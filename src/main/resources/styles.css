@@ -1,0 +1,7 @@
+#label {
+    -fx-text-fill: blue;
+}
+
+#textField {
+    -fx-text-fill: red;
+}
