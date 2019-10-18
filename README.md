@@ -2,7 +2,7 @@
 
 Bike pickup & delivery planning app.
 
-## Build status
+## Build status
 
 `master` | `develop`
 --- | ---
