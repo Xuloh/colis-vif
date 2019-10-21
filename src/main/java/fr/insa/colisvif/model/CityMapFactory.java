@@ -20,6 +20,7 @@ public class CityMapFactory {
         this.cityMapParserXML = new CityMapParserXML();
     }
 
+    //TODO on doit pouvoir passer le fichier en paramètre !
     public CityMap createCityMapFromXMLFile() throws IOException, SAXException, ParserConfigurationException {
         this.cityMapParserXML.loadFile();
         List<Triplet<Long, Double, Double>> nodes = this.cityMapParserXML.readNodes();

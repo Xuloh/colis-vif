@@ -9,7 +9,7 @@ public class Node {
     private double latitude;
     private List<Section> successors;
 
-    public Node(long id, double longitude, double latitude) {
+    public Node(long id, double latitude, double longitude) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;

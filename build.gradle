@@ -22,8 +22,8 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     // Use jcenter for resolving dependencies.
