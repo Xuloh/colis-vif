@@ -1,19 +1,19 @@
 package fr.insa.colisvif.model;
 
 public class Section {
-    private Integer length;
+    private double length;
     private String roadName;
-    private Integer destination;
-    private Integer origine;
+    private int destination;
+    private int origine;
 
-    public Section(Integer length, String roadName, Integer destination, Integer origine) {
+    public Section(double length, String roadName, int destination, int origine) {
         this.length = length;
         this.roadName = roadName;
         this.destination = destination;
         this.origine = origine;
     }
 
-    public Integer getLength() {
+    public double getLength() {
         return this.length;
     }
 
@@ -21,11 +21,11 @@ public class Section {
         return this.roadName;
     }
 
-    public Integer getDestination() {
+    public int getDestination() {
         return this.destination;
     }
 
-    public Integer getOrigine() {
+    public int getOrigine() {
         return this.origine;
     }
 }

@@ -1,16 +1,16 @@
 package fr.insa.colisvif.model;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CityMap {
-    private static final Integer LONG_MAX = 180;
-    private static final Integer LAT_MIN = -90;
+    private static final int LONG_MAX = 180;
+    private static final int LAT_MIN = -90;
 
-    private Integer longMin;
-    private Integer latMax;
+    private double longMin;
+    private double latMax;
     private Map<Integer, Node> mapNode;
     private Map<String, List<Section>> mapSection;
 
@@ -21,7 +21,7 @@ public class CityMap {
         this.mapSection = new HashMap<>();
     }
 
-    public void createNode(Integer id, Integer latitude, Integer longitude) {
+    public void createNode(int id, double latitude, double longitude) {
         Node newNode = new Node(id, latitude, longitude);
         this.mapNode.put(id, newNode);
 
@@ -34,7 +34,7 @@ public class CityMap {
         }
     }
 
-    public void createSection(Integer length, String roadName, Integer destination, Integer origine) {
+    public void createSection(double length, String roadName, int destination, int origine) {
         Section newSection = new Section(length, roadName, destination, origine);
 
         if(this.mapSection.get(roadName).isEmpty()){
@@ -49,19 +49,19 @@ public class CityMap {
         this.mapNode.get(origine).addToSuccessors(newSection);
     }
 
-    public void setLongMin(Integer longitude) {
+    public void setLongMin(double longitude) {
         this.longMin = longitude;
     }
 
-    public void setLatMax(Integer latitude) {
+    public void setLatMax(double latitude) {
         this.latMax = latitude;
     }
 
-    public Integer getLongMin() {
+    public double getLongMin() {
         return this.longMin;
     }
 
-    public Integer getLatMax() {
+    public double getLatMax() {
         return this.latMax;
     }
 

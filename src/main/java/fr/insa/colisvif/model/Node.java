@@ -4,27 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-    private Integer id;
-    private Integer longitude;
-    private Integer latitude;
+    private int id;
+    private double longitude;
+    private double latitude;
     private List<Section> successors;
 
-    public Node(Integer id, Integer longitude, Integer latitude) {
+    public Node(int id, double longitude, double latitude) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
         this.successors = new ArrayList<>();
     }
 
-    public Integer getLongitude() {
+    public double getLongitude() {
         return this.longitude;
     }
 
-    public Integer getLatitude() {
+    public double getLatitude() {
         return this.latitude;
     }
 
-    public Integer getId() {
+    public int getId() {
         return this.id;
     }
 
