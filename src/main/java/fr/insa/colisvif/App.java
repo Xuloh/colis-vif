@@ -3,20 +3,27 @@
  */
 package fr.insa.colisvif;
 
+import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.CityMapFactory;
+/*
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+*/
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-public class App extends Application {
+public class App {
 
     public String getGreeting() {
         return "Hello World.";
     }
 
+    /*
     @Override
     public void start(Stage stage) throws IOException {
         // load main scene
@@ -31,10 +38,14 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
+    */
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
         // launch javafx app
-        launch(args);
+        // launch(args);
+
+        CityMap cm = CityMapFactory.getInstance().createCityMapFromXMLFile();
+        System.out.println(cm.toString());
+
     }
 }

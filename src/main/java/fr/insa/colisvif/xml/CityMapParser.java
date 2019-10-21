@@ -8,7 +8,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 
 public interface CityMapParser {
-    List<Triplet<Integer, Double, Double>> readNodes();
-    List<Quadruplet<Double, String, Integer, Integer>> readSections();
+    List<Triplet<Long, Double, Double>> readNodes();
+    List<Quadruplet<Double, String, Long, Long>> readSections();
     void loadFile() throws ParserConfigurationException, SAXException, IOException;
 }

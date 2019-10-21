@@ -37,26 +37,24 @@ public class CityMapParserXML implements CityMapParser{
     }
 
     @Override
-    public List<Triplet<Integer, Double, Double>> readNodes() {
-        ArrayList<Triplet<Integer, Double, Double>> result = new ArrayList<Triplet<Integer, Double, Double>>();
+    public List<Triplet<Long, Double, Double>> readNodes() {
+        ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<Triplet<Long, Double, Double>>();
         try {
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = docBuilder.parse(this.xmlFile);
             Element root = document.getDocumentElement();
-            if (root.getNodeName().equals("plan")) {
-
+            if (root.getNodeName().equals("reseau")) {
+                NodeList nodeList = root.getElementsByTagName("noeud");
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    Element node = (Element) nodeList.item(i);
+                    long id = Long.parseLong(node.getAttribute("id"));
+                    double latitude = Double.parseDouble(node.getAttribute("latitude"));
+                    double longitude = Double.parseDouble(node.getAttribute("longitude"));
+                    Triplet<Long, Double, Double> newNode = new Triplet<>(id, latitude, longitude);
+                    result.add(newNode);
+                }
             } else
                 throw new XMLException("Document non conforme");
-            NodeList nodeList = root.getElementsByTagName("noeud");
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Element node = (Element) nodeList.item(i);
-                int id = Integer.parseInt(node.getAttribute("id"));
-                double latitude = Double.parseDouble(node.getAttribute("latitude"));
-                double longitude = Double.parseDouble(node.getAttribute("longitude"));
-                Triplet<Integer, Double, Double> newNode = new Triplet<>(id, latitude, longitude);
-                result.add(newNode);
-            }
-            return result;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (XMLException exceptionXML) {
@@ -66,31 +64,30 @@ public class CityMapParserXML implements CityMapParser{
         } catch (SAXException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     @Override
-    public List<Quadruplet<Double, String, Integer, Integer>> readSections() {
-        ArrayList<Quadruplet<Double, String, Integer, Integer>> result = new ArrayList<Quadruplet<Double, String, Integer, Integer>>();
+    public List<Quadruplet<Double, String, Long, Long>> readSections() {
+        ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<Quadruplet<Double, String, Long, Long>>();
         try {
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = docBuilder.parse(this.xmlFile);
             Element root = document.getDocumentElement();
-            if (root.getNodeName().equals("plan")) {
+            if (root.getNodeName().equals("reseau")) {
                 NodeList nodeList = root.getElementsByTagName("troncon");
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     Element node = (Element) nodeList.item(i);
                     double length = Double.parseDouble(node.getAttribute("longueur"));
                     String roadName = node.getAttribute("nomRue");
-                    int origin = Integer.parseInt(node.getAttribute("origine"));
-                    int destination = Integer.parseInt(node.getAttribute("destination"));
-                    Quadruplet<Double, String, Integer, Integer> newSection = new Quadruplet<>(length, roadName, origin, destination);
+                    long origin = Long.parseLong(node.getAttribute("origine"));
+                    long destination = Long.parseLong(node.getAttribute("destination"));
+                    Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, origin, destination);
                     result.add(newSection);
                 }
             } else {
                 throw new XMLException("Document non conforme");
             }
-            return result;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (XMLException exceptionXML) {
@@ -100,7 +97,7 @@ public class CityMapParserXML implements CityMapParser{
         } catch (SAXException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
 

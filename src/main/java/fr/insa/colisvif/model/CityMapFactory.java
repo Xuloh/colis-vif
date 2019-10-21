@@ -22,23 +22,23 @@ public class CityMapFactory {
 
     public CityMap createCityMapFromXMLFile() throws IOException, SAXException, ParserConfigurationException {
         this.cityMapParserXML.loadFile();
-        List<Triplet<Integer, Double, Double>> nodes = this.cityMapParserXML.readNodes();
-        List<Quadruplet<Double, String, Integer, Integer>> sections = this.cityMapParserXML.readSections();
-        for (Triplet<Integer, Double, Double> node : nodes) {
+        List<Triplet<Long, Double, Double>> nodes = this.cityMapParserXML.readNodes();
+        List<Quadruplet<Double, String, Long, Long>> sections = this.cityMapParserXML.readSections();
+        for (Triplet<Long, Double, Double> node : nodes) {
             this.makeNode(node.getFirst(), node.getSecond(), node.getThird());
         }
-        for(Quadruplet<Double, String, Integer, Integer> section : sections) {
+        for(Quadruplet<Double, String, Long, Long> section : sections) {
             this.makeSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
         }
         return this.cityMap;
     }
 
-    public void makeNode(int id, double latitude, double longitude) {
+    public void makeNode(long id, double latitude, double longitude) {
         this.cityMap.createNode(id, latitude, longitude);
     }
 
-    public void makeSection(double length, String roadName, int destination, int origine) {
-        this.cityMap.createSection(length, roadName, destination, origine);
+    public void makeSection(double length, String roadName, long destination, long origin) {
+        this.cityMap.createSection(length, roadName, destination, origin);
     }
 
     public CityMap getCityMap() {

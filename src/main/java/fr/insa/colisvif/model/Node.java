@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-    private int id;
+    private long id;
     private double longitude;
     private double latitude;
     private List<Section> successors;
 
-    public Node(int id, double longitude, double latitude) {
+    public Node(long id, double longitude, double latitude) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -24,7 +24,7 @@ public class Node {
         return this.latitude;
     }
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -34,5 +34,11 @@ public class Node {
 
     public void addToSuccessors(Section section) {
         this.successors.add(section);
+    }
+
+    @Override
+    public String toString() {
+        String result = "ID : " + id + " | Latitude :  " + latitude + " | Longitude : " + longitude + "\n";
+        return result;
     }
 }

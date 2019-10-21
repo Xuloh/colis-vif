@@ -1,9 +1,6 @@
 package fr.insa.colisvif.model;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CityMap {
     private static final int LONG_MAX = 180;
@@ -11,7 +8,7 @@ public class CityMap {
 
     private double longMin;
     private double latMax;
-    private Map<Integer, Node> mapNode;
+    private Map<Long, Node> mapNode;
     private Map<String, List<Section>> mapSection;
 
     public CityMap() {
@@ -21,7 +18,7 @@ public class CityMap {
         this.mapSection = new HashMap<>();
     }
 
-    public void createNode(int id, double latitude, double longitude) {
+    public void createNode(long id, double latitude, double longitude) {
         Node newNode = new Node(id, latitude, longitude);
         this.mapNode.put(id, newNode);
 
@@ -34,10 +31,10 @@ public class CityMap {
         }
     }
 
-    public void createSection(double length, String roadName, int destination, int origine) {
-        Section newSection = new Section(length, roadName, destination, origine);
+    public void createSection(double length, String roadName, long destination, long origin) {
+        Section newSection = new Section(length, roadName, destination, origin);
 
-        if(this.mapSection.get(roadName).isEmpty()){
+        if(this.mapSection.get(roadName) == null){
             List<Section> newSections = new ArrayList<>();
             newSections.add(newSection);
             this.mapSection.put(roadName, newSections);
@@ -46,7 +43,7 @@ public class CityMap {
             this.mapSection.get(roadName).add(newSection);
         }
 
-        this.mapNode.get(origine).addToSuccessors(newSection);
+        this.mapNode.get(origin).addToSuccessors(newSection);
     }
 
     public void setLongMin(double longitude) {
@@ -65,11 +62,37 @@ public class CityMap {
         return this.latMax;
     }
 
-    public Map<Integer, Node> getMapNode() {
+    public Map<Long, Node> getMapNode() {
         return this.mapNode;
     }
 
     public Map<String, List<Section>> getMapSection() {
         return this.mapSection;
+    }
+
+    @Override
+    public String toString() {
+        String result = "Nodes : \n";
+
+        Set nodeKeys = this.mapNode.keySet();
+        Iterator itN = nodeKeys.iterator();
+        while (itN.hasNext()){
+            Object nodeKey = itN.next();
+            Node node = this.mapNode.get(nodeKey);
+            result += node.toString();
+        }
+
+        result += "\nSections : \n";
+
+        Set sectionKeys = this.mapSection.keySet();
+        Iterator itS = sectionKeys.iterator();
+        while (itS.hasNext()){
+            Object sectionKey = itS.next();
+            List<Section> sections = this.mapSection.get(sectionKey);
+            for (Section s : sections)
+                result += s.toString();
+        }
+
+        return result;
     }
 }

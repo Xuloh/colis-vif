@@ -3,14 +3,14 @@ package fr.insa.colisvif.model;
 public class Section {
     private double length;
     private String roadName;
-    private int destination;
-    private int origine;
+    private long destination;
+    private long origin;
 
-    public Section(double length, String roadName, int destination, int origine) {
+    public Section(double length, String roadName, long destination, long origin) {
         this.length = length;
         this.roadName = roadName;
         this.destination = destination;
-        this.origine = origine;
+        this.origin = origin;
     }
 
     public double getLength() {
@@ -21,11 +21,17 @@ public class Section {
         return this.roadName;
     }
 
-    public int getDestination() {
+    public long getDestination() {
         return this.destination;
     }
 
-    public int getOrigine() {
-        return this.origine;
+    public long getOrigin() {
+        return this.origin;
+    }
+
+    @Override
+    public String toString() {
+        String result = "Length : " + length + " | Road Name : " + roadName + " | Destination : " + destination + " | Origin : " + origin + "\n";
+        return result;
     }
 }
