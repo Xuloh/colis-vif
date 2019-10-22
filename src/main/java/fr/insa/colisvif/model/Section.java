@@ -13,6 +13,7 @@ public class Section {
         this.origin = origin;
 
         if(length <= 0 ) throw new IllegalArgumentException();
+        if(destination == origin) throw new IllegalArgumentException();
     }
 
     public double getLength() {
