@@ -42,7 +42,7 @@ public class Node {
 
     @Override
     public String toString() {
-        String result = "ID : " + id + " | Latitude :  " + latitude + " | Longitude : " + longitude + "\n";
+        String result = "ID : " + id + " | Latitude : " + latitude + " | Longitude : " + longitude + "\n";
         return result;
     }
 }
