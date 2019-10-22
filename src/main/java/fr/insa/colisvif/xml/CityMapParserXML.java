@@ -1,24 +1,19 @@
 package fr.insa.colisvif.xml;
 
-import fr.insa.colisvif.model.CityMapFactory;
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CityMapParserXML implements CityMapParser{
     private File xmlFile;
@@ -28,17 +23,13 @@ public class CityMapParserXML implements CityMapParser{
     }
 
     @Override
-    public void loadFile() throws ParserConfigurationException, SAXException, IOException{
-        try {
-            this.xmlFile = XMLFileOpener.getInstance().openXML(true);
-        } catch (XMLException e) {
-
-        }
+    public void loadFile(File file) {
+        this.xmlFile = file;
     }
 
     @Override
     public List<Triplet<Long, Double, Double>> readNodes() {
-        ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<Triplet<Long, Double, Double>>();
+        ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<>();
         try {
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = docBuilder.parse(this.xmlFile);
@@ -55,13 +46,7 @@ public class CityMapParserXML implements CityMapParser{
                 }
             } else
                 throw new XMLException("Document non conforme");
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (XMLException exceptionXML) {
-            exceptionXML.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
             e.printStackTrace();
         }
         return result;
@@ -69,7 +54,7 @@ public class CityMapParserXML implements CityMapParser{
 
     @Override
     public List<Quadruplet<Double, String, Long, Long>> readSections() {
-        ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<Quadruplet<Double, String, Long, Long>>();
+        ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
         try {
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = docBuilder.parse(this.xmlFile);
@@ -88,13 +73,7 @@ public class CityMapParserXML implements CityMapParser{
             } else {
                 throw new XMLException("Document non conforme");
             }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (XMLException exceptionXML) {
-            exceptionXML.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
             e.printStackTrace();
         }
         return result;
