@@ -1,5 +1,6 @@
 package fr.insa.colisvif.model;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class Node {
         this.longitude = longitude;
         this.latitude = latitude;
         this.successors = new ArrayList<>();
+        if (this.longitude > 180 || this.longitude < -180 || this.latitude < -90 || this.latitude > 90) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public double getLongitude() {
