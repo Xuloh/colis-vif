@@ -58,9 +58,9 @@ public class MainController {
     }
 
     public void openFile(File file) {
-        CityMapFactory factory = CityMapFactory.getInstance();
+        CityMapFactory factory = new CityMapFactory();
         try {
-            CityMap map = factory.createCityMapFromXMLFile();
+            CityMap map = factory.createCityMapFromXMLFile(file);
             this.drawMap(map);
         }
         catch(IOException | SAXException | ParserConfigurationException e) {
