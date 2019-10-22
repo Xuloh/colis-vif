@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.IdError;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +38,11 @@ public class Node {
         return this.successors;
     }
 
-    public void addToSuccessors(Section section) {
-        this.successors.add(section);
+    public void addToSuccessors(Section section) throws IdError{
+        if (section.getOrigin() == this.id)
+            this.successors.add(section);
+        else
+            throw new IdError("Origine du tronçon différente de ce noeud");
     }
 
     @Override
