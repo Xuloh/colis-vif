@@ -1,6 +1,7 @@
-package fr.insa.colisvif.xml;
+// TODO : vérifier IDs de noeuds uniques
+// TODO : pas deux sections exactement identiques
 
-import fr.insa.colisvif.model.CityMapFactory;
+package fr.insa.colisvif.xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,11 +9,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
 import org.w3c.dom.Document;

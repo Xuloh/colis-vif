@@ -1,4 +1,4 @@
-package fr.insa.colisvif.xml;
+package fr.insa.colisvif.exception;
 
 public class XMLException extends Exception {
 

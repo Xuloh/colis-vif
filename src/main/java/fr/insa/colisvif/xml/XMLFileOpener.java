@@ -1,5 +1,7 @@
 package fr.insa.colisvif.xml;
 
+import fr.insa.colisvif.exception.XMLException;
+
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.*;
@@ -13,7 +15,7 @@ public class XMLFileOpener extends FileFilter{
         return instance;
     }
 
-    public File openXML(boolean endOfFile) throws XMLException{
+    public File openXML(boolean endOfFile) throws XMLException {
         int returnVal;
         JFileChooser jFileChooserXML = new JFileChooser();
         jFileChooserXML.setFileFilter(this);

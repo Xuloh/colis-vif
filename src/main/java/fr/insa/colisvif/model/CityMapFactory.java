@@ -1,5 +1,6 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
 import fr.insa.colisvif.xml.CityMapParser;
@@ -21,7 +22,7 @@ public class CityMapFactory {
     }
 
     //TODO on doit pouvoir passer le fichier en paramètre !
-    public CityMap createCityMapFromXMLFile() throws IOException, SAXException, ParserConfigurationException {
+    public CityMap createCityMapFromXMLFile() throws IOException, SAXException, ParserConfigurationException, IdError {
         this.cityMapParserXML.loadFile();
         List<Triplet<Long, Double, Double>> nodes = this.cityMapParserXML.readNodes();
         List<Quadruplet<Double, String, Long, Long>> sections = this.cityMapParserXML.readSections();
@@ -38,7 +39,7 @@ public class CityMapFactory {
         this.cityMap.createNode(id, latitude, longitude);
     }
 
-    public void makeSection(double length, String roadName, long destination, long origin) {
+    public void makeSection(double length, String roadName, long destination, long origin) throws IdError {
         this.cityMap.createSection(length, roadName, destination, origin);
     }
 
