@@ -1,4 +1,4 @@
-package fr.insa.colisvif;
+package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.model.Node;
 import org.junit.Test;
