@@ -1,0 +1,38 @@
+package fr.insa.colisvif.controller;
+
+import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.CityMapFactory;
+import fr.insa.colisvif.view.MainController;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+
+public class Controller {
+
+    private CityMap map;
+
+    private CityMapFactory factory;
+
+    private MainController mainController;
+
+    public Controller() {
+        this.map = null;
+        this.factory = new CityMapFactory();
+    }
+
+    public void openFile(File file) {
+        try {
+            this.map = this.factory.createCityMapFromXMLFile(file);
+            this.mainController.clearMap();
+            this.mainController.drawMap(this.map);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+}
