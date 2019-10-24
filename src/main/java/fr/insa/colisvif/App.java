@@ -1,5 +1,6 @@
 package fr.insa.colisvif;
 
+import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.view.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,12 +13,17 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Controller controller = new Controller();
         // create fxml loader
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene.fxml"));
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/scene.fxml")
+        );
 
         // create and set controller
-        MainController controller = new MainController(stage);
-        loader.setController(controller);
+        MainController mainController = new MainController(stage, controller);
+        loader.setController(mainController);
+
+        controller.setMainController(mainController);
 
         // load scene
         Scene scene = new Scene(loader.load());
