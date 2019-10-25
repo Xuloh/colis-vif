@@ -6,11 +6,15 @@ import java.util.*;
 
 public class CityMap {
     private static final int LONG_MAX = 180;
+
     private static final int LAT_MIN = -90;
 
     private double longMin;
+
     private double latMax;
+
     private Map<Long, Node> mapNode;
+
     private Map<String, List<Section>> mapSection;
 
     public CityMap() {
@@ -24,11 +28,11 @@ public class CityMap {
         Node newNode = new Node(id, latitude, longitude);
         this.mapNode.put(id, newNode);
 
-        if(latitude > this.latMax){
+        if (latitude > this.latMax) {
             this.latMax = latitude;
         }
 
-        if(longitude < this.longMin){
+        if (longitude < this.longMin) {
             this.longMin = longitude;
         }
     }
@@ -36,12 +40,11 @@ public class CityMap {
     public void createSection(double length, String roadName, long destination, long origin) throws IdError {
         Section newSection = new Section(length, roadName, destination, origin);
 
-        if(this.mapSection.get(roadName) == null){
+        if (this.mapSection.get(roadName) == null) {
             List<Section> newSections = new ArrayList<>();
             newSections.add(newSection);
             this.mapSection.put(roadName, newSections);
-        }
-        else {
+        } else {
             this.mapSection.get(roadName).add(newSection);
         }
 
@@ -77,7 +80,7 @@ public class CityMap {
         StringBuilder result = new StringBuilder("Nodes : \n");
 
         Set<Long> nodeKeys = this.mapNode.keySet();
-        for(Long nodeKey : nodeKeys) {
+        for (Long nodeKey : nodeKeys) {
             Node node = this.mapNode.get(nodeKey);
             result.append(node.toString());
         }
@@ -85,10 +88,11 @@ public class CityMap {
         result.append("\nSections : \n");
 
         Set<String> sectionKeys = this.mapSection.keySet();
-        for(String sectionKey : sectionKeys) {
+        for (String sectionKey : sectionKeys) {
             List<Section> sections = this.mapSection.get(sectionKey);
-            for(Section s : sections)
+            for (Section s : sections) {
                 result.append(s.toString());
+            }
         }
 
         return result.toString();
