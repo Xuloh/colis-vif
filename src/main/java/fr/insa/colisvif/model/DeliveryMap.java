@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DeliveryRequest {
+public class DeliveryMap {
 
-    private List<Delivery> deliveryList;
+    private List<Delivery> deliveryRequests;
     private long warehouseNodeId;
     private int startDateInSeconds;
 
 
-    public DeliveryRequest() {
-        this.deliveryList = new ArrayList<>();
+    public DeliveryMap() {
+        this.deliveryRequests = new ArrayList<>();
     }
 
     public void createDelivery(long pickUpId, long deliveryId, int pickUpDuration, int deliveryDuration){
         Delivery newDelivery = new Delivery(pickUpId, deliveryId, pickUpDuration, deliveryDuration);
-        this.deliveryList.add(newDelivery);
+        this.deliveryRequests.add(newDelivery);
     }
 
     public void createWarehouse(long positionId, int startDateInSeconds){
@@ -26,7 +26,7 @@ public class DeliveryRequest {
     }
 
     public List<Delivery> getDeliveryList() {
-        return deliveryList;
+        return deliveryRequests;
     }
 
     public long getWarehouseNodeId() {

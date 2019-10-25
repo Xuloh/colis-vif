@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public interface DeliveryRequestParser {
+public interface DeliveryMapParser {
 
     List<Quadruplet<Long, Long, Integer, Integer>> readDelivery();
     List<Pair<Long,Integer>> readWarehouse();

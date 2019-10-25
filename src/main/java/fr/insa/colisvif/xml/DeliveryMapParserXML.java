@@ -7,11 +7,11 @@ import javafx.util.Pair;
 import java.io.File;
 import java.util.List;
 
-public class DeliveryRequestParserXML implements DeliveryRequestParser {
+public class DeliveryMapParserXML implements DeliveryMapParser {
 
     private File xmlFile;
 
-    public DeliveryRequestParserXML() {
+    public DeliveryMapParserXML() {
 
     }
 
