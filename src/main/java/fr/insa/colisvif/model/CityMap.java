@@ -74,27 +74,23 @@ public class CityMap {
 
     @Override
     public String toString() {
-        String result = "Nodes : \n";
+        StringBuilder result = new StringBuilder("Nodes : \n");
 
-        Set nodeKeys = this.mapNode.keySet();
-        Iterator itN = nodeKeys.iterator();
-        while (itN.hasNext()){
-            Object nodeKey = itN.next();
+        Set<Long> nodeKeys = this.mapNode.keySet();
+        for(Long nodeKey : nodeKeys) {
             Node node = this.mapNode.get(nodeKey);
-            result += node.toString();
+            result.append(node.toString());
         }
 
-        result += "\nSections : \n";
+        result.append("\nSections : \n");
 
-        Set sectionKeys = this.mapSection.keySet();
-        Iterator itS = sectionKeys.iterator();
-        while (itS.hasNext()){
-            Object sectionKey = itS.next();
+        Set<String> sectionKeys = this.mapSection.keySet();
+        for(String sectionKey : sectionKeys) {
             List<Section> sections = this.mapSection.get(sectionKey);
-            for (Section s : sections)
-                result += s.toString();
+            for(Section s : sections)
+                result.append(s.toString());
         }
 
-        return result;
+        return result.toString();
     }
 }
