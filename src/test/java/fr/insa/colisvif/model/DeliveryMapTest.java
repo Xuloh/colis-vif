@@ -2,8 +2,6 @@ package fr.insa.colisvif.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class DeliveryMapTest {
 
     @Test
@@ -26,12 +24,11 @@ public class DeliveryMapTest {
 
     }
 
-    /*
-    public void createWarehouse(long positionId, int startDateInSeconds){
-        this.warehouseNodeId = positionId;
-        this.startDateInSeconds = startDateInSeconds;
-    }
-     */
+    @Test
+    public void testCreateWarehouseZeroTime() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        deliveryMap.createWarehouse(101,0);
 
+    }
 
 }

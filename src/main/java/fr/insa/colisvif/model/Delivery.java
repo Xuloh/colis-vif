@@ -60,8 +60,8 @@ public class Delivery {
 
     public boolean isPicked() { return isPicked; }
 
-    public void setToPickedUp() {
-        this.isPicked = true;
+    public void setToPickedUp(boolean value) {
+        this.isPicked = value;
     }
 
     @Override
