@@ -88,10 +88,10 @@ public class MainController {
             Node origin = nodes.get(section.getOrigin());
             Node destination = nodes.get(section.getDestination());
 
-            double x1 = (origin.getLongitude() - map.getLongMin()) * LNG_TO_PX;
+            double x1 = (origin.getLongitude() - map.getLngMin()) * LNG_TO_PX;
             double y1 = (map.getLatMax() - origin.getLatitude()) * LAT_TO_PX;
 
-            double x2 = (destination.getLongitude() - map.getLongMin())
+            double x2 = (destination.getLongitude() - map.getLngMin())
                         * LNG_TO_PX;
             double y2 = (map.getLatMax() - destination.getLatitude())
                         * LAT_TO_PX;
@@ -101,7 +101,7 @@ public class MainController {
 
         context.setFill(NODE_COLOR);
         for (Node node : nodes.values()) {
-            double x = (node.getLongitude() - map.getLongMin()) * LNG_TO_PX;
+            double x = (node.getLongitude() - map.getLngMin()) * LNG_TO_PX;
             double y = (map.getLatMax() - node.getLatitude()) * LAT_TO_PX;
             context.fillOval(x - NODE_SIZE / 2d,
                              y - NODE_SIZE / 2d,
