@@ -10,22 +10,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-class PrevAndLength {
-    private Long prev;
-    private double length;
-
-    PrevAndLength(){
-        prev = null;
-        length = -1;
-    }
-
-    Long getPrev() { return prev; }
-    double getLength() { return length; }
-    void setPrev(Long prev) { this.prev = prev; }
-    void setLength(double length) { this.length = length; }
-}
-
 public class ShortestPaths {
+    static class PrevAndLength {
+        private Long prev;
+        private double length;
+
+        PrevAndLength(){
+            prev = null;
+            length = -1;
+        }
+    
+        Long getPrev() { return prev; }
+        double getLength() { return length; }
+        void setPrev(Long prev) { this.prev = prev; }
+        void setLength(double length) { this.length = length; }
+    }
     private Map<Long, Map<Long, PrevAndLength>> paths;
 
     public Map<Long, Map<Long, PrevAndLength>> getPaths() { return paths; }
