@@ -12,7 +12,7 @@ import java.util.List;
 public interface DeliveryMapParser {
 
     List<Quadruplet<Long, Long, Integer, Integer>> readDelivery();
-    List<Pair<Long,Integer>> readWarehouse();
+    Pair<Long,Integer> readWarehouse();
 
     void loadFile(File file) throws ParserConfigurationException, SAXException, IOException;
 }

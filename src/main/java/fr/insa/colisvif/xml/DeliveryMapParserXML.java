@@ -27,7 +27,7 @@ public class DeliveryMapParserXML implements DeliveryMapParser {
     }
 
     @Override
-    public List<Pair<Long,Integer>> readWarehouse() {
+    public Pair<Long,Integer> readWarehouse() {
 
         return null;
     }
