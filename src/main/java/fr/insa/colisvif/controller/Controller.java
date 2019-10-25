@@ -1,5 +1,6 @@
 package fr.insa.colisvif.controller;
 
+import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
 import fr.insa.colisvif.view.MainController;
@@ -27,7 +28,7 @@ public class Controller {
             this.map = this.factory.createCityMapFromXMLFile(file);
             this.mainController.clearMap();
             this.mainController.drawMap(this.map);
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
     }

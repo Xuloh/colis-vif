@@ -11,6 +11,9 @@ public class Section {
         this.roadName = roadName;
         this.destination = destination;
         this.origin = origin;
+
+        if(length <= 0 ) throw new IllegalArgumentException();
+        //if(destination == origin) throw new IllegalArgumentException();
     }
 
     public double getLength() {

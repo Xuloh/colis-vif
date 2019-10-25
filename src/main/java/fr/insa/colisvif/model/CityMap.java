@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.IdError;
+
 import java.util.*;
 
 public class CityMap {
@@ -31,7 +33,7 @@ public class CityMap {
         }
     }
 
-    public void createSection(double length, String roadName, long destination, long origin) {
+    public void createSection(double length, String roadName, long destination, long origin) throws IdError {
         Section newSection = new Section(length, roadName, destination, origin);
 
         if(this.mapSection.get(roadName) == null){
