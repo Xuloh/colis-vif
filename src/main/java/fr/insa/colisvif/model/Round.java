@@ -1,5 +1,8 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.algos.ShortestPaths;
+import fr.insa.colisvif.algos.TravellingSalesman;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +12,13 @@ public class Round {
     private int startDateInSeconds;
 
 
-    Round(long warehouseNodeId, int startDateInSeconds){
+    Round(long warehouseNodeId, int startDateInSeconds, CityMap map, DeliveryMap deliveries){
         this.warehouseNodeId = warehouseNodeId;
         this.startDateInSeconds = startDateInSeconds;
         this.steps = new ArrayList<Step>();
+        ShortestPaths shortestPaths = new ShortestPaths(map, deliveries);
+        TravellingSalesman TSP = new TravellingSalesman(deliveries, shortestPaths);
+
     }
 
     public long getWarehouseNodeId() { return warehouseNodeId; }

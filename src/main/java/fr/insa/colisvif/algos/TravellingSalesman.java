@@ -7,14 +7,27 @@ import fr.insa.colisvif.util.Paire;
 import java.util.*;
 
 public class TravellingSalesman {
-    class SubResult{
+    static class Vertex{
+        Long id;
+        Boolean type; //0 if it is a pick up and 1 if it is a drop off
+
+        public Long getId() { return id; }
+        public boolean isPickUp() { return type; }
+        public boolean isDropOff() { return !type; }
+
+        Vertex(Long id, Boolean type){
+            this.id = id;
+            this.type = type;
+        }
+    }
+    static class SubResult{
         LinkedList<Long> path;
         double length;
 
         LinkedList<Long> getPath() { return path; }
         double getLength() { return length; }
         void setLength(double length) { this.length = length; }
-        public void setPath(LinkedList<Long> path) { this.path = path; }
+        void setPath(LinkedList<Long> path) { this.path = path; }
 
         SubResult(){
             path = new LinkedList<>();
@@ -31,7 +44,7 @@ public class TravellingSalesman {
     private HashMap<Long, HashMap<Long, Double>> lengths;
     private HashMap<Paire<Long, Set<Long>>, SubResult> subresults;
 
-    TravellingSalesman(DeliveryMap deliveries, ShortestPaths shortestPaths){
+    public TravellingSalesman(DeliveryMap deliveries, ShortestPaths shortestPaths){
         warehouseNodeId = deliveries.getWarehouseNodeId();
         subresults = new HashMap<>();
         dropOffs = new HashMap<>();
@@ -100,7 +113,12 @@ public class TravellingSalesman {
         return subResult;
     }
 
-    private LinkedList<Long> shortestRound(){
-        return subProblem(warehouseNodeId, lengths.keySet()).getPath();
+    public LinkedList<Vertex> shortestRound(){
+        LinkedList<Long> L = subProblem(warehouseNodeId, lengths.keySet()).getPath();
+        LinkedList<Vertex> V = new LinkedList<>();
+        for( Long l : L){
+            V.add(new Vertex(l, dropOffs.containsKey(l)));
+        }
+        return V;
     }
 }
