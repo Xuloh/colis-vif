@@ -23,57 +23,28 @@ public class ShortestPaths {
         void setLength(double length) { this.length = length; }
     }
 
+    private Long warehouseNodeId;
+    private HashMap<Long, HashMap<Long, PrevAndLength>> pathsFromVertices;
+
     public ShortestPaths(CityMap map, DeliveryMap deliveries){
         warehouseNodeId = deliveries.getWarehouseNodeId();
         pathsFromVertices = new HashMap<>();
-        lengths = new HashMap<>();
 
         dijkstra(map, deliveries.getWarehouseNodeId());
-        lengths.put(warehouseNodeId, new HashMap<>());
-
         for(Delivery delivery : deliveries.getDeliveryList()){
-            Long pickUp = delivery.getPickUpNodeId();
-            Long dropOff = delivery.getDeliveryNodeId();
-            lengths.put(pickUp, new HashMap<>());
-            lengths.put(dropOff, new HashMap<>());
-            lengths.get(warehouseNodeId).put(pickUp, pathsFromVertices.get(warehouseNodeId).get(pickUp).getLength());
-            lengths.get(warehouseNodeId).put(dropOff, pathsFromVertices.get(warehouseNodeId).get(dropOff).getLength());
-            dijkstra(map, pickUp);
-            dijkstra(map, dropOff);
-            lengths.get(pickUp).put(warehouseNodeId, pathsFromVertices.get(pickUp).get(warehouseNodeId).getLength());
-            lengths.get(dropOff).put(warehouseNodeId, pathsFromVertices.get(dropOff).get(warehouseNodeId).getLength());
-        }
-        for(Delivery delivery1 : deliveries.getDeliveryList()){
-            Long pickUp1 = delivery1.getPickUpNodeId();
-            Long dropOff1 = delivery1.getDeliveryNodeId();
-            for(Delivery delivery2 : deliveries.getDeliveryList()){
-                Long pickUp2 = delivery2.getPickUpNodeId();
-                Long dropOff2 = delivery2.getDeliveryNodeId();
-                lengths.get(pickUp1).put(pickUp2, pathsFromVertices.get(pickUp1).get(pickUp2).getLength());
-                lengths.get(pickUp1).put(dropOff1, pathsFromVertices.get(pickUp1).get(dropOff1).getLength());
-                lengths.get(pickUp1).put(dropOff2, pathsFromVertices.get(pickUp1).get(dropOff2).getLength());
-                lengths.get(pickUp2).put(pickUp1, pathsFromVertices.get(pickUp2).get(pickUp1).getLength());
-                lengths.get(pickUp2).put(dropOff1, pathsFromVertices.get(pickUp2).get(dropOff1).getLength());
-                lengths.get(pickUp2).put(dropOff2, pathsFromVertices.get(pickUp2).get(dropOff2).getLength());
-                lengths.get(dropOff1).put(pickUp1, pathsFromVertices.get(dropOff1).get(pickUp1).getLength());
-                lengths.get(dropOff1).put(pickUp2, pathsFromVertices.get(dropOff1).get(pickUp2).getLength());
-                lengths.get(dropOff1).put(dropOff2, pathsFromVertices.get(dropOff1).get(dropOff2).getLength());
-                lengths.get(dropOff2).put(pickUp1, pathsFromVertices.get(dropOff2).get(pickUp1).getLength());
-                lengths.get(dropOff2).put(pickUp2, pathsFromVertices.get(dropOff2).get(pickUp2).getLength());
-                lengths.get(dropOff2).put(dropOff1, pathsFromVertices.get(dropOff2).get(dropOff1).getLength());
-            }
+            dijkstra(map, delivery.getPickUpNodeId());
+            dijkstra(map, delivery.getDeliveryNodeId());
         }
     }
 
-    private Long warehouseNodeId;
-    private HashMap<Long, HashMap<Long, PrevAndLength>> pathsFromVertices;
-    private HashMap<Long, HashMap<Long, Double>> lengths; // à garder ?
-    private List<Long> shortestHamiltonianPath;
+    public Long getWarehouseNodeId() { return warehouseNodeId; }
+    //public HashMap<Long, HashMap<Long, PrevAndLength>> getPathsFromVertices() { return pathsFromVertices; }
+    public double getLength(Long vertex1Id, Long vertex2Id){
+        return pathsFromVertices.get(vertex1Id).get(vertex2Id).getLength();
+    }
+    public Set<Long> getVertices() { return pathsFromVertices.keySet(); }
 
-    public HashMap<Long, HashMap<Long, PrevAndLength>> getPathsFromVertices() { return pathsFromVertices; }
-    public List<Long> getShortestHamiltonianPath() { return shortestHamiltonianPath; }
-
-    public void dijkstra(CityMap map, Long start){
+    private void dijkstra(CityMap map, Long start){
         HashMap<Long, PrevAndLength> pathsFromStart = new HashMap<>();
         for(Long key : map.getMapNode().keySet()){
             pathsFromStart.put(key, new PrevAndLength());
@@ -99,8 +70,4 @@ public class ShortestPaths {
         }
         pathsFromVertices.put(start, pathsFromStart);
     }
-
-
-
-
 }
