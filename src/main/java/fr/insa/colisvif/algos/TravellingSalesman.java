@@ -43,6 +43,9 @@ public class TravellingSalesman {
         void add(Long l){
             path.add(l);
         }
+        void clearPath(){
+            path.clear();
+        }
     }
 
     public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
@@ -72,7 +75,7 @@ public class TravellingSalesman {
             System.out.println(machin.id);
         }
 */
-        int n = 4;
+        int n = 9;
         int k = 2*n+1;
         HashMap<Long, HashMap<Long, Double>> len = new HashMap<>();
         for(Long i = 0L; i < k; ++i){
@@ -102,11 +105,15 @@ public class TravellingSalesman {
 */
 
         TravellingSalesman TS = new TravellingSalesman(n, len);
+        var debut = System.nanoTime();
         LinkedList<Vertex> L = TS.shortestRound();
+        var fin = System.nanoTime();
         for(Vertex v : L){
             System.out.print(v.getId());
             System.out.print("  ");
         }
+        System.out.println(" ");
+        System.out.println((fin - debut)*0.000000001);
     }
 
     private Long warehouseNodeId;
@@ -167,10 +174,9 @@ public class TravellingSalesman {
     }
 
     private SubResult subProblem(Long start, Set<Long> vertices){
-        //System.out.println(subresults.keySet().size());
-        Paire<Long, Set<Long>> key = new Paire<>(start, vertices);
+        Paire<Long, Set<Long>> key = new Paire<>(start, new TreeSet<>(vertices));
+
         if(subresults.containsKey(key)) {
-            System.out.println("TROUVE");
             return subresults.get(key);
         }
         if(vertices.isEmpty()){
@@ -190,23 +196,6 @@ public class TravellingSalesman {
         subResult.setPath(new LinkedList<>(subResult.getPath()));
         subResult.add(start);
 
-        /*
-        System.out.print("start : ");
-        System.out.println(start);
-        System.out.print("vertices : ");
-        for(Long a : vertices){
-            System.out.print(a);
-            System.out.print("  ");
-        }
-        System.out.println(" ");
-        System.out.print("path : ");
-        for(Long a : subResult.getPath()){
-            System.out.print(a);
-            System.out.print("  ");
-        }
-        System.out.println(" ");
-
-         */
         subresults.put(key, subResult);
         return subResult;
     }
