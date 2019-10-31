@@ -12,7 +12,7 @@ public class Round {
     private int startDateInSeconds;
 
 
-    Round(long warehouseNodeId, int startDateInSeconds, CityMap map, DeliveryMap deliveries){
+    public Round(long warehouseNodeId, int startDateInSeconds, CityMap map, DeliveryMap deliveries){
         this.warehouseNodeId = warehouseNodeId;
         this.startDateInSeconds = startDateInSeconds;
         this.steps = new ArrayList<Step>();
@@ -31,7 +31,7 @@ public class Round {
 
     public List<Step> getSteps() { return steps; }
 
-    void addStep(Step step){
+    public void addStep(Step step){
 
     }
 }

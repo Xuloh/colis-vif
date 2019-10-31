@@ -8,21 +8,6 @@ import fr.insa.colisvif.model.Section;
 import java.util.*;
 
 public class ShortestPaths {
-    static class PrevAndLength {
-        private Long prev;
-        private double length;
-
-        PrevAndLength(){
-            prev = null;
-            length = -1;
-        }
-
-        Long getPrev() { return prev; }
-        double getLength() { return length; }
-        void setPrev(Long prev) { this.prev = prev; }
-        void setLength(double length) { this.length = length; }
-    }
-
     private Long warehouseNodeId;
     private HashMap<Long, HashMap<Long, PrevAndLength>> pathsFromVertices;
 
@@ -38,11 +23,26 @@ public class ShortestPaths {
     }
 
     public Long getWarehouseNodeId() { return warehouseNodeId; }
-    //public HashMap<Long, HashMap<Long, PrevAndLength>> getPathsFromVertices() { return pathsFromVertices; }
+    // public HashMap<Long, HashMap<Long, PrevAndLength>> getPathsFromVertices() { return pathsFromVertices; }
     public double getLength(Long vertex1Id, Long vertex2Id){
         return pathsFromVertices.get(vertex1Id).get(vertex2Id).getLength();
     }
     public Set<Long> getVertices() { return pathsFromVertices.keySet(); }
+
+    public void show(){
+        System.out.print("Warehouse : ");
+        System.out.println(warehouseNodeId);
+        System.out.println("Lengths : ");
+        for(Long start : pathsFromVertices.keySet()){
+            for(Long stop : pathsFromVertices.keySet()){
+                System.out.print(start);
+                System.out.print(" -> ");
+                System.out.print(stop);
+                System.out.print("   ");
+                System.out.println(pathsFromVertices.get(start).get(stop).getLength());
+            }
+        }
+    }
 
     private void dijkstra(CityMap map, Long start){
         HashMap<Long, PrevAndLength> pathsFromStart = new HashMap<>();
@@ -69,5 +69,20 @@ public class ShortestPaths {
             }
         }
         pathsFromVertices.put(start, pathsFromStart);
+    }
+
+    static class PrevAndLength {
+        private Long prev;
+        private double length;
+        /* PP = package private me cassez pas les couilles merci */
+        /*PP*/ PrevAndLength(){
+            prev = null;
+            length = -1;
+        }
+
+        /*PP*/ Long getPrev() { return prev; }
+        /*PP*/ double getLength() { return length; }
+        /*PP*/ void setPrev(Long prev) { this.prev = prev; }
+        /*PP*/ void setLength(double length) { this.length = length; }
     }
 }

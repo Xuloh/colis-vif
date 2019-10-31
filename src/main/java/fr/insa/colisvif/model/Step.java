@@ -16,7 +16,7 @@ public class Step {
     public boolean isPickUp() { return type; }
     public boolean isDropOff() { return !type; }
 
-    Step(List<Section> sections, Boolean type, int arrivalDateInSeconds, int durationInSeconds){
+    public Step(List<Section> sections, Boolean type, int arrivalDateInSeconds, int durationInSeconds){
         this.sections = sections;
         this.type = type;
         this.arrivalDateInSeconds = arrivalDateInSeconds;

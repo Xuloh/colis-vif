@@ -1,9 +1,15 @@
 package fr.insa.colisvif.algos;
 
-import fr.insa.colisvif.model.Delivery;
-import fr.insa.colisvif.model.DeliveryMap;
+import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.util.Paire;
+import fr.insa.colisvif.xml.DeliveryMapParserXML;
+import javafx.util.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class TravellingSalesman {
@@ -39,6 +45,70 @@ public class TravellingSalesman {
         }
     }
 
+    public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
+        /*
+        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/Tests/map1.xml");
+        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
+        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/Tests/delivery1.xml");
+        DeliveryMap deliveries = new DeliveryMapFactory(new DeliveryMapParserXML()).createDeliveryMapFromXML(file);
+
+
+        for(Long node : map.getMapNode().keySet()){
+            System.out.println(node);
+            for(Section section : map.getMapNode().get(node).getSuccessors()){
+                System.out.print("->");
+                System.out.print(section.getDestination());
+                System.out.print("   ");
+                System.out.println(section.getLength());
+            }
+            System.out.println("");
+        }
+
+
+        ShortestPaths SP = new ShortestPaths(map, deliveries);
+        TravellingSalesman TSP = new TravellingSalesman(deliveries, SP);
+        LinkedList<Vertex> truc = TSP.shortestRound();
+        for(Vertex machin : truc){
+            System.out.println(machin.id);
+        }
+*/
+        int n = 4;
+        int k = 2*n+1;
+        HashMap<Long, HashMap<Long, Double>> len = new HashMap<>();
+        for(Long i = 0L; i < k; ++i){
+            len.put(i, new HashMap<>());
+        }
+
+        for(Long i = 0L; i<k; ++i){
+            for(Long j=0L; j<k; ++j){
+                len.get(i).put(j, Math.abs(Math.cos(i) + Math.sin(j)) + 0.001);
+            }
+        }
+
+        /*
+        for(Long i = 0L; i < k * k; ++i){
+            len.get(i / k).put(i % k, (double) (i + 1L));
+        }
+
+        for(Long i = 0L; i < k; ++i){
+            for(Long j = 0L; j < k; ++j){
+                System.out.print(i);
+                System.out.print(" -> ");
+                System.out.print(j);
+                System.out.print("   ");
+                System.out.println(len.get(i).get(j));
+            }
+        }
+*/
+
+        TravellingSalesman TS = new TravellingSalesman(n, len);
+        LinkedList<Vertex> L = TS.shortestRound();
+        for(Vertex v : L){
+            System.out.print(v.getId());
+            System.out.print("  ");
+        }
+    }
+
     private Long warehouseNodeId;
     private HashMap<Long, Long> dropOffs;
     private HashMap<Long, HashMap<Long, Double>> lengths;
@@ -60,6 +130,16 @@ public class TravellingSalesman {
             }
             lengths.put(vertex1id, lengthsFromV1);
         }
+    }
+
+    public TravellingSalesman(int n, HashMap<Long, HashMap<Long, Double>> len){
+        warehouseNodeId = 0L;
+        subresults = new HashMap<>();
+        dropOffs = new HashMap<>();
+        for(long i = 1; i < 2 * n; i+=2){
+            dropOffs.put(i, i+1);
+        }
+        lengths = len;
     }
 
     private void update(Long start, Long id, SubResult subResult, SubResult candidate){
@@ -87,16 +167,16 @@ public class TravellingSalesman {
     }
 
     private SubResult subProblem(Long start, Set<Long> vertices){
+        //System.out.println(subresults.keySet().size());
         Paire<Long, Set<Long>> key = new Paire<>(start, vertices);
         if(subresults.containsKey(key)) {
+            System.out.println("TROUVE");
             return subresults.get(key);
         }
-        if(vertices.size() == 1){
-            Long l = vertices.iterator().next();
+        if(vertices.isEmpty()){
             SubResult subResult = new SubResult();
-            subResult.add(l);
             subResult.add(start);
-            subResult.setLength(lengths.get(start).get(l));
+            subResult.setLength(0);
             subresults.put(key, subResult);
             return subResult;
         }
@@ -109,12 +189,30 @@ public class TravellingSalesman {
         }
         subResult.setPath(new LinkedList<>(subResult.getPath()));
         subResult.add(start);
+
+        /*
+        System.out.print("start : ");
+        System.out.println(start);
+        System.out.print("vertices : ");
+        for(Long a : vertices){
+            System.out.print(a);
+            System.out.print("  ");
+        }
+        System.out.println(" ");
+        System.out.print("path : ");
+        for(Long a : subResult.getPath()){
+            System.out.print(a);
+            System.out.print("  ");
+        }
+        System.out.println(" ");
+
+         */
         subresults.put(key, subResult);
         return subResult;
     }
 
     public LinkedList<Vertex> shortestRound(){
-        LinkedList<Long> L = subProblem(warehouseNodeId, lengths.keySet()).getPath();
+        LinkedList<Long> L = subProblem(warehouseNodeId, dropOffs.keySet()).getPath();
         LinkedList<Vertex> V = new LinkedList<>();
         for( Long l : L){
             V.add(new Vertex(l, dropOffs.containsKey(l)));
