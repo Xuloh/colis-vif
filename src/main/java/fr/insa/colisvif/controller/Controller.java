@@ -1,10 +1,7 @@
 package fr.insa.colisvif.controller;
 
 import fr.insa.colisvif.exception.IdError;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.CityMapFactory;
-import fr.insa.colisvif.model.DeliveryMap;
-import fr.insa.colisvif.model.DeliveryMapFactory;
+import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.view.MainController;
 import org.xml.sax.SAXException;
@@ -50,9 +47,10 @@ public class Controller {
         }
     }
 
-    public void openDeliveryMap(File file) {
+    public void openDeliveryMap(File file, CityMap cityMap) {
         try {
-            this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file);
+            this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
+            this.mainController.writeImpossibleDelivery(this.deliveryMap);
             this.mainController.writeDeliveries(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -75,7 +73,7 @@ public class Controller {
         this.currentState.loadCityMap(this, mainController, file);
     }
 
-    public void loadDeliveryMap() {
-        this.currentState.loadDeliveryMap(this, mainController);
+    public void loadDeliveryMap(File file, CityMap cityMap) {
+        this.currentState.loadDeliveryMap(this, mainController, file, cityMap);
     }
 }

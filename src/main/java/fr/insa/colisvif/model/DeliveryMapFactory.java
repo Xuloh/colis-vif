@@ -24,13 +24,17 @@ public class DeliveryMapFactory {
     public DeliveryMapFactory() {
     }
 
-    public DeliveryMap createDeliveryMapFromXML(File file) throws IOException, SAXException, ParserConfigurationException {
+    public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws IOException, SAXException, ParserConfigurationException {
         Element root = loadFile(file);
         DeliveryMap deliveryMap = new DeliveryMap();
         List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery(root);
         Pair<Long, Integer> warehouse = readWarehouse(root);
         for (Quadruplet<Long, Long, Integer, Integer> delivery: deliveryList) {
-            deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(), delivery.getThird(), delivery.getFourth());
+            if (cityMap.getMapNode().containsKey(delivery.getFirst()) && cityMap.getMapNode().containsKey(delivery.getSecond())) {
+                deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(), delivery.getThird(), delivery.getFourth());
+            } else {
+                deliveryMap.createImpossibleDelivery(delivery.getFirst(), delivery.getSecond(), delivery.getThird(), delivery.getFourth());
+            }
         }
         deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
         return deliveryMap;
