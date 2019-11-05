@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class CommandList {
 
     private LinkedList<Command> pastCommands;
-    
+
     private LinkedList<Command> currentCommands;
 
     public CommandList() {
