@@ -26,8 +26,9 @@ public class Controller {
     public void openFile(File file) {
         try {
             this.map = this.factory.createCityMapFromXMLFile(file);
+            this.mainController.setCityMap(map);
             this.mainController.clearMap();
-            this.mainController.drawMap(this.map);
+            this.mainController.drawMap();
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
