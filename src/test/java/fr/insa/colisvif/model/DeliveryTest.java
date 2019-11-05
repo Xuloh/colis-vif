@@ -28,7 +28,7 @@ public class DeliveryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration3() {
-        Delivery delivery = new Delivery(100, 100, -10,-10);
+        Delivery delivery = new Delivery(100, 101, -10,-10);
     }
 
     @Test
@@ -104,5 +104,9 @@ public class DeliveryTest {
 
     @Test
     public void testToString() {
+        Delivery delivery = new Delivery(100, 101, 10,20);
+        assertEquals("pickUpNodeId : 100 | deliveryNodeId : 101 | pickUpDuration : 10 | deliveryDuration : 20 | isPicked : false\n"
+                ,delivery.toString());
     }
+
 }
