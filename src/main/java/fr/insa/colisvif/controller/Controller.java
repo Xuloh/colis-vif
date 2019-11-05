@@ -3,12 +3,16 @@ package fr.insa.colisvif.controller;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
+import fr.insa.colisvif.model.DeliveryMap;
+import fr.insa.colisvif.model.DeliveryMapFactory;
+import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.view.MainController;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Controller {
 
@@ -20,23 +24,39 @@ public class Controller {
 
     private CityMap map;
 
-    private CityMapFactory factory;
+    private CityMapFactory cityMapFactory;
+
+    private DeliveryMapFactory deliveryMapFactory;
 
     private MainController mainController;
 
     private State currentState;
 
+    private DeliveryMap deliveryMap;
+
     public Controller() {
         this.map = null;
-        this.factory = new CityMapFactory();
+        this.cityMapFactory = new CityMapFactory();
         this.currentState = initialState;
+        this.deliveryMapFactory = new DeliveryMapFactory();
     }
 
     public void openFile(File file) {
         try {
-            this.map = this.factory.createCityMapFromXMLFile(file);
+            this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
             this.mainController.setCityMap(map);
+            this.mainController.clearMap();
+            this.mainController.drawMap();
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openDeliveryMap(File file) {
+        try {
+            this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file);
+            this.mainController.writeDeliveries(this.deliveryMap);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }

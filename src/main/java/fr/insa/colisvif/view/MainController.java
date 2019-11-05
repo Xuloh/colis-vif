@@ -2,12 +2,14 @@ package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Section;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -33,6 +35,9 @@ public class MainController {
     private MenuItem openMap;
 
     @FXML
+    private MenuItem openDeliveryMap;
+
+    @FXML
     private MenuItem close;
 
     @FXML
@@ -40,6 +45,9 @@ public class MainController {
 
     @FXML
     private Canvas canvas;
+
+    @FXML
+    private ListView textualView;
 
     private Stage stage;
 
@@ -58,11 +66,19 @@ public class MainController {
 
     public void initialize() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Ouvrir une carte");
+
+        textualView.getItems().add("test");
 
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
+            fileChooser.setTitle("Ouvrir une carte");
             File file = fileChooser.showOpenDialog(this.stage);
             this.controller.loadCityMap(file);
+        });
+
+        this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
+            fileChooser.setTitle("Ouvrir un plan de livraison");
+            File file = fileChooser.showOpenDialog(this.stage);
+            this.controller.openDeliveryMap(file);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
@@ -78,6 +94,10 @@ public class MainController {
     public void windowResized() {
         this.clearMap();
         this.drawMap();
+    }
+
+    public void writeDeliveries(DeliveryMap deliveryMap) {
+        textualView.getItems().add("test");
     }
 
     public void clearMap() {
