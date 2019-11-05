@@ -75,7 +75,7 @@ public class TravellingSalesman {
             System.out.println(machin.id);
         }
 */
-        int n = 9;
+        int n = 11;
         int k = 2*n+1;
         HashMap<Long, HashMap<Long, Double>> len = new HashMap<>();
         for(Long i = 0L; i < k; ++i){
