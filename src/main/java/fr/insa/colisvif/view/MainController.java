@@ -51,7 +51,7 @@ public class MainController {
 
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
             File file = fileChooser.showOpenDialog(this.stage);
-            this.controller.openFile(file);
+            this.controller.loadCityMap(file);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());

@@ -30,8 +30,6 @@ public class Controller {
     public void openFile(File file) {
         try {
             this.map = this.factory.createCityMapFromXMLFile(file);
-            this.mainController.clearMap();
-            this.mainController.drawMap(this.map);
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
@@ -45,7 +43,11 @@ public class Controller {
         this.currentState = currentState;
     }
 
-    public void loadCityMap() { this.currentState.loadCityMap(this, mainController); }
+    public CityMap getMap() {
+        return map;
+    }
+
+    public void loadCityMap(File file) { this.currentState.loadCityMap(this, mainController, file); }
 
     public void loadDeliveryMap() { this.currentState.loadDeliveryMap(this, mainController); }
 }
