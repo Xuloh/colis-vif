@@ -3,12 +3,14 @@ package fr.insa.colisvif.model;
 public class Delivery {
 
     private long pickUpNodeId;
+
     private long deliveryNodeId;
+
     private int pickUpDuration;
+
     private int deliveryDuration;
+
     private boolean isPicked;
-
-
 
     public Delivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int deliveryDuration) {
         this.pickUpNodeId = pickUpNodeId;
@@ -21,7 +23,7 @@ public class Delivery {
             throw new IllegalArgumentException();
         }
 
-        if (this.pickUpDuration <= 0 || this.deliveryDuration <= 0) {
+        if (this.pickUpDuration < 0 || this.deliveryDuration < 0) {
             throw new IllegalArgumentException();
         }
     }
@@ -58,7 +60,9 @@ public class Delivery {
         this.deliveryDuration = deliveryDuration;
     }
 
-    public boolean isPicked() { return isPicked; }
+    public boolean isPicked() {
+        return isPicked;
+    }
 
     public void setToPickedUp(boolean value) {
         this.isPicked = value;

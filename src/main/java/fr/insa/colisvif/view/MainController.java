@@ -98,6 +98,8 @@ public class MainController {
 
     public void writeDeliveries(DeliveryMap deliveryMap) {
         textualView.getItems().add("test");
+        textualView.getItems().add(deliveryMap.getStartDateInSeconds());
+        textualView.getItems().add(deliveryMap.getWarehouseNodeId());
     }
 
     public void clearMap() {
