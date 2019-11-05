@@ -1,16 +1,14 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.DeliveryMap;
-import fr.insa.colisvif.model.Node;
-import fr.insa.colisvif.model.Section;
+import fr.insa.colisvif.model.*;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -49,6 +47,9 @@ public class MainController {
     @FXML
     private ListView textualView;
 
+    @FXML
+    private TextArea statusView;
+
     private Stage stage;
 
     private Controller controller;
@@ -78,7 +79,7 @@ public class MainController {
         this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir un plan de livraison");
             File file = fileChooser.showOpenDialog(this.stage);
-            this.controller.openDeliveryMap(file);
+            this.controller.loadDeliveryMap(file, map);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
@@ -98,6 +99,21 @@ public class MainController {
 
     public void writeDeliveries(DeliveryMap deliveryMap) {
         textualView.getItems().add("test");
+    }
+
+    public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
+        StringBuilder builder = new StringBuilder("");
+        builder.append(statusView.getText());
+        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
+            builder.append("Bad Ones : ");
+        }
+        for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
+            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDeliveryNodeId() + "/");
+        }
+        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
+            builder.append("\n");
+        }
+        statusView.setText(builder.toString());
     }
 
     public void clearMap() {

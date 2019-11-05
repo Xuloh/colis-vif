@@ -49,6 +49,6 @@
       </BorderPane>
    </right>
    <bottom>
-      <TextArea prefHeight="150.0" prefWidth="200.0" text="Vue Statut" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="statusView" prefHeight="150.0" prefWidth="200.0" text="" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
