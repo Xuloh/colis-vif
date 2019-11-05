@@ -13,10 +13,13 @@ import java.io.IOException;
 public class Controller {
 
     private CityMap map;
-
     private CityMapFactory factory;
-
     private MainController mainController;
+    private State currentState;
+
+    protected final InitialState initialStat = new InitialState();
+    protected final CityMapLoadedState cityMapLoadedState = new CityMapLoadedState();
+    protected final DeliveryMapLoadedState deliveryMapLoadedState = new DeliveryMapLoadedState();
 
     public Controller() {
         this.map = null;

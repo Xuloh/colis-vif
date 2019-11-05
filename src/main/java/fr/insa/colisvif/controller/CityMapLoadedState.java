@@ -2,7 +2,7 @@ package fr.insa.colisvif.controller;
 
 import fr.insa.colisvif.view.MainController;
 
-public class MapLoadedState implements State{
+public class CityMapLoadedState implements State{
 
     @Override
     public void loadCityMap(Controller c, MainController mc) {
