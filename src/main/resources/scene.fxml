@@ -5,25 +5,24 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/8.0.999-ea"
-            xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1">
     <top>
-        <MenuBar fx:id="menuBar" prefHeight="29.0" prefWidth="800" BorderPane.alignment="CENTER">
+        <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="Fichier">
                     <items>
-                        <MenuItem fx:id="openMap" mnemonicParsing="false" text="Ouvrir un plan de ville"/>
-                        <MenuItem fx:id="close" mnemonicParsing="false" text="Fermer"/>
+                        <MenuItem fx:id="openMap" mnemonicParsing="false" text="Ouvrir un plan de ville" />
+                        <MenuItem fx:id="close" mnemonicParsing="false" text="Fermer" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
     </top>
     <center>
-        <Canvas fx:id="canvas" height="371.0" width="800.0" BorderPane.alignment="CENTER"/>
+        <Pane fx:id="canvasPane" minHeight="0.0" minWidth="0.0">
+            <Canvas fx:id="canvas" BorderPane.alignment="CENTER" />
+        </Pane>
     </center>
 </BorderPane>
