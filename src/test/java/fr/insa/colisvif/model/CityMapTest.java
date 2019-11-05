@@ -10,9 +10,9 @@ public class CityMapTest {
     @Test
     public void testUpdateLatMax() {
         CityMap citymap = new CityMap();
-        double LONGMIN = citymap.getLongMin();
+        double LONGMIN = citymap.getLngMin();
         citymap.createNode(2405632, -60, 180);
-        assert(-60 == citymap.getLatMax() && citymap.getLongMin() == LONGMIN);
+        assert(-60 == citymap.getLatMax() && citymap.getLngMin() == LONGMIN);
     }
 
     @Test
@@ -20,14 +20,14 @@ public class CityMapTest {
         CityMap citymap = new CityMap();
         double LATMAX = citymap.getLatMax();
         citymap.createNode(2405632, -90, 120);
-        assert(120 == citymap.getLongMin() && citymap.getLatMax() == LATMAX);
+        assert(120 == citymap.getLngMin() && citymap.getLatMax() == LATMAX);
     }
 
     @Test
     public void testUpdateLatMaxLongMin() {
         CityMap citymap = new CityMap();
         citymap.createNode(2405632, -60, 120);
-        assert(-60 == citymap.getLatMax() && citymap.getLongMin() == 120) ;
+        assert(-60 == citymap.getLatMax() && citymap.getLngMin() == 120) ;
     }
 
     @Test

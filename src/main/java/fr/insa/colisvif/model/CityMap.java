@@ -5,9 +5,13 @@ import fr.insa.colisvif.exception.IdError;
 import java.util.*;
 
 public class CityMap {
+    private static final int LNG_MIN = -180;
+
     private static final int LNG_MAX = 180;
 
     private static final int LAT_MIN = -90;
+
+    private static final int LAT_MAX = 90;
 
     private double lngMin;
 
@@ -22,8 +26,10 @@ public class CityMap {
     private Map<String, List<Section>> mapSection;
 
     public CityMap() {
+        this.latMin = LAT_MAX;
         this.latMax = LAT_MIN;
         this.lngMin = LNG_MAX;
+        this.lngMax = LNG_MIN;
         this.mapNode = new HashMap<>();
         this.mapSection = new HashMap<>();
     }
@@ -32,12 +38,20 @@ public class CityMap {
         Node newNode = new Node(id, latitude, longitude);
         this.mapNode.put(id, newNode);
 
+        if (latitude < this.latMin) {
+            this.latMin = latitude;
+        }
+
         if (latitude > this.latMax) {
             this.latMax = latitude;
         }
 
         if (longitude < this.lngMin) {
             this.lngMin = longitude;
+        }
+
+        if (longitude > this.lngMax) {
+            this.lngMax = longitude;
         }
     }
 
@@ -55,16 +69,16 @@ public class CityMap {
         this.mapNode.get(origin).addToSuccessors(newSection);
     }
 
-    public void setLngMin(double longitude) {
-        this.lngMin = longitude;
-    }
-
-    public void setLatMax(double latitude) {
-        this.latMax = latitude;
-    }
-
     public double getLngMin() {
         return this.lngMin;
+    }
+
+    public double getLngMax() {
+        return this.lngMax;
+    }
+
+    public double getLatMin() {
+        return this.latMin;
     }
 
     public double getLatMax() {
