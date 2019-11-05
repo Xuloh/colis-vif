@@ -7,6 +7,11 @@ import static org.junit.Assert.*;
 
 public class NodeTest {
 
+    @Test
+    public void testNodeGood() {
+        Node testNode = new Node(2405632, 50, 24);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testLatitudeLowBound() {
         Node testNode = new Node(2405632, -120, 24);

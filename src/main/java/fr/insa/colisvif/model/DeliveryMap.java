@@ -23,6 +23,9 @@ public class DeliveryMap {
     public void createWarehouse(long positionId, int startDateInSeconds){
         this.warehouseNodeId = positionId;
         this.startDateInSeconds = startDateInSeconds;
+        if (this.startDateInSeconds < 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public List<Delivery> getDeliveryList() {

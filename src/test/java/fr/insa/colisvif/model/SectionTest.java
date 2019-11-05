@@ -5,6 +5,11 @@ import static org.junit.Assert.*;
 
 public class SectionTest {
 
+    @Test
+    public void testSectionGood() {
+        Section section = new Section(20,"Rue de la Paix",100,101);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testSectionNegativeLength() {
         Section section = new Section(-20,"Rue de la Paix",100,101);
