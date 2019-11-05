@@ -1,6 +1,7 @@
 package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
@@ -13,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +23,17 @@ public class CityMapFactory {
     private File xmlFile;
 
 
+
     public CityMapFactory() {
 
     }
 
     //TODO on doit pouvoir passer le fichier en paramètre !
     public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdError {
-        //this.cityMapParserXML.loadFile(file);
-        loadFile(file);
+        Element root = loadFile(file);
         CityMap cityMap = new CityMap();
-        List<Triplet<Long, Double, Double>> nodes = readNodes();
-        List<Quadruplet<Double, String, Long, Long>> sections = readSections();
-        //List<Triplet<Long, Double, Double>> nodes = this.cityMapParserXML.readNodes();
-        //List<Quadruplet<Double, String, Long, Long>> sections = this.cityMapParserXML.readSections();
+        List<Triplet<Long, Double, Double>> nodes = readNodes(root);
+        List<Quadruplet<Double, String, Long, Long>> sections = readSections(root);
         for (Triplet<Long, Double, Double> node : nodes) {
             cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
         }
@@ -43,19 +43,29 @@ public class CityMapFactory {
         return cityMap;
     }
 
-
-
-    public void loadFile(File file) {
+    public Element loadFile(File file) throws IOException, ParserConfigurationException, SAXException {
         this.xmlFile = file;
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getAbsolutePath() + " not found.");
+        }
+
+        if (!file.canRead()) {
+            throw new InvalidFilePermissionException(file.getAbsolutePath() + " : file not readable");
+        }
+
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(this.xmlFile);
+        Element root = document.getDocumentElement();
+
+        return root;
     }
 
 
-    public List<Triplet<Long, Double, Double>> readNodes() {
+    public List<Triplet<Long, Double, Double>> readNodes(Element root) {
         ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<>();
+
         try {
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = docBuilder.parse(this.xmlFile);
-            Element root = document.getDocumentElement();
             if (root.getNodeName().equals("reseau")) {
                 NodeList nodeList = root.getElementsByTagName("noeud");
                 for (int i = 0; i < nodeList.getLength(); i++) {
@@ -68,18 +78,16 @@ public class CityMapFactory {
                 }
             } else
                 throw new XMLException("Document non conforme");
-        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+        } catch (XMLException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    public List<Quadruplet<Double, String, Long, Long>> readSections() {
+    public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) {
         ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
         try {
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = docBuilder.parse(this.xmlFile);
-            Element root = document.getDocumentElement();
+
             if (root.getNodeName().equals("reseau")) {
                 NodeList nodeList = root.getElementsByTagName("troncon");
                 for (int i = 0; i < nodeList.getLength(); i++) {
@@ -94,7 +102,7 @@ public class CityMapFactory {
             } else {
                 throw new XMLException("Document non conforme");
             }
-        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+        } catch (XMLException e) {
             e.printStackTrace();
         }
         return result;

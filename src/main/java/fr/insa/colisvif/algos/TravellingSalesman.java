@@ -3,7 +3,7 @@ package fr.insa.colisvif.algos;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.util.Paire;
-import fr.insa.colisvif.xml.DeliveryMapParserXML;
+//import fr.insa.colisvif.xml.DeliveryMapParserXML;
 import javafx.util.Pair;
 import org.xml.sax.SAXException;
 
