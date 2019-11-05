@@ -5,34 +5,48 @@ import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Section;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class ShortestPaths {
-    static class PrevAndLength {
-        private Long prev;
-        private double length;
+    private Long warehouseNodeId;
+    private HashMap<Long, HashMap<Long, PrevAndLength>> pathsFromVertices;
 
-        PrevAndLength(){
-            prev = null;
-            length = -1;
+    public ShortestPaths(CityMap map, DeliveryMap deliveries){
+        warehouseNodeId = deliveries.getWarehouseNodeId();
+        pathsFromVertices = new HashMap<>();
+
+        dijkstra(map, deliveries.getWarehouseNodeId());
+        for(Delivery delivery : deliveries.getDeliveryList()){
+            dijkstra(map, delivery.getPickUpNodeId());
+            dijkstra(map, delivery.getDeliveryNodeId());
         }
-    
-        Long getPrev() { return prev; }
-        double getLength() { return length; }
-        void setPrev(Long prev) { this.prev = prev; }
-        void setLength(double length) { this.length = length; }
     }
-    private Map<Long, Map<Long, PrevAndLength>> paths;
 
-    public Map<Long, Map<Long, PrevAndLength>> getPaths() { return paths; }
+    public Long getWarehouseNodeId() { return warehouseNodeId; }
+    // public HashMap<Long, HashMap<Long, PrevAndLength>> getPathsFromVertices() { return pathsFromVertices; }
+    public double getLength(Long vertex1Id, Long vertex2Id){
+        return pathsFromVertices.get(vertex1Id).get(vertex2Id).getLength();
+    }
+    public Set<Long> getVertices() { return pathsFromVertices.keySet(); }
 
-    public void dijkstra(CityMap map, Long start){
-        Map<Long, PrevAndLength> pathsFromStart = new HashMap<>();
+    public void show(){
+        System.out.print("Warehouse : ");
+        System.out.println(warehouseNodeId);
+        System.out.println("Lengths : ");
+        for(Long start : pathsFromVertices.keySet()){
+            for(Long stop : pathsFromVertices.keySet()){
+                System.out.print(start);
+                System.out.print(" -> ");
+                System.out.print(stop);
+                System.out.print("   ");
+                System.out.println(pathsFromVertices.get(start).get(stop).getLength());
+            }
+        }
+    }
+
+    private void dijkstra(CityMap map, Long start){
+        HashMap<Long, PrevAndLength> pathsFromStart = new HashMap<>();
         for(Long key : map.getMapNode().keySet()){
-            //System.out.println(key);
             pathsFromStart.put(key, new PrevAndLength());
         }
         pathsFromStart.get(start).setLength(0);
@@ -54,15 +68,21 @@ public class ShortestPaths {
                 }
             }
         }
-
-        paths.put(start, pathsFromStart);
+        pathsFromVertices.put(start, pathsFromStart);
     }
 
-    public void dijkstra(CityMap map, DeliveryMap deliveries){
-        dijkstra(map, deliveries.getWarehouseNodeId());
-        for(Delivery delivery : deliveries.getDeliveryList()){
-            dijkstra(map, delivery.getPickUpNodeId());
-            dijkstra(map, delivery.getDeliveryNodeId());
+    static class PrevAndLength {
+        private Long prev;
+        private double length;
+        /* PP = package private me cassez pas les couilles merci */
+        /*PP*/ PrevAndLength(){
+            prev = null;
+            length = -1;
         }
+
+        /*PP*/ Long getPrev() { return prev; }
+        /*PP*/ double getLength() { return length; }
+        /*PP*/ void setPrev(Long prev) { this.prev = prev; }
+        /*PP*/ void setLength(double length) { this.length = length; }
     }
 }
