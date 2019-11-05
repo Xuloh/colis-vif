@@ -1,27 +1,32 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
-import fr.insa.colisvif.xml.DeliveryMapParserXML;
 import javafx.util.Pair;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryMapFactory {
-    private DeliveryMapParserXML deliveryRequestParserXML;
+    private File xmlFile;
 
-    public DeliveryMapFactory(DeliveryMapParserXML deliveryRequestParserXML) {
-        this.deliveryRequestParserXML = deliveryRequestParserXML;
+    public DeliveryMapFactory() {
     }
 
     public DeliveryMap createDeliveryMapFromXML(File file) throws IOException, SAXException, ParserConfigurationException {
-        this.deliveryRequestParserXML.loadFile(file);
+        loadFile(file);
         DeliveryMap deliveryMap = new DeliveryMap();
-        List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = this.deliveryRequestParserXML.readDelivery();
-        Pair<Long,Integer> warehouse = this.deliveryRequestParserXML.readWarehouse();
+        List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery();
+        Pair<Long,Integer> warehouse = readWarehouse();
         for (Quadruplet<Long, Long, Integer, Integer> delivery: deliveryList){
             deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(), delivery.getThird(), delivery.getFourth());
         }
@@ -29,19 +34,58 @@ public class DeliveryMapFactory {
         return deliveryMap;
     }
 
-    /*
-        public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdError {
-        this.cityMapParserXML.loadFile(file);
-        CityMap cityMap = new CityMap();
-        List<Triplet<Long, Double, Double>> nodes = this.cityMapParserXML.readNodes();
-        List<Quadruplet<Double, String, Long, Long>> sections = this.cityMapParserXML.readSections();
-        for (Triplet<Long, Double, Double> node : nodes) {
-            cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
-        }
-        for(Quadruplet<Double, String, Long, Long> section : sections) {
-            cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
-        }
-        return cityMap;
+    public void loadFile(File file) {
+        this.xmlFile = file;
     }
-     */
+
+
+    public List<Quadruplet<Long, Long, Integer, Integer>> readDelivery() {
+        List<Quadruplet<Long, Long, Integer, Integer>> result = new ArrayList<>();
+        try {
+            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = docBuilder.parse(this.xmlFile);
+            Element root = document.getDocumentElement();
+            if (root.getNodeName().equals("demandeDeLivraisons")) {
+                NodeList deliveryList = root.getElementsByTagName("livraison");
+                for (int i = 0; i < deliveryList.getLength(); i++) {
+                    Element delivery = (Element) deliveryList.item(i);
+                    long pickUpNodeId = Long.parseLong(delivery.getAttribute("adresseEnlevement"));
+                    long deliveryNodeId = Long.parseLong(delivery.getAttribute("adresseLivraison"));
+                    int pickUpDuration = Integer.parseInt(delivery.getAttribute("dureeEnlevement"));
+                    int deliveryDuration = Integer.parseInt(delivery.getAttribute("dureeLivraison"));
+                    Quadruplet<Long, Long, Integer, Integer> newDelivery = new Quadruplet<>(pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
+                    result.add(newDelivery);
+                }
+            } else
+                throw new XMLException("Document non conforme");
+        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public Pair<Long,Integer> readWarehouse() {
+
+        try {
+            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = docBuilder.parse(this.xmlFile);
+            Element root = document.getDocumentElement();
+            if (root.getNodeName().equals("demandeDeLivraisons")) {
+                NodeList warehouseList = root.getElementsByTagName("entrepot");
+                Element warehouse = (Element) warehouseList.item(0);
+                long positionId = Long.parseLong(warehouse.getAttribute("adresse"));
+                int startDate = Integer.parseInt(warehouse.getAttribute("heureDepart"));
+                return new Pair(positionId,startDate);
+
+            } else {
+                throw new XMLException("Document non conforme");
+            }
+        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
+        return new Pair(0,0);
+
+    }
+
 }
