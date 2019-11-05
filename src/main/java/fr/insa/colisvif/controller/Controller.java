@@ -17,13 +17,14 @@ public class Controller {
     private MainController mainController;
     private State currentState;
 
-    protected final InitialState initialStat = new InitialState();
+    protected final InitialState initialState = new InitialState();
     protected final CityMapLoadedState cityMapLoadedState = new CityMapLoadedState();
     protected final DeliveryMapLoadedState deliveryMapLoadedState = new DeliveryMapLoadedState();
 
     public Controller() {
         this.map = null;
         this.factory = new CityMapFactory();
+        this.currentState = initialState;
     }
 
     public void openFile(File file) {
@@ -39,4 +40,12 @@ public class Controller {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public void loadCityMap() { this.currentState.loadCityMap(this, mainController); }
+
+    public void loadDeliveryMap() { this.currentState.loadDeliveryMap(this, mainController); }
 }
