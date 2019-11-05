@@ -12,23 +12,30 @@ import java.io.IOException;
 
 public class Controller {
 
+    protected final InitialState initialState = new InitialState();
+
+    protected final CityMapLoadedState cityMapLoadedState = new CityMapLoadedState();
+
+    protected final DeliveryMapLoadedState deliveryMapLoadedState = new DeliveryMapLoadedState();
+
     private CityMap map;
 
     private CityMapFactory factory;
 
     private MainController mainController;
 
+    private State currentState;
+
     public Controller() {
         this.map = null;
         this.factory = new CityMapFactory();
+        this.currentState = initialState;
     }
 
     public void openFile(File file) {
         try {
             this.map = this.factory.createCityMapFromXMLFile(file);
             this.mainController.setCityMap(map);
-            this.mainController.clearMap();
-            this.mainController.drawMap();
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
@@ -36,5 +43,21 @@ public class Controller {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public CityMap getMap() {
+        return map;
+    }
+
+    public void loadCityMap(File file) {
+        this.currentState.loadCityMap(this, mainController, file);
+    }
+
+    public void loadDeliveryMap() {
+        this.currentState.loadDeliveryMap(this, mainController);
     }
 }
