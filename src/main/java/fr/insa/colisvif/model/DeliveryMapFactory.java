@@ -1,5 +1,6 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
 import javafx.util.Pair;
@@ -12,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,28 +25,39 @@ public class DeliveryMapFactory {
     }
 
     public DeliveryMap createDeliveryMapFromXML(File file) throws IOException, SAXException, ParserConfigurationException {
-        loadFile(file);
+        Element root = loadFile(file);
         DeliveryMap deliveryMap = new DeliveryMap();
-        List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery();
-        Pair<Long,Integer> warehouse = readWarehouse();
-        for (Quadruplet<Long, Long, Integer, Integer> delivery: deliveryList){
+        List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery(root);
+        Pair<Long, Integer> warehouse = readWarehouse(root);
+        for (Quadruplet<Long, Long, Integer, Integer> delivery: deliveryList) {
             deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(), delivery.getThird(), delivery.getFourth());
         }
         deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
         return deliveryMap;
     }
 
-    public void loadFile(File file) {
+    public Element loadFile(File file) throws IOException, ParserConfigurationException, SAXException  {
         this.xmlFile = file;
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getAbsolutePath() + " not found.");
+        }
+
+        if (!file.canRead()) {
+            throw new InvalidFilePermissionException(file.getAbsolutePath() + " : file not readable");
+        }
+
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(this.xmlFile);
+        Element root = document.getDocumentElement();
+
+        return root;
     }
 
 
-    public List<Quadruplet<Long, Long, Integer, Integer>> readDelivery() {
+    public List<Quadruplet<Long, Long, Integer, Integer>> readDelivery(Element root) {
         List<Quadruplet<Long, Long, Integer, Integer>> result = new ArrayList<>();
         try {
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = docBuilder.parse(this.xmlFile);
-            Element root = document.getDocumentElement();
             if (root.getNodeName().equals("demandeDeLivraisons")) {
                 NodeList deliveryList = root.getElementsByTagName("livraison");
                 for (int i = 0; i < deliveryList.getLength(); i++) {
@@ -56,36 +69,38 @@ public class DeliveryMapFactory {
                     Quadruplet<Long, Long, Integer, Integer> newDelivery = new Quadruplet<>(pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
                     result.add(newDelivery);
                 }
-            } else
+            } else {
                 throw new XMLException("Document non conforme");
-        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+            }
+        } catch (XMLException e) {
             e.printStackTrace();
         }
         return result;
-
     }
 
-    public Pair<Long,Integer> readWarehouse() {
-
+    public Pair<Long, Integer> readWarehouse(Element root) {
         try {
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = docBuilder.parse(this.xmlFile);
-            Element root = document.getDocumentElement();
             if (root.getNodeName().equals("demandeDeLivraisons")) {
                 NodeList warehouseList = root.getElementsByTagName("entrepot");
                 Element warehouse = (Element) warehouseList.item(0);
                 long positionId = Long.parseLong(warehouse.getAttribute("adresse"));
-                int startDate = Integer.parseInt(warehouse.getAttribute("heureDepart"));
-                return new Pair(positionId,startDate);
-
+                String startDateString = warehouse.getAttribute("heureDepart");
+                int startDate = transformStartDateToSeconds(startDateString);
+                return new Pair(positionId, startDate);
             } else {
                 throw new XMLException("Document non conforme");
             }
-        } catch (ParserConfigurationException | XMLException | IOException | SAXException e) {
+        } catch (XMLException e) {
             e.printStackTrace();
         }
-        return new Pair(0,0);
-
+        return new Pair(0, 0);
     }
 
+    private int transformStartDateToSeconds(String startDate) {
+        String[] timeComponents = startDate.split(":");
+        int startInSeconds = Integer.parseInt(timeComponents[0]) * 3600
+                             + Integer.parseInt(timeComponents[1]) * 60
+                             + Integer.parseInt(timeComponents[2]);
+        return startInSeconds;
+    }
 }

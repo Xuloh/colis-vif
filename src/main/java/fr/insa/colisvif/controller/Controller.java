@@ -45,8 +45,6 @@ public class Controller {
         try {
             this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
             this.mainController.setCityMap(map);
-            this.mainController.clearMap();
-            this.mainController.drawMap();
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
