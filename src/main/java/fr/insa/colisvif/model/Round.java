@@ -1,8 +1,5 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.algos.ShortestPaths;
-import fr.insa.colisvif.algos.TravellingSalesman;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,27 +8,29 @@ public class Round {
     private long warehouseNodeId;
     private int startDateInSeconds;
 
-
-    public Round(long warehouseNodeId, int startDateInSeconds, CityMap map, DeliveryMap deliveries){
+    public long getWarehouseNodeId(){
+        return warehouseNodeId;
+    }
+    public void setWarehouseNodeId(long warehouseNodeId){
         this.warehouseNodeId = warehouseNodeId;
+    }
+    public int getStartDateInSeconds(){
+        return startDateInSeconds;
+    }
+    public void setStartDateInSeconds(int startDateInSeconds){
         this.startDateInSeconds = startDateInSeconds;
-        this.steps = new ArrayList<Step>();
-        ShortestPaths shortestPaths = new ShortestPaths(map, deliveries);
-        TravellingSalesman TSP = new TravellingSalesman(deliveries, shortestPaths);
-
+    }
+    public List<Step> getSteps(){
+        return steps;
     }
 
-    public long getWarehouseNodeId() { return warehouseNodeId; }
+    public Round(long warehouseNodeId, int startDateInSeconds){
+        steps = new ArrayList<>();
+        this.warehouseNodeId = warehouseNodeId;
+        this.startDateInSeconds = startDateInSeconds;
+    }
 
-    public void setWarehouseNodeId(long warehouseNodeId) { this.warehouseNodeId = warehouseNodeId; }
-
-    public int getStartDateInSeconds() { return startDateInSeconds; }
-
-    public void setStartDateInSeconds(int startDateInSeconds) { this.startDateInSeconds = startDateInSeconds; }
-
-    public List<Step> getSteps() { return steps; }
-
-    public void addStep(Step step){
-
+    public void pushStep(Step step){
+        steps.add(step);
     }
 }

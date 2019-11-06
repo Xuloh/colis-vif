@@ -1,5 +1,6 @@
 package fr.insa.colisvif.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Step {
@@ -16,10 +17,14 @@ public class Step {
     public boolean isPickUp() { return type; }
     public boolean isDropOff() { return !type; }
 
-    public Step(List<Section> sections, Boolean type, int arrivalDateInSeconds, int durationInSeconds){
-        this.sections = sections;
+    public Step(Boolean type, int durationInSeconds){
+        sections = new ArrayList<>();
         this.type = type;
-        this.arrivalDateInSeconds = arrivalDateInSeconds;
+        arrivalDateInSeconds = -1;
         this.durationInSeconds = durationInSeconds;
+    }
+
+    public void pushSection(Section section){
+        sections.add(section);
     }
 }

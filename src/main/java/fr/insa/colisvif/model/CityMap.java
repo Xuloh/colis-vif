@@ -12,6 +12,7 @@ public class CityMap {
     private double latMax;
     private Map<Long, Node> mapNode;
     private Map<String, List<Section>> mapSection;
+    private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
     public CityMap() {
         this.latMax = LAT_MIN;
@@ -72,6 +73,10 @@ public class CityMap {
         return this.mapSection;
     }
 
+    public Double getLength(Long start, Long finish){
+        return pathsFromVertices.get(start).getLength(finish);
+    }
+
     @Override
     public String toString() {
         String result = "Nodes : \n";
@@ -96,5 +101,55 @@ public class CityMap {
         }
 
         return result;
+    }
+
+    public void dijkstra(Long start){
+        PathsFromVertex pathsFromStart = new PathsFromVertex();
+
+        Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
+        PriorityQueue<Long> Q = new PriorityQueue<Long>(cmp);
+        Q.add(start);
+
+        while(!Q.isEmpty()){
+            Long node = Q.poll();
+            double length = pathsFromStart.getLength(node);
+            for(Section section : getMapNode().get(node).getSuccessors()){
+                double destinationLength = pathsFromStart.getLength(section.getDestination());
+                if(destinationLength == -1 || length + section.getLength() < destinationLength){
+                    pathsFromStart.setLength(section.getDestination(),length + section.getLength());
+                    pathsFromStart.setPrev(section.getDestination(), node);
+                    Q.remove(section.getDestination());
+                    Q.add(section.getDestination());
+                }
+            }
+        }
+
+        pathsFromVertices.put(start, pathsFromStart);
+    }
+
+    private class PathsFromVertex{
+        private HashMap<Long, Long> prevVertices;
+        private HashMap<Long, Double> lengths;
+
+        //No need to make a special constructor
+
+        private void addPrev(Long id, Long prev){
+            prevVertices.put(id, prev);
+        }
+        private void addLength(Long id, Double length){
+            lengths.put(id, length);
+        }
+        private Long getPrev(Long id){
+            return prevVertices.get(id);
+        }
+        private void setPrev(Long id, Long prev){
+            prevVertices.put(id, prev);
+        }
+        private Double getLength(Long id){
+            return lengths.get(id);
+        }
+        private void setLength(Long id, Double length){
+            lengths.put(id, length);
+        }
     }
 }

@@ -1,18 +1,15 @@
-package fr.insa.colisvif.algos;
+package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdError;
-import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.util.Paire;
-import fr.insa.colisvif.xml.DeliveryMapParserXML;
 import javafx.util.Pair;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class TravellingSalesman {
+public class VerticesGraph {
     static class Vertex{
         Long id;
         Boolean type; //0 if it is a pick up and 1 if it is a drop off
@@ -75,7 +72,7 @@ public class TravellingSalesman {
             System.out.println(machin.id);
         }
 */
-        int n = 11;
+        int n = 9;
         int k = 2*n+1;
         HashMap<Long, HashMap<Long, Double>> len = new HashMap<>();
         for(Long i = 0L; i < k; ++i){
@@ -104,7 +101,7 @@ public class TravellingSalesman {
         }
 */
 
-        TravellingSalesman TS = new TravellingSalesman(n, len);
+        VerticesGraph TS = new VerticesGraph(n, len);
         var debut = System.nanoTime();
         LinkedList<Vertex> L = TS.shortestRound();
         var fin = System.nanoTime();
@@ -114,6 +111,17 @@ public class TravellingSalesman {
         }
         System.out.println(" ");
         System.out.println((fin - debut)*0.000000001);
+
+
+//        var debut = System.nanoTime();
+//        var L = TS.naiveRound();
+//        var fin = System.nanoTime();
+//        for(Vertex v : L){
+//            System.out.print(v.getId());
+//            System.out.print("  ");
+//        }
+//        System.out.println(" ");
+//        System.out.println((fin - debut)*0.000000001);
     }
 
     private Long warehouseNodeId;
@@ -121,7 +129,7 @@ public class TravellingSalesman {
     private HashMap<Long, HashMap<Long, Double>> lengths;
     private HashMap<Paire<Long, Set<Long>>, SubResult> subresults;
 
-    public TravellingSalesman(DeliveryMap deliveries, ShortestPaths shortestPaths){
+    public VerticesGraph(CityMap map, DeliveryMap deliveries){
         warehouseNodeId = deliveries.getWarehouseNodeId();
         subresults = new HashMap<>();
         dropOffs = new HashMap<>();
@@ -130,16 +138,29 @@ public class TravellingSalesman {
         }
 
         lengths = new HashMap<>();
-        for(Long vertex1id : shortestPaths.getVertices()){
-            HashMap<Long, Double> lengthsFromV1 = new HashMap<>();
-            for(Long vertex2id : shortestPaths.getVertices()){
-                lengthsFromV1.put(vertex2id, shortestPaths.getLength(vertex1id, vertex2id));
+        lengths.put(warehouseNodeId, new HashMap<>());
+        map.dijkstra(warehouseNodeId);
+        for(Delivery delivery1 : deliveries.getDeliveryList()){
+            Long pickUp1 = delivery1.getPickUpNodeId();
+            Long dropOff1 = delivery1.getDeliveryNodeId();
+            lengths.put(pickUp1, new HashMap<>());
+            lengths.put(dropOff1, new HashMap<>());
+            map.dijkstra(pickUp1);
+            map.dijkstra(dropOff1);
+            for(Delivery delivery2 : deliveries.getDeliveryList()){
+                Long pickUp2 = delivery2.getPickUpNodeId();
+                Long dropOff2 = delivery2.getDeliveryNodeId();
+                lengths.get(pickUp1).put(pickUp2, map.getLength(pickUp1, pickUp2));
+                lengths.get(pickUp1).put(dropOff2, map.getLength(pickUp1, dropOff2));
+                lengths.get(dropOff1).put(pickUp2, map.getLength(dropOff1, pickUp2));
+                lengths.get(dropOff1).put(dropOff2, map.getLength(dropOff1, dropOff2));
             }
-            lengths.put(vertex1id, lengthsFromV1);
+            lengths.get(warehouseNodeId).put(pickUp1, map.getLength(warehouseNodeId, pickUp1));
+            lengths.get(warehouseNodeId).put(dropOff1, map.getLength(warehouseNodeId, dropOff1));
         }
     }
 
-    public TravellingSalesman(int n, HashMap<Long, HashMap<Long, Double>> len){
+    public VerticesGraph(int n, HashMap<Long, HashMap<Long, Double>> len){
         warehouseNodeId = 0L;
         subresults = new HashMap<>();
         dropOffs = new HashMap<>();
@@ -204,8 +225,34 @@ public class TravellingSalesman {
         LinkedList<Long> L = subProblem(warehouseNodeId, dropOffs.keySet()).getPath();
         LinkedList<Vertex> V = new LinkedList<>();
         for( Long l : L){
-            V.add(new Vertex(l, dropOffs.containsKey(l)));
+            V.addFirst(new Vertex(l, dropOffs.containsKey(l)));
         }
+        return V;
+    }
+
+    public LinkedList<Vertex> naiveRound(){
+        LinkedList<Vertex> V = new LinkedList<>();
+        Set<Long> S = new TreeSet<>(dropOffs.keySet());
+
+        V.add(new Vertex(warehouseNodeId, dropOffs.containsKey(warehouseNodeId)));
+        Long last = warehouseNodeId;
+        while(!S.isEmpty()){
+            Long candidate = S.iterator().next();
+            Double distance = lengths.get(last).get(candidate);
+            for(Long l : S){
+                if(lengths.get(last).get(l) < distance){
+                    candidate = l;
+                    distance = lengths.get(last).get(l);
+                }
+            }
+            V.add(new Vertex(candidate, dropOffs.containsKey(candidate)));
+            if(dropOffs.containsKey(candidate)){
+                S.add(dropOffs.get(candidate));
+            }
+            S.remove(candidate);
+            last = candidate;
+        }
+
         return V;
     }
 }
