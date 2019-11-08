@@ -6,7 +6,10 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class VerticesGraph {
     static class SubResult{
@@ -120,7 +123,7 @@ public class VerticesGraph {
         subresults = new HashMap<>();
         dropOffs = new HashMap<>();
         for(Delivery delivery : deliveries.getDeliveryList()){
-            dropOffs.put(delivery.getPickUpNodeId(), delivery.getDeliveryNodeId());
+            dropOffs.put(delivery.getPickUpNodeId(), delivery.getDropOffNodeId());
         }
 
         lengths = new HashMap<>();
@@ -128,14 +131,14 @@ public class VerticesGraph {
         map.dijkstra(warehouseNodeId);
         for(Delivery delivery1 : deliveries.getDeliveryList()){
             Long pickUp1 = delivery1.getPickUpNodeId();
-            Long dropOff1 = delivery1.getDeliveryNodeId();
+            Long dropOff1 = delivery1.getDropOffNodeId();
             lengths.put(pickUp1, new HashMap<>());
             lengths.put(dropOff1, new HashMap<>());
             map.dijkstra(pickUp1);
             map.dijkstra(dropOff1);
             for(Delivery delivery2 : deliveries.getDeliveryList()){
                 Long pickUp2 = delivery2.getPickUpNodeId();
-                Long dropOff2 = delivery2.getDeliveryNodeId();
+                Long dropOff2 = delivery2.getDropOffNodeId();
                 lengths.get(pickUp1).put(pickUp2, map.getLength(pickUp1, pickUp2));
                 lengths.get(pickUp1).put(dropOff2, map.getLength(pickUp1, dropOff2));
                 lengths.get(dropOff1).put(pickUp2, map.getLength(dropOff1, pickUp2));

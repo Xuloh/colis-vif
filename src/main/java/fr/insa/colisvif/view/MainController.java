@@ -1,22 +1,20 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Node;
-import fr.insa.colisvif.model.Section;
+import fr.insa.colisvif.model.Delivery;
+import fr.insa.colisvif.model.DeliveryMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.paint.Color;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainController {
@@ -28,85 +26,88 @@ public class MainController {
     private ResourceBundle resources;
 
     @FXML
-    private MenuItem openMap;
+    private BorderPane mainPane;
+
+    @FXML
+    private MenuItem openDeliveryMap;
 
     @FXML
     private MenuItem close;
 
     @FXML
-    private Canvas canvas;
+    private Pane canvasPane;
+
+    @FXML
+    private MenuItem openMap;
+
+    @FXML
+    private ListView textualView;
+
+    @FXML
+    private TextArea statusView;
 
     private Stage stage;
 
     private Controller controller;
 
+    private MapCanvas mapCanvas;
+
     public MainController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
+        this.mapCanvas = new MapCanvas();
     }
 
     public void initialize() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Ouvrir une carte");
+
+        textualView.getItems().add("test");
 
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
+            fileChooser.setTitle("Ouvrir une carte");
             File file = fileChooser.showOpenDialog(this.stage);
-            this.controller.openFile(file);
+            this.controller.loadCityMap(file);
+        });
+
+        this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
+            fileChooser.setTitle("Ouvrir un plan de livraison");
+            File file = fileChooser.showOpenDialog(this.stage);
+            this.controller.loadDeliveryMap(file, this.mapCanvas.getCityMap());
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
+
+        this.mainPane.setCenter(this.mapCanvas);
+    }
+
+    public void writeDeliveries(DeliveryMap deliveryMap) {
+        textualView.getItems().add("test");
+    }
+
+    public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
+        StringBuilder builder = new StringBuilder("");
+        builder.append(statusView.getText());
+        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
+            builder.append("Bad Ones : ");
+        }
+        for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
+            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDropOffNodeId() + "/");
+        }
+        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
+            builder.append("\n");
+        }
+        statusView.setText(builder.toString());
     }
 
     public void clearMap() {
-        var context = this.canvas.getGraphicsContext2D();
-        context.clearRect(0, 0,
-                          this.canvas.getWidth(),
-                          this.canvas.getHeight());
+        this.mapCanvas.clearMap();
     }
 
-    public void drawMap(CityMap map) {
-        var context = this.canvas.getGraphicsContext2D();
-        final int LAT_TO_PX = 10000;
-        final int LNG_TO_PX = 10000;
+    public void drawMap() {
+        this.mapCanvas.drawMap();
+    }
 
-        final Color NODE_COLOR = Color.CORNFLOWERBLUE;
-        final Color SECTION_COLOR = Color.BLACK;
-        final int NODE_SIZE = 3;
-
-        Map<Long, Node> nodes = map.getMapNode();
-
-        context.setFill(SECTION_COLOR);
-        List<Section> sections = map
-            .getMapSection()
-            .values()
-            .stream()
-            .reduce(new ArrayList<>(), (acc, val) -> {
-                acc.addAll(val);
-                return acc;
-            });
-        for (Section section : sections) {
-            Node origin = nodes.get(section.getOrigin());
-            Node destination = nodes.get(section.getDestination());
-
-            double x1 = (origin.getLongitude() - map.getLongMin()) * LNG_TO_PX;
-            double y1 = (map.getLatMax() - origin.getLatitude()) * LAT_TO_PX;
-
-            double x2 = (destination.getLongitude() - map.getLongMin())
-                        * LNG_TO_PX;
-            double y2 = (map.getLatMax() - destination.getLatitude())
-                        * LAT_TO_PX;
-
-            context.strokeLine(x1, y1, x2, y2);
-        }
-
-        context.setFill(NODE_COLOR);
-        for (Node node : nodes.values()) {
-            double x = (node.getLongitude() - map.getLongMin()) * LNG_TO_PX;
-            double y = (map.getLatMax() - node.getLatitude()) * LAT_TO_PX;
-            context.fillOval(x - NODE_SIZE / 2d,
-                             y - NODE_SIZE / 2d,
-                             NODE_SIZE,
-                             NODE_SIZE);
-        }
+    public MapCanvas getMapCanvas() {
+        return this.mapCanvas;
     }
 }

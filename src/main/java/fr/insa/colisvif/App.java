@@ -20,10 +20,10 @@ public class App extends Application {
         );
 
         // create and set controller
-        MainController mainController = new MainController(stage, controller);
-        loader.setController(mainController);
+        MainController MainController = new MainController(stage, controller);
+        loader.setController(MainController);
 
-        controller.setMainController(mainController);
+        controller.setMainController(MainController);
 
         // load scene
         Scene scene = new Scene(loader.load());

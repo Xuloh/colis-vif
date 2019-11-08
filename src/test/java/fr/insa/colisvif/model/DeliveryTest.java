@@ -51,14 +51,14 @@ public class DeliveryTest {
     public void testGetDeliveryNodeId() {
         Delivery delivery = new Delivery(100, 101, 10,10);
 
-        assertEquals(101,delivery.getDeliveryNodeId());
+        assertEquals(101,delivery.getDropOffNodeId());
     }
 
     @Test
     public void testSDeliveryNodeId() {
         Delivery delivery = new Delivery(100, 101, 10,10);
-        delivery.setDeliveryNodeId(200);
-        assertEquals(200,delivery.getDeliveryNodeId());
+        delivery.setDropOffNodeId(200);
+        assertEquals(200,delivery.getDropOffNodeId());
     }
 
     @Test
@@ -79,27 +79,14 @@ public class DeliveryTest {
     public void testGetDeliveryDuration() {
         Delivery delivery = new Delivery(100, 101, 10,20);
 
-        assertEquals(20,delivery.getDeliveryDuration());
+        assertEquals(20,delivery.getDropOffDuration());
     }
 
     @Test
     public void testSDeliveryDuration() {
         Delivery delivery = new Delivery(100, 101, 10,20);
-        delivery.setDeliveryDuration(125);
-        assertEquals(125,delivery.getDeliveryDuration());
-    }
-
-    @Test
-    public void testIsPicked() {
-        Delivery delivery = new Delivery(100, 101, 10,20);
-        assertEquals(false,delivery.isPicked());
-    }
-
-    @Test
-    public void testSetToPickedUp() {
-        Delivery delivery = new Delivery(100, 101, 10,20);
-        delivery.setToPickedUp(true);
-        assertEquals(true,delivery.isPicked());
+        delivery.setDropOffDuration(125);
+        assertEquals(125,delivery.getDropOffDuration());
     }
 
     @Test

@@ -14,24 +14,38 @@ public class CityMap {
         File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/grandPlan.xml");
         CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
         file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/demandeGrand7.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file);
+        DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file, map);
 
         Round round = map.naiveRound(deliveries);
     }
 
-    private static final int LONG_MAX = 180;
+    private static final int LNG_MIN = -180;
+
+    private static final int LNG_MAX = 180;
+
     private static final int LAT_MIN = -90;
     private static final int speedInMS = (int)(15./3.6); //the speed of the cyclist in meters per second
 
-    private double longMin;
+    private static final int LAT_MAX = 90;
+
+    private double lngMin;
+
+    private double lngMax;
+
+    private double latMin;
+
     private double latMax;
+
     private Map<Long, Node> mapNode;
+
     private Map<String, List<Section>> mapSection;
     private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
     public CityMap() {
+        this.latMin = LAT_MAX;
         this.latMax = LAT_MIN;
-        this.longMin = LONG_MAX;
+        this.lngMin = LNG_MAX;
+        this.lngMax = LNG_MIN;
         this.mapNode = new HashMap<>();
         this.mapSection = new HashMap<>();
     }
@@ -40,40 +54,47 @@ public class CityMap {
         Node newNode = new Node(id, latitude, longitude);
         this.mapNode.put(id, newNode);
 
-        if(latitude > this.latMax){
+        if (latitude < this.latMin) {
+            this.latMin = latitude;
+        }
+
+        if (latitude > this.latMax) {
             this.latMax = latitude;
         }
 
-        if(longitude < this.longMin){
-            this.longMin = longitude;
+        if (longitude < this.lngMin) {
+            this.lngMin = longitude;
+        }
+
+        if (longitude > this.lngMax) {
+            this.lngMax = longitude;
         }
     }
 
     public void createSection(double length, String roadName, long destination, long origin) throws IdError {
         Section newSection = new Section(length, roadName, destination, origin);
 
-        if(this.mapSection.get(roadName) == null){
+        if (this.mapSection.get(roadName) == null) {
             List<Section> newSections = new ArrayList<>();
             newSections.add(newSection);
             this.mapSection.put(roadName, newSections);
-        }
-        else {
+        } else {
             this.mapSection.get(roadName).add(newSection);
         }
 
         this.mapNode.get(origin).addToSuccessors(newSection);
     }
 
-    public void setLongMin(double longitude) {
-        this.longMin = longitude;
+    public double getLngMin() {
+        return this.lngMin;
     }
 
-    public void setLatMax(double latitude) {
-        this.latMax = latitude;
+    public double getLngMax() {
+        return this.lngMax;
     }
 
-    public double getLongMin() {
-        return this.longMin;
+    public double getLatMin() {
+        return this.latMin;
     }
 
     public double getLatMax() {
@@ -103,29 +124,27 @@ public class CityMap {
 
     @Override
     public String toString() {
-        String result = "Nodes : \n";
+        StringBuilder result = new StringBuilder("Nodes : \n");
 
-        Set nodeKeys = this.mapNode.keySet();
-        Iterator itN = nodeKeys.iterator();
-        while (itN.hasNext()){
-            Object nodeKey = itN.next();
+        Set<Long> nodeKeys = this.mapNode.keySet();
+        for (Long nodeKey : nodeKeys) {
             Node node = this.mapNode.get(nodeKey);
-            result += node.toString();
+            result.append(node.toString());
         }
 
-        result += "\nSections : \n";
+        result.append("\nSections : \n");
 
-        Set sectionKeys = this.mapSection.keySet();
-        Iterator itS = sectionKeys.iterator();
-        while (itS.hasNext()){
-            Object sectionKey = itS.next();
+        Set<String> sectionKeys = this.mapSection.keySet();
+        for (String sectionKey : sectionKeys) {
             List<Section> sections = this.mapSection.get(sectionKey);
-            for (Section s : sections)
-                result += s.toString();
+            for (Section s : sections) {
+                result.append(s.toString());
+            }
         }
 
-        return result;
+        return result.toString();
     }
+
 
     public void dijkstra(Long start){
         PathsFromVertex pathsFromStart = new PathsFromVertex();
@@ -226,6 +245,20 @@ public class CityMap {
             lengths.put(id, length);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CityMap cityMap = (CityMap) o;
+        return Double.compare(cityMap.lngMin, lngMin) == 0 &&
+                Double.compare(cityMap.lngMax, lngMax) == 0 &&
+                Double.compare(cityMap.latMin, latMin) == 0 &&
+                Double.compare(cityMap.latMax, latMax) == 0 &&
+                Objects.equals(mapNode, cityMap.mapNode) &&
+                Objects.equals(mapSection, cityMap.mapSection);
+    }
+
 }
 
 
