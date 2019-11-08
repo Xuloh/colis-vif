@@ -4,8 +4,11 @@ import java.util.Objects;
 
 public class Section {
     private double length;
+
     private String roadName;
+
     private long destination;
+
     private long origin;
 
     public Section(double length, String roadName, long destination, long origin) {
@@ -14,7 +17,9 @@ public class Section {
         this.destination = destination;
         this.origin = origin;
 
-        if(length <= 0 ) throw new IllegalArgumentException();
+        if (length <= 0) {
+            throw new IllegalArgumentException();
+        }
         //if(destination == origin) throw new IllegalArgumentException();
     }
 
@@ -42,12 +47,16 @@ public class Section {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Section section = (Section) o;
-        return Double.compare(section.length, length) == 0 &&
-                destination == section.destination &&
-                origin == section.origin &&
-                Objects.equals(roadName, section.roadName);
+        return Double.compare(section.length, length) == 0
+                && destination == section.destination
+                && origin == section.origin
+                && Objects.equals(roadName, section.roadName);
     }
 }
