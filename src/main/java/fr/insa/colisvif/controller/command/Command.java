@@ -1,4 +1,4 @@
-package fr.insa.colisvif.controller;
+package fr.insa.colisvif.controller.command;
 
 public interface Command {
 

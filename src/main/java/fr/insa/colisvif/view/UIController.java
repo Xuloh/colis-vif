@@ -17,7 +17,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainController {
+public class UIController {
 
     @FXML
     private URL location;
@@ -52,7 +52,7 @@ public class MainController {
 
     private MapCanvas mapCanvas;
 
-    public MainController(Stage stage, Controller controller) {
+    public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();

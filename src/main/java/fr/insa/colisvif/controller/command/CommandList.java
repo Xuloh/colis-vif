@@ -1,4 +1,6 @@
-package fr.insa.colisvif.controller;
+package fr.insa.colisvif.controller.command;
+
+import fr.insa.colisvif.controller.command.Command;
 
 import java.util.LinkedList;
 
