@@ -7,10 +7,8 @@ public class Delivery {
     private DropOff dropOff;
 
     public Delivery(long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) {
-        this.pickUp.setNodeId(pickUpNodeId);
-        this.dropOff.setNodeId(dropOffNodeId);
-        this.pickUp.setDuration(pickUpDuration);
-        this.dropOff.setDuration(dropOffDuration);
+        pickUp = new PickUp(pickUpNodeId, pickUpDuration);
+        dropOff = new DropOff(dropOffNodeId, dropOffDuration);
 
         if (this.pickUp.getNodeId() == this.dropOff.getNodeId()) {
             throw new IllegalArgumentException();

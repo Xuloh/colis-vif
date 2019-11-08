@@ -5,6 +5,11 @@ public class PickUp {
 
     private int duration;
 
+    public PickUp(long nodeId, int duration) {
+        this.nodeId = nodeId;
+        this.duration = duration;
+    }
+
     public long getNodeId() {
         return nodeId;
     }
