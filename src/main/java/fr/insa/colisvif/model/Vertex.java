@@ -17,9 +17,10 @@ public class Vertex implements Comparable<Vertex> {
     public boolean isPickUp() { return type; }
     public boolean isDropOff() { return !type; }
 
-    Vertex(long id, boolean type){
+    Vertex(long id, boolean type, int durationInSeconds){
         this.id = id;
         this.type = type;
+        this.durationInSeconds = durationInSeconds;
     }
 
     @Override
