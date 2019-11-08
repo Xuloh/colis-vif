@@ -112,7 +112,12 @@ public class Controller {
         this.currentState.loadCityMap(this, uiController, file);
     }
 
-    public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, uiController, file, cityMap);
+    public void loadDeliveryMap(File file) {
+        this.currentState.loadDeliveryMap(this, uiController, file, this.map);
     }
+
+    public void initialiseVertices() {
+        this.uiController.getTextualView().setVertexMap(this.deliveryMap);
+    }
+
 }
