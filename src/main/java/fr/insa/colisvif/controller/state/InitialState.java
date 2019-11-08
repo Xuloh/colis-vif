@@ -10,7 +10,7 @@ public class InitialState implements State {
     @Override
     public void loadCityMap(Controller c, UIController mc, File file) {
         c.openFile(file);
-        mc.getMapCanvas().drawMap();
+        mc.drawCanvas();
         c.setCurrentState(CityMapLoadedState.class);
     }
 }

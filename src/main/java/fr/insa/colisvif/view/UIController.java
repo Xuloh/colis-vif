@@ -99,12 +99,13 @@ public class UIController {
         statusView.setText(builder.toString());
     }
 
-    public void clearMap() {
-        this.mapCanvas.clearMap();
+    public void clearCanvas() {
+        this.mapCanvas.clearCanvas();
     }
 
-    public void drawMap() {
-        this.mapCanvas.drawMap();
+    public void drawCanvas() {
+        this.mapCanvas.drawCityMap();
+        this.mapCanvas.drawDeliveryMap();
     }
 
     public MapCanvas getMapCanvas() {

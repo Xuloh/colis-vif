@@ -129,7 +129,7 @@ public class MapCanvas extends BorderPane {
 
         this.deliveryMap.getDeliveryList()
             .forEach(delivery -> {
-                deliveryNodes.add(nodes.get(delivery.getDeliveryNodeId()));
+                deliveryNodes.add(nodes.get(delivery.getDropOffNodeId()));
                 pickupNodes.add(nodes.get(delivery.getPickUpNodeId()));
             });
 

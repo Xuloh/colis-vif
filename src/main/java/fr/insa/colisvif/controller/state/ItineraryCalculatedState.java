@@ -12,9 +12,9 @@ public class ItineraryCalculatedState implements State {
 
     @Override
     public void loadCityMap(Controller c, UIController mc, File file) {
-        mc.getMapCanvas().clearMap();
+        mc.clearCanvas();
         c.openFile(file);
-        mc.getMapCanvas().drawMap();
+        mc.drawCanvas();
         c.setCurrentState(CityMapLoadedState.class);
     }
 
