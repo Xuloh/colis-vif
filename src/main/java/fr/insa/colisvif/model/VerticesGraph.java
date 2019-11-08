@@ -169,7 +169,7 @@ public class VerticesGraph {
     }
 
     private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
-        copy.remove(vertex);
+        /*copy.remove(vertex);
         Long id = vertex.getId();
         if(vertex.isPickUp()) {
             Vertex next = new Vertex(dropOffs.get(id), true);
@@ -209,22 +209,22 @@ public class VerticesGraph {
         subResult.add(start);
 
         subresults.put(key, subResult);
-        return subResult;
+        return subResult;*/
     }
 
     public LinkedList<Vertex> shortestRound(){
-        Vertex start = new Vertex(warehouseNodeId, true);
+        /*Vertex start = new Vertex(warehouseNodeId, true);
         TreeSet<Vertex> vertices = new TreeSet<>();
         for(Long l : dropOffs.keySet()){
             vertices.add(new Vertex(l, false));
         }
         LinkedList<Vertex> stops = subProblem(start, vertices).getPath();
-        stops.removeFirst();
-        return stops;
+        stops.removeFirst();*/
+        return new LinkedList<Vertex>();
     }
 
     public LinkedList<Vertex> naiveRound(){
-        LinkedList<Vertex> stopList = new LinkedList<>();
+        /*LinkedList<Vertex> stopList = new LinkedList<>();
         Set<Long> S = new TreeSet<>(dropOffs.keySet());
 
         Long last = warehouseNodeId;
@@ -244,7 +244,7 @@ public class VerticesGraph {
             S.remove(candidate);
             last = candidate;
         }
-
-        return stopList;
+*/
+        return new LinkedList<Vertex>();
     }
 }

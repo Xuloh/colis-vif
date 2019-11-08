@@ -17,7 +17,7 @@ public class Vertex implements Comparable<Vertex> {
     public boolean isPickUp() { return type; }
     public boolean isDropOff() { return !type; }
 
-    Vertex(long id, boolean type, int durationInSeconds){
+    public Vertex(long id, boolean type, int durationInSeconds){
         this.id = id;
         this.type = type;
         this.durationInSeconds = durationInSeconds;
@@ -55,5 +55,12 @@ public class Vertex implements Comparable<Vertex> {
         return Objects.hash(id, type);
     }
 
-
+    @Override
+    public String toString() {
+        return "Vertex{" +
+                "id=" + id +
+                ", type=" + type +
+                ", durationInSeconds=" + durationInSeconds +
+                '}';
+    }
 }
