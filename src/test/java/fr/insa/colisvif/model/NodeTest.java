@@ -1,7 +1,6 @@
 package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdError;
-import fr.insa.colisvif.model.Node;
 import org.junit.Test;
 
 import java.util.List;
@@ -52,7 +51,7 @@ public class NodeTest {
     @Test
     public void testNodeToString() {
         Node testNode = new Node(1242021, 12.451, -21.7856);
-        String expected ="ID : 1242021 | Latitude : 12.451 | Longitude : -21.7856\n";
+        String expected = "ID : 1242021 | Latitude : 12.451 | Longitude : -21.7856\n";
         assertEquals("Node.toString() is functionnal", expected, testNode.toString());
     }
 
