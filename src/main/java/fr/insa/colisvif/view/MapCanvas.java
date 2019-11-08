@@ -35,6 +35,8 @@ public class MapCanvas extends BorderPane {
 
     private static final int NODE_SIZE = 3;
 
+    private static final int DELIVERY_NODE_SIZE = 10;
+
     private CityMap cityMap;
 
     private DeliveryMap deliveryMap;
@@ -137,7 +139,8 @@ public class MapCanvas extends BorderPane {
             this.drawPoint(
                 pickupNode.getLatitude(),
                 pickupNode.getLongitude(),
-                PICKUP_COLOR
+                PICKUP_COLOR,
+                DELIVERY_NODE_SIZE
             );
         }
 
@@ -145,7 +148,8 @@ public class MapCanvas extends BorderPane {
             this.drawPoint(
                 deliveryNode.getLatitude(),
                 deliveryNode.getLongitude(),
-                DELIVERY_COLOR
+                DELIVERY_COLOR,
+                DELIVERY_NODE_SIZE
             );
         }
     }
@@ -187,10 +191,14 @@ public class MapCanvas extends BorderPane {
     }
 
     private void drawPoint(double lat, double lng) {
-        this.drawPoint(lat, lng, NODE_COLOR);
+        this.drawPoint(lat, lng, NODE_COLOR, NODE_SIZE);
     }
 
     private void drawPoint(double lat, double lng, Paint paint) {
+        this.drawPoint(lat, lng, paint, NODE_SIZE);
+    }
+
+    private void drawPoint(double lat, double lng, Paint paint, int size) {
         double x = this.lngToPx(lng);
         double y = this.latToPx(lat);
 
@@ -198,10 +206,10 @@ public class MapCanvas extends BorderPane {
         Paint prevFill = context.getFill();
         context.setFill(paint);
         context.fillOval(
-            x - NODE_SIZE / 2d,
-            y - NODE_SIZE / 2d,
-            NODE_SIZE,
-            NODE_SIZE
+            x - size / 2d,
+            y - size / 2d,
+            size,
+            size
         );
         context.setFill(prevFill);
     }
