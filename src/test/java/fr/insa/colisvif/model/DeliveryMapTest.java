@@ -15,6 +15,14 @@ public class DeliveryMapTest {
     }
 
     @Test
+    public void testCreateDelivery() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        deliveryMap.createDelivery(100,101,10,10);
+        Delivery delivery = new Delivery(100,101,10,10);
+        assertEquals(delivery,deliveryMap.getDeliveryList().get(0));
+    }
+
+    @Test
     public void testCreateWarehouseGood() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createWarehouse(101,100);
@@ -77,5 +85,27 @@ public class DeliveryMapTest {
         deliveryMap.createWarehouse(101,10);
         deliveryMap.setStartDateInSeconds(100);
         assertEquals(100,deliveryMap.getStartDateInSeconds());
+    }
+
+    @Test
+    public void createImpossibleDelivery() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        deliveryMap.createImpossibleDelivery(100,101,10,10);
+        Delivery delivery = new Delivery(100,101,10,10);
+        assertEquals(delivery,deliveryMap.getImpossibleDeliveries().get(0));
+
+    }
+
+    @Test
+    public void getImpossibleDeliveries() {
+        DeliveryMap deliveryMap= new DeliveryMap();
+        deliveryMap.createImpossibleDelivery(101,100,15,10);
+        deliveryMap.createImpossibleDelivery(105,104,10,20);
+
+        List<Delivery> deliveries = new ArrayList<>();
+        deliveries.add(new Delivery(101,100,15,10));
+        deliveries.add(new Delivery(105,104,10,20));
+
+        assertEquals(deliveries,deliveryMap.getImpossibleDeliveries());
     }
 }
