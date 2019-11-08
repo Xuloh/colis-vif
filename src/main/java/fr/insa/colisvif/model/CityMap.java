@@ -115,4 +115,19 @@ public class CityMap {
 
         return result.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CityMap cityMap = (CityMap) o;
+        return Double.compare(cityMap.lngMin, lngMin) == 0 &&
+                Double.compare(cityMap.lngMax, lngMax) == 0 &&
+                Double.compare(cityMap.latMin, latMin) == 0 &&
+                Double.compare(cityMap.latMax, latMax) == 0 &&
+                Objects.equals(mapNode, cityMap.mapNode) &&
+                Objects.equals(mapSection, cityMap.mapSection);
+    }
+
+
 }

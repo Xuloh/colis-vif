@@ -39,4 +39,12 @@ public class CommandList {
         currentCommands.clear();
         pastCommands.clear();
     }
+
+    public LinkedList<Command> getPastCommands() {
+        return pastCommands;
+    }
+
+    public LinkedList<Command> getCurrentCommands() {
+        return currentCommands;
+    }
 }

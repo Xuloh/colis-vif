@@ -23,7 +23,7 @@ public class Controller {
 
     private DeliveryMapFactory deliveryMapFactory;
 
-    private MainController MainController;
+    private MainController mainController;
 
     private State currentState;
 
@@ -39,7 +39,7 @@ public class Controller {
     public void openFile(File file) {
         try {
             this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
-            this.MainController.setCityMap(map);
+            this.mainController.getMapCanvas().setCityMap(map);
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
@@ -48,15 +48,15 @@ public class Controller {
     public void openDeliveryMap(File file, CityMap cityMap) {
         try {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            this.MainController.writeImpossibleDelivery(this.deliveryMap);
-            this.MainController.writeDeliveries(this.deliveryMap);
+            this.mainController.writeImpossibleDelivery(this.deliveryMap);
+            this.mainController.writeDeliveries(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
     public void setMainController(MainController mainController) {
-        this.MainController = mainController;
+        this.mainController = mainController;
     }
 
     public void setCurrentState(State currentState) {
@@ -68,11 +68,11 @@ public class Controller {
     }
 
     public void loadCityMap(File file) {
-        this.currentState.loadCityMap(this, MainController, file);
+        this.currentState.loadCityMap(this, mainController, file);
     }
 
     public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, MainController, file, cityMap);
+        this.currentState.loadDeliveryMap(this, mainController, file, cityMap);
         //todo: si on n'est pas dans le bon etat, prevenir dans la vue statut
     }
 }
