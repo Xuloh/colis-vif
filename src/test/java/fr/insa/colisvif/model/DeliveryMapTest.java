@@ -108,4 +108,6 @@ public class DeliveryMapTest {
 
         assertEquals(deliveries,deliveryMap.getImpossibleDeliveries());
     }
+
+
 }

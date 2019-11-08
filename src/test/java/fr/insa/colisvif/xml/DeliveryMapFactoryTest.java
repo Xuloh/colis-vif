@@ -2,8 +2,12 @@ package fr.insa.colisvif.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.exception.XMLException;
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
+import fr.insa.colisvif.model.Delivery;
+import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.DeliveryMapFactory;
 import fr.insa.colisvif.util.Quadruplet;
 import java.io.File;
@@ -12,6 +16,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -20,7 +25,43 @@ import org.xml.sax.SAXException;
 public class DeliveryMapFactoryTest {
 
   @Test
-  public void testCreateDeliveryMapFromXML() {
+  public void testCreateDeliveryMapFromXML()
+      throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+    File city_file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+    File delivery_file = new File(getClass().getResource("/validDeliverymatchingMap.xml").toURI());
+    CityMapFactory cityMapFactory = new CityMapFactory();
+    CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(city_file);
+    DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
+    DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(delivery_file,cityMap);
+
+    DeliveryMap expected_result = new DeliveryMap();
+    expected_result.createDelivery(2684668925L,2509481775L,420,600);
+    expected_result.setWarehouseNodeId(2684668925L);
+    expected_result.setStartDateInSeconds(28800);
+
+    assertEquals(deliveryMap,expected_result);
+
+  }
+
+  @Test
+  public void testCreateDeliveryMapFromXML_impossibleDeliveries()
+      throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+    File city_file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+    File delivery_file = new File(getClass().getResource("/validDelivery.xml").toURI());
+    CityMapFactory cityMapFactory = new CityMapFactory();
+    CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(city_file);
+    DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
+    DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(delivery_file,cityMap);
+
+    DeliveryMap expected_result = new DeliveryMap();
+    expected_result.createImpossibleDelivery(1679901320L,208769457L,420,600);
+    expected_result.createImpossibleDelivery(208769120L,25336179L,420,480);
+
+    expected_result.setWarehouseNodeId(2835339774L);
+    expected_result.setStartDateInSeconds(28800);
+
+    assertEquals(deliveryMap,expected_result);
+
   }
 
   @Test
@@ -77,6 +118,26 @@ public class DeliveryMapFactoryTest {
   }
 
   @Test
-  public void testReadWarehouse() {
+  public void testReadWarehouse()
+      throws XMLException, ParserConfigurationException, SAXException, IOException, URISyntaxException {
+
+    File file = new File(getClass().getResource("/validDelivery.xml").toURI());
+    DeliveryMapFactory factory = new DeliveryMapFactory();
+    Element root = factory.loadFile(file);
+    Pair<Long, Integer> warehouse = factory.readWarehouse(root);
+    Pair expected_result = new Pair((long)2835339774L,28800) ;
+    assertEquals(warehouse,expected_result);
+
+    assertEquals(warehouse,expected_result);
+  }
+
+  @Test (expected = XMLException.class)
+  public void testReadWarehouseWrongFile()
+      throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
+    File file = new File(getClass().getResource("/InvalidDelivery.xml").toURI());
+    DeliveryMapFactory factory = new DeliveryMapFactory();
+    Element root = factory.loadFile(file);
+    factory.readWarehouse(root);
+
   }
 }

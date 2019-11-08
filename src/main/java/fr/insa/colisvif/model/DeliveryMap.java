@@ -2,6 +2,7 @@ package fr.insa.colisvif.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class DeliveryMap {
@@ -42,6 +43,21 @@ public class DeliveryMap {
         return deliveryRequests;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DeliveryMap that = (DeliveryMap) o;
+        return warehouseNodeId == that.warehouseNodeId &&
+            startDateInSeconds == that.startDateInSeconds &&
+            Objects.equals(deliveryRequests, that.deliveryRequests) &&
+            Objects.equals(impossibleDeliveries, that.impossibleDeliveries);
+    }
+
     public List<Delivery> getImpossibleDeliveries() {
         return impossibleDeliveries;
     }
@@ -60,5 +76,15 @@ public class DeliveryMap {
 
     public void setStartDateInSeconds(int startDateInSeconds) {
         this.startDateInSeconds = startDateInSeconds;
+    }
+
+    @Override
+    public String toString() {
+        return "DeliveryMap{" +
+            "deliveryRequests=" + deliveryRequests +
+            ", impossibleDeliveries=" + impossibleDeliveries +
+            ", warehouseNodeId=" + warehouseNodeId +
+            ", startDateInSeconds=" + startDateInSeconds +
+            '}';
     }
 }
