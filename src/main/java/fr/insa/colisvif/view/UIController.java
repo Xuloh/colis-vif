@@ -24,7 +24,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainController {
+public class UIController {
 
     @FXML
     private URL location;
@@ -64,7 +64,7 @@ public class MainController {
 
     private TextualView textualView;
 
-    public MainController(Stage stage, Controller controller) {
+    public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
@@ -117,11 +117,6 @@ public class MainController {
         textualView.getColumns().add(deliveryDurationColumn);
     }*/
 
-    public void windowResized() {
-        this.clearMap();
-        this.drawMap();
-    }
-
     /*public void writeDeliveries(DeliveryMap deliveryMap) {
         for (Vextex v : vertexMap) {
             textualView.getItems().add(v);
@@ -151,12 +146,13 @@ public class MainController {
         statusView.setText(builder.toString());
     }*/
 
-    public void clearMap() {
-        this.mapCanvas.clearMap();
+    public void clearCanvas() {
+        this.mapCanvas.clearCanvas();
     }
 
-    public void drawMap() {
-        this.mapCanvas.drawMap();
+    public void drawCanvas() {
+        this.mapCanvas.drawCityMap();
+        this.mapCanvas.drawDeliveryMap();
     }
 
     public MapCanvas getMapCanvas() {
