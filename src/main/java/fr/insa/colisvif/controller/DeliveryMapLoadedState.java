@@ -9,9 +9,9 @@ public class DeliveryMapLoadedState implements State {
 
     @Override
     public void loadCityMap(Controller c, MainController mc, File file) {
-        mc.clearMap();
+        mc.getMapCanvas();
         c.openFile(file);
-        mc.drawMap();
+        mc.getMapCanvas();
         c.setCurrentState(c.cityMapLoadedState);
     }
 
