@@ -1,5 +1,6 @@
 package fr.insa.colisvif.controller;
 
+import fr.insa.colisvif.controller.command.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
