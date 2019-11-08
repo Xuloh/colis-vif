@@ -89,6 +89,7 @@ public class Controller {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
             this.uiController.writeImpossibleDelivery(this.deliveryMap);
             this.uiController.writeDeliveries(this.deliveryMap);
+            this.uiController.getMapCanvas().setDeliveryMap(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
@@ -102,10 +103,6 @@ public class Controller {
         if (stateMap.containsKey(stateName)) {
             this.currentState = stateMap.get(stateName);
         }
-    }
-
-    public CityMap getMap() {
-        return map;
     }
 
     public void loadCityMap(File file) {
