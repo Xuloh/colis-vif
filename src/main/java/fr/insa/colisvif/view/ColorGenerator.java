@@ -10,9 +10,16 @@ public class ColorGenerator implements Iterator<Color> {
 
     private int current;
 
+    private double opacity;
+
     public ColorGenerator(int count) {
+        this(count, 1.0);
+    }
+
+    public ColorGenerator(int count, double opacity) {
         this.count = count;
         this.current = 0;
+        this.opacity = opacity;
     }
 
     @Override
@@ -28,6 +35,6 @@ public class ColorGenerator implements Iterator<Color> {
 
         this.current++;
 
-        return Color.hsb(hue, saturation, brightness);
+        return Color.hsb(hue, saturation, brightness, this.opacity);
     }
 }
