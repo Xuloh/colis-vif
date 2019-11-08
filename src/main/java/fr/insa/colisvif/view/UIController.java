@@ -2,11 +2,13 @@ package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.*;
+import fr.insa.colisvif.util.Quadruplet;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class MainController {
+public class UIController {
 
     @FXML
     private URL location;
@@ -56,7 +58,7 @@ public class MainController {
 
     private double scale;
 
-    public MainController(Stage stage, Controller controller) {
+    public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.map = null;
@@ -92,12 +94,14 @@ public class MainController {
 
     private void initialiseTextualView() {
 
-        TableColumn<String, String> column1 = new TableColumn<>("First Name");
+        TableColumn<String, Delivery> pickUpDurationColumn = new TableColumn<>("Durée enlèvement");
+        pickUpDurationColumn.setCellValueFactory(new PropertyValueFactory<>("pickUpDuration"));
 
+        TableColumn<String, Delivery> deliveryDurationColumn = new TableColumn<>("Durée dépôt");
+        deliveryDurationColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryDuration"));
 
-        textualView.getColumns().add(column1);
-
-        textualView.getItems().add("truc");
+        textualView.getColumns().add(pickUpDurationColumn);
+        textualView.getColumns().add(deliveryDurationColumn);
     }
 
     public void windowResized() {
@@ -106,8 +110,14 @@ public class MainController {
     }
 
     public void writeDeliveries(DeliveryMap deliveryMap) {
+        for (Delivery d : deliveryMap.getDeliveryList()) {
+            textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
+        }
 
-        textualView.getItems().add("item1");
+        System.out.println("ici");
+        System.out.println(deliveryMap.getDeliveryList().get(0).getPickUpDuration());
+        textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
+        textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
     }
 
     public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
