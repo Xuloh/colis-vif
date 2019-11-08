@@ -4,6 +4,7 @@ import fr.insa.colisvif.exception.IdError;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CityMapTest {
 
@@ -88,4 +89,23 @@ public class CityMapTest {
 
     }
 
+    @Test
+    public void testEquals() throws IdError  {
+        CityMap citymap_1 = new CityMap();
+        citymap_1.createNode(1, 0, 0);
+        citymap_1.createNode(2, 1, 1);
+        citymap_1.createNode(3, 2, 2);
+        citymap_1.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        citymap_1.createSection(100, "Rue Antoine Tout Court", 3, 2);
+
+        CityMap citymap_2 = new CityMap();
+        citymap_2.createNode(1, 0, 0);
+        citymap_2.createNode(2, 1, 1);
+        citymap_2.createNode(3, 2, 2);
+        citymap_2.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        citymap_2.createSection(100, "Rue Antoine Tout Court", 3, 2);
+
+        assertEquals(true,citymap_1.equals(citymap_2));
+
+    }
 }

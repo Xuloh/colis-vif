@@ -96,7 +96,7 @@ public class CityMapFactory {
                     String roadName = node.getAttribute("nomRue");
                     long origin = Long.parseLong(node.getAttribute("origine"));
                     long destination = Long.parseLong(node.getAttribute("destination"));
-                    Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, origin, destination);
+                    Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, destination, origin);
                     result.add(newSection);
                 }
             } else {

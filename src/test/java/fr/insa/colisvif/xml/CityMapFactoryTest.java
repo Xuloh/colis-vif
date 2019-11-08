@@ -1,6 +1,8 @@
 package fr.insa.colisvif.xml;
 
+import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.exception.InvalidFilePermissionException;
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
@@ -70,7 +72,22 @@ public class CityMapFactoryTest {
 
         List<Quadruplet<Double, String, Long, Long>> readSections = cityMapParser.readSections(root);
         List<Quadruplet<Double, String, Long, Long>> expectedSections = new ArrayList<>();
-        expectedSections.add(new Quadruplet<>(97.249695d, "Rue Ch\u00e2teau-Gaillard", 2684668925L, 2509481775L));
+        expectedSections.add(new Quadruplet<>(97.249695d, "Rue Ch\u00e2teau-Gaillard", 2509481775L, 2684668925L));
         assertEquals(expectedSections, readSections);
     }
+
+    @Test
+    public void testCreateCityMapFromXMLFile() throws IOException, SAXException, ParserConfigurationException, IdError, URISyntaxException {
+        File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+        CityMapFactory cityMapParser = new CityMapFactory();
+        CityMap cityMap_from_file = cityMapParser.createCityMapFromXMLFile((file));
+        CityMap citymap = new CityMap();
+        citymap.createNode(2684668925L,45.775486,4.888253);
+        citymap.createNode(2509481775L,45.775345,4.8870163);
+        citymap.createSection(97.249695,"Rue Château-Gaillard",2509481775L,2684668925L);
+
+        assertEquals(cityMap_from_file, citymap);
+
+    }
+
 }

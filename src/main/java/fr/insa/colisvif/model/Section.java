@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import java.util.Objects;
+
 public class Section {
     private double length;
     private String roadName;
@@ -37,4 +39,16 @@ public class Section {
         String result = "Length : " + length + " | Road Name : " + roadName + " | Destination : " + destination + " | Origin : " + origin + "\n";
         return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Section section = (Section) o;
+        return Double.compare(section.length, length) == 0 &&
+                destination == section.destination &&
+                origin == section.origin &&
+                Objects.equals(roadName, section.roadName);
+    }
+
 }
