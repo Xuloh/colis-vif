@@ -41,6 +41,10 @@ public class Controller {
 
     protected final SuppressedNodeSelectedState suppressedNodeSelectedState = new SuppressedNodeSelectedState();
 
+    protected final NonOptimizedItineraryState nonOptimizedItineraryState = new NonOptimizedItineraryState();
+
+    protected final RoadMapSaveMode roadMapSaveMode = new RoadMapSaveMode();
+
     private Map<Class, State> stateMap = new HashMap<>();
 
     private CityMap map;
@@ -74,6 +78,8 @@ public class Controller {
         this.stateMap.put(SuppressedNodeSelectedState.class, suppressedNodeSelectedState);
         this.stateMap.put(SuppressionModeState.class, suppressionModeState);
         this.stateMap.put(ItineraryCalculatedState.class, itineraryCalculatedState);
+        this.stateMap.put(NonOptimizedItineraryState.class, nonOptimizedItineraryState);
+        this.stateMap.put(RoadMapSaveMode.class, roadMapSaveMode);
     }
 
     public void openFile(File file) {
