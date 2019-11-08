@@ -30,17 +30,23 @@ public class CityMapFactory {
 
     //TODO on doit pouvoir passer le fichier en paramètre !
     public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdError {
-        Element root = loadFile(file);
-        CityMap cityMap = new CityMap();
-        List<Triplet<Long, Double, Double>> nodes = readNodes(root);
-        List<Quadruplet<Double, String, Long, Long>> sections = readSections(root);
-        for (Triplet<Long, Double, Double> node : nodes) {
-            cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
+        try {
+            Element root = loadFile(file);
+            CityMap cityMap = new CityMap();
+            List<Triplet<Long, Double, Double>> nodes = readNodes(root);
+            List<Quadruplet<Double, String, Long, Long>> sections = readSections(root);
+
+            for (Triplet<Long, Double, Double> node : nodes) {
+                cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
+            }
+            for(Quadruplet<Double, String, Long, Long> section : sections) {
+                cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
+            }
+            return cityMap;
+        } catch (XMLException e){
+            e.printStackTrace();
         }
-        for(Quadruplet<Double, String, Long, Long> section : sections) {
-            cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
-        }
-        return cityMap;
+        return null;
     }
 
     public Element loadFile(File file) throws IOException, ParserConfigurationException, SAXException {
@@ -62,31 +68,29 @@ public class CityMapFactory {
     }
 
 
-    public List<Triplet<Long, Double, Double>> readNodes(Element root) {
+    public List<Triplet<Long, Double, Double>> readNodes(Element root) throws XMLException {
         ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<>();
 
-        try {
-            if (root.getNodeName().equals("reseau")) {
-                NodeList nodeList = root.getElementsByTagName("noeud");
-                for (int i = 0; i < nodeList.getLength(); i++) {
-                    Element node = (Element) nodeList.item(i);
-                    long id = Long.parseLong(node.getAttribute("id"));
-                    double latitude = Double.parseDouble(node.getAttribute("latitude"));
-                    double longitude = Double.parseDouble(node.getAttribute("longitude"));
-                    Triplet<Long, Double, Double> newNode = new Triplet<>(id, latitude, longitude);
-                    result.add(newNode);
-                }
-            } else
-                throw new XMLException("Document non conforme");
-        } catch (XMLException e) {
-            e.printStackTrace();
+
+        if (root.getNodeName().equals("reseau")) {
+            NodeList nodeList = root.getElementsByTagName("noeud");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element node = (Element) nodeList.item(i);
+                long id = Long.parseLong(node.getAttribute("id"));
+                double latitude = Double.parseDouble(node.getAttribute("latitude"));
+                double longitude = Double.parseDouble(node.getAttribute("longitude"));
+                Triplet<Long, Double, Double> newNode = new Triplet<>(id, latitude, longitude);
+                result.add(newNode);
+            }
+        } else {
+            throw new XMLException("Document non conforme");
         }
+
         return result;
     }
 
-    public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) {
+    public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) throws XMLException {
         ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
-        try {
 
             if (root.getNodeName().equals("reseau")) {
                 NodeList nodeList = root.getElementsByTagName("troncon");
@@ -102,9 +106,7 @@ public class CityMapFactory {
             } else {
                 throw new XMLException("Document non conforme");
             }
-        } catch (XMLException e) {
-            e.printStackTrace();
-        }
+
         return result;
     }
 }

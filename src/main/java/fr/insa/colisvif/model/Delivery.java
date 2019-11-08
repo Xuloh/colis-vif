@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import java.util.Objects;
+
 public class Delivery {
 
     private long pickUpNodeId;
@@ -66,9 +68,25 @@ public class Delivery {
 
     @Override
     public String toString() {
-        String result = "pickUpNodeId : " + pickUpNodeId + " | deliveryNodeId : " + deliveryNodeId + " | pickUpDuration : "
+        return "pickUpNodeId : " + pickUpNodeId + " | deliveryNodeId : " + deliveryNodeId + " | pickUpDuration : "
                 + pickUpDuration + " | deliveryDuration : " + deliveryDuration + " | isPicked : " + isPicked + "\n";
-        return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Delivery delivery = (Delivery) o;
+        return pickUpNodeId == delivery.pickUpNodeId &&
+            deliveryNodeId == delivery.deliveryNodeId &&
+            pickUpDuration == delivery.pickUpDuration &&
+            deliveryDuration == delivery.deliveryDuration &&
+            isPicked == delivery.isPicked;
+    }
+
 
 }
