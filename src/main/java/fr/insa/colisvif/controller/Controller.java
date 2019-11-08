@@ -1,9 +1,6 @@
 package fr.insa.colisvif.controller;
 
-import fr.insa.colisvif.controller.state.CityMapLoadedState;
-import fr.insa.colisvif.controller.state.DeliveryMapLoadedState;
-import fr.insa.colisvif.controller.state.InitialState;
-import fr.insa.colisvif.controller.state.State;
+import fr.insa.colisvif.controller.state.*;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
@@ -12,6 +9,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.MonitorInfo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +20,26 @@ public class Controller {
     protected final CityMapLoadedState cityMapLoadedState = new CityMapLoadedState();
 
     protected final DeliveryMapLoadedState deliveryMapLoadedState = new DeliveryMapLoadedState();
+
+    protected final ItineraryCalculatedState itineraryCalculatedState = new ItineraryCalculatedState();
+
+    protected final PickUpNodeAddingState pickUpNodeAddingState = new PickUpNodeAddingState();
+
+    protected final DropOffNodeAdding dropOffNodeAdding = new DropOffNodeAdding();
+
+    protected final LocalItineraryModificationState localItineraryModificationState = new LocalItineraryModificationState();
+
+    protected final ModifyOrderState modifyOrderState = new ModifyOrderState();
+
+    protected final ModifyStopLocationState modifyStopLocationState = new ModifyStopLocationState();
+
+    protected final NodeToModifyOrderState nodeToModifyOrderState = new NodeToModifyOrderState();
+
+    protected final PropertiesPrintedState propertiesPrintedState = new PropertiesPrintedState();
+
+    protected final SuppressionModeState suppressionModeState = new SuppressionModeState();
+
+    protected final SuppressedNodeSelectedState suppressedNodeSelectedState = new SuppressedNodeSelectedState();
 
     private Map<Class, State> stateMap = new HashMap<>();
 
@@ -46,6 +64,16 @@ public class Controller {
         this.stateMap.put(InitialState.class, initialState);
         this.stateMap.put(CityMapLoadedState.class, cityMapLoadedState);
         this.stateMap.put(DeliveryMapLoadedState.class, deliveryMapLoadedState);
+        this.stateMap.put(DropOffNodeAdding.class, dropOffNodeAdding);
+        this.stateMap.put(LocalItineraryModificationState.class, localItineraryModificationState);
+        this.stateMap.put(ModifyStopLocationState.class, modifyStopLocationState);
+        this.stateMap.put(ModifyOrderState.class, modifyOrderState);
+        this.stateMap.put(NodeToModifyOrderState.class, nodeToModifyOrderState);
+        this.stateMap.put(PickUpNodeAddingState.class, pickUpNodeAddingState);
+        this.stateMap.put(PropertiesPrintedState.class, propertiesPrintedState);
+        this.stateMap.put(SuppressedNodeSelectedState.class, suppressedNodeSelectedState);
+        this.stateMap.put(SuppressionModeState.class, suppressionModeState);
+        this.stateMap.put(ItineraryCalculatedState.class, itineraryCalculatedState);
     }
 
     public void openFile(File file) {

@@ -8,7 +8,7 @@ import java.io.File;
 
 //TODO : Ajouter Etat Cas ou trajet non optimal
 
-public class ItineraryCalculated implements State {
+public class ItineraryCalculatedState implements State {
 
     @Override
     public void loadCityMap(Controller c, UIController mc, File file) {
