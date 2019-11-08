@@ -1,77 +1,60 @@
 package fr.insa.colisvif.model;
 
 public class Delivery {
+    private PickUp pickUp;
+    private DropOff dropOff;
 
-    private long pickUpNodeId;
+    public Delivery(long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) {
+        this.pickUp.setNodeId(pickUpNodeId);
+        this.dropOff.setNodeId(dropOffNodeId);
+        this.pickUp.setDuration(pickUpDuration);
+        this.dropOff.setDuration(dropOffDuration);
 
-    private long deliveryNodeId;
-
-    private int pickUpDuration;
-
-    private int deliveryDuration;
-
-    private boolean isPicked;
-
-    public Delivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int deliveryDuration) {
-        this.pickUpNodeId = pickUpNodeId;
-        this.deliveryNodeId = deliveryNodeId;
-        this.pickUpDuration = pickUpDuration;
-        this.deliveryDuration = deliveryDuration;
-        this.isPicked = false;
-
-        if (this.pickUpNodeId == this.deliveryNodeId) {
+        if (this.pickUp.getNodeId() == this.dropOff.getNodeId()) {
             throw new IllegalArgumentException();
         }
 
-        if (this.pickUpDuration < 0 || this.deliveryDuration < 0) {
+        if (this.pickUp.getDuration() < 0 || this.dropOff.getDuration() < 0) {
             throw new IllegalArgumentException();
         }
     }
 
     public long getPickUpNodeId() {
-        return pickUpNodeId;
+        return pickUp.getNodeId();
     }
 
     public void setPickUpNodeId(long pickUpNodeId) {
-        this.pickUpNodeId = pickUpNodeId;
+        this.pickUp.setNodeId(pickUpNodeId);
     }
 
-    public long getDeliveryNodeId() {
-        return deliveryNodeId;
+    public long getDropOffNodeId() {
+        return dropOff.getNodeId();
     }
 
-    public void setDeliveryNodeId(long deliveryNodeId) {
-        this.deliveryNodeId = deliveryNodeId;
+    public void setDropOffNodeId(long deliveryNodeId) {
+        this.dropOff.setNodeId(deliveryNodeId);
     }
 
     public int getPickUpDuration() {
-        return pickUpDuration;
+        return pickUp.getDuration();
     }
 
     public void setPickUpDuration(int pickUpDuration) {
-        this.pickUpDuration = pickUpDuration;
+        this.pickUp.setDuration(pickUpDuration);
     }
 
-    public int getDeliveryDuration() {
-        return deliveryDuration;
+    public int getDropOffDuration() {
+        return dropOff.getDuration();
     }
 
-    public void setDeliveryDuration(int deliveryDuration) {
-        this.deliveryDuration = deliveryDuration;
-    }
-
-    public boolean isPicked() {
-        return isPicked;
-    }
-
-    public void setToPickedUp(boolean value) {
-        this.isPicked = value;
+    public void setDropOffDuration(int deliveryDuration) {
+        this.dropOff.setDuration(deliveryDuration);
     }
 
     @Override
     public String toString() {
-        String result = "pickUpNodeId : " + pickUpNodeId + " | deliveryNodeId : " + deliveryNodeId + " | pickUpDuration : "
-                + pickUpDuration + " | deliveryDuration : " + deliveryDuration + " | isPicked : " + isPicked + "\n";
+        String result = "pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
+                + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
         return result;
     }
 

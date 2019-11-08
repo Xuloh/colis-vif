@@ -1,7 +1,6 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import javafx.event.ActionEvent;
@@ -92,7 +91,7 @@ public class MainController {
             builder.append("Bad Ones : ");
         }
         for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
-            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDeliveryNodeId() + "/");
+            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDropOffNodeId() + "/");
         }
         if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
             builder.append("\n");
