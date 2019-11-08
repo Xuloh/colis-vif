@@ -5,6 +5,7 @@ import fr.insa.colisvif.exception.IdError;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Node {
     private long id;
@@ -50,4 +51,17 @@ public class Node {
         String result = "ID : " + id + " | Latitude : " + latitude + " | Longitude : " + longitude + "\n";
         return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return id == node.id &&
+                Double.compare(node.longitude, longitude) == 0 &&
+                Double.compare(node.latitude, latitude) == 0 &&
+                Objects.equals(successors, node.successors);
+    }
+
+
 }
