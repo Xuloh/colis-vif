@@ -4,10 +4,20 @@ import fr.insa.colisvif.exception.IdError;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class CityMap {
+
+    public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
+        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/grandPlan.xml");
+        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
+        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/demandeGrand7.xml");
+        DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file);
+
+        Round round = map.naiveRound(deliveries);
+    }
 
     private static final int LONG_MAX = 180;
     private static final int LAT_MIN = -90;
