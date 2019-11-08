@@ -23,7 +23,7 @@ public class DeliveryMapLoadedState implements State {
     }
 
     @Override
-    public void calculateItinerary(Controller c, UIController mc) {
+    public void calculateItinerary() {
 
     }
 }

@@ -24,5 +24,23 @@ public class ItineraryCalculatedState implements State {
         c.setCurrentState(DeliveryMapLoadedState.class);
     }
 
+    @Override
+    public void saveRoadMap() {
 
+    }
+
+    @Override
+    public void switchToSuppressionMode() {
+
+    }
+
+    @Override
+    public void switchToAddMode() {
+
+    }
+
+    @Override
+    public void showNodeProperties() {
+
+    }
 }

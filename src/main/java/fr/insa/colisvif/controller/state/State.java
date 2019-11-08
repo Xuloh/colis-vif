@@ -17,11 +17,68 @@ public interface State {
 
     }
 
-    default void calculateItinerary(Controller c, UIController mc) {
+    default void calculateItinerary() {
 
     }
 
-    default void suppressingDelivery() {
+    default void saveRoadMap() {
 
     }
+
+    default void switchToSuppressionMode() {
+
+    }
+
+    default void suppressStop() {
+
+    }
+
+    default void switchToAddMode() {
+
+    }
+
+    default void addPickUpNode() {
+
+    }
+
+    default void addDropOffNode() {
+
+    }
+
+    default void showNodeProperties()  {
+
+    }
+
+    default void switchToOrderChangeMode() {
+
+    }
+
+    default void switchToLocationChange() {
+
+    }
+
+    default void changeNodeLocation() {
+
+    }
+
+    default void continueCalculation() {
+
+    }
+
+    default void stopCalculation() {
+
+    }
+
+    default void selectStopToPass() {
+
+    }
+
+    default void calculateItineraryLocally() {
+
+    }
+
+    default void selectStopToDelete() {
+
+    }
+
 }

@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.MonitorInfo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,8 +32,6 @@ public class Controller {
 
     protected final ModifyStopLocationState modifyStopLocationState = new ModifyStopLocationState();
 
-    protected final NodeToModifyOrderState nodeToModifyOrderState = new NodeToModifyOrderState();
-
     protected final PropertiesPrintedState propertiesPrintedState = new PropertiesPrintedState();
 
     protected final SuppressionModeState suppressionModeState = new SuppressionModeState();
@@ -42,8 +39,6 @@ public class Controller {
     protected final SuppressedNodeSelectedState suppressedNodeSelectedState = new SuppressedNodeSelectedState();
 
     protected final NonOptimizedItineraryState nonOptimizedItineraryState = new NonOptimizedItineraryState();
-
-    protected final RoadMapSaveMode roadMapSaveMode = new RoadMapSaveMode();
 
     private Map<Class, State> stateMap = new HashMap<>();
 
@@ -72,14 +67,12 @@ public class Controller {
         this.stateMap.put(LocalItineraryModificationState.class, localItineraryModificationState);
         this.stateMap.put(ModifyStopLocationState.class, modifyStopLocationState);
         this.stateMap.put(ModifyOrderState.class, modifyOrderState);
-        this.stateMap.put(NodeToModifyOrderState.class, nodeToModifyOrderState);
         this.stateMap.put(PickUpNodeAddingState.class, pickUpNodeAddingState);
         this.stateMap.put(PropertiesPrintedState.class, propertiesPrintedState);
         this.stateMap.put(SuppressedNodeSelectedState.class, suppressedNodeSelectedState);
         this.stateMap.put(SuppressionModeState.class, suppressionModeState);
         this.stateMap.put(ItineraryCalculatedState.class, itineraryCalculatedState);
         this.stateMap.put(NonOptimizedItineraryState.class, nonOptimizedItineraryState);
-        this.stateMap.put(RoadMapSaveMode.class, roadMapSaveMode);
     }
 
     public void openFile(File file) {
