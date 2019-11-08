@@ -2,15 +2,12 @@ package fr.insa.colisvif.controller;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class CommandListTest {
 
     @Test
-    public void createCommandList(){
+    public void createCommandList() {
         CommandList cl = new CommandList();
         assertTrue(cl.getPastCommands().isEmpty());
         assertTrue(cl.getCurrentCommands().isEmpty());
