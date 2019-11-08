@@ -72,7 +72,6 @@ public class UIController {
     }
 
     public void initialize() {
-        //initialiseTextualView();
 
         FileChooser fileChooser = new FileChooser();
 
@@ -85,7 +84,7 @@ public class UIController {
         this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir un plan de livraison");
             File file = fileChooser.showOpenDialog(this.stage);
-            this.controller.loadDeliveryMap(file, this.mapCanvas.getCityMap());
+            this.controller.loadDeliveryMap(file);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
@@ -94,57 +93,9 @@ public class UIController {
         this.mainPane.setCenter(this.mapCanvas);
     }
 
-    /*private void initialiseTextualView() {
-        TableColumn<String, Vertex> nodeIdColumn = new TableColumn<>("Id Node");
-        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
-
-        TableColumn<String, Vertex> nodeIdColumn = new TableColumn<>("Id Node");
-        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
-
-        TableColumn<String, Vertex> durationColumn = new TableColumn<>("Id Node");
-        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
-
-        textualView.getColumns().addAll(nodeIdColumn, durationColumn);
-
-
-        TableColumn<String, Delivery> pickUpDurationColumn = new TableColumn<>("Durée enlèvement");
-        pickUpDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
-
-        TableColumn<String, Delivery> deliveryDurationColumn = new TableColumn<>("Durée dépôt");
-        deliveryDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
-
-        textualView.getColumns().add(pickUpDurationColumn);
-        textualView.getColumns().add(deliveryDurationColumn);
-    }*/
-
-    /*public void writeDeliveries(DeliveryMap deliveryMap) {
-        for (Vextex v : vertexMap) {
-            textualView.getItems().add(v);
-        }
-
-        for (Delivery d : deliveryMap.getDeliveryList()) {
-            textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
-        }
-
-        System.out.println(deliveryMap.getDeliveryList().get(0).getPickUpDuration());
-        textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
-        textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
+    public void printTextualView() {
+        this.textualView.printVertices();
     }
-
-    public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
-        StringBuilder builder = new StringBuilder("");
-        builder.append(statusView.getText());
-        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
-            builder.append("Bad Ones : ");
-        }
-        for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
-            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDropOffNodeId() + "/");
-        }
-        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
-            builder.append("\n");
-        }
-        statusView.setText(builder.toString());
-    }*/
 
     public void clearCanvas() {
         this.mapCanvas.clearCanvas();
@@ -157,5 +108,9 @@ public class UIController {
 
     public MapCanvas getMapCanvas() {
         return this.mapCanvas;
+    }
+
+    public TextualView getTextualView() {
+        return this.textualView;
     }
 }
