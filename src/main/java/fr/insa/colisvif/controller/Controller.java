@@ -82,10 +82,10 @@ public class Controller {
     }
 
     public void loadCityMap(File file) {
-        this.currentState.loadCityMap(this, UIController, file);
+        this.currentState.loadCityMap(this, uiController, file);
     }
 
     public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, UIController, file, cityMap);
+        this.currentState.loadDeliveryMap(this, uiController, file, cityMap);
     }
 }
