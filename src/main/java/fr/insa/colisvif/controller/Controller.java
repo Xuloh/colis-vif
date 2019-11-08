@@ -2,7 +2,7 @@ package fr.insa.colisvif.controller;
 
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
-import fr.insa.colisvif.view.UIController;
+import fr.insa.colisvif.view.MainController;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +23,7 @@ public class Controller {
 
     private DeliveryMapFactory deliveryMapFactory;
 
-    private UIController UIController;
+    private MainController MainController;
 
     private State currentState;
 
@@ -39,7 +39,7 @@ public class Controller {
     public void openFile(File file) {
         try {
             this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
-            this.UIController.setCityMap(map);
+            this.MainController.setCityMap(map);
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
@@ -48,15 +48,15 @@ public class Controller {
     public void openDeliveryMap(File file, CityMap cityMap) {
         try {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            this.UIController.writeImpossibleDelivery(this.deliveryMap);
-            this.UIController.writeDeliveries(this.deliveryMap);
+            this.MainController.writeImpossibleDelivery(this.deliveryMap);
+            this.MainController.writeDeliveries(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
-    public void setUIController(UIController UIController) {
-        this.UIController = UIController;
+    public void setMainController(MainController mainController) {
+        this.MainController = mainController;
     }
 
     public void setCurrentState(State currentState) {
@@ -68,11 +68,11 @@ public class Controller {
     }
 
     public void loadCityMap(File file) {
-        this.currentState.loadCityMap(this, UIController, file);
+        this.currentState.loadCityMap(this, MainController, file);
     }
 
     public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, UIController, file, cityMap);
+        this.currentState.loadDeliveryMap(this, MainController, file, cityMap);
         //todo: si on n'est pas dans le bon etat, prevenir dans la vue statut
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class UIController {
+public class MainController {
 
     @FXML
     private URL location;
@@ -58,7 +58,7 @@ public class UIController {
 
     private double scale;
 
-    public UIController(Stage stage, Controller controller) {
+    public MainController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.map = null;

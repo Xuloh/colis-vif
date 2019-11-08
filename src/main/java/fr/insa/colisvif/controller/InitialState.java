@@ -1,13 +1,13 @@
 package fr.insa.colisvif.controller;
 
-import fr.insa.colisvif.view.UIController;
+import fr.insa.colisvif.view.MainController;
 
 import java.io.File;
 
 public class InitialState implements State {
 
     @Override
-    public void loadCityMap(Controller c, UIController mc, File file) {
+    public void loadCityMap(Controller c, MainController mc, File file) {
         c.openFile(file);
         mc.drawMap();
         c.setCurrentState(c.cityMapLoadedState);
