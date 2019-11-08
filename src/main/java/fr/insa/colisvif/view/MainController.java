@@ -99,6 +99,14 @@ public class MainController {
         statusView.setText(builder.toString());
     }
 
+    public void clearMap() {
+        this.mapCanvas.clearMap();
+    }
+
+    public void drawMap() {
+        this.mapCanvas.drawMap();
+    }
+
     public MapCanvas getMapCanvas() {
         return this.mapCanvas;
     }

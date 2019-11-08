@@ -9,7 +9,7 @@ public class CityMapLoadedState implements State {
 
     @Override
     public void loadCityMap(Controller c, MainController mc, File file) {
-        mc.clearMap();
+        mc.drawMap();
         c.openFile(file);
         mc.drawMap();
         c.setCurrentState(c.cityMapLoadedState);

@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import java.util.Objects;
+
 public class Delivery {
     private PickUp pickUp;
     private DropOff dropOff;
@@ -57,5 +59,21 @@ public class Delivery {
                 + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
         return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Delivery delivery = (Delivery) o;
+        return this.pickUp.getNodeId() == delivery.pickUp.getNodeId() &&
+            this.dropOff.getNodeId() == delivery.dropOff.getNodeId() &&
+            this.pickUp.getDuration() == delivery.pickUp.getDuration() &&
+            this.dropOff.getDuration() == delivery.dropOff.getDuration();
+    }
+
 
 }
