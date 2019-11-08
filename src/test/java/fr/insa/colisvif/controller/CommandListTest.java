@@ -7,6 +7,18 @@ import static org.junit.Assert.*;
 
 public class CommandListTest {
 
+    public class SimplePrintCommand implements Command {
+        @Override
+        public void undoCommand() {
+            System.out.println("UNDO");
+        }
+
+        @Override
+        public void doCommand() {
+            System.out.println("DO");
+        }
+    }
+
     @Test
     public void createCommandList() {
         CommandList cl = new CommandList();
