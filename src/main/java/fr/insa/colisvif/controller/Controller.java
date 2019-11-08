@@ -48,8 +48,8 @@ public class Controller {
     public void openDeliveryMap(File file, CityMap cityMap) {
         try {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            this.mainController.writeImpossibleDelivery(this.deliveryMap);
-            this.mainController.writeDeliveries(this.deliveryMap);
+            //this.mainController.writeImpossibleDelivery(this.deliveryMap);
+            //this.mainController.writeDeliveries(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }

@@ -36,6 +36,9 @@ public class MainController {
     private BorderPane mainPane;
 
     @FXML
+    private BorderPane rightPane;
+
+    @FXML
     private MenuItem openDeliveryMap;
 
     @FXML
@@ -47,8 +50,8 @@ public class MainController {
     @FXML
     private MenuItem openMap;
 
-    @FXML
-    private TableView textualView;
+    //@FXML
+    //private TableView textualView;
 
     @FXML
     private TextArea statusView;
@@ -59,14 +62,17 @@ public class MainController {
 
     private MapCanvas mapCanvas;
 
+    private TextualView textualView;
+
     public MainController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
+        this.textualView = new TextualView();
     }
 
     public void initialize() {
-        initialiseTextualView();
+        //initialiseTextualView();
 
         FileChooser fileChooser = new FileChooser();
 
@@ -84,32 +90,47 @@ public class MainController {
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
 
+        this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);
     }
 
-    private void initialiseTextualView() {
+    /*private void initialiseTextualView() {
+        TableColumn<String, Vertex> nodeIdColumn = new TableColumn<>("Id Node");
+        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
+
+        TableColumn<String, Vertex> nodeIdColumn = new TableColumn<>("Id Node");
+        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
+
+        TableColumn<String, Vertex> durationColumn = new TableColumn<>("Id Node");
+        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
+
+        textualView.getColumns().addAll(nodeIdColumn, durationColumn);
+
 
         TableColumn<String, Delivery> pickUpDurationColumn = new TableColumn<>("Durée enlèvement");
-        pickUpDurationColumn.setCellValueFactory(new PropertyValueFactory<>("pickUpDuration"));
+        pickUpDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         TableColumn<String, Delivery> deliveryDurationColumn = new TableColumn<>("Durée dépôt");
-        deliveryDurationColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryDuration"));
+        deliveryDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         textualView.getColumns().add(pickUpDurationColumn);
         textualView.getColumns().add(deliveryDurationColumn);
-    }
+    }*/
 
     public void windowResized() {
         this.clearMap();
         this.drawMap();
     }
 
-    public void writeDeliveries(DeliveryMap deliveryMap) {
+    /*public void writeDeliveries(DeliveryMap deliveryMap) {
+        for (Vextex v : vertexMap) {
+            textualView.getItems().add(v);
+        }
+
         for (Delivery d : deliveryMap.getDeliveryList()) {
             textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
         }
 
-        System.out.println("ici");
         System.out.println(deliveryMap.getDeliveryList().get(0).getPickUpDuration());
         textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
         textualView.getItems().add(deliveryMap.getDeliveryList().get(0));
@@ -122,13 +143,13 @@ public class MainController {
             builder.append("Bad Ones : ");
         }
         for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
-            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDeliveryNodeId() + "/");
+            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDropOffNodeId() + "/");
         }
         if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
             builder.append("\n");
         }
         statusView.setText(builder.toString());
-    }
+    }*/
 
     public void clearMap() {
         this.mapCanvas.clearMap();

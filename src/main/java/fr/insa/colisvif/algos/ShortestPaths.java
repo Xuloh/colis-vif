@@ -18,7 +18,7 @@ public class ShortestPaths {
         dijkstra(map, deliveries.getWarehouseNodeId());
         for(Delivery delivery : deliveries.getDeliveryList()){
             dijkstra(map, delivery.getPickUpNodeId());
-            dijkstra(map, delivery.getDeliveryNodeId());
+            dijkstra(map, delivery.getDropOffNodeId());
         }
     }
 

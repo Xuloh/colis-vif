@@ -27,12 +27,12 @@
     <center>
     </center>
    <right>
-      <BorderPane prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER" fx:id="rightPane">
          <top>
             <Button mnemonicParsing="false" text="Calculer l'itinéraire" BorderPane.alignment="CENTER" />
          </top>
          <center>
-            <TableView fx:id="textualView" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
+            <!--<TableView fx:id="textualView" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER" />-->
          </center>
          <bottom>
             <FlowPane prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER">
