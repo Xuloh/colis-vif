@@ -6,6 +6,8 @@ import fr.insa.colisvif.view.UIController;
 
 import java.io.File;
 
+//TODO : Ajouter Etat Cas ou trajet non optimal
+
 public class ItineraryCalculated implements State {
 
     @Override
