@@ -1,5 +1,7 @@
 package fr.insa.colisvif.controller;
 
+import fr.insa.colisvif.controller.command.Command;
+
 import java.util.LinkedList;
 
 public class CommandList {
