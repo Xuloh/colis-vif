@@ -24,10 +24,10 @@ public class Round {
         return steps;
     }
 
-    public Round(long warehouseNodeId, int startDateInSeconds){
+    public Round(DeliveryMap deliveries){
         steps = new ArrayList<>();
-        this.warehouseNodeId = warehouseNodeId;
-        this.startDateInSeconds = startDateInSeconds;
+        warehouseNodeId = deliveries.getWarehouseNodeId();
+        startDateInSeconds = deliveries.getStartDateInSeconds();
     }
 
     public void pushStep(Step step){

@@ -1,12 +1,17 @@
 package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdError;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.*;
 
 public class CityMap {
+
     private static final int LONG_MAX = 180;
     private static final int LAT_MIN = -90;
+    private static final int speedInMS = (int)(15./3.6); //the speed of the cyclist in meters per second
 
     private double longMin;
     private double latMax;
@@ -77,6 +82,15 @@ public class CityMap {
         return pathsFromVertices.get(start).getLength(finish);
     }
 
+    public Section getSection(Long start, Long finish){
+        for(Section section : getMapNode().get(start).getSuccessors()){
+            if(section.getDestination() == finish){
+                return section;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     @Override
     public String toString() {
         String result = "Nodes : \n";
@@ -105,6 +119,7 @@ public class CityMap {
 
     public void dijkstra(Long start){
         PathsFromVertex pathsFromStart = new PathsFromVertex();
+        pathsFromStart.setLength(start, 0D);
 
         Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> Q = new PriorityQueue<Long>(cmp);
@@ -127,7 +142,56 @@ public class CityMap {
         pathsFromVertices.put(start, pathsFromStart);
     }
 
-    private class PathsFromVertex{
+    private int constructPath(Step step, long start, long finish, int time){
+        if(start == finish){
+            return time;
+        }
+        double length = 0D;
+        while(start != finish){
+            long prev = pathsFromVertices.get(start).prevVertices.get(finish);
+            Section section = getSection(prev, finish);
+            step.pushSection(section);
+            finish = prev;
+            length += section.getLength();
+        }
+        return time + (int)(length / speedInMS);
+    }
+
+    public Round shortestRound(DeliveryMap deliveries){
+        int time = deliveries.getStartDateInSeconds();
+        long lastId = deliveries.getWarehouseNodeId();
+        Round round = new Round(deliveries);
+        VerticesGraph G = new VerticesGraph(this, deliveries);
+        List<Vertex> stopList = G.shortestRound();
+        for(Vertex vertex : stopList){
+            Step step = new Step(vertex);
+            time = constructPath(step, lastId, vertex.getId(), time);
+            step.setArrivalDateInSeconds(time);
+            time += step.getDurationInSeconds();
+            lastId = vertex.getId();
+            round.pushStep(step);
+        }
+        return round;
+    }
+
+    public Round naiveRound(DeliveryMap deliveries){
+        int time = deliveries.getStartDateInSeconds();
+        long lastId = deliveries.getWarehouseNodeId();
+        Round round = new Round(deliveries);
+        VerticesGraph G = new VerticesGraph(this, deliveries);
+        List<Vertex> stopList = G.naiveRound();
+        for(Vertex vertex : stopList){
+            Step step = new Step(vertex);
+            time = constructPath(step, lastId, vertex.getId(), time);
+            step.setArrivalDateInSeconds(time);
+            time += step.getDurationInSeconds();
+            lastId = vertex.getId();
+            round.pushStep(step);
+        }
+        return round;
+    }
+
+    private static class PathsFromVertex{
         private HashMap<Long, Long> prevVertices;
         private HashMap<Long, Double> lengths;
 
@@ -153,3 +217,5 @@ public class CityMap {
         }
     }
 }
+
+

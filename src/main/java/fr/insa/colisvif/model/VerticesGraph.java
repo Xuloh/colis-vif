@@ -2,7 +2,6 @@ package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.util.Paire;
-import javafx.util.Pair;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -10,35 +9,22 @@ import java.io.IOException;
 import java.util.*;
 
 public class VerticesGraph {
-    static class Vertex{
-        Long id;
-        Boolean type; //0 if it is a pick up and 1 if it is a drop off
-
-        public Long getId() { return id; }
-        public boolean isPickUp() { return type; }
-        public boolean isDropOff() { return !type; }
-
-        Vertex(Long id, Boolean type){
-            this.id = id;
-            this.type = type;
-        }
-    }
     static class SubResult{
-        LinkedList<Long> path;
+        LinkedList<Vertex> path;
         double length;
 
-        LinkedList<Long> getPath() { return path; }
+        LinkedList<Vertex> getPath() { return path; }
         double getLength() { return length; }
         void setLength(double length) { this.length = length; }
-        void setPath(LinkedList<Long> path) { this.path = path; }
+        void setPath(LinkedList<Vertex> path) { this.path = path; }
 
         SubResult(){
             path = new LinkedList<>();
             length = -1;
         }
 
-        void add(Long l){
-            path.add(l);
+        void add(Vertex vertex){
+            path.add(vertex);
         }
         void clearPath(){
             path.clear();
@@ -102,19 +88,9 @@ public class VerticesGraph {
 */
 
         VerticesGraph TS = new VerticesGraph(n, len);
-        var debut = System.nanoTime();
-        LinkedList<Vertex> L = TS.shortestRound();
-        var fin = System.nanoTime();
-        for(Vertex v : L){
-            System.out.print(v.getId());
-            System.out.print("  ");
-        }
-        System.out.println(" ");
-        System.out.println((fin - debut)*0.000000001);
-
 
 //        var debut = System.nanoTime();
-//        var L = TS.naiveRound();
+//        LinkedList<Vertex> L = TS.shortestRound();
 //        var fin = System.nanoTime();
 //        for(Vertex v : L){
 //            System.out.print(v.getId());
@@ -122,12 +98,22 @@ public class VerticesGraph {
 //        }
 //        System.out.println(" ");
 //        System.out.println((fin - debut)*0.000000001);
+
+        var debut = System.nanoTime();
+        var L = TS.naiveRound();
+        var fin = System.nanoTime();
+        for(Vertex v : L){
+            System.out.print(v.getId());
+            System.out.print("  ");
+        }
+        System.out.println(" ");
+        System.out.println((fin - debut)*0.000000001);
     }
 
     private Long warehouseNodeId;
-    private HashMap<Long, Long> dropOffs;
+    private HashMap<Long, Long> dropOffs; // TODO remplacer ça par une liste de dropoffs associés
     private HashMap<Long, HashMap<Long, Double>> lengths;
-    private HashMap<Paire<Long, Set<Long>>, SubResult> subresults;
+    private HashMap<Paire<Vertex, Set<Vertex>>, SubResult> subresults;
 
     public VerticesGraph(CityMap map, DeliveryMap deliveries){
         warehouseNodeId = deliveries.getWarehouseNodeId();
@@ -179,23 +165,25 @@ public class VerticesGraph {
         }
     }
 
-    private void aux(Long start, Long id, SubResult subResult, TreeSet<Long> copy){
-        copy.remove(id);
-        if(dropOffs.containsKey(id)) {
-            copy.add(dropOffs.get(id));
-            SubResult candidate = subProblem(id, copy);
-            update(start, id, subResult, candidate);
-            copy.remove(dropOffs.get(id));
+    private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
+        copy.remove(vertex);
+        Long id = vertex.getId();
+        if(vertex.isPickUp()) {
+            Vertex next = new Vertex(dropOffs.get(id), true);
+            copy.add(next);
+            SubResult candidate = subProblem(vertex, copy);
+            update(start.getId(), id, subResult, candidate);
+            copy.remove(next);
         }
         else{
-            SubResult candidate = subProblem(id, copy);
-            update(start, id, subResult, candidate);
+            SubResult candidate = subProblem(vertex, copy);
+            update(start.getId(), id, subResult, candidate);
         }
-        copy.add(id);
+        copy.add(vertex);
     }
 
-    private SubResult subProblem(Long start, Set<Long> vertices){
-        Paire<Long, Set<Long>> key = new Paire<>(start, new TreeSet<>(vertices));
+    private SubResult subProblem(Vertex start, Set<Vertex> vertices){
+        Paire<Vertex, Set<Vertex>> key = new Paire<>(start, new TreeSet<>(vertices));
 
         if(subresults.containsKey(key)) {
             return subresults.get(key);
@@ -209,10 +197,10 @@ public class VerticesGraph {
         }
 
         SubResult subResult = new SubResult();
-        TreeSet<Long> copy = new TreeSet<>(vertices);
+        TreeSet<Vertex> copy = new TreeSet<>(vertices);
 
-        for(Long id : vertices){
-            aux(start, id, subResult, copy);
+        for(Vertex vertex : vertices){
+            aux(start, vertex, subResult, copy);
         }
         subResult.setPath(new LinkedList<>(subResult.getPath()));
         subResult.add(start);
@@ -222,19 +210,20 @@ public class VerticesGraph {
     }
 
     public LinkedList<Vertex> shortestRound(){
-        LinkedList<Long> L = subProblem(warehouseNodeId, dropOffs.keySet()).getPath();
-        LinkedList<Vertex> V = new LinkedList<>();
-        for( Long l : L){
-            V.addFirst(new Vertex(l, dropOffs.containsKey(l)));
+        Vertex start = new Vertex(warehouseNodeId, true);
+        TreeSet<Vertex> vertices = new TreeSet<>();
+        for(Long l : dropOffs.keySet()){
+            vertices.add(new Vertex(l, false));
         }
-        return V;
+        LinkedList<Vertex> stops = subProblem(start, vertices).getPath();
+        stops.removeFirst();
+        return stops;
     }
 
     public LinkedList<Vertex> naiveRound(){
-        LinkedList<Vertex> V = new LinkedList<>();
+        LinkedList<Vertex> stopList = new LinkedList<>();
         Set<Long> S = new TreeSet<>(dropOffs.keySet());
 
-        V.add(new Vertex(warehouseNodeId, dropOffs.containsKey(warehouseNodeId)));
         Long last = warehouseNodeId;
         while(!S.isEmpty()){
             Long candidate = S.iterator().next();
@@ -245,7 +234,7 @@ public class VerticesGraph {
                     distance = lengths.get(last).get(l);
                 }
             }
-            V.add(new Vertex(candidate, dropOffs.containsKey(candidate)));
+            stopList.add(new Vertex(candidate, dropOffs.containsKey(candidate)));
             if(dropOffs.containsKey(candidate)){
                 S.add(dropOffs.get(candidate));
             }
@@ -253,6 +242,6 @@ public class VerticesGraph {
             last = candidate;
         }
 
-        return V;
+        return stopList;
     }
 }
