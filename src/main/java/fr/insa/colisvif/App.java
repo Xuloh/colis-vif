@@ -1,7 +1,7 @@
 package fr.insa.colisvif;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.view.MainController;
+import fr.insa.colisvif.view.UIController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,10 +20,10 @@ public class App extends Application {
         );
 
         // create and set controller
-        MainController mainController = new MainController(stage, controller);
-        loader.setController(mainController);
+        UIController uiController = new UIController(stage, controller);
+        loader.setController(uiController);
 
-        controller.setMainController(mainController);
+        controller.setUIController(uiController);
 
         // load scene
         Scene scene = new Scene(loader.load());

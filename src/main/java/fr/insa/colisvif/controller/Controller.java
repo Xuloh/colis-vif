@@ -6,7 +6,7 @@ import fr.insa.colisvif.controller.state.InitialState;
 import fr.insa.colisvif.controller.state.State;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
-import fr.insa.colisvif.view.MainController;
+import fr.insa.colisvif.view.UIController;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,7 +31,7 @@ public class Controller {
 
     private DeliveryMapFactory deliveryMapFactory;
 
-    private MainController mainController;
+    private UIController uiController;
 
     private State currentState;
 
@@ -51,7 +51,7 @@ public class Controller {
     public void openFile(File file) {
         try {
             this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
-            this.mainController.getMapCanvas().setCityMap(map);
+            this.uiController.getMapCanvas().setCityMap(map);
         } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
             e.printStackTrace();
         }
@@ -60,15 +60,15 @@ public class Controller {
     public void openDeliveryMap(File file, CityMap cityMap) {
         try {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            this.mainController.writeImpossibleDelivery(this.deliveryMap);
-            this.mainController.writeDeliveries(this.deliveryMap);
+            this.uiController.writeImpossibleDelivery(this.deliveryMap);
+            this.uiController.writeDeliveries(this.deliveryMap);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    public void setUIController(UIController uiController) {
+        this.uiController = uiController;
     }
 
     public void setCurrentState(Class stateName) {
@@ -82,10 +82,10 @@ public class Controller {
     }
 
     public void loadCityMap(File file) {
-        this.currentState.loadCityMap(this, mainController, file);
+        this.currentState.loadCityMap(this, UIController, file);
     }
 
     public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, mainController, file, cityMap);
+        this.currentState.loadDeliveryMap(this, UIController, file, cityMap);
     }
 }
