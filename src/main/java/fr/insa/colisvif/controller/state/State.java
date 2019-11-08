@@ -1,5 +1,6 @@
-package fr.insa.colisvif.controller;
+package fr.insa.colisvif.controller.state;
 
+import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.MainController;
 
