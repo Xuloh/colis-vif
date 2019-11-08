@@ -4,11 +4,9 @@ import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.util.Paire;
 //import fr.insa.colisvif.xml.DeliveryMapParserXML;
-import javafx.util.Pair;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -126,7 +124,7 @@ public class TravellingSalesman {
         subresults = new HashMap<>();
         dropOffs = new HashMap<>();
         for(Delivery delivery : deliveries.getDeliveryList()){
-            dropOffs.put(delivery.getPickUpNodeId(), delivery.getDeliveryNodeId());
+            dropOffs.put(delivery.getPickUpNodeId(), delivery.getDropOffNodeId());
         }
 
         lengths = new HashMap<>();
