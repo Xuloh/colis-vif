@@ -6,9 +6,7 @@ import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -45,7 +43,7 @@ public class MainController {
     private Canvas canvas;
 
     @FXML
-    private ListView textualView;
+    private TableView textualView;
 
     @FXML
     private TextArea statusView;
@@ -66,9 +64,9 @@ public class MainController {
     }
 
     public void initialize() {
-        FileChooser fileChooser = new FileChooser();
+        initialiseTextualView();
 
-        textualView.getItems().add("test");
+        FileChooser fileChooser = new FileChooser();
 
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir une carte");
@@ -92,13 +90,24 @@ public class MainController {
         this.canvas.widthProperty().addListener(listener);
     }
 
+    private void initialiseTextualView() {
+
+        TableColumn<String, String> column1 = new TableColumn<>("First Name");
+
+
+        textualView.getColumns().add(column1);
+
+        textualView.getItems().add("truc");
+    }
+
     public void windowResized() {
         this.clearMap();
         this.drawMap();
     }
 
     public void writeDeliveries(DeliveryMap deliveryMap) {
-        textualView.getItems().add("test");
+
+        textualView.getItems().add("item1");
     }
 
     public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
