@@ -19,6 +19,8 @@ public class CityMapLoadedState implements State {
     @Override
     public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
         c.openDeliveryMap(file, cityMap);
+        mc.clearCanvas();
+        mc.drawCanvas();
         c.setCurrentState(DeliveryMapLoadedState.class);
     }
 }
