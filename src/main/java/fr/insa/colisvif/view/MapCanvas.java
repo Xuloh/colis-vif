@@ -1,38 +1,27 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Section;
 import javafx.beans.InvalidationListener;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MapCanvas extends BorderPane {
-
-    private static final Color NODE_COLOR = Color.CORNFLOWERBLUE;
-
-    private static final Color SECTION_COLOR = Color.grayRgb(85);
-
-    private static final int NODE_SIZE = 3;
-
-    private static final int DELIVERY_NODE_SIZE = 15;
 
     private CityMap cityMap;
 
@@ -42,11 +31,19 @@ public class MapCanvas extends BorderPane {
 
     private GraphicsContext context;
 
-    private double scale;
+    private DoubleProperty scale;
+
+    private double baseZoom;
 
     private double originX;
 
     private double originY;
+
+    private double dragOriginX;
+
+    private double dragOriginY;
+
+    private ToolsPane toolsPane;
 
     public MapCanvas() {
         this(true);
@@ -54,6 +51,11 @@ public class MapCanvas extends BorderPane {
 
     public MapCanvas(boolean useTools) {
         super();
+
+        this.scale = new SimpleDoubleProperty();
+        this.baseZoom = 1d;
+        this.originX = 0d;
+        this.originY = 0d;
 
         Pane canvasContainer = new Pane();
         this.canvas = new Canvas();
@@ -63,8 +65,39 @@ public class MapCanvas extends BorderPane {
 
 
         if (useTools) {
-            this.setRight(new ToolsPane());
+            this.toolsPane = new ToolsPane();
+            this.setRight(toolsPane);
+
+            this.scale.bindBidirectional(this.toolsPane.getZoomSlider().valueProperty());
+            this.scale.addListener((observable, oldValue, newValue) -> {
+                this.clearCanvas();
+                this.drawCityMap();
+                this.drawDeliveryMap();
+            });
+
+            this.toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
+                this.scale.set(1d);
+                this.originX = 0;
+                this.originY = 0;
+                this.clearCanvas();
+                this.drawCityMap();
+                this.drawDeliveryMap();
+            });
+
+            this.toolsPane.getZoomPlusButton().addEventHandler(ActionEvent.ACTION, event -> {
+                double scale = this.scale.get();
+                scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
+                this.scale.set(scale);
+            });
+
+            this.toolsPane.getZoomMinusButton().addEventHandler(ActionEvent.ACTION, event -> {
+                double scale = this.scale.get();
+                scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
+                this.scale.set(scale);
+            });
         }
+
+        this.scale.set(1d);
 
         this.canvas.heightProperty().bind(canvasContainer.heightProperty());
         this.canvas.widthProperty().bind(canvasContainer.widthProperty());
@@ -73,9 +106,29 @@ public class MapCanvas extends BorderPane {
         this.canvas.heightProperty().addListener(listener);
         this.canvas.widthProperty().addListener(listener);
 
-        this.scale = 1d;
-        this.originX = 0d;
-        this.originY = 0d;
+        this.canvas.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.canvas.setCursor(Cursor.CLOSED_HAND);
+                this.dragOriginX = this.originX - event.getX();
+                this.dragOriginY = this.originY - event.getY();
+            }
+        });
+
+        this.canvas.setOnMouseDragged(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.originX = event.getX() + this.dragOriginX;
+                this.originY = event.getY() + this.dragOriginY;
+                this.clearCanvas();
+                this.drawCityMap();
+                this.drawDeliveryMap();
+            }
+        });
+
+        this.canvas.setOnMouseReleased(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.canvas.setCursor(Cursor.DEFAULT);
+            }
+        });
     }
 
     public void clearCanvas() {
@@ -130,7 +183,7 @@ public class MapCanvas extends BorderPane {
                 pickupNodes.add(nodes.get(delivery.getPickUpNodeId()));
             });
 
-        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), 0.7);
+        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), CanvasConstants.NODE_OPACITY);
 
         for (int i = 0; i < pickupNodes.size(); i++) {
             Node pickupNode = pickupNodes.get(i);
@@ -147,25 +200,39 @@ public class MapCanvas extends BorderPane {
                 dropOffNode.getLatitude(),
                 dropOffNode.getLongitude(),
                 color,
-                DELIVERY_NODE_SIZE
+                CanvasConstants.DELIVERY_NODE_SIZE
             );
         }
+
+        Node warehouse = nodes.get(this.deliveryMap.getWarehouseNodeId());
+        Color color = Color.rgb(255, 255, 255, CanvasConstants.NODE_OPACITY);
+
+        this.drawSquare(
+            warehouse.getLatitude(),
+            warehouse.getLongitude(),
+            color
+        );
     }
 
-    public void autoScale() {
-        final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
-        final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
-        final double CANVAS_WIDTH = this.canvas.getWidth();
-        final double CANVAS_HEIGHT = this.canvas.getHeight();
-
-        if (CANVAS_WIDTH > CANVAS_HEIGHT) {
-            this.scale = CANVAS_HEIGHT / MAP_HEIGHT;
+    private void computeBaseZoom() {
+        if (this.cityMap == null) {
+            this.baseZoom = 1d;
         } else {
-            this.scale = CANVAS_WIDTH / MAP_WIDTH;
+            final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
+            final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
+            final double CANVAS_WIDTH = this.canvas.getWidth();
+            final double CANVAS_HEIGHT = this.canvas.getHeight();
+
+            if (CANVAS_WIDTH > CANVAS_HEIGHT) {
+                this.baseZoom = CANVAS_HEIGHT / MAP_HEIGHT;
+            } else {
+                this.baseZoom = CANVAS_WIDTH / MAP_WIDTH;
+            }
         }
     }
 
-    public void onResize() {
+    private void onResize() {
+        this.computeBaseZoom();
         this.clearCanvas();
         this.drawCityMap();
         this.drawDeliveryMap();
@@ -173,7 +240,7 @@ public class MapCanvas extends BorderPane {
 
     public void setCityMap(CityMap map) {
         this.cityMap = map;
-        this.autoScale();
+        this.computeBaseZoom();
     }
 
     public CityMap getCityMap() {
@@ -186,14 +253,6 @@ public class MapCanvas extends BorderPane {
 
     public DeliveryMap getDeliveryMap() {
         return this.deliveryMap;
-    }
-
-    private void drawPoint(double lat, double lng) {
-        this.drawPoint(lat, lng, NODE_COLOR, NODE_SIZE);
-    }
-
-    private void drawPoint(double lat, double lng, Paint paint) {
-        this.drawPoint(lat, lng, paint, NODE_SIZE);
     }
 
     private void drawPoint(double lat, double lng, Paint paint, int size) {
@@ -222,7 +281,7 @@ public class MapCanvas extends BorderPane {
     }
 
     private void drawLine(double lat1, double lng1, double lat2, double lng2) {
-        this.drawLine(lat1, lng1, lat2, lng2, SECTION_COLOR);
+        this.drawLine(lat1, lng1, lat2, lng2, CanvasConstants.SECTION_COLOR);
     }
 
     private void drawLine(double lat1, double lng1, double lat2, double lng2, Paint paint) {
@@ -245,7 +304,7 @@ public class MapCanvas extends BorderPane {
         double[] x = new double[3];
         double[] y = new double[3];
 
-        final int RADIUS = DELIVERY_NODE_SIZE / 2;
+        final int RADIUS = CanvasConstants.DELIVERY_NODE_SIZE / 2;
 
         for (int k = 0; k < 3; k++) {
             x[k] = RADIUS * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
@@ -263,11 +322,42 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
+    private void drawSquare(double lat, double lng, Paint paint) {
+        double centerX = this.lngToPx(lng);
+        double centerY = this.latToPx(lat);
+
+        final int RADIUS = CanvasConstants.DELIVERY_NODE_SIZE / 2;
+
+        double[] x = {
+            centerX - RADIUS,
+            centerX + RADIUS,
+            centerX + RADIUS,
+            centerX - RADIUS
+        };
+
+        double[] y = {
+            centerY - RADIUS,
+            centerY - RADIUS,
+            centerY + RADIUS,
+            centerY + RADIUS
+        };
+
+        Paint prevFill = this.context.getFill();
+        this.context.setFill(paint);
+        this.context.fillPolygon(x, y, 4);
+        this.context.setStroke(prevFill);
+
+        Paint prevStroke = this.context.getStroke();
+        this.context.setStroke(Color.BLACK);
+        this.context.strokePolygon(x, y, 4);
+        this.context.setStroke(prevStroke);
+    }
+
     private double latToPx(double lat) {
-        return (this.cityMap.getLatMax() - lat) * this.scale + this.originY;
+        return (this.cityMap.getLatMax() - lat) * this.scale.get() * this.baseZoom + this.originY;
     }
 
     private double lngToPx(double lng) {
-        return (lng - this.cityMap.getLngMin()) * this.scale + this.originX;
+        return (lng - this.cityMap.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
     }
 }
