@@ -1,10 +1,10 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -36,7 +36,7 @@ public class CityMapTest {
     }
 
     @Test
-    public void testCreateSectionNewSection() throws IdError {
+    public void testCreateSectionNewSection() throws IdException {
         CityMap citymap = new CityMap();
         citymap.createNode(101, -60, 120);
         citymap.createNode(100, -66, 120);
@@ -46,7 +46,7 @@ public class CityMapTest {
     }
 
     @Test
-    public void testCreateSectionUpdateSection() throws IdError {
+    public void testCreateSectionUpdateSection() throws IdException {
         CityMap citymap = new CityMap();
         citymap.createNode(101, -60, 120);
         citymap.createNode(100, -66, 120);
@@ -67,13 +67,13 @@ public class CityMapTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateBadSection() throws IdError {
+    public void testCreateBadSection() throws IdException {
         CityMap citymap = new CityMap();
         citymap.createSection(-240, "Supé Rue", 120, 124);
     }
 
     @Test
-    public void testCityMapToString() throws IdError {
+    public void testCityMapToString() throws IdException {
         CityMap citymap = new CityMap();
         citymap.createNode(1, 0, 0);
         citymap.createNode(2, 1, 1);
@@ -94,7 +94,7 @@ public class CityMapTest {
     }
 
     @Test
-    public void testEquals() throws IdError  {
+    public void testEquals() throws IdException {
         CityMap citymap_1 = new CityMap();
         citymap_1.createNode(1, 0, 0);
         citymap_1.createNode(2, 1, 1);
@@ -178,7 +178,7 @@ public class CityMapTest {
     }
 
     @Test
-    public void testToString() throws IdError {
+    public void testToString() throws IdException {
         CityMap citymap = new CityMap();
         citymap.createNode(1, 0, 0);
         citymap.createNode(2, 1, 1);

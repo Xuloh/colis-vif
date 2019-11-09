@@ -1,6 +1,6 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
@@ -29,7 +29,7 @@ public class CityMapFactory {
     }
 
     //TODO on doit pouvoir passer le fichier en paramètre !
-    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdError {
+    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdException {
         try {
             Element root = loadFile(file);
             CityMap cityMap = new CityMap();

@@ -1,16 +1,12 @@
 package fr.insa.colisvif.controller;
 
 import fr.insa.colisvif.controller.state.*;
-import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

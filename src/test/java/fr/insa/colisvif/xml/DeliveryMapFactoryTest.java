@@ -1,6 +1,6 @@
 package fr.insa.colisvif.xml;
 
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
@@ -27,7 +27,7 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testCreateDeliveryMapFromXML()
-            throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+            throws ParserConfigurationException, SAXException, IOException, IdException, URISyntaxException {
         File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
         File deliveryFile = new File(getClass().getResource("/validDeliveryMatchingMap.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();
@@ -46,7 +46,7 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testCreateDeliveryMapFromXMLImpossibleDeliveries()
-            throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+            throws ParserConfigurationException, SAXException, IOException, IdException, URISyntaxException {
         File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
         File deliveryFile = new File(getClass().getResource("/validDelivery.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();

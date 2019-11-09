@@ -1,10 +1,10 @@
 package fr.insa.colisvif.exception;
 
-public class IdError extends Exception{
+public class IdException extends Exception{
 
     private static final long serialVersionUID = 1L;
 
-    public IdError(String message) {
+    public IdException(String message) {
         super(message);
     }
 }

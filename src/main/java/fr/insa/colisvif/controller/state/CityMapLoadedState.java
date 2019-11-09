@@ -1,7 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.UIController;
 import org.xml.sax.SAXException;
@@ -18,7 +18,7 @@ public class CityMapLoadedState implements State {
         try {
             c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
             mc.getMapCanvas().setCityMap(c.getMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
+        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }
         mc.getMapCanvas().setDeliveryMap(null);
