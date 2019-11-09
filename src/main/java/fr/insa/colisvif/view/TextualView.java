@@ -19,8 +19,6 @@ public class TextualView extends Pane {
 
     private TableView<Vertex> table;
 
-    private ObservableList<Vertex> vertexMap;
-
     private TableColumn<Vertex, Long> nodeIdColumn;
 
     private TableColumn<Vertex, Integer> durationColumn;
@@ -34,26 +32,17 @@ public class TextualView extends Pane {
         this.table.prefHeightProperty().bind(this.heightProperty());
         this.table.prefWidthProperty().bind(this.widthProperty());
 
-        this.nodeIdColumn = new TableColumn<>("Id Node");
-        this.nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Vertex, Long> nodeIdColumn = new TableColumn<>("Id Node");
+        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("nodeId"));
 
-        this.durationColumn = new TableColumn<>("Duration");
-        this.durationColumn.setCellValueFactory(new PropertyValueFactory<>("durationInSeconds"));
+        TableColumn<Vertex, Integer> durationColumn = new TableColumn<>("Duration");
+        durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         this.table.getColumns().add(nodeIdColumn);
         this.table.getColumns().add(durationColumn);
     }
 
-    public void setVertexMap(DeliveryMap deliveryMap) {
-        this.vertexMap = FXCollections.observableArrayList();
-
-        for (Delivery d : deliveryMap.getDeliveryList()) {
-            vertexMap.add(new Vertex(d.getPickUpNodeId(), false, d.getPickUpDuration()));
-            vertexMap.add(new Vertex(d.getDropOffNodeId(), true, d.getDropOffDuration()));
-        }
-    }
-
-    public void printVertices() {
-        table.setItems(vertexMap);
+    public void printVertices(ObservableList<Vertex> vertexList) {
+        table.setItems(vertexList);
     }
 }

@@ -118,7 +118,7 @@ public class UIController {
     }
 
     public void printTextualView() {
-        this.textualView.printVertices();
+        this.textualView.printVertices(controller.getVertexList());
     }
 
     public void clearCanvas() {
