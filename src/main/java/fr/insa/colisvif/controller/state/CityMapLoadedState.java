@@ -30,10 +30,9 @@ public class CityMapLoadedState implements State {
     public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
         try {
             c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            mc.writeImpossibleDelivery(c.getDeliveryMap());
             mc.writeDeliveries(c.getDeliveryMap());
             mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mc.clearCanvas();
