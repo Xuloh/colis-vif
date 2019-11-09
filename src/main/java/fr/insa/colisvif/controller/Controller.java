@@ -4,6 +4,8 @@ import fr.insa.colisvif.controller.state.*;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,7 +54,9 @@ public class Controller {
 
     private State currentState;
 
-    private DeliveryMap deliveryMap; // todo : a supprimer
+    private DeliveryMap deliveryMap;
+
+    private ObservableList<Vertex> vertexList;
 
     public Controller() {
         this.map = null;
@@ -97,6 +101,19 @@ public class Controller {
         this.map = map;
     }
 
+    public void setVertexList(DeliveryMap deliveryMap) {
+        this.vertexList = FXCollections.observableArrayList();
+
+        for (Delivery d : deliveryMap.getDeliveryList()) {
+            vertexList.add(new Vertex(d.getPickUpNodeId(), false, d.getPickUpDuration()));
+            vertexList.add(new Vertex(d.getDropOffNodeId(), true, d.getDropOffDuration()));
+        }
+    }
+
+    public ObservableList<Vertex> getVertexList() {
+        return this.vertexList;
+    }
+
     public CityMapFactory getCityMapFactory() {
         return cityMapFactory;
     }
@@ -115,10 +132,6 @@ public class Controller {
 
     public DeliveryMapFactory getDeliveryMapFactory() {
         return deliveryMapFactory;
-    }
-
-    public void initialiseVertices() {
-        this.uiController.getTextualView().setVertexMap(this.deliveryMap);
     }
 
     public void addDelivery() {

@@ -29,11 +29,9 @@ public class CityMapLoadedState implements State {
     @Override
     public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
         try {
-            // canvas
             c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            c.setVertexList(c.getDeliveryMap());
             mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
-            // table
-            c.initialiseVertices();
         } catch (Exception e) {
             e.printStackTrace();
         }
