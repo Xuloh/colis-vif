@@ -15,6 +15,14 @@ public class DeliveryMapTest {
     }
 
     @Test
+    public void testCreateDelivery() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        deliveryMap.createDelivery(100,101,10,10);
+        Delivery delivery = new Delivery(100,101,10,10);
+        assertEquals(delivery,deliveryMap.getDeliveryList().get(0));
+    }
+
+    @Test
     public void testCreateWarehouseGood() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createWarehouse(101,100);
@@ -78,4 +86,7 @@ public class DeliveryMapTest {
         deliveryMap.setStartDateInSeconds(100);
         assertEquals(100,deliveryMap.getStartDateInSeconds());
     }
+
+
+
 }

@@ -52,7 +52,7 @@ public class Controller {
 
     private State currentState;
 
-    private DeliveryMap deliveryMap;
+    private DeliveryMap deliveryMap; // todo : a supprimer
 
     public Controller() {
         this.map = null;
@@ -75,23 +75,12 @@ public class Controller {
         this.stateMap.put(NonOptimizedItineraryState.class, nonOptimizedItineraryState);
     }
 
-    public void openFile(File file) {
-        try {
-            this.map = this.cityMapFactory.createCityMapFromXMLFile(file);
-            this.uiController.getMapCanvas().setCityMap(map);
-        } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
-            e.printStackTrace();
-        }
+    public void loadCityMap(File file) {
+        this.currentState.loadCityMap(this, uiController, file);
     }
 
-    public void openDeliveryMap(File file, CityMap cityMap) {
-        try {
-            this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            //this.mainController.writeImpossibleDelivery(this.deliveryMap);
-            //this.mainController.writeDeliveries(this.deliveryMap);
-        } catch (IOException | SAXException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+    public void loadDeliveryMap(File file) {
+        this.currentState.loadDeliveryMap(this, uiController, file, this.map);
     }
 
     public void setUIController(UIController uiController) {
@@ -104,16 +93,28 @@ public class Controller {
         }
     }
 
+    public void setMap(CityMap map) {
+        this.map = map;
+    }
+
+    public CityMapFactory getCityMapFactory() {
+        return cityMapFactory;
+    }
+
     public CityMap getMap() {
         return map;
     }
 
-    public void loadCityMap(File file) {
-        this.currentState.loadCityMap(this, uiController, file);
+    public DeliveryMap getDeliveryMap() {
+        return deliveryMap;
     }
 
-    public void loadDeliveryMap(File file) {
-        this.currentState.loadDeliveryMap(this, uiController, file, this.map);
+    public void setDeliveryMap(DeliveryMap deliveryMap) {
+        this.deliveryMap = deliveryMap;
+    }
+
+    public DeliveryMapFactory getDeliveryMapFactory() {
+        return deliveryMapFactory;
     }
 
     public void initialiseVertices() {

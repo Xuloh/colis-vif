@@ -9,6 +9,7 @@ import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
@@ -27,19 +28,19 @@ public class MapCanvas extends BorderPane {
 
     private static final Color NODE_COLOR = Color.CORNFLOWERBLUE;
 
-    private static final Color SECTION_COLOR = Color.BLACK;
-
-    private static final Color DELIVERY_COLOR = Color.RED;
-
-    private static final Color PICKUP_COLOR = Color.GREEN;
+    private static final Color SECTION_COLOR = Color.grayRgb(85);
 
     private static final int NODE_SIZE = 3;
+
+    private static final int DELIVERY_NODE_SIZE = 15;
 
     private CityMap cityMap;
 
     private DeliveryMap deliveryMap;
 
     private Canvas canvas;
+
+    private GraphicsContext context;
 
     private double scale;
 
@@ -56,6 +57,7 @@ public class MapCanvas extends BorderPane {
 
         Pane canvasContainer = new Pane();
         this.canvas = new Canvas();
+        this.context = this.canvas.getGraphicsContext2D();
         canvasContainer.getChildren().add(this.canvas);
         this.setCenter(canvasContainer);
 
@@ -77,8 +79,7 @@ public class MapCanvas extends BorderPane {
     }
 
     public void clearCanvas() {
-        var context = this.canvas.getGraphicsContext2D();
-        context.clearRect(
+        this.context.clearRect(
             0,
             0,
             this.canvas.getWidth(),
@@ -111,10 +112,6 @@ public class MapCanvas extends BorderPane {
                 destination.getLongitude()
             );
         }
-
-        for (Node node : nodes.values()) {
-            this.drawPoint(node.getLatitude(), node.getLongitude());
-        }
     }
 
     public void drawDeliveryMap() {
@@ -125,27 +122,32 @@ public class MapCanvas extends BorderPane {
         Map<Long, Node> nodes = this.cityMap.getMapNode();
 
         List<Node> pickupNodes = new ArrayList<>();
-        List<Node> deliveryNodes = new ArrayList<>();
+        List<Node> dropOffNodes = new ArrayList<>();
 
         this.deliveryMap.getDeliveryList()
             .forEach(delivery -> {
-                deliveryNodes.add(nodes.get(delivery.getDropOffNodeId()));
+                dropOffNodes.add(nodes.get(delivery.getDropOffNodeId()));
                 pickupNodes.add(nodes.get(delivery.getPickUpNodeId()));
             });
 
-        for (Node pickupNode : pickupNodes) {
-            this.drawPoint(
+        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), 0.7);
+
+        for (int i = 0; i < pickupNodes.size(); i++) {
+            Node pickupNode = pickupNodes.get(i);
+            Node dropOffNode = dropOffNodes.get(i);
+            Color color = colorGenerator.next();
+
+            this.drawTriangle(
                 pickupNode.getLatitude(),
                 pickupNode.getLongitude(),
-                PICKUP_COLOR
+                color
             );
-        }
 
-        for (Node deliveryNode : deliveryNodes) {
             this.drawPoint(
-                deliveryNode.getLatitude(),
-                deliveryNode.getLongitude(),
-                DELIVERY_COLOR
+                dropOffNode.getLatitude(),
+                dropOffNode.getLongitude(),
+                color,
+                DELIVERY_NODE_SIZE
             );
         }
     }
@@ -187,23 +189,36 @@ public class MapCanvas extends BorderPane {
     }
 
     private void drawPoint(double lat, double lng) {
-        this.drawPoint(lat, lng, NODE_COLOR);
+        this.drawPoint(lat, lng, NODE_COLOR, NODE_SIZE);
     }
 
     private void drawPoint(double lat, double lng, Paint paint) {
+        this.drawPoint(lat, lng, paint, NODE_SIZE);
+    }
+
+    private void drawPoint(double lat, double lng, Paint paint, int size) {
         double x = this.lngToPx(lng);
         double y = this.latToPx(lat);
 
-        var context = this.canvas.getGraphicsContext2D();
-        Paint prevFill = context.getFill();
-        context.setFill(paint);
-        context.fillOval(
-            x - NODE_SIZE / 2d,
-            y - NODE_SIZE / 2d,
-            NODE_SIZE,
-            NODE_SIZE
+        Paint prevFill = this.context.getFill();
+        this.context.setFill(paint);
+        this.context.fillOval(
+            x - size / 2d,
+            y - size / 2d,
+            size,
+            size
         );
-        context.setFill(prevFill);
+        this.context.setFill(prevFill);
+
+        Paint prevStroke = this.context.getStroke();
+        this.context.setStroke(Color.BLACK);
+        this.context.strokeOval(
+            x - size / 2d,
+            y - size / 2d,
+            size,
+            size
+        );
+        this.context.setStroke(prevStroke);
     }
 
     private void drawLine(double lat1, double lng1, double lat2, double lng2) {
@@ -217,11 +232,35 @@ public class MapCanvas extends BorderPane {
         double x2 = this.lngToPx(lng2);
         double y2 = this.latToPx(lat2);
 
-        var context = this.canvas.getGraphicsContext2D();
-        Paint prevFill = context.getFill();
-        context.setFill(paint);
-        context.strokeLine(x1, y1, x2, y2);
-        context.setFill(prevFill);
+        Paint prevStroke = this.context.getStroke();
+        this.context.setStroke(paint);
+        this.context.strokeLine(x1, y1, x2, y2);
+        this.context.setStroke(prevStroke);
+    }
+
+    private void drawTriangle(double lat, double lng, Paint paint) {
+        double centerX = this.lngToPx(lng);
+        double centerY = this.latToPx(lat);
+
+        double[] x = new double[3];
+        double[] y = new double[3];
+
+        final int RADIUS = DELIVERY_NODE_SIZE / 2;
+
+        for (int k = 0; k < 3; k++) {
+            x[k] = RADIUS * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
+            y[k] = RADIUS * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
+        }
+
+        Paint prevFill = this.context.getFill();
+        this.context.setFill(paint);
+        this.context.fillPolygon(x, y, 3);
+        this.context.setStroke(prevFill);
+
+        Paint prevStroke = this.context.getStroke();
+        this.context.setStroke(Color.BLACK);
+        this.context.strokePolygon(x, y, 3);
+        this.context.setStroke(prevStroke);
     }
 
     private double latToPx(double lat) {

@@ -1,25 +1,44 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.UIController;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 
 public class CityMapLoadedState implements State {
 
     @Override
     public void loadCityMap(Controller c, UIController mc, File file) {
         mc.clearCanvas();
-        c.openFile(file);
+        try {
+            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
+            mc.getMapCanvas().setCityMap(c.getMap());
+        } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
+            e.printStackTrace();
+        }
+        mc.getMapCanvas().setDeliveryMap(null);
         mc.drawCanvas();
         c.setCurrentState(CityMapLoadedState.class);
     }
 
     @Override
     public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
-        c.openDeliveryMap(file, cityMap);
-        c.initialiseVertices();
+        try {
+            // canvas
+            c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
+            // table
+            c.initialiseVertices();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mc.clearCanvas();
+        mc.drawCanvas();
         mc.printTextualView();
         c.setCurrentState(DeliveryMapLoadedState.class);
     }

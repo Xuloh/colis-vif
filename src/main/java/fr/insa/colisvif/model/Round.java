@@ -6,7 +6,7 @@ import java.util.List;
 public class Round {
     private List<Step> steps;
     private long warehouseNodeId;
-    private int startDateInSeconds;
+    private int startDate;
 
     public long getWarehouseNodeId(){
         return warehouseNodeId;
@@ -14,11 +14,11 @@ public class Round {
     public void setWarehouseNodeId(long warehouseNodeId){
         this.warehouseNodeId = warehouseNodeId;
     }
-    public int getStartDateInSeconds(){
-        return startDateInSeconds;
+    public int getStartDate(){
+        return startDate;
     }
-    public void setStartDateInSeconds(int startDateInSeconds){
-        this.startDateInSeconds = startDateInSeconds;
+    public void setStartDate(int startDate){
+        this.startDate = startDate;
     }
     public List<Step> getSteps(){
         return steps;
@@ -27,7 +27,7 @@ public class Round {
     public Round(DeliveryMap deliveries){
         steps = new ArrayList<>();
         warehouseNodeId = deliveries.getWarehouseNodeId();
-        startDateInSeconds = deliveries.getStartDateInSeconds();
+        startDate = deliveries.getStartDateInSeconds();
     }
 
     public void pushStep(Step step){

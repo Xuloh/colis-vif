@@ -3,6 +3,8 @@ package fr.insa.colisvif.model;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DeliveryTest {
 
@@ -40,25 +42,10 @@ public class DeliveryTest {
     }
 
     @Test
-    public void testSetPickUpNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setPickUpNodeId(200);
-        assertEquals(200, delivery.getPickUpNodeId());
-
-    }
-
-    @Test
     public void testGetDeliveryNodeId() {
         Delivery delivery = new Delivery(100, 101, 10, 10);
 
         assertEquals(101, delivery.getDropOffNodeId());
-    }
-
-    @Test
-    public void testSDeliveryNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setDropOffNodeId(200);
-        assertEquals(200, delivery.getDropOffNodeId());
     }
 
     @Test
@@ -100,7 +87,7 @@ public class DeliveryTest {
     public void testSetToPickedUp() {
         Delivery delivery = new Delivery(100, 101, 10,20);
         delivery.setToPickedUp(true);
-        assertEquals(true,delivery.isPicked());
+        assertTrue(delivery.isPicked());
     }
 */
     /*
@@ -111,5 +98,19 @@ public class DeliveryTest {
                 ,delivery.toString());
     }
     */
+
+    @Test
+    public void testSelfEquals() {
+        Delivery delivery = new Delivery(100, 101, 10,20);
+        assertEquals(delivery,delivery);
+    }
+
+    @Test
+    public void testNullEquals() {
+        Delivery delivery_null = null;
+        Delivery delivery = new Delivery(100, 101, 10,20);
+
+        assertFalse(delivery.equals(delivery_null));
+    }
 
 }
