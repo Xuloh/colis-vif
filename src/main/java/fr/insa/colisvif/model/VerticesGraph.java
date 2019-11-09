@@ -1,250 +1,244 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdError;
-import fr.insa.colisvif.util.Paire;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
 
-public class VerticesGraph {
-    static class SubResult{
-        LinkedList<Vertex> path;
-        double length;
+/*package-private*/ class VerticesGraph {
+    private static final int cyclistSpeed = (int)(15./3.6); /**The speed of the cyclist in meters per second */
+    private long N; /**N=2^(2n+1) where n is the number of deliveries, N is the number of subsets of the vertices*/
+    private DeliveryMap deliveries; /**The deliveries that the cyclist need to deliver*/
+    private HashMap<Long, PathsFromVertex> pathsFromVertices; /**The results from the Dijkstra's algorithms*/
+    private ArrayList<ArrayList<Double>> lengths; /**The weights of the arcs*/
+    private HashMap<Long, SubResult> subResults; /**We will use dynamic programing, this is where we store the sub results*/
 
-        LinkedList<Vertex> getPath() { return path; }
-        double getLength() { return length; }
-        void setLength(double length) { this.length = length; }
-        void setPath(LinkedList<Vertex> path) { this.path = path; }
-
-        SubResult(){
-            path = new LinkedList<>();
-            length = -1;
+    /**
+     * @param index a vertex in G
+     * @return the id of the associated map node
+     */
+    private long idFromIndex(int index){
+        if(index == 0){
+            return deliveries.getWarehouseNodeId();
         }
-
-        void add(Vertex vertex){
-            path.add(vertex);
+        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
+        if(index%2 == 1){
+            return delivery.getPickUpNodeId();
         }
-        void clearPath(){
-            path.clear();
-        }
+        return delivery.getDropOffNodeId();
     }
 
-    public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
-        /*
-        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/Tests/map1.xml");
-        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
-        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/Tests/delivery1.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory(new DeliveryMapParserXML()).createDeliveryMapFromXML(file);
-
-
-        for(Long node : map.getMapNode().keySet()){
-            System.out.println(node);
-            for(Section section : map.getMapNode().get(node).getSuccessors()){
-                System.out.print("->");
-                System.out.print(section.getDestination());
-                System.out.print("   ");
-                System.out.println(section.getLength());
-            }
-            System.out.println("");
+    /**
+     * @param index a vertex in G
+     * @return the duration of the associated vertex
+     */
+    private int durationFromIndex(int index){
+        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
+        if(index%2 == 1){
+            return delivery.getPickUpDuration();
         }
+        return delivery.getDropOffDuration();
+    }
 
+    /**
+     * Let n be the number of deliveries we want to process
+     * Creates a graph G with 2n+1 vertices : one for the warehouse and two for each delivery (the pick up and the drop off)
+     * The vertices are indexed from 0 to 2n : the warehouse is associated to 0
+     *                                         the pick up of the i-th delivery is associated to 2i+1
+     *                                         the drop off of this same delivery is associated to 2i+2
+     * @param deliveries a delivery map we want to process
+     * @param pathsFromVertices the results of Dijkstra's algorithms from all nodes in deliveries
+     */
+    /*package-private*/ VerticesGraph(DeliveryMap deliveries, HashMap<Long, PathsFromVertex> pathsFromVertices){
+        int n = deliveries.size();
+        N = 0b1 << (2*n+1); //makes 2^(2n+1), thanks Pacôme
+        this.deliveries = deliveries;
+        this.pathsFromVertices = pathsFromVertices;
 
-        ShortestPaths SP = new ShortestPaths(map, deliveries);
-        TravellingSalesman TSP = new TravellingSalesman(deliveries, SP);
-        LinkedList<Vertex> truc = TSP.shortestRound();
-        for(Vertex machin : truc){
-            System.out.println(machin.id);
-        }
-*/
-        int n = 9;
-        int k = 2*n+1;
-        HashMap<Long, HashMap<Long, Double>> len = new HashMap<>();
-        for(Long i = 0L; i < k; ++i){
-            len.put(i, new HashMap<>());
-        }
-
-        for(Long i = 0L; i<k; ++i){
-            for(Long j=0L; j<k; ++j){
-                len.get(i).put(j, Math.abs(Math.cos(i) + Math.sin(j)) + 0.001);
+        lengths = new ArrayList<>(2*n+1);
+        lengths.add(new ArrayList<>(2*n+1));
+        for(int i=0; i<2*n+1; ++i){
+            lengths.add(new ArrayList<>(2*n+1));
+            long id1 = idFromIndex(i);
+            for(int j=0; j<2*n+1; ++j){
+                long id2 = idFromIndex(j);
+                double len = pathsFromVertices.get(id1).getLength(id2);
+                lengths.get(i).add(len);
             }
         }
 
-        /*
-        for(Long i = 0L; i < k * k; ++i){
-            len.get(i / k).put(i % k, (double) (i + 1L));
-        }
+        subResults = new HashMap<>();
+    }
 
-        for(Long i = 0L; i < k; ++i){
-            for(Long j = 0L; j < k; ++j){
-                System.out.print(i);
-                System.out.print(" -> ");
-                System.out.print(j);
-                System.out.print("   ");
-                System.out.println(len.get(i).get(j));
+    /**
+     * Calculates the key associated with a sub problem in the dynamic programming process
+     * This key will be used in the map subResults to store the sub result of this sub problem
+     * A sub problem is a couple (v, S) where v is a vertex of G and S a subset of the vertices of G that does not contain v
+     * The goal is to find the shortest hamiltonian path of Su{v} whose first vertex is v
+     * @param start the vertex v of the previous explanation
+     * @param setCode a number that represents S, more precisely the sum of all 2^k for k in S
+     * @return the key associated with (v, S)
+     */
+    private Long subProblemKey(int start, long setCode){
+        return setCode + N * start;
+    }
+
+    /**
+     * Returns the result of the sub problem (start, S) where S is the subset coded by setCode
+     * @param start the starting vertex of our path
+     * @param setCode the subSet that need to be explored
+     * @return the sub result of the sub problem (start, s)
+     */
+    private SubResult resolveSubProblem(int start, long setCode){
+        long key = subProblemKey(start, setCode);
+        if(subResults.containsKey(key)){ //this sub problem has been solved yet, we don't solve it again
+            return subResults.get(key);
+        }
+        if(setCode == 0){ //stop case, when S is the empty set
+            SubResult subResult = new SubResult();
+            subResult.setLength(0); //0 can be replaced by lengths.get(start).get(0) if we want the cyclist to come back
+            subResult.addVertex(start);
+            subResults.put(key, subResult);
+            return subResult;
+        }
+        SubResult subResult = new SubResult();
+        int n = deliveries.size();
+        long a = 2; //will be 2^k, used to add and remove elements from the set
+        long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
+        for(int k = 1; k < 2 * n + 1; ++k){
+            if(copy % 2 == 1){//k belongs to the set
+                if(k % 2 == 1){//k is a pick up
+                    //we remove the pick up from the set and add his associated drop off instead
+                    SubResult candidate = resolveSubProblem(k, setCode + a);
+                    //setCode+a is in fact setCode-a+2a, i.e.setCode-2^k+2^(k+1)
+                    //that means we remove int k from the set and add k+1 instead
+                    update(start, k, subResult, candidate);
+                }
+                else{//k is a drop off
+                    //we remove the drop off from the set
+                    SubResult candidate = resolveSubProblem(k, setCode - a);
+                    update(start, k, subResult, candidate);
+                }
             }
+            a = 2 * a;
+            copy = copy / 2;
         }
-*/
-
-        VerticesGraph TS = new VerticesGraph(n, len);
-
-//        var debut = System.nanoTime();
-//        LinkedList<Vertex> L = TS.shortestRound();
-//        var fin = System.nanoTime();
-//        for(Vertex v : L){
-//            System.out.print(v.getId());
-//            System.out.print("  ");
-//        }
-//        System.out.println(" ");
-//        System.out.println((fin - debut)*0.000000001);
-
-        var debut = System.nanoTime();
-        var L = TS.naiveRound();
-        var fin = System.nanoTime();
-        for(Vertex v : L){
-            System.out.print(v.getId());
-            System.out.print("  ");
-        }
-        System.out.println(" ");
-        System.out.println((fin - debut)*0.000000001);
+        subResult.setPath(new LinkedList<>(subResult.getPath()));
+        subResult.addVertex(start);
+        subResults.put(key, subResult);
+        return subResult;
     }
 
-    private Long warehouseNodeId;
-    private HashMap<Long, Long> dropOffs; // TODO remplacer ça par une liste de dropoffs associés
-    private HashMap<Long, HashMap<Long, Double>> lengths;
-    private HashMap<Paire<Vertex, Set<Vertex>>, SubResult> subresults;
-
-    public VerticesGraph(CityMap map, DeliveryMap deliveries){
-        warehouseNodeId = deliveries.getWarehouseNodeId();
-        subresults = new HashMap<>();
-        dropOffs = new HashMap<>();
-        for(Delivery delivery : deliveries.getDeliveryList()){
-            dropOffs.put(delivery.getPickUpNodeId(), delivery.getDropOffNodeId());
-        }
-
-        lengths = new HashMap<>();
-        lengths.put(warehouseNodeId, new HashMap<>());
-        map.dijkstra(warehouseNodeId);
-        for(Delivery delivery1 : deliveries.getDeliveryList()){
-            Long pickUp1 = delivery1.getPickUpNodeId();
-            Long dropOff1 = delivery1.getDropOffNodeId();
-            lengths.put(pickUp1, new HashMap<>());
-            lengths.put(dropOff1, new HashMap<>());
-            map.dijkstra(pickUp1);
-            map.dijkstra(dropOff1);
-            for(Delivery delivery2 : deliveries.getDeliveryList()){
-                Long pickUp2 = delivery2.getPickUpNodeId();
-                Long dropOff2 = delivery2.getDropOffNodeId();
-                lengths.get(pickUp1).put(pickUp2, map.getLength(pickUp1, pickUp2));
-                lengths.get(pickUp1).put(dropOff2, map.getLength(pickUp1, dropOff2));
-                lengths.get(dropOff1).put(pickUp2, map.getLength(dropOff1, pickUp2));
-                lengths.get(dropOff1).put(dropOff2, map.getLength(dropOff1, dropOff2));
-            }
-            lengths.get(warehouseNodeId).put(pickUp1, map.getLength(warehouseNodeId, pickUp1));
-            lengths.get(warehouseNodeId).put(dropOff1, map.getLength(warehouseNodeId, dropOff1));
-        }
-    }
-
-    public VerticesGraph(int n, HashMap<Long, HashMap<Long, Double>> len){
-        warehouseNodeId = 0L;
-        subresults = new HashMap<>();
-        dropOffs = new HashMap<>();
-        for(long i = 1; i < 2 * n; i+=2){
-            dropOffs.put(i, i+1);
-        }
-        lengths = len;
-    }
-
-    private void update(Long start, Long id, SubResult subResult, SubResult candidate){
+    /**
+     * Compares the sub results subResult and candidate, and updates subResult to candidate if candidate is better
+     * Before the treatment, subResult's length is the length of the path starting from start and continuing with
+     * subResult.getPath() . -1 stands for an "infinite" value
+     * @param start the first vertex of the sub problem we are solving
+     * @param next the fist vertex of candidate's path
+     * @param subResult the best result we found so far
+     * @param candidate a candidate that could be better
+     */
+    private void update(int start, int next, SubResult subResult, SubResult candidate){
         double a = subResult.getLength();
-        double b = candidate.getLength() + lengths.get(start).get(id);
-        if(a == -1 || a > b){
+        double b = candidate.getLength() + lengths.get(start).get(next);
+        if(a == -1 || a > b) {
             subResult.setLength(b);
             subResult.setPath(candidate.getPath());
         }
     }
 
-    private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
-        copy.remove(vertex);
-        Long id = vertex.getId();
-        if(vertex.isPickUp()) {
-            Vertex next = new Vertex(dropOffs.get(id), true);
-            copy.add(next);
-            SubResult candidate = subProblem(vertex, copy);
-            update(start.getId(), id, subResult, candidate);
-            copy.remove(next);
+    /**
+     * @return the number that codes the set of all pick ups
+     */
+    private long pickUpSetCode(){
+        int n = deliveries.size();
+        long code = 0;
+        long a = 1;
+        for(int k = 0; k < n; ++k){
+            code += a;
+            a *= 4;
         }
-        else{
-            SubResult candidate = subProblem(vertex, copy);
-            update(start.getId(), id, subResult, candidate);
-        }
-        copy.add(vertex);
+        return code * 2;
     }
 
-    private SubResult subProblem(Vertex start, Set<Vertex> vertices){
-        Paire<Vertex, Set<Vertex>> key = new Paire<>(start, new TreeSet<>(vertices));
+    /**
+     *
+     * @param departureIndex
+     * @param arrivalIndex
+     * @param time
+     * @return
+     */
+    private Step makeStep(int departureIndex, int arrivalIndex, int time){
+        long departureId = idFromIndex(departureIndex);
+        long arrivalId = idFromIndex(arrivalIndex);
+        boolean arrivalType = arrivalIndex % 2 == 1;
+        int arrivalDuration = durationFromIndex(arrivalIndex);
+        Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 
-        if(subresults.containsKey(key)) {
-            return subresults.get(key);
+        Step step = new Step(arrival);
+        if(departureId == arrivalId){
+            step.setArrivalDate(time);
+            return step;
         }
-        if(vertices.isEmpty()){
-            SubResult subResult = new SubResult();
-            subResult.add(start);
-            subResult.setLength(0);
-            subresults.put(key, subResult);
-            return subResult;
+        Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
+        while(prevSection.getOrigin() != arrivalId){
+            step.pushSection(prevSection);
         }
-
-        SubResult subResult = new SubResult();
-        TreeSet<Vertex> copy = new TreeSet<>(vertices);
-
-        for(Vertex vertex : vertices){
-            aux(start, vertex, subResult, copy);
-        }
-        subResult.setPath(new LinkedList<>(subResult.getPath()));
-        subResult.add(start);
-
-        subresults.put(key, subResult);
-        return subResult;
+        double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
+        step.setArrivalDate(time + (int)(distance / cyclistSpeed));
+        return step;
     }
 
-    public LinkedList<Vertex> shortestRound(){
-        Vertex start = new Vertex(warehouseNodeId, true);
-        TreeSet<Vertex> vertices = new TreeSet<>();
-        for(Long l : dropOffs.keySet()){
-            vertices.add(new Vertex(l, false));
+    /**
+     *
+     * @return
+     */
+    /*package-private*/ Round shortestRound(){
+        SubResult subResult = resolveSubProblem(0, pickUpSetCode());
+        ArrayList<Integer> L = new ArrayList<>(subResult.getPath());
+        Round round = new Round(deliveries);
+        int time = round.getStartDate();
+        for(int i = 0; i < L.size() - 1; ++i){
+            Step step = makeStep(L.get(i), L.get(i + 1), time);
+            round.pushStep(step);
+            time = step.getArrivalDate() + step.getDuration();
         }
-        LinkedList<Vertex> stops = subProblem(start, vertices).getPath();
-        stops.removeFirst();
-        return stops;
+        return round;
     }
 
-    public LinkedList<Vertex> naiveRound(){
-        LinkedList<Vertex> stopList = new LinkedList<>();
-        Set<Long> S = new TreeSet<>(dropOffs.keySet());
+    /**
+     *
+     */
+    private static class SubResult {
+        private double length;
+        private LinkedList<Integer> path;
 
-        Long last = warehouseNodeId;
-        while(!S.isEmpty()){
-            Long candidate = S.iterator().next();
-            Double distance = lengths.get(last).get(candidate);
-            for(Long l : S){
-                if(lengths.get(last).get(l) < distance){
-                    candidate = l;
-                    distance = lengths.get(last).get(l);
-                }
-            }
-            stopList.add(new Vertex(candidate, dropOffs.containsKey(candidate)));
-            if(dropOffs.containsKey(candidate)){
-                S.add(dropOffs.get(candidate));
-            }
-            S.remove(candidate);
-            last = candidate;
+        /**
+         *
+         */
+        /*package-private*/ SubResult(){
+            length = -1;
+            path = new LinkedList<>();
         }
 
-        return stopList;
+        /*package-private*/ double getLength() {
+            return length;
+        }
+        /*package-private*/ LinkedList<Integer> getPath() {
+            return path;
+        }
+        /*package-private*/ void setLength(double length) {
+            this.length = length;
+        }
+        /*package-private*/ void setPath(LinkedList<Integer> path) {
+            this.path = path;
+        }
+
+        /**
+         *
+         * @param v
+         */
+        /*package-private*/ void addVertex(int v){
+            path.addFirst(v);
+        }
     }
 }
