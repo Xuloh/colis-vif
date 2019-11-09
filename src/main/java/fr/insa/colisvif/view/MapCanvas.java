@@ -1,36 +1,25 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Section;
 import javafx.beans.InvalidationListener;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
+import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MapCanvas extends BorderPane {
 
-    private static final Color NODE_COLOR = Color.CORNFLOWERBLUE;
-
     private static final Color SECTION_COLOR = Color.grayRgb(85);
-
-    private static final int NODE_SIZE = 3;
 
     private static final int DELIVERY_NODE_SIZE = 15;
 
@@ -152,7 +141,7 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    public void autoScale() {
+    private void autoScale() {
         final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
         final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
         final double CANVAS_WIDTH = this.canvas.getWidth();
@@ -165,7 +154,7 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    public void onResize() {
+    private void onResize() {
         this.clearCanvas();
         this.drawCityMap();
         this.drawDeliveryMap();
@@ -186,14 +175,6 @@ public class MapCanvas extends BorderPane {
 
     public DeliveryMap getDeliveryMap() {
         return this.deliveryMap;
-    }
-
-    private void drawPoint(double lat, double lng) {
-        this.drawPoint(lat, lng, NODE_COLOR, NODE_SIZE);
-    }
-
-    private void drawPoint(double lat, double lng, Paint paint) {
-        this.drawPoint(lat, lng, paint, NODE_SIZE);
     }
 
     private void drawPoint(double lat, double lng, Paint paint, int size) {
