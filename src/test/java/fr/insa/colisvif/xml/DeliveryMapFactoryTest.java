@@ -101,8 +101,8 @@ public class DeliveryMapFactoryTest {
 
 
         List<Quadruplet<Long, Long, Integer, Integer>> expectedResult = new ArrayList<>();
-        expectedResult.add(new Quadruplet((long) 1679901320, (long) 208769457, 420, 600));
-        expectedResult.add(new Quadruplet((long) 208769120, (long) 25336179, 420, 480));
+        expectedResult.add(new Quadruplet<>(1679901320L, 208769457L, 420, 600));
+        expectedResult.add(new Quadruplet<>(208769120L, 25336179L, 420, 480));
 
         assertEquals(expectedResult, result);
 
@@ -116,7 +116,7 @@ public class DeliveryMapFactoryTest {
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         Pair<Long, Integer> warehouse = factory.readWarehouse(root);
-        Pair expectedResult = new Pair((long) 2835339774L, 28800);
+        Pair expectedResult = new Pair<>(2835339774L, 28800);
         assertEquals(warehouse, expectedResult);
 
         assertEquals(warehouse, expectedResult);
