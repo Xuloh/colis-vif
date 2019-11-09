@@ -120,4 +120,20 @@ public class Controller {
         this.uiController.getTextualView().setVertexMap(this.deliveryMap);
     }
 
+    public void addDelivery() {
+        this.currentState.switchToAddMode();
+    }
+
+    public void deleteDelivery() {
+        this.currentState.switchToSuppressionMode();
+    }
+
+    public void editSequenceDelivery() {
+        this.currentState.switchToOrderChangeMode();
+    }
+
+    public void editLocationDelivery() {
+        this.currentState.switchToLocationChange();
+    }
+
 }
