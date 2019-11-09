@@ -2,28 +2,25 @@ package fr.insa.colisvif.model;
 
 import java.util.HashMap;
 
-public class PathsFromVertex{
-    private HashMap<Long, Long> prevVertices;
+/*package-private*/ class PathsFromVertex{
+    private HashMap<Long, Section> prevSections;
     private HashMap<Long, Double> lengths;
 
     //No need to make a special constructor
 
-    public void addPrev(Long id, Long prev){
-        prevVertices.put(id, prev);
+    /*package-private*/ Section getPrevSection(long id){
+        return prevSections.get(id);
     }
-    public void addLength(Long id, Double length){
-        lengths.put(id, length);
+    /*package-private*/ long getPrevNode(long id){
+        return prevSections.get(id).getOrigin();
     }
-    public Long getPrev(Long id){
-        return prevVertices.get(id);
+    /*package-private*/ void setPrev(long id, Section section){
+        prevSections.put(id, section);
     }
-    public void setPrev(Long id, Long prev){
-        prevVertices.put(id, prev);
-    }
-    public Double getLength(Long id){
+    /*package-private*/ Double getLength(long id){
         return lengths.get(id);
     }
-    public void setLength(Long id, Double length){
+    /*package-private*/ void setLength(long id, double length){
         lengths.put(id, length);
     }
 }

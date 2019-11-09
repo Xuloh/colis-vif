@@ -24,7 +24,6 @@ public class CityMap {
     private static final int LNG_MAX = 180;
 
     private static final int LAT_MIN = -90;
-    private static final int speedInMS = (int)(15./3.6); //the speed of the cyclist in meters per second
 
     private static final int LAT_MAX = 90;
 
@@ -162,7 +161,7 @@ public class CityMap {
                 double destinationLength = pathsFromStart.getLength(section.getDestination());
                 if(destinationLength == -1 || length + section.getLength() < destinationLength){
                     pathsFromStart.setLength(section.getDestination(),length + section.getLength());
-                    pathsFromStart.setPrev(section.getDestination(), node);
+                    pathsFromStart.setPrev(node, section);
                     Q.remove(section.getDestination());
                     Q.add(section.getDestination());
                 }
@@ -171,55 +170,16 @@ public class CityMap {
 
         pathsFromVertices.put(start, pathsFromStart);
     }
-/*
-    private int constructPath(Step step, long start, long finish, int time){
-        if(start == finish){
-            return time;
-        }
-        double length = 0D;
-        while(start != finish){
-            long prev = pathsFromVertices.get(start).prevVertices.get(finish);
-            Section section = getSection(prev, finish);
-            step.pushSection(section);
-            finish = prev;
-            length += section.getLength();
-        }
-        return time + (int)(length / speedInMS);
-    }
 
     public Round shortestRound(DeliveryMap deliveries){
-        int time = deliveries.getStartDateInSeconds();
-        long lastId = deliveries.getWarehouseNodeId();
-        Round round = new Round(deliveries);
-        VerticesGraph G = new VerticesGraph(this, deliveries);
-        List<Vertex> stopList = G.shortestRound();
-        for(Vertex vertex : stopList){
-            Step step = new Step(vertex);
-            time = constructPath(step, lastId, vertex.getId(), time);
-            step.setArrivalDateInSeconds(time);
-            time += step.getDurationInSeconds();
-            lastId = vertex.getId();
-            round.pushStep(step);
+        dijkstra(deliveries.getWarehouseNodeId());
+        for(Delivery delivery : deliveries.getDeliveryList()){
+            dijkstra(delivery.getPickUpNodeId());
+            dijkstra(delivery.getDropOffNodeId());
         }
-        return round;
+        VerticesGraph G = new VerticesGraph(deliveries, pathsFromVertices);
+        return G.shortestRound();
     }
-
-    public Round naiveRound(DeliveryMap deliveries){
-        int time = deliveries.getStartDateInSeconds();
-        long lastId = deliveries.getWarehouseNodeId();
-        Round round = new Round(deliveries);
-        VerticesGraph G = new VerticesGraph(this, deliveries);
-        List<Vertex> stopList = G.naiveRound();
-        for(Vertex vertex : stopList){
-            Step step = new Step(vertex);
-            time = constructPath(step, lastId, vertex.getId(), time);
-            step.setArrivalDateInSeconds(time);
-            time += step.getDurationInSeconds();
-            lastId = vertex.getId();
-            round.pushStep(step);
-        }
-        return round;
-    }*/
 
     @Override
     public boolean equals(Object o) {
