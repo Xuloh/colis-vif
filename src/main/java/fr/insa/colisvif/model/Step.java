@@ -24,7 +24,7 @@ public class Step {
         this.deliveryID = deliveryID;
     }
 
-    public void pushSection(Section section){
+    public void addSection(Section section){
         sections.addFirst(section);
     }
 }
