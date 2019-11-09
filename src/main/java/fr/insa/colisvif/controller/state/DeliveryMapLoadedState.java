@@ -12,6 +12,7 @@ public class DeliveryMapLoadedState implements State {
     public void loadCityMap(Controller c, UIController mc, File file) {
         mc.clearCanvas();
         c.openFile(file);
+        mc.getMapCanvas().setDeliveryMap(null);
         mc.drawCanvas();
         c.setCurrentState(CityMapLoadedState.class);
     }
