@@ -14,6 +14,8 @@ public final class CanvasConstants {
 
     public static final int DELIVERY_NODE_SIZE = 15;
 
+    public static final double NODE_OPACITY = 0.7d;
+
     private CanvasConstants() {
 
     }
