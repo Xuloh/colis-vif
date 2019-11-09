@@ -31,4 +31,9 @@ public class Quadruplet<T, U, V, W> {
     public U getSecond() { return second; }
     public V getThird() { return third; }
     public W getFourth() { return fourth; }
+
+    @Override
+    public String toString() {
+        return ("(" + first + "," + second + "," + third + "," + fourth + ")");
+    }
 }
