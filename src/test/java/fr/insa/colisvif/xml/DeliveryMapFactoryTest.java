@@ -1,6 +1,9 @@
 package fr.insa.colisvif.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.exception.XMLException;
@@ -52,16 +55,7 @@ public class DeliveryMapFactoryTest {
     CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(city_file);
     DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
     DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(delivery_file,cityMap);
-
-    DeliveryMap expected_result = new DeliveryMap();
-    expected_result.createImpossibleDelivery(1679901320L,208769457L,420,600);
-    expected_result.createImpossibleDelivery(208769120L,25336179L,420,480);
-
-    expected_result.setWarehouseNodeId(2835339774L);
-    expected_result.setStartDateInSeconds(28800);
-
-    assertEquals(deliveryMap,expected_result);
-
+    assertNull(deliveryMap);
   }
 
   @Test

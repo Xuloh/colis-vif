@@ -34,6 +34,7 @@ public class VerticesGraph {
         }
     }
 
+
     public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
         /*
         File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/Tests/map1.xml");
@@ -102,6 +103,8 @@ public class VerticesGraph {
 //        System.out.println(" ");
 //        System.out.println((fin - debut)*0.000000001);
 
+
+        /*
         var debut = System.nanoTime();
         var L = TS.naiveRound();
         var fin = System.nanoTime();
@@ -110,7 +113,7 @@ public class VerticesGraph {
             System.out.print("  ");
         }
         System.out.println(" ");
-        System.out.println((fin - debut)*0.000000001);
+        System.out.println((fin - debut)*0.000000001);*/
     }
 
     private Long warehouseNodeId;
@@ -168,7 +171,7 @@ public class VerticesGraph {
         }
     }
 
-    private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
+    /*private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
         copy.remove(vertex);
         Long id = vertex.getId();
         if(vertex.isPickUp()) {
@@ -183,9 +186,9 @@ public class VerticesGraph {
             update(start.getId(), id, subResult, candidate);
         }
         copy.add(vertex);
-    }
+    }*/
 
-    private SubResult subProblem(Vertex start, Set<Vertex> vertices){
+    /*private SubResult subProblem(Vertex start, Set<Vertex> vertices){
         Paire<Vertex, Set<Vertex>> key = new Paire<>(start, new TreeSet<>(vertices));
 
         if(subresults.containsKey(key)) {
@@ -210,8 +213,9 @@ public class VerticesGraph {
 
         subresults.put(key, subResult);
         return subResult;
-    }
+    }*/
 
+    /*
     public LinkedList<Vertex> shortestRound(){
         Vertex start = new Vertex(warehouseNodeId, true);
         TreeSet<Vertex> vertices = new TreeSet<>();
@@ -221,8 +225,9 @@ public class VerticesGraph {
         LinkedList<Vertex> stops = subProblem(start, vertices).getPath();
         stops.removeFirst();
         return stops;
-    }
+    }*/
 
+    /*
     public LinkedList<Vertex> naiveRound(){
         LinkedList<Vertex> stopList = new LinkedList<>();
         Set<Long> S = new TreeSet<>(dropOffs.keySet());
@@ -246,5 +251,5 @@ public class VerticesGraph {
         }
 
         return stopList;
-    }
+    }*/
 }

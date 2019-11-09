@@ -87,10 +87,9 @@ public class Controller {
     public void openDeliveryMap(File file, CityMap cityMap) {
         try {
             this.deliveryMap = this.deliveryMapFactory.createDeliveryMapFromXML(file, cityMap);
-            this.uiController.writeImpossibleDelivery(this.deliveryMap);
             this.uiController.writeDeliveries(this.deliveryMap);
             this.uiController.getMapCanvas().setDeliveryMap(this.deliveryMap);
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

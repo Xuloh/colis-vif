@@ -16,7 +16,7 @@ public class CityMap {
         file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/demandeGrand7.xml");
         DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file, map);
 
-        Round round = map.naiveRound(deliveries);
+        //Round round = map.naiveRound(deliveries);
     }
 
     private static final int LNG_MIN = -180;
@@ -186,7 +186,7 @@ public class CityMap {
         return time + (int)(length / speedInMS);
     }
 
-    public Round shortestRound(DeliveryMap deliveries){
+    /*public Round shortestRound(DeliveryMap deliveries){
         int time = deliveries.getStartDateInSeconds();
         long lastId = deliveries.getWarehouseNodeId();
         Round round = new Round(deliveries);
@@ -201,9 +201,9 @@ public class CityMap {
             round.pushStep(step);
         }
         return round;
-    }
+    }*/
 
-    public Round naiveRound(DeliveryMap deliveries){
+    /*public Round naiveRound(DeliveryMap deliveries){
         int time = deliveries.getStartDateInSeconds();
         long lastId = deliveries.getWarehouseNodeId();
         Round round = new Round(deliveries);
@@ -218,7 +218,7 @@ public class CityMap {
             round.pushStep(step);
         }
         return round;
-    }
+    }*/
 
     private static class PathsFromVertex{
         private HashMap<Long, Long> prevVertices;
