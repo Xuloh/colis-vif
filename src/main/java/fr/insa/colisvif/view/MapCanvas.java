@@ -8,8 +8,10 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -36,6 +38,10 @@ public class MapCanvas extends BorderPane {
     private double originX;
 
     private double originY;
+
+    private double dragOriginX;
+
+    private double dragOriginY;
 
     private ToolsPane toolsPane;
 
@@ -71,6 +77,8 @@ public class MapCanvas extends BorderPane {
 
             this.toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
                 this.scale.set(1d);
+                this.originX = 0;
+                this.originY = 0;
                 this.clearCanvas();
                 this.drawCityMap();
                 this.drawDeliveryMap();
@@ -97,6 +105,30 @@ public class MapCanvas extends BorderPane {
         InvalidationListener listener = observable -> this.onResize();
         this.canvas.heightProperty().addListener(listener);
         this.canvas.widthProperty().addListener(listener);
+
+        this.canvas.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.canvas.setCursor(Cursor.CLOSED_HAND);
+                this.dragOriginX = this.originX - event.getX();
+                this.dragOriginY = this.originY - event.getY();
+            }
+        });
+
+        this.canvas.setOnMouseDragged(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.originX = event.getX() + this.dragOriginX;
+                this.originY = event.getY() + this.dragOriginY;
+                this.clearCanvas();
+                this.drawCityMap();
+                this.drawDeliveryMap();
+            }
+        });
+
+        this.canvas.setOnMouseReleased(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                this.canvas.setCursor(Cursor.DEFAULT);
+            }
+        });
     }
 
     public void clearCanvas() {
