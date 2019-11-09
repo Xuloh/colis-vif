@@ -72,5 +72,12 @@ public class Vertex implements Comparable<Vertex> {
         return Objects.hash(nodeId, type);
     }
 
-
+    @Override
+    public String toString() {
+        return "Vertex{" +
+                "id=" + nodeId +
+                ", type=" + type +
+                ", durationInSeconds=" + duration +
+                '}';
+    }
 }

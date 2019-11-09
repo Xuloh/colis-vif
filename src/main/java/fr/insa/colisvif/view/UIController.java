@@ -1,6 +1,11 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.*;
+import fr.insa.colisvif.util.Quadruplet;
+import javafx.beans.InvalidationListener;
+import javafx.scene.canvas.Canvas;
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import javafx.event.ActionEvent;
@@ -9,6 +14,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,6 +36,9 @@ public class UIController {
     private BorderPane mainPane;
 
     @FXML
+    private BorderPane rightPane;
+
+    @FXML
     private MenuItem openDeliveryMap;
 
     @FXML
@@ -41,10 +51,19 @@ public class UIController {
     private MenuItem openMap;
 
     @FXML
-    private ListView textualView;
+    private TextArea statusView;
 
     @FXML
-    private TextArea statusView;
+    private Button addDelivery;
+
+    @FXML
+    private Button deleteDelivery;
+
+    @FXML
+    private Button editLocation;
+
+    @FXML
+    private Button editSequence;
 
     private Stage stage;
 
@@ -52,17 +71,20 @@ public class UIController {
 
     private MapCanvas mapCanvas;
 
+    private TextualView textualView;
+
     public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
+        this.textualView = new TextualView();
     }
 
     public void initialize() {
+
         FileChooser fileChooser = new FileChooser();
 
-        textualView.getItems().add("test");
-
+        // File menu
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir une carte");
             File file = fileChooser.showOpenDialog(this.stage);
@@ -72,16 +94,31 @@ public class UIController {
         this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir un plan de livraison");
             File file = fileChooser.showOpenDialog(this.stage);
-            this.controller.loadDeliveryMap(file, this.mapCanvas.getCityMap());
+            this.controller.loadDeliveryMap(file);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
 
+        // Edit buttons
+        this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.addDelivery();
+        });
+        this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.deleteDelivery();
+        });
+        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.editSequenceDelivery();
+        });
+        this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.editLocationDelivery();
+        });
+
+        this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);
     }
 
-    public void writeDeliveries(DeliveryMap deliveryMap) {
-        textualView.getItems().add("test");
+    public void printTextualView() {
+        this.textualView.printVertices(controller.getVertexList());
     }
 
     public void clearCanvas() {
@@ -95,5 +132,9 @@ public class UIController {
 
     public MapCanvas getMapCanvas() {
         return this.mapCanvas;
+    }
+
+    public TextualView getTextualView() {
+        return this.textualView;
     }
 }
