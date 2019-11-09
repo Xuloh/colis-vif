@@ -25,7 +25,7 @@ public class DeliveryMapFactory {
     public DeliveryMapFactory() {
     }
 
-    public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws IOException, SAXException, ParserConfigurationException {
+    public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) {
         try {
             Element root = loadFile(file);
             DeliveryMap deliveryMap = new DeliveryMap();
@@ -37,8 +37,7 @@ public class DeliveryMapFactory {
                     deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(),
                         delivery.getThird(), delivery.getFourth());
                 } else {
-                    deliveryMap.createImpossibleDelivery(delivery.getFirst(), delivery.getSecond(),
-                        delivery.getThird(), delivery.getFourth());
+                    throw new XMLException(file.getAbsolutePath() + " refers to nodes outside the current city map");
                 }
             }
             deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());

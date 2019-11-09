@@ -9,8 +9,6 @@ public class DeliveryMap {
 
     private List<Delivery> deliveryRequests;
 
-    private List<Delivery> impossibleDeliveries;
-
     private long warehouseNodeId;
 
     private int startDateInSeconds;
@@ -18,7 +16,6 @@ public class DeliveryMap {
 
     public DeliveryMap() {
         this.deliveryRequests = new ArrayList<>();
-        this.impossibleDeliveries = new ArrayList<>();
     }
 
     public void createDelivery(long pickUpId, long deliveryId, int pickUpDuration, int deliveryDuration) {
@@ -26,10 +23,6 @@ public class DeliveryMap {
         this.deliveryRequests.add(newDelivery);
     }
 
-    public void createImpossibleDelivery(long pickUpId, long deliveryId, int pickUpDuration, int deliveryDuration) {
-        Delivery newDelivery = new Delivery(pickUpId, deliveryId, pickUpDuration, deliveryDuration);
-        this.impossibleDeliveries.add(newDelivery);
-    }
 
     public void createWarehouse(long positionId, int startDateInSeconds) {
         this.warehouseNodeId = positionId;
@@ -54,12 +47,7 @@ public class DeliveryMap {
         DeliveryMap that = (DeliveryMap) o;
         return warehouseNodeId == that.warehouseNodeId &&
             startDateInSeconds == that.startDateInSeconds &&
-            Objects.equals(deliveryRequests, that.deliveryRequests) &&
-            Objects.equals(impossibleDeliveries, that.impossibleDeliveries);
-    }
-
-    public List<Delivery> getImpossibleDeliveries() {
-        return impossibleDeliveries;
+            Objects.equals(deliveryRequests, that.deliveryRequests);
     }
 
     public long getWarehouseNodeId() {
@@ -90,7 +78,6 @@ public class DeliveryMap {
     public String toString() {
         return "DeliveryMap{" +
             "deliveryRequests=" + deliveryRequests +
-            ", impossibleDeliveries=" + impossibleDeliveries +
             ", warehouseNodeId=" + warehouseNodeId +
             ", startDateInSeconds=" + startDateInSeconds +
             '}';
