@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -9,8 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<?import javafx.scene.control.TableView?>
-<BorderPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.999-ea" xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane">
+<BorderPane fx:id="mainPane" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
             <menus>
@@ -27,7 +25,7 @@
     <center>
     </center>
    <right>
-      <BorderPane prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER" fx:id="rightPane">
+      <BorderPane fx:id="rightPane" prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER">
          <top>
             <Button mnemonicParsing="false" text="Calculer l'itinéraire" BorderPane.alignment="CENTER" />
          </top>
@@ -37,8 +35,10 @@
          <bottom>
             <FlowPane prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="Ajouter une livraison" />
-                  <Button mnemonicParsing="false" text="Supprimer une livraison" />
+                  <Button mnemonicParsing="false" text="Ajouter une livraison" fx:id="addDelivery"/>
+                  <Button mnemonicParsing="false" text="Supprimer une livraison" fx:id="deleteDelivery"/>
+                  <Button mnemonicParsing="false" text="Modifier lieu" fx:id="editLocation"/>
+                  <Button mnemonicParsing="false" text="Modier ordre" fx:id="editSequence"/>
                </children>
             </FlowPane>
          </bottom>
