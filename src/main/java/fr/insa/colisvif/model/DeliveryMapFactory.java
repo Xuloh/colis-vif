@@ -3,7 +3,6 @@ package fr.insa.colisvif.model;
 import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
-import java.rmi.server.ExportException;
 import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,7 +41,7 @@ public class DeliveryMapFactory {
             }
             deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
             return deliveryMap;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -71,36 +70,35 @@ public class DeliveryMapFactory {
         throws XMLException {
         List<Quadruplet<Long, Long, Integer, Integer>> result = new ArrayList<>();
 
-            if (root.getNodeName().equals("demandeDeLivraisons")) {
-                NodeList deliveryList = root.getElementsByTagName("livraison");
-                for (int i = 0; i < deliveryList.getLength(); i++) {
-                    Element delivery = (Element) deliveryList.item(i);
-                    long pickUpNodeId = Long.parseLong(delivery.getAttribute("adresseEnlevement"));
-                    long deliveryNodeId = Long.parseLong(delivery.getAttribute("adresseLivraison"));
-                    int pickUpDuration = Integer.parseInt(delivery.getAttribute("dureeEnlevement"));
-                    int deliveryDuration = Integer.parseInt(delivery.getAttribute("dureeLivraison"));
-                    Quadruplet<Long, Long, Integer, Integer> newDelivery = new Quadruplet<>(pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
-                    result.add(newDelivery);
-                }
-            } else {
-                throw new XMLException("Document non conforme");
+        if (root.getNodeName().equals("demandeDeLivraisons")) {
+            NodeList deliveryList = root.getElementsByTagName("livraison");
+            for (int i = 0; i < deliveryList.getLength(); i++) {
+                Element delivery = (Element) deliveryList.item(i);
+                long pickUpNodeId = Long.parseLong(delivery.getAttribute("adresseEnlevement"));
+                long deliveryNodeId = Long.parseLong(delivery.getAttribute("adresseLivraison"));
+                int pickUpDuration = Integer.parseInt(delivery.getAttribute("dureeEnlevement"));
+                int deliveryDuration = Integer.parseInt(delivery.getAttribute("dureeLivraison"));
+                Quadruplet<Long, Long, Integer, Integer> newDelivery = new Quadruplet<>(pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
+                result.add(newDelivery);
             }
+        } else {
+            throw new XMLException("Document non conforme");
+        }
 
         return result;
     }
 
     public Pair<Long, Integer> readWarehouse(Element root) throws XMLException {
-
-            if (root.getNodeName().equals("demandeDeLivraisons")) {
-                NodeList warehouseList = root.getElementsByTagName("entrepot");
-                Element warehouse = (Element) warehouseList.item(0);
-                long positionId = Long.parseLong(warehouse.getAttribute("adresse"));
-                String startDateString = warehouse.getAttribute("heureDepart");
-                int startDate = transformStartDateToSeconds(startDateString);
-                return new Pair(positionId, startDate);
-            } else {
-                throw new XMLException("Document non conforme");
-            }
+        if (root.getNodeName().equals("demandeDeLivraisons")) {
+            NodeList warehouseList = root.getElementsByTagName("entrepot");
+            Element warehouse = (Element) warehouseList.item(0);
+            long positionId = Long.parseLong(warehouse.getAttribute("adresse"));
+            String startDateString = warehouse.getAttribute("heureDepart");
+            int startDate = transformStartDateToSeconds(startDateString);
+            return new Pair(positionId, startDate);
+        } else {
+            throw new XMLException("Document non conforme");
+        }
 
     }
 

@@ -42,25 +42,10 @@ public class DeliveryTest {
     }
 
     @Test
-    public void testSetPickUpNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setPickUpNodeId(200);
-        assertEquals(200, delivery.getPickUpNodeId());
-
-    }
-
-    @Test
     public void testGetDeliveryNodeId() {
         Delivery delivery = new Delivery(100, 101, 10, 10);
 
         assertEquals(101, delivery.getDropOffNodeId());
-    }
-
-    @Test
-    public void testSDeliveryNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setDropOffNodeId(200);
-        assertEquals(200, delivery.getDropOffNodeId());
     }
 
     @Test
