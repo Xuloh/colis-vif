@@ -50,11 +50,20 @@ public class UIController {
     @FXML
     private MenuItem openMap;
 
-    //@FXML
-    //private TableView textualView;
-
     @FXML
     private TextArea statusView;
+
+    @FXML
+    private Button addDelivery;
+
+    @FXML
+    private Button deleteDelivery;
+
+    @FXML
+    private Button editLocation;
+
+    @FXML
+    private Button editSequence;
 
     private Stage stage;
 
@@ -75,6 +84,7 @@ public class UIController {
 
         FileChooser fileChooser = new FileChooser();
 
+        // File menu
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir une carte");
             File file = fileChooser.showOpenDialog(this.stage);
@@ -88,6 +98,20 @@ public class UIController {
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
+
+        // Edit buttons
+        this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.addDelivery();
+        });
+        this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.deleteDelivery();
+        });
+        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.editSequenceDelivery();
+        });
+        this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.editLocationDelivery();
+        });
 
         this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);

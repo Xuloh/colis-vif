@@ -3,7 +3,9 @@ package fr.insa.colisvif.view;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Vertex;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -17,7 +19,11 @@ public class TextualView extends Pane {
 
     private TableView<Vertex> table;
 
-    private List<Vertex> vertexMap;
+    private ObservableList<Vertex> vertexMap;
+
+    private TableColumn<Vertex, Long> nodeIdColumn;
+
+    private TableColumn<Vertex, Integer> durationColumn;
 
     public TextualView() {
         super();
@@ -28,18 +34,18 @@ public class TextualView extends Pane {
         this.table.prefHeightProperty().bind(this.heightProperty());
         this.table.prefWidthProperty().bind(this.widthProperty());
 
-        TableColumn<Vertex, Long> nodeIdColumn = new TableColumn<>("Id Node");
-        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        this.nodeIdColumn = new TableColumn<>("Id Node");
+        this.nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Vertex, Integer> durationColumn = new TableColumn<>("Duration");
-        nodeIdColumn.setCellValueFactory(new PropertyValueFactory<>("durationInSeconds"));
+        this.durationColumn = new TableColumn<>("Duration");
+        this.durationColumn.setCellValueFactory(new PropertyValueFactory<>("durationInSeconds"));
 
-        table.getColumns().add(nodeIdColumn);
-        table.getColumns().add(durationColumn);
+        this.table.getColumns().add(nodeIdColumn);
+        this.table.getColumns().add(durationColumn);
     }
 
     public void setVertexMap(DeliveryMap deliveryMap) {
-        vertexMap = new ArrayList<>();
+        this.vertexMap = FXCollections.observableArrayList();
 
         for (Delivery d : deliveryMap.getDeliveryList()) {
             vertexMap.add(new Vertex(d.getPickUpNodeId(), false, d.getPickUpDuration()));
@@ -48,9 +54,6 @@ public class TextualView extends Pane {
     }
 
     public void printVertices() {
-        for (Vertex v : vertexMap) {
-            System.out.println(v.toString());
-            table.getItems().add(v);
-        }
+        table.setItems(vertexMap);
     }
 }
