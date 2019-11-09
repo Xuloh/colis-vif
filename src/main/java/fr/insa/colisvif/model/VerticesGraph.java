@@ -196,23 +196,6 @@ import java.util.LinkedList;
         return step;
     }
 
-<<<<<<< HEAD
-    private void aux(Vertex start, Vertex vertex, SubResult subResult, TreeSet<Vertex> copy){
-        /*copy.remove(vertex);
-        Long id = vertex.getId();
-        if(vertex.isPickUp()) {
-            Vertex next = new Vertex(dropOffs.get(id), true);
-            copy.add(next);
-            SubResult candidate = subProblem(vertex, copy);
-            update(start.getId(), id, subResult, candidate);
-            copy.remove(next);
-        }
-        else{
-            SubResult candidate = subProblem(vertex, copy);
-            update(start.getId(), id, subResult, candidate);
-        }
-        copy.add(vertex);
-=======
     /**
      *
      * @return
@@ -229,7 +212,6 @@ import java.util.LinkedList;
             time = step.getArrivalDate() + step.getDuration();
         }
         return round;
->>>>>>> 8b29a4a56985c4ae59f69f8c31b3546fac246e44
     }
 
     /**
@@ -256,49 +238,6 @@ import java.util.LinkedList;
         /*package-private*/ void setLength(double length) {
             this.length = length;
         }
-<<<<<<< HEAD
-        subResult.setPath(new LinkedList<>(subResult.getPath()));
-        subResult.add(start);
-
-        subresults.put(key, subResult);
-        return subResult;*/
-    }
-
-    public LinkedList<Vertex> shortestRound(){
-        /*Vertex start = new Vertex(warehouseNodeId, true);
-        TreeSet<Vertex> vertices = new TreeSet<>();
-        for(Long l : dropOffs.keySet()){
-            vertices.add(new Vertex(l, false));
-        }
-        LinkedList<Vertex> stops = subProblem(start, vertices).getPath();
-        stops.removeFirst();*/
-        return new LinkedList<Vertex>();
-    }
-
-    public LinkedList<Vertex> naiveRound(){
-        /*LinkedList<Vertex> stopList = new LinkedList<>();
-        Set<Long> S = new TreeSet<>(dropOffs.keySet());
-
-        Long last = warehouseNodeId;
-        while(!S.isEmpty()){
-            Long candidate = S.iterator().next();
-            Double distance = lengths.get(last).get(candidate);
-            for(Long l : S){
-                if(lengths.get(last).get(l) < distance){
-                    candidate = l;
-                    distance = lengths.get(last).get(l);
-                }
-            }
-            stopList.add(new Vertex(candidate, dropOffs.containsKey(candidate)));
-            if(dropOffs.containsKey(candidate)){
-                S.add(dropOffs.get(candidate));
-            }
-            S.remove(candidate);
-            last = candidate;
-        }
-*/
-        return new LinkedList<Vertex>();
-=======
         /*package-private*/ void setPath(LinkedList<Integer> path) {
             this.path = path;
         }
@@ -310,6 +249,5 @@ import java.util.LinkedList;
         /*package-private*/ void addVertex(int v){
             path.addFirst(v);
         }
->>>>>>> 8b29a4a56985c4ae59f69f8c31b3546fac246e44
     }
 }
