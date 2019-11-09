@@ -4,6 +4,8 @@ import fr.insa.colisvif.controller.state.*;
 import fr.insa.colisvif.exception.IdError;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,6 +56,8 @@ public class Controller {
 
     private DeliveryMap deliveryMap;
 
+    private ObservableList<Vertex> vertexList;
+
     public Controller() {
         this.map = null;
         this.cityMapFactory = new CityMapFactory();
@@ -79,8 +83,8 @@ public class Controller {
         this.currentState.loadCityMap(this, uiController, file);
     }
 
-    public void loadDeliveryMap(File file, CityMap cityMap) {
-        this.currentState.loadDeliveryMap(this, uiController, file, cityMap);
+    public void loadDeliveryMap(File file) {
+        this.currentState.loadDeliveryMap(this, uiController, file, this.map);
     }
 
     public void setUIController(UIController uiController) {
@@ -95,6 +99,19 @@ public class Controller {
 
     public void setMap(CityMap map) {
         this.map = map;
+    }
+
+    public void setVertexList(DeliveryMap deliveryMap) {
+        this.vertexList = FXCollections.observableArrayList();
+
+        for (Delivery d : deliveryMap.getDeliveryList()) {
+            vertexList.add(new Vertex(d.getPickUpNodeId(), false, d.getPickUpDuration()));
+            vertexList.add(new Vertex(d.getDropOffNodeId(), true, d.getDropOffDuration()));
+        }
+    }
+
+    public ObservableList<Vertex> getVertexList() {
+        return this.vertexList;
     }
 
     public CityMapFactory getCityMapFactory() {
@@ -116,4 +133,21 @@ public class Controller {
     public DeliveryMapFactory getDeliveryMapFactory() {
         return deliveryMapFactory;
     }
+
+    public void addDelivery() {
+        this.currentState.switchToAddMode();
+    }
+
+    public void deleteDelivery() {
+        this.currentState.switchToSuppressionMode();
+    }
+
+    public void editSequenceDelivery() {
+        this.currentState.switchToOrderChangeMode();
+    }
+
+    public void editLocationDelivery() {
+        this.currentState.switchToLocationChange();
+    }
+
 }

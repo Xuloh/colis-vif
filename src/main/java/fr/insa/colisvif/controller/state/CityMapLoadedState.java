@@ -30,13 +30,14 @@ public class CityMapLoadedState implements State {
     public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
         try {
             c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            mc.writeDeliveries(c.getDeliveryMap());
+            c.setVertexList(c.getDeliveryMap());
             mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
         mc.clearCanvas();
         mc.drawCanvas();
+        mc.printTextualView();
         c.setCurrentState(DeliveryMapLoadedState.class);
     }
 }

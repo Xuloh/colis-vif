@@ -81,7 +81,7 @@ public class Round {
         steps.add(stepDelivery);
 
         // Change all hours
-        for(int i = steps.indexOf(stepPickup); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepPickup); i < steps.size(); i ++){
 
         }
     }
@@ -118,12 +118,12 @@ public class Round {
         // /!\ CHANGE THE LIST OF STEPS FOR stepJustAfter
 
         // Change all hours
-        for(int i = steps.indexOf(stepChangeOrder); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i ++){
 
         }
     }
 
-    public void pushStep(Step step){
+    public void addStep(Step step) {
         steps.add(step);
     }
 }

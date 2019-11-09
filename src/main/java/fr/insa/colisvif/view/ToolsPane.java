@@ -61,7 +61,23 @@ public class ToolsPane extends FlowPane {
     }
 
     private void createZoomSlider() {
-        this.zoomSlider = new Slider(0, 10, 1);
+        this.zoomSlider = new Slider(CanvasConstants.MIN_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE, 1d);
         this.zoomSlider.setOrientation(Orientation.VERTICAL);
+    }
+
+    public Button getAutoZoomButton() {
+        return this.autoZoomButton;
+    }
+
+    public Button getZoomPlusButton() {
+        return this.zoomPlusButton;
+    }
+
+    public Button getZoomMinusButton() {
+        return this.zoomMinusButton;
+    }
+
+    public Slider getZoomSlider() {
+        return this.zoomSlider;
     }
 }
