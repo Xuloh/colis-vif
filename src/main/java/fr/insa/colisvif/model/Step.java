@@ -24,7 +24,7 @@ public class Step {
         this.duration = vertex.getDurationInSeconds();
     }
 
-    public void pushSection(Section section){
+    public void addSection(Section section){
         sections.addFirst(section);
     }
 }

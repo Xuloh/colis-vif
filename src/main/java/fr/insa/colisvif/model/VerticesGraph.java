@@ -101,6 +101,7 @@ import java.util.LinkedList;
             return subResult;
         }
         SubResult subResult = new SubResult();
+        subResult.setLength(-1);
         int n = deliveries.size();
         long a = 2; //will be 2^k, used to add and remove elements from the set
         long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
@@ -161,11 +162,11 @@ import java.util.LinkedList;
     }
 
     /**
-     *
-     * @param departureIndex
-     * @param arrivalIndex
-     * @param time
-     * @return
+     * Creates the step between two vertices, using the results of Dijkstra's algorithms stored in pathsFromVertices
+     * @param departureIndex the departure of the step
+     * @param arrivalIndex the arrival of the step
+     * @param time the time when the step begin
+     * @return the step
      */
     private Step makeStep(int departureIndex, int arrivalIndex, int time){
         long departureId = idFromIndex(departureIndex);
@@ -181,7 +182,7 @@ import java.util.LinkedList;
         }
         Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
         while(prevSection.getOrigin() != arrivalId){
-            step.pushSection(prevSection);
+            step.addSection(prevSection);
         }
         double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int)(distance / cyclistSpeed));
@@ -189,34 +190,30 @@ import java.util.LinkedList;
     }
 
     /**
-     *
-     * @return
+     * @return a round that minimize the total length
      */
     /*package-private*/ Round shortestRound(){
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
-        ArrayList<Integer> L = new ArrayList<>(subResult.getPath());
+        ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
         Round round = new Round(deliveries);
         int time = round.getStartDate();
-        for(int i = 0; i < L.size() - 1; ++i){
-            Step step = makeStep(L.get(i), L.get(i + 1), time);
-            round.pushStep(step);
+        for(int i = 0; i < path.size() - 1; ++i){
+            Step step = makeStep(path.get(i), path.get(i + 1), time);
+            round.addStep(step);
             time = step.getArrivalDate() + step.getDuration();
         }
         return round;
     }
 
     /**
-     *
+     * The class that store an intermediary result
      */
     private static class SubResult {
-        private double length;
-        private LinkedList<Integer> path;
+        private double length; /**The length of the path*/
+        private LinkedList<Integer> path;/**The indexes of the nodes of the path*/
 
-        /**
-         *
-         */
         /*package-private*/ SubResult(){
-            length = -1;
+            length = 0;
             path = new LinkedList<>();
         }
 
@@ -234,11 +231,11 @@ import java.util.LinkedList;
         }
 
         /**
-         *
-         * @param v
+         * Add a vertex index at the beginning of the path
+         * @param vertexIndex the index added
          */
-        /*package-private*/ void addVertex(int v){
-            path.addFirst(v);
+        /*package-private*/ void addVertex(int vertexIndex){
+            path.addFirst(vertexIndex);
         }
     }
 }

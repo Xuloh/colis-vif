@@ -30,7 +30,7 @@ public class Round {
         startDate = deliveries.getStartDateInSeconds();
     }
 
-    public void pushStep(Step step){
+    public void addStep(Step step){
         steps.add(step);
     }
 }
