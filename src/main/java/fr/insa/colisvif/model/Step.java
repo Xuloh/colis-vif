@@ -1,11 +1,10 @@
 package fr.insa.colisvif.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Step {
     private LinkedList<Section> sections;
+    private int deliveryID;
     private boolean type; //0 if it is a pick up and 1 if it is a drop off
     private int arrivalDate; //the date when the delivery man will get to delivery point
     private int duration; //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
@@ -18,10 +17,11 @@ public class Step {
     public boolean isPickUp() { return type; }
     public boolean isDropOff() { return !type; }
 
-    public Step(Vertex vertex){
+    public Step(Vertex vertex, int deliveryID){
         sections = new LinkedList<>();
         this.type = vertex.isPickUp();
-        this.duration = vertex.getDurationInSeconds();
+        this.duration = vertex.getDuration();
+        this.deliveryID = deliveryID;
     }
 
     public void addSection(Section section){

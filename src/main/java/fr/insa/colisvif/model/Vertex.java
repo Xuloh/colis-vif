@@ -3,56 +3,73 @@ package fr.insa.colisvif.model;
 import java.util.Objects;
 
 public class Vertex implements Comparable<Vertex> {
-    private long id;
+
+    public static final boolean DROP_OFF = false;
+
+    public static final boolean PICK_UP = false;
+
+    private long nodeId;
+
     private boolean type; //0 if it is a pick up and 1 if it is a drop off
-    private int durationInSeconds;
 
-    public int getDurationInSeconds() {
-        return durationInSeconds;
-    }
-    public void setDurationInSeconds(int durationInSeconds) {
-        this.durationInSeconds = durationInSeconds;
-    }
-    public Long getId() { return id; }
-    public boolean isPickUp() { return type; }
-    public boolean isDropOff() { return !type; }
+    private int duration;
 
-    Vertex(long id, boolean type, int durationInSeconds){
-        this.id = id;
+    public Vertex(long nodeId, boolean type, int duration) {
+        this.nodeId = nodeId;
         this.type = type;
-        this.durationInSeconds = durationInSeconds;
+        this.duration = duration;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int durationInSeconds) {
+        this.duration = durationInSeconds;
+    }
+
+    public long getNodeId() {
+        return nodeId;
+    }
+
+    public boolean isPickUp() {
+        return type;
     }
 
     @Override
     public int compareTo(Vertex vertex) {
-        if(this.id == vertex.id){
-            if(this.type == vertex.type){
-                if(this.durationInSeconds == vertex.durationInSeconds){
+        if (this.nodeId == vertex.nodeId) {
+            if (this.type == vertex.type) {
+                if (this.duration == vertex.duration) {
                     return 0;
                 }
-                return this.durationInSeconds - vertex.durationInSeconds;
+                return this.duration - vertex.duration;
             }
-            if(this.type){
+            if (this.type) {
                 return 1;
             }
             return -1;
         }
-        return (int)(this.id - vertex.id);
+        return (int) (this.nodeId - vertex.nodeId);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Vertex vertex = (Vertex) o;
-        return id == vertex.id &&
-                type == vertex.type &&
-                durationInSeconds == vertex.durationInSeconds;
+        return nodeId == vertex.nodeId
+                && type == vertex.type
+                && duration == vertex.duration;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type);
+        return Objects.hash(nodeId, type);
     }
 
 

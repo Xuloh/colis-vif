@@ -6,10 +6,9 @@ import java.util.Objects;
 
 
 public class DeliveryMap {
+    private static int cptId;
 
     private List<Delivery> deliveryRequests;
-
-    private List<Delivery> impossibleDeliveries;
 
     private long warehouseNodeId;
 
@@ -17,19 +16,16 @@ public class DeliveryMap {
 
 
     public DeliveryMap() {
+        cptId = 0;
         this.deliveryRequests = new ArrayList<>();
-        this.impossibleDeliveries = new ArrayList<>();
     }
 
     public void createDelivery(long pickUpId, long deliveryId, int pickUpDuration, int deliveryDuration) {
-        Delivery newDelivery = new Delivery(pickUpId, deliveryId, pickUpDuration, deliveryDuration);
+        Delivery newDelivery = new Delivery(cptId, pickUpId, deliveryId, pickUpDuration, deliveryDuration);
+        cptId++;
         this.deliveryRequests.add(newDelivery);
     }
 
-    public void createImpossibleDelivery(long pickUpId, long deliveryId, int pickUpDuration, int deliveryDuration) {
-        Delivery newDelivery = new Delivery(pickUpId, deliveryId, pickUpDuration, deliveryDuration);
-        this.impossibleDeliveries.add(newDelivery);
-    }
 
     public void createWarehouse(long positionId, int startDateInSeconds) {
         this.warehouseNodeId = positionId;
@@ -52,14 +48,9 @@ public class DeliveryMap {
             return false;
         }
         DeliveryMap that = (DeliveryMap) o;
-        return warehouseNodeId == that.warehouseNodeId &&
-            startDateInSeconds == that.startDateInSeconds &&
-            Objects.equals(deliveryRequests, that.deliveryRequests) &&
-            Objects.equals(impossibleDeliveries, that.impossibleDeliveries);
-    }
-
-    public List<Delivery> getImpossibleDeliveries() {
-        return impossibleDeliveries;
+        return warehouseNodeId == that.warehouseNodeId
+                && startDateInSeconds == that.startDateInSeconds
+                && Objects.equals(deliveryRequests, that.deliveryRequests);
     }
 
     public long getWarehouseNodeId() {
@@ -78,7 +69,7 @@ public class DeliveryMap {
         this.startDateInSeconds = startDateInSeconds;
     }
 
-    public int size(){
+    public int size() {
         return deliveryRequests.size();
     }
 
@@ -88,11 +79,13 @@ public class DeliveryMap {
 
     @Override
     public String toString() {
-        return "DeliveryMap{" +
-            "deliveryRequests=" + deliveryRequests +
-            ", impossibleDeliveries=" + impossibleDeliveries +
-            ", warehouseNodeId=" + warehouseNodeId +
-            ", startDateInSeconds=" + startDateInSeconds +
-            '}';
+        return "DeliveryMap{"
+                + "deliveryRequests="
+                + deliveryRequests
+                + ", warehouseNodeId="
+                + warehouseNodeId
+                + ", startDateInSeconds="
+                + startDateInSeconds
+                + '}';
     }
 }

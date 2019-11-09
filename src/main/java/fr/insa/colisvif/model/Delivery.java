@@ -1,14 +1,16 @@
 package fr.insa.colisvif.model;
 
-import java.util.Objects;
-
 public class Delivery {
-    private PickUp pickUp;
-    private DropOff dropOff;
+    private Vertex pickUp;
 
-    public Delivery(long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) {
-        pickUp = new PickUp(pickUpNodeId, pickUpDuration);
-        dropOff = new DropOff(dropOffNodeId, dropOffDuration);
+    private Vertex dropOff;
+
+    private int id;
+
+    public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) {
+        pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
+        dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
+        this.id = id;
 
         if (this.pickUp.getNodeId() == this.dropOff.getNodeId()) {
             throw new IllegalArgumentException();
@@ -19,20 +21,16 @@ public class Delivery {
         }
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public long getPickUpNodeId() {
         return pickUp.getNodeId();
     }
 
-    public void setPickUpNodeId(long pickUpNodeId) {
-        this.pickUp.setNodeId(pickUpNodeId);
-    }
-
     public long getDropOffNodeId() {
         return dropOff.getNodeId();
-    }
-
-    public void setDropOffNodeId(long deliveryNodeId) {
-        this.dropOff.setNodeId(deliveryNodeId);
     }
 
     public int getPickUpDuration() {
@@ -67,10 +65,10 @@ public class Delivery {
             return false;
         }
         Delivery delivery = (Delivery) o;
-        return this.pickUp.getNodeId() == delivery.pickUp.getNodeId() &&
-            this.dropOff.getNodeId() == delivery.dropOff.getNodeId() &&
-            this.pickUp.getDuration() == delivery.pickUp.getDuration() &&
-            this.dropOff.getDuration() == delivery.dropOff.getDuration();
+        return this.pickUp.getNodeId() == delivery.pickUp.getNodeId()
+                && this.dropOff.getNodeId() == delivery.dropOff.getNodeId()
+                && this.pickUp.getDuration() == delivery.pickUp.getDuration()
+                && this.dropOff.getDuration() == delivery.dropOff.getDuration();
     }
 
 

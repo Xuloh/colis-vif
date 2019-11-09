@@ -23,6 +23,14 @@ import java.util.LinkedList;
     /** We will use dynamic programing, this is where we store the sub results */
     private HashMap<Long, SubResult> subResults;
 
+    private int deliveryIdFromIndex(int index){
+        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
+        if(index%2 == 1){
+            return delivery.getPickUpDuration();
+        }
+        return delivery.getId();
+    }
+
     /**
      * Let n be the number of deliveries we want to process
      * Creates a graph G with 2n+1 vertices : one for the warehouse and two for each delivery (the pick up and the drop off)
@@ -190,8 +198,8 @@ import java.util.LinkedList;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 
-        Step step = new Step(arrival);
-        if (departureId == arrivalId) {
+        Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex));
+        if(departureId == arrivalId){
             step.setArrivalDate(time);
             return step;
         }
@@ -207,6 +215,7 @@ import java.util.LinkedList;
     /**
      * @return a round that minimize the total length
      */
+
     /*package-private*/ Round shortestRound() {
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
         ArrayList<Integer> path = new ArrayList<>(subResult.getPath());

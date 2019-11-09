@@ -84,21 +84,6 @@ public class UIController {
         textualView.getItems().add("test");
     }
 
-    public void writeImpossibleDelivery(DeliveryMap deliveryMap) {
-        StringBuilder builder = new StringBuilder("");
-        builder.append(statusView.getText());
-        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
-            builder.append("Bad Ones : ");
-        }
-        for (Delivery delivery : deliveryMap.getImpossibleDeliveries()) {
-            builder.append(delivery.getPickUpNodeId() + "->" + delivery.getDropOffNodeId() + "/");
-        }
-        if (!deliveryMap.getImpossibleDeliveries().isEmpty()) {
-            builder.append("\n");
-        }
-        statusView.setText(builder.toString());
-    }
-
     public void clearCanvas() {
         this.mapCanvas.clearCanvas();
     }

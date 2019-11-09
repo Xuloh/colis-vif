@@ -10,83 +10,68 @@ public class DeliveryTest {
 
     @Test
     public void testDeliveryGood() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testOriginEqualsDestination() {
-        Delivery delivery = new Delivery(100, 100, 10, 10);
+        Delivery delivery = new Delivery(1, 100, 100, 10, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration1() {
-        Delivery delivery = new Delivery(100, 100, -10, 10);
+        Delivery delivery = new Delivery(1, 100, 100, -10, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration2() {
-        Delivery delivery = new Delivery(100, 100, 10, -10);
+        Delivery delivery = new Delivery(1, 100, 100, 10, -10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration3() {
-        Delivery delivery = new Delivery(100, 101, -10, -10);
+        Delivery delivery = new Delivery(1, 100, 101, -10, -10);
     }
 
     @Test
     public void testGetPickUpNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 10);
 
         assertEquals(100, delivery.getPickUpNodeId());
 
     }
 
     @Test
-    public void testSetPickUpNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setPickUpNodeId(200);
-        assertEquals(200, delivery.getPickUpNodeId());
-
-    }
-
-    @Test
     public void testGetDeliveryNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 10);
 
         assertEquals(101, delivery.getDropOffNodeId());
     }
 
     @Test
-    public void testSDeliveryNodeId() {
-        Delivery delivery = new Delivery(100, 101, 10, 10);
-        delivery.setDropOffNodeId(200);
-        assertEquals(200, delivery.getDropOffNodeId());
-    }
-
-    @Test
     public void testGetPickUpDuration() {
-        Delivery delivery = new Delivery(100, 101, 10, 20);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
 
         assertEquals(10, delivery.getPickUpDuration());
     }
 
     @Test
     public void testSPickUpDuration() {
-        Delivery delivery = new Delivery(100, 101, 10, 20);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
         delivery.setPickUpDuration(50);
         assertEquals(50, delivery.getPickUpDuration());
     }
 
     @Test
     public void testGetDeliveryDuration() {
-        Delivery delivery = new Delivery(100, 101, 10, 20);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
 
         assertEquals(20, delivery.getDropOffDuration());
     }
 
     @Test
     public void testSDeliveryDuration() {
-        Delivery delivery = new Delivery(100, 101, 10, 20);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
         delivery.setDropOffDuration(125);
         assertEquals(125, delivery.getDropOffDuration());
     }
@@ -116,16 +101,16 @@ public class DeliveryTest {
 
     @Test
     public void testSelfEquals() {
-        Delivery delivery = new Delivery(100, 101, 10,20);
-        assertEquals(delivery,delivery);
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
+        assertEquals(delivery, delivery);
     }
 
     @Test
     public void testNullEquals() {
-        Delivery delivery_null = null;
-        Delivery delivery = new Delivery(100, 101, 10,20);
+        Delivery deliveryNull = null;
+        Delivery delivery = new Delivery(1, 100, 101, 10, 20);
 
-        assertFalse(delivery.equals(delivery_null));
+        assertFalse(delivery.equals(deliveryNull));
     }
 
 }
