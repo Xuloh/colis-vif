@@ -61,4 +61,12 @@ public class DeliveryMap {
     public void setStartDateInSeconds(int startDateInSeconds) {
         this.startDateInSeconds = startDateInSeconds;
     }
+
+    public int size(){
+        return deliveryRequests.size();
+    }
+
+    public Delivery getDelivery(int i){
+        return deliveryRequests.get(i);
+    }
 }

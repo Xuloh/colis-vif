@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class CityMap {
-
+/*
     public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
         File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/grandPlan.xml");
         CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
@@ -17,7 +17,7 @@ public class CityMap {
         DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file, map);
 
         Round round = map.naiveRound(deliveries);
-    }
+    }*/
 
     private static final int LNG_MIN = -180;
 
@@ -48,6 +48,7 @@ public class CityMap {
         this.lngMax = LNG_MIN;
         this.mapNode = new HashMap<>();
         this.mapSection = new HashMap<>();
+        this.pathsFromVertices = new HashMap<>();
     }
 
     public void createNode(long id, double latitude, double longitude) {
@@ -170,7 +171,7 @@ public class CityMap {
 
         pathsFromVertices.put(start, pathsFromStart);
     }
-
+/*
     private int constructPath(Step step, long start, long finish, int time){
         if(start == finish){
             return time;
@@ -218,33 +219,7 @@ public class CityMap {
             round.pushStep(step);
         }
         return round;
-    }
-
-    private static class PathsFromVertex{
-        private HashMap<Long, Long> prevVertices;
-        private HashMap<Long, Double> lengths;
-
-        //No need to make a special constructor
-
-        private void addPrev(Long id, Long prev){
-            prevVertices.put(id, prev);
-        }
-        private void addLength(Long id, Double length){
-            lengths.put(id, length);
-        }
-        private Long getPrev(Long id){
-            return prevVertices.get(id);
-        }
-        private void setPrev(Long id, Long prev){
-            prevVertices.put(id, prev);
-        }
-        private Double getLength(Long id){
-            return lengths.get(id);
-        }
-        private void setLength(Long id, Double length){
-            lengths.put(id, length);
-        }
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {
