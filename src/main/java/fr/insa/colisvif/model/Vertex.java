@@ -62,9 +62,9 @@ public class Vertex implements Comparable<Vertex> {
             return false;
         }
         Vertex vertex = (Vertex) o;
-        return nodeId == vertex.nodeId &&
-                type == vertex.type &&
-                duration == vertex.duration;
+        return nodeId == vertex.nodeId
+                && type == vertex.type
+                && duration == vertex.duration;
     }
 
     @Override
