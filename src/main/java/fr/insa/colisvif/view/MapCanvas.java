@@ -151,7 +151,7 @@ public class MapCanvas extends BorderPane {
                 pickupNodes.add(nodes.get(delivery.getPickUpNodeId()));
             });
 
-        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), 0.7);
+        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), CanvasConstants.NODE_OPACITY);
 
         for (int i = 0; i < pickupNodes.size(); i++) {
             Node pickupNode = pickupNodes.get(i);
@@ -171,6 +171,15 @@ public class MapCanvas extends BorderPane {
                 CanvasConstants.DELIVERY_NODE_SIZE
             );
         }
+
+        Node warehouse = nodes.get(this.deliveryMap.getWarehouseNodeId());
+        Color color = Color.rgb(255, 255, 255, CanvasConstants.NODE_OPACITY);
+
+        this.drawSquare(
+            warehouse.getLatitude(),
+            warehouse.getLongitude(),
+            color
+        );
     }
 
     private void computeBaseZoom() {
@@ -278,6 +287,37 @@ public class MapCanvas extends BorderPane {
         Paint prevStroke = this.context.getStroke();
         this.context.setStroke(Color.BLACK);
         this.context.strokePolygon(x, y, 3);
+        this.context.setStroke(prevStroke);
+    }
+
+    private void drawSquare(double lat, double lng, Paint paint) {
+        double centerX = this.lngToPx(lng);
+        double centerY = this.latToPx(lat);
+
+        final int RADIUS = CanvasConstants.DELIVERY_NODE_SIZE / 2;
+
+        double[] x = {
+            centerX - RADIUS,
+            centerX + RADIUS,
+            centerX + RADIUS,
+            centerX - RADIUS
+        };
+
+        double[] y = {
+            centerY - RADIUS,
+            centerY - RADIUS,
+            centerY + RADIUS,
+            centerY + RADIUS
+        };
+
+        Paint prevFill = this.context.getFill();
+        this.context.setFill(paint);
+        this.context.fillPolygon(x, y, 4);
+        this.context.setStroke(prevFill);
+
+        Paint prevStroke = this.context.getStroke();
+        this.context.setStroke(Color.BLACK);
+        this.context.strokePolygon(x, y, 4);
         this.context.setStroke(prevStroke);
     }
 
