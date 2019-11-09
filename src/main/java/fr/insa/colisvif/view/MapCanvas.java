@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
+ * to render instances of {@link CityMap} and {@link DeliveryMap}.
+ */
 public class MapCanvas extends BorderPane {
 
     private CityMap cityMap;
