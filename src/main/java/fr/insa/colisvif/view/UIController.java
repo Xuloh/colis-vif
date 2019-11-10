@@ -10,6 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -19,6 +21,8 @@ import java.util.ResourceBundle;
  * JavaFX controller used to handle all the different view components
  */
 public class UIController {
+
+    private static final Logger LOGGER = LogManager.getLogger(UIController.class);
 
     @FXML
     private URL location;
@@ -84,6 +88,7 @@ public class UIController {
      * Called by JavaFX when creating the window.
      */
     public void initialize() {
+        LOGGER.info("Initializing UI");
 
         FileChooser fileChooser = new FileChooser();
 
@@ -118,6 +123,8 @@ public class UIController {
 
         this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);
+
+        LOGGER.info("UI successfully initialized");
     }
 
     /**
