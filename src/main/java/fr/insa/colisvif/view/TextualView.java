@@ -16,10 +16,6 @@ public class TextualView extends Pane {
 
     private TableView<Vertex> table;
 
-    private TableColumn<Vertex, Long> nodeIdColumn;
-
-    private TableColumn<Vertex, Integer> durationColumn;
-
     /**
      * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}.
      * The first {@link TableColumn} corresponds to the nodeId
