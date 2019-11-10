@@ -6,11 +6,8 @@ import java.util.Objects;
 
 /**
  * Create and contains all the {@link Delivery} in a {@link List}, the warehouse {@link Node} id and the starting date in seconds.
- * Attach an id to the {@link Delivery} that are created.
  */
 public class DeliveryMap {
-    private static int cptId;
-
     private List<Delivery> deliveryRequests;
 
     private long warehouseNodeId;
@@ -21,7 +18,6 @@ public class DeliveryMap {
      * Constructor of the {@link DeliveryMap}
      */
     public DeliveryMap() {
-        cptId = 0;
         this.deliveryRequests = new ArrayList<>();
     }
 
@@ -29,16 +25,16 @@ public class DeliveryMap {
      * Create a {@link Delivery} out of a pick up {@link Node} id, a delivery {@link Node} id, a pick up duration and a delivery duration (in seconds).
      * It also attaches an id to the {@link Delivery}.
      *
+     * @param id : the id of the {@link Delivery}.
      * @param pickUpNodeId the {@link Node} id of the pick up.
      * @param deliveryNodeId the {@link Node} id of the drop off.
      * @param pickUpDuration the duration of the pick up in seconds.
      * @param deliveryDuration the duration of the drop off in seconds.
      * @throws IllegalArgumentException if the pickUpDuration / deliveryDuration is less or equal to 0 seconds or the pickUpNodeId is equal to the deliveryNodeId.
      */
-    public void createDelivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int deliveryDuration) throws IllegalArgumentException {
+    public void createDelivery(int id, long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int deliveryDuration) throws IllegalArgumentException {
         //TODO Le pickUpNodeId et le deliveryNodeId doivent correspondre à un noeud existant.
-        Delivery newDelivery = new Delivery(cptId, pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
-        cptId++;
+        Delivery newDelivery = new Delivery(id, pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
         this.deliveryRequests.add(newDelivery);
     }
 

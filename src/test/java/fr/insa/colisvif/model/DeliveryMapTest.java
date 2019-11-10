@@ -13,13 +13,13 @@ public class DeliveryMapTest {
     @Test
     public void testCreateDeliveryGood() {
         DeliveryMap deliveryMap = new DeliveryMap();
-        deliveryMap.createDelivery(100, 101, 10, 10);
+        deliveryMap.createDelivery(1, 100, 101, 10, 10);
     }
 
     @Test
     public void testCreateDelivery() {
         DeliveryMap deliveryMap = new DeliveryMap();
-        deliveryMap.createDelivery(100, 101, 10, 10);
+        deliveryMap.createDelivery(1, 100, 101, 10, 10);
         Delivery delivery = new Delivery(1, 100, 101, 10, 10);
         assertEquals(delivery, deliveryMap.getDeliveryList().get(0));
     }
@@ -28,7 +28,6 @@ public class DeliveryMapTest {
     public void testCreateWarehouseGood() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createWarehouse(101, 100);
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -48,12 +47,12 @@ public class DeliveryMapTest {
     @Test
     public void getDeliveryList() {
         DeliveryMap deliveryMap = new DeliveryMap();
-        deliveryMap.createDelivery(101, 100, 15, 10);
-        deliveryMap.createDelivery(105, 104, 10, 20);
+        deliveryMap.createDelivery(1, 101, 100, 15, 10);
+        deliveryMap.createDelivery(2, 105, 104, 10, 20);
 
         List<Delivery> deliveries = new ArrayList<>();
         deliveries.add(new Delivery(1, 101, 100, 15, 10));
-        deliveries.add(new Delivery(1, 105, 104, 10, 20));
+        deliveries.add(new Delivery(2, 105, 104, 10, 20));
 
         assertEquals(deliveries, deliveryMap.getDeliveryList());
     }

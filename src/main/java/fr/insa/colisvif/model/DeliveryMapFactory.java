@@ -39,6 +39,7 @@ public class DeliveryMapFactory {
      * @throws IdException if the delivery id does not correspond to any existing {@link Node} id.
      */
     public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws IdException, ParserConfigurationException, SAXException, IOException {
+        int cptId = 0;
         try {
             Element root = loadFile(file);
             DeliveryMap deliveryMap = new DeliveryMap();
@@ -47,8 +48,9 @@ public class DeliveryMapFactory {
             for (Quadruplet<Long, Long, Integer, Integer> delivery : deliveryList) {
                 if (cityMap.getMapNode().containsKey(delivery.getFirst()) && cityMap.getMapNode()
                     .containsKey(delivery.getSecond())) {
-                    deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(),
+                    deliveryMap.createDelivery(cptId, delivery.getFirst(), delivery.getSecond(),
                         delivery.getThird(), delivery.getFourth());
+                    cptId++;
                 } else {
                     throw new IdException(file.getAbsolutePath() + " refers to nodes outside the current city map");
                 }

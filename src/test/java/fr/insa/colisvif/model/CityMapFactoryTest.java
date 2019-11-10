@@ -1,4 +1,4 @@
-package fr.insa.colisvif.xml;
+package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.exception.InvalidFilePermissionException;

@@ -4,7 +4,6 @@ import fr.insa.colisvif.exception.IdException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A class representing a Node, formed with an id, a longitude and latitude in degrees, and a {@link List} of successors ({@link Section}).
@@ -103,7 +102,7 @@ public class Node {
      * Determines if the given {@link Object} is "equal"
      * to this {@link Node}.
      * Only other {@link Node} are considered for comparison.
-     * The method compares the ids, the longitude and the latitude.
+     * The method compares the id of the two {@link Node};
      *
      * @param o the {@link Object} to compare this {@link Node} to
      *
@@ -119,9 +118,6 @@ public class Node {
             return false;
         }
         Node node = (Node) o;
-        return id == node.id
-                && Double.compare(node.longitude, longitude) == 0
-                && Double.compare(node.latitude, latitude) == 0
-                && Objects.equals(successors, node.successors);
+        return id == node.id;
     }
 }

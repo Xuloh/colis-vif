@@ -1,4 +1,4 @@
-package fr.insa.colisvif.xml;
+package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.exception.XMLException;
@@ -36,7 +36,7 @@ public class DeliveryMapFactoryTest {
         DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(deliveryFile, cityMap);
 
         DeliveryMap expectedResult = new DeliveryMap();
-        expectedResult.createDelivery(2684668925L, 2509481775L, 420, 600);
+        expectedResult.createDelivery(0, 2684668925L, 2509481775L, 420, 600);
         expectedResult.createWarehouse(2684668925L, 28800);
 
         assertEquals(deliveryMap, expectedResult);

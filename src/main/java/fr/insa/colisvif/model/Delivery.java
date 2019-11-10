@@ -4,6 +4,7 @@ package fr.insa.colisvif.model;
  * Represent a Delivery by its pick up and drop off {@link Vertex} and its id.
  */
 public class Delivery {
+
     private Vertex pickUp;
 
     private Vertex dropOff;
@@ -23,6 +24,14 @@ public class Delivery {
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
         this.id = id;
+
+        if (pickUpDuration < 0) {
+            throw new IllegalArgumentException("The pick up duration must be more or equal than 0 seconds, got " + pickUpDuration);
+        }
+
+        if (dropOffDuration < 0) {
+            throw new IllegalArgumentException("The drop off duration must be more or equal than 0 seconds, got " + dropOffDuration);
+        }
 
         //TODO @Felix : Est-ce qu'un pickup et dropoff d'un même delivery peuvent être sur un même noeud?
         if (this.pickUp.getNodeId() == this.dropOff.getNodeId()) {
@@ -119,7 +128,7 @@ public class Delivery {
      */
     @Override
     public String toString() {
-        return "pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
+        return "id : " + id + "pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
                 + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
     }
 
@@ -127,8 +136,7 @@ public class Delivery {
      * Determines if the given {@link Object} is "equal"
      * to this {@link Delivery}.
      * Only other {@link Delivery} are considered for comparison.
-     * The method compares the ids, the pick up and drop off {@link Node} id
-     * as well as the the pick up and drop off duration
+     * The method compares the ids of the two {@link Delivery}.
      *
      * @param o the {@link Object} to compare this {@link Delivery} to
      *
@@ -144,10 +152,6 @@ public class Delivery {
             return false;
         }
         Delivery delivery = (Delivery) o;
-        return  this.id == delivery.id
-                && this.pickUp.getNodeId() == delivery.pickUp.getNodeId()
-                && this.dropOff.getNodeId() == delivery.dropOff.getNodeId()
-                && this.pickUp.getDuration() == delivery.pickUp.getDuration()
-                && this.dropOff.getDuration() == delivery.dropOff.getDuration();
+        return  this.id == delivery.id;
     }
 }
