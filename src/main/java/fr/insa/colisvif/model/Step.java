@@ -76,8 +76,8 @@ public class Step {
      * @param durationInSeconds the duration in seconds of the {@link Step}.
      * @throws IllegalArgumentException if the duration in seconds is under 0 seconds.
      */
-    public void setDuration(int durationInSeconds) throws IllegalArgumentException{
-        if (durationInSeconds < 0){
+    public void setDuration(int durationInSeconds) throws IllegalArgumentException {
+        if (durationInSeconds < 0) {
             throw new IllegalArgumentException("The duration in seconds must be equal or over 0 second, got " + durationInSeconds);
         }
         this.duration = durationInSeconds;
@@ -85,7 +85,7 @@ public class Step {
 
     /**
      * Returns the {@link LinkedList} of {@link Section} of the {@link Step}.
-     * 
+     *
      * @return the {@link LinkedList} of {@link Section} of the {@link Step}.
      */
     public LinkedList<Section> getSections() {
@@ -116,7 +116,7 @@ public class Step {
      * @param section the {@link Section} to add.
      * @throws IllegalArgumentException if the new {@link Section}'s origin {@link Node} id does not correspond to the lastly added {@link Section}'s destination {@link Node} id.
      */
-    public void addSection(Section section) throws IllegalArgumentException{
+    public void addSection(Section section) throws IllegalArgumentException {
         if (sections.size() > 0 && sections.getLast().getDestination() != section.getOrigin()) {
             throw new IllegalArgumentException("The origin of the new Section does not correspond to the last Section in the list. Got "
                     + section.getOrigin() + " instead of " + sections.getLast().getDestination());
