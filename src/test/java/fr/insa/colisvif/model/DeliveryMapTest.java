@@ -66,28 +66,10 @@ public class DeliveryMapTest {
     }
 
     @Test
-    public void setWarehouseNodeId() {
-        DeliveryMap deliveryMap = new DeliveryMap();
-        deliveryMap.createWarehouse(101, 0);
-        deliveryMap.setWarehouseNodeId(102);
-        assertEquals(102, deliveryMap.getWarehouseNodeId());
-    }
-
-    @Test
     public void getStartDateInSeconds() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createWarehouse(101, 10);
         assertEquals(10, deliveryMap.getStartDateInSeconds());
 
     }
-
-    @Test
-    public void setStartDateInSeconds() {
-        DeliveryMap deliveryMap = new DeliveryMap();
-        deliveryMap.createWarehouse(101, 10);
-        deliveryMap.setStartDateInSeconds(100);
-        assertEquals(100, deliveryMap.getStartDateInSeconds());
-    }
-
-
 }
