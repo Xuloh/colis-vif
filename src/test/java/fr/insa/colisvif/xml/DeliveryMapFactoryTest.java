@@ -37,8 +37,7 @@ public class DeliveryMapFactoryTest {
 
         DeliveryMap expectedResult = new DeliveryMap();
         expectedResult.createDelivery(2684668925L, 2509481775L, 420, 600);
-        expectedResult.setWarehouseNodeId(2684668925L);
-        expectedResult.setStartDateInSeconds(28800);
+        expectedResult.createWarehouse(2684668925L, 28800);
 
         assertEquals(deliveryMap, expectedResult);
 

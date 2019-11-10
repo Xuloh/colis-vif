@@ -3,39 +3,54 @@ package fr.insa.colisvif.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the round to do all the deliveries that needs to be made, as a {@link List} of {@link Step}.
+ */
 public class Round {
     private List<Step> steps;
-    private long warehouseNodeId;
-    private int startDate;
 
-    public long getWarehouseNodeId(){
-        return warehouseNodeId;
-    }
-    public void setWarehouseNodeId(long warehouseNodeId){
-        this.warehouseNodeId = warehouseNodeId;
-    }
-    public int getStartDate(){
-        return startDate;
-    }
-    public void setStartDate(int startDate){
-        this.startDate = startDate;
-    }
-    public List<Step> getSteps(){
-        return steps;
-    }
+    private DeliveryMap deliveryMap;
 
-    public Round(DeliveryMap deliveries){
+    /**
+     * Constructor of Round.
+     * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
+     */
+    public Round(DeliveryMap deliveries) {
         steps = new ArrayList<>();
-        warehouseNodeId = deliveries.getWarehouseNodeId();
-        startDate = deliveries.getStartDateInSeconds();
+        this.deliveryMap = deliveries;
     }
 
     /**
-     * Remove the delivery composed by 2 steps from the list of steps
-     * @param stepPickup the pickup from the delivery
-     * @param stepDelivery the dropoff from the delivery
+     * Returns the warehouse {@link Node} id of the {@link DeliveryMap}.
+     * @return the warehouse {@link Node} id of the {@link DeliveryMap}.
      */
-    public void removeDelivery(Step stepPickup, Step stepDelivery){             // Make callable with Delivery or one step
+    public long getWarehouseNodeId() {
+        return this.deliveryMap.getWarehouseNodeId();
+    }
+
+    /**
+     * Returns the start date of the {@link DeliveryMap}.
+     * @return the start date of the {@link DeliveryMap}.
+     */
+    public int getStartDate() {
+        return this.deliveryMap.getStartDateInSeconds();
+    }
+
+    /**
+     * Returns the {@link List} of {@link Step}.
+     * @return the {@link List} of {@link Step}.
+     */
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    /**
+     * Remove the delivery composed by 2 steps from the list of steps.
+     *
+     * @param stepPickup the pickup from the delivery.
+     * @param stepDelivery the dropoff from the delivery.
+     */
+    public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
         if (!(steps.contains(stepPickup) && steps.contains(stepDelivery))) {    // The steps are in the list steps
             throw new IllegalArgumentException();
         }
@@ -47,7 +62,7 @@ public class Round {
         Step stepAfterPickup = steps.get(steps.indexOf(stepPickup) + 1);
         Step stepAfterDelivery = null;
 
-        if(steps.indexOf(stepDelivery) != steps.size() - 1){
+        if (steps.indexOf(stepDelivery) != steps.size() - 1) {
             stepAfterDelivery = steps.get(steps.indexOf(stepDelivery) + 1);
         }
 
@@ -56,17 +71,18 @@ public class Round {
         steps.remove(stepDelivery);
 
         // Change all hours
-        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i++) {
 
         }
     }
 
     /**
-     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery
-      * @param stepPickup step to go from the previous location to the pickup location
-     * @param stepDelivery step to go from the previous location to the delivery pickup
+     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
+     *
+     * @param stepPickup step to go from the previous location to the pickup location.
+     * @param stepDelivery step to go from the previous location to the delivery pickup.
      */
-    public void addDelivery(Step stepPickup, Step stepDelivery){
+    public void addDelivery(Step stepPickup, Step stepDelivery) {
         // /!\ calculer le chemin !!!!!!!!!!
         //
         if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {   // The steps are in the list steps
@@ -81,17 +97,18 @@ public class Round {
         steps.add(stepDelivery);
 
         // Change all hours
-        for (int i = steps.indexOf(stepPickup); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepPickup); i < steps.size(); i++) {
 
         }
     }
 
     /**
-     * Change the order of stepChangeOrder to be just before stepJustAfter
-     * @param stepChangeOrder the step that the order will be changed
-     * @param stepJustAfter the step that will follow stepChangeOrder
+     * Change the order of stepChangeOrder to be just before stepJustAfter.
+     *
+     * @param stepChangeOrder the step that the order will be changed.
+     * @param stepJustAfter the step that will follow stepChangeOrder.
      */
-    public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter){
+    public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter) {
         if (!(steps.contains(stepChangeOrder) && steps.contains(stepJustAfter))) { // The steps are in the list steps
             throw new IllegalArgumentException();
         }
@@ -108,7 +125,7 @@ public class Round {
 
         for (int i = start; i < end; i++) {
             if (steps.get(i).getDeliveryID() == stepChangeOrder.getDeliveryID()) {
-               throw new IllegalArgumentException();    // One of the previous assessment is false
+                throw new IllegalArgumentException();    // One of the previous assessment is false
             }
         }
 
@@ -118,11 +135,16 @@ public class Round {
         // /!\ CHANGE THE LIST OF STEPS FOR stepJustAfter
 
         // Change all hours
-        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i++) {
 
         }
     }
 
+    /**
+     * Add a {@link Step} to the {@link List} of {@link Step}.
+     *
+     * @param step that needs to be added.
+     */
     public void addStep(Step step) {
         steps.add(step);
     }

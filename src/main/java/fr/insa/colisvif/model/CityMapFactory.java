@@ -32,6 +32,7 @@ public class CityMapFactory {
 
     /**
      * Reads and build a {@link CityMap} from a XML File.
+     *
      * @param file the file to read, must be XML.
      * @return a {@link CityMap} corresponding to the XML file.
      * @throws IOException if the file does not exists or is not readable
@@ -63,6 +64,7 @@ public class CityMapFactory {
 
     /**
      * Loads a {@link File} to read it.
+     *
      * @param file the file to read
      * @return an {@link Element} corresponding to the root of the XML file.
      * @throws IOException if the file does not exists or is not readable (permissions)
@@ -91,6 +93,7 @@ public class CityMapFactory {
     /**
      * Read all the {@link Node} out of an {@link Element} that corresponds to the
      * root of a XML document.
+     *
      * @param root the root of the XML document.
      * @return a {@link List} of {@link Triplet} of long double double,
      * the three arguments of a {@link Node} (id, latitude, longitude).
@@ -119,6 +122,7 @@ public class CityMapFactory {
     /**
      * Read all the {@link Section} out of an {@link Element} that corresponds to the
      * root of a XML document.
+     *
      * @param root the root of the XML document.
      * @return a {@link List} of {@link Quadruplet} of double, String, long, long,
      * the four arguments of a {@link Section} (lenght, road name, destination, origin).
