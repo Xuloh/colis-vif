@@ -13,31 +13,31 @@ import java.io.IOException;
 public class CityMapLoadedState implements State {
 
     @Override
-    public void loadCityMap(Controller c, UIController mc, File file) {
-        mc.clearCanvas();
+    public void loadCityMap(Controller controller, UIController uiController, File file) {
+        uiController.clearCanvas();
         try {
-            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
-            mc.getMapCanvas().setCityMap(c.getMap());
+            controller.setMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            uiController.getMapCanvas().setCityMap(controller.getMap());
         } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }
-        mc.getMapCanvas().setDeliveryMap(null);
-        mc.drawCanvas();
-        c.setCurrentState(CityMapLoadedState.class);
+        uiController.getMapCanvas().setDeliveryMap(null);
+        uiController.drawCanvas();
+        controller.setCurrentState(CityMapLoadedState.class);
     }
 
     @Override
-    public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
+    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
-            c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            c.setVertexList(c.getDeliveryMap());
-            mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
+            controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setVertexList(controller.getDeliveryMap());
+            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mc.clearCanvas();
-        mc.drawCanvas();
-        mc.printTextualView();
-        c.setCurrentState(DeliveryMapLoadedState.class);
+        uiController.clearCanvas();
+        uiController.drawCanvas();
+        uiController.printTextualView();
+        controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 }

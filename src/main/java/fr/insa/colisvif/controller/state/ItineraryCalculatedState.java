@@ -15,31 +15,31 @@ import java.io.IOException;
 public class ItineraryCalculatedState implements State {
 
     @Override
-    public void loadCityMap(Controller c, UIController mc, File file) {
-        mc.clearCanvas();
+    public void loadCityMap(Controller controller, UIController uiController, File file) {
+        uiController.clearCanvas();
         try {
-            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
-            mc.getMapCanvas().setCityMap(c.getMap());
+            controller.setMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            uiController.getMapCanvas().setCityMap(controller.getMap());
         } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }
-        mc.getMapCanvas().setDeliveryMap(null);
-        mc.drawCanvas();
-        c.setCurrentState(CityMapLoadedState.class);
+        uiController.getMapCanvas().setDeliveryMap(null);
+        uiController.drawCanvas();
+        controller.setCurrentState(CityMapLoadedState.class);
     }
 
     @Override
-    public void loadDeliveryMap(Controller c, UIController mc, File file, CityMap cityMap) {
+    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
-            c.setDeliveryMap(c.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
             //mc.writeDeliveries(c.getDeliveryMap());
-            mc.getMapCanvas().setDeliveryMap(c.getDeliveryMap());
+            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mc.clearCanvas();
-        mc.drawCanvas();
-        c.setCurrentState(DeliveryMapLoadedState.class);
+        uiController.clearCanvas();
+        uiController.drawCanvas();
+        controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 
     @Override
