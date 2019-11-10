@@ -19,7 +19,7 @@ public class Delivery {
      * @param pickUpDuration the pick up duration of the delivery.
      * @param dropOffDuration the drop off duration of the delivery
      */
-    public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException{
+    public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
         this.id = id;
@@ -134,6 +134,4 @@ public class Delivery {
                 && this.pickUp.getDuration() == delivery.pickUp.getDuration()
                 && this.dropOff.getDuration() == delivery.dropOff.getDuration();
     }
-
-
 }
