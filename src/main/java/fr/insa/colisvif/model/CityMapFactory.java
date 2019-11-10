@@ -51,11 +51,11 @@ public class CityMapFactory {
             for (Triplet<Long, Double, Double> node : nodes) {
                 cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
             }
-            for(Quadruplet<Double, String, Long, Long> section : sections) {
+            for (Quadruplet<Double, String, Long, Long> section : sections) {
                 cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
             }
             return cityMap;
-        } catch (XMLException e){
+        } catch (XMLException e) {
             e.printStackTrace();
         }
         return null;
@@ -127,20 +127,20 @@ public class CityMapFactory {
     public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) throws XMLException {
         ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
 
-            if (root.getNodeName().equals("reseau")) {
-                NodeList nodeList = root.getElementsByTagName("troncon");
-                for (int i = 0; i < nodeList.getLength(); i++) {
-                    Element node = (Element) nodeList.item(i);
-                    double length = Double.parseDouble(node.getAttribute("longueur"));
-                    String roadName = node.getAttribute("nomRue");
-                    long origin = Long.parseLong(node.getAttribute("origine"));
-                    long destination = Long.parseLong(node.getAttribute("destination"));
-                    Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, destination, origin);
-                    result.add(newSection);
-                }
-            } else {
-                throw new XMLException("Document non conforme");
+        if (root.getNodeName().equals("reseau")) {
+            NodeList nodeList = root.getElementsByTagName("troncon");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element node = (Element) nodeList.item(i);
+                double length = Double.parseDouble(node.getAttribute("longueur"));
+                String roadName = node.getAttribute("nomRue");
+                long origin = Long.parseLong(node.getAttribute("origine"));
+                long destination = Long.parseLong(node.getAttribute("destination"));
+                Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, destination, origin);
+                result.add(newSection);
             }
+        } else {
+            throw new XMLException("Document non conforme");
+        }
 
         return result;
     }

@@ -18,8 +18,8 @@ public class ItineraryCalculatedState implements State {
     public void loadCityMap(Controller controller, UIController uiController, File file) {
         uiController.clearCanvas();
         try {
-            controller.setMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getMap());
+            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            uiController.getMapCanvas().setCityMap(controller.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }
