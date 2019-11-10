@@ -5,6 +5,8 @@ import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
 import fr.insa.colisvif.util.Triplet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -24,6 +26,8 @@ import java.util.List;
  */
 public class CityMapFactory {
 
+    private static final Logger LOGGER = LogManager.getLogger(CityMapFactory.class);
+
     /**
      * Creates a {@link CityMapFactory}.
      */
@@ -40,9 +44,8 @@ public class CityMapFactory {
      * @throws SAXException if the XML file is not well formed.
      * @throws ParserConfigurationException if a DocumentBuilder
      * cannot be created which satisfies the configuration requested.
-     * @throws IdException
      */
-    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdException {
+    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException {
         try {
             Element root = loadFile(file);
             CityMap cityMap = new CityMap();
@@ -56,8 +59,8 @@ public class CityMapFactory {
                 cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
             }
             return cityMap;
-        } catch (XMLException e) {
-            e.printStackTrace();
+        } catch (XMLException e) { //TODO il faut vraiment catch ça ?
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
