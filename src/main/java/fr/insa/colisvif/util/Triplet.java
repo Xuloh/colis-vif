@@ -1,7 +1,6 @@
 package fr.insa.colisvif.util;
 
-// TODO :
-//  -> credit https://stackoverflow.com/questions/6010843/java-how-to-store-data-triple-in-a-list
+// idea from https://stackoverflow.com/questions/6010843/java-how-to-store-data-triple-in-a-list
 
 import java.util.Objects;
 
