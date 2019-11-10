@@ -1,9 +1,14 @@
 package fr.insa.colisvif.controller;
 
-import fr.insa.colisvif.controller.command.*;
+import fr.insa.colisvif.controller.command.Command;
+import fr.insa.colisvif.controller.command.CommandList;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.util.LinkedList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CommandListTest {
 
@@ -19,82 +24,98 @@ public class CommandListTest {
         }
     }
 
-    @Test
-    public void createCommandList() {
-        CommandList cl = new CommandList();
-        assertTrue(cl.getPastCommands().isEmpty());
-        assertTrue(cl.getCurrentCommands().isEmpty());
+    public static LinkedList<Command> getCurrentCommands(CommandList commandList) throws NoSuchFieldException, IllegalAccessException {
+        Class<CommandList> clazz = CommandList.class;
+        Field currentCommandsField = clazz.getDeclaredField("currentCommands");
+        currentCommandsField.setAccessible(true);
+        return (LinkedList<Command>) currentCommandsField.get(commandList);
+    }
+
+    public static LinkedList<Command> getPastCommands(CommandList commandList) throws NoSuchFieldException, IllegalAccessException {
+        Class<CommandList> clazz = CommandList.class;
+        Field pastCommandsField = clazz.getDeclaredField("pastCommands");
+        pastCommandsField.setAccessible(true);
+        return (LinkedList<Command>) pastCommandsField.get(commandList);
     }
 
     @Test
-    public void addCommand() {
+    public void createCommandList() throws NoSuchFieldException, IllegalAccessException {
         CommandList cl = new CommandList();
-        Command c = new SimplePrintCommand();
-        cl.addCommand(c);
-        assertEquals(cl.getCurrentCommands().size(), 1);
-        assertEquals(cl.getCurrentCommands().get(0), c);
+
+        assertTrue(getCurrentCommands(cl).isEmpty());
+        assertTrue(getPastCommands(cl).isEmpty());
     }
 
     @Test
-    public void undoCommandEmpty() {
-        CommandList cl = new CommandList();
-        cl.undoCommand();
-        assertEquals(cl.getCurrentCommands().size(), 0);
-        assertEquals(cl.getPastCommands().size(), 0);
-    }
-
-    @Test
-    public void undoCommand() {
+    public void addCommand() throws NoSuchFieldException, IllegalAccessException {
         CommandList cl = new CommandList();
         Command c = new SimplePrintCommand();
+        cl.doCommand(c);
 
-        cl.addCommand(c);
-        assertEquals(cl.getCurrentCommands().size(), 1);
-        assertEquals(cl.getPastCommands().size(), 0);
-
-        cl.undoCommand();
-
-        assertEquals(cl.getCurrentCommands().size(), 0);
-        assertEquals(cl.getPastCommands().size(), 1);
-
-
-        assertEquals(cl.getPastCommands().get(0), c);
+        assertEquals(getCurrentCommands(cl).size(), 1);
+        assertEquals(getCurrentCommands(cl).get(0), c);
     }
 
     @Test
-    public void redoCommandEmpty() {
+    public void undoCommandEmpty() throws NoSuchFieldException, IllegalAccessException {
+        CommandList cl = new CommandList();
+        cl.undoCommand();
+
+        assertEquals(getCurrentCommands(cl).size(), 0);
+        assertEquals(getPastCommands(cl).size(), 0);
+    }
+
+    @Test
+    public void undoCommand() throws NoSuchFieldException, IllegalAccessException {
+        CommandList cl = new CommandList();
+        Command c = new SimplePrintCommand();
+
+        cl.doCommand(c);
+
+        assertEquals(getCurrentCommands(cl).size(), 1);
+        assertEquals(getPastCommands(cl).size(), 0);
+
+        cl.undoCommand();
+
+        assertEquals(getCurrentCommands(cl).size(), 0);
+        assertEquals(getPastCommands(cl).size(), 1);
+        assertEquals(getPastCommands(cl).get(0), c);
+    }
+
+    @Test
+    public void redoCommandEmpty() throws NoSuchFieldException, IllegalAccessException {
         CommandList cl = new CommandList();
         cl.redoCommand();
-        assertEquals(cl.getCurrentCommands().size(), 0);
-        assertEquals(cl.getPastCommands().size(), 0);
+
+        assertEquals(getCurrentCommands(cl).size(), 0);
+        assertEquals(getPastCommands(cl).size(), 0);
     }
 
     @Test
-    public void redoCommand() {
+    public void redoCommand() throws NoSuchFieldException, IllegalAccessException {
         CommandList cl = new CommandList();
         Command c = new SimplePrintCommand();
 
-        cl.addCommand(c);
+        cl.doCommand(c);
         cl.undoCommand();
         cl.redoCommand();
 
-        assertEquals(cl.getCurrentCommands().size(), 1);
-        assertEquals(cl.getPastCommands().size(), 0);
-
-        assertEquals(cl.getCurrentCommands().get(0), c);
+        assertEquals(getCurrentCommands(cl).size(), 1);
+        assertEquals(getPastCommands(cl).size(), 0);
+        assertEquals(getCurrentCommands(cl).get(0), c);
     }
 
     @Test
-    public void resetCommand() {
+    public void resetCommand() throws NoSuchFieldException, IllegalAccessException {
         CommandList cl = new CommandList();
         Command c = new SimplePrintCommand();
 
-        cl.addCommand(c);
+        cl.doCommand(c);
         cl.undoCommand();
         cl.redoCommand();
-
         cl.resetCommand();
-        assertEquals(cl.getCurrentCommands().size(), 0);
-        assertEquals(cl.getPastCommands().size(), 0);
+
+        assertEquals(getCurrentCommands(cl).size(), 0);
+        assertEquals(getPastCommands(cl).size(), 0);
     }
 }

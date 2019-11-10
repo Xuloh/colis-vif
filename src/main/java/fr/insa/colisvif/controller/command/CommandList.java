@@ -3,11 +3,9 @@ package fr.insa.colisvif.controller.command;
 import java.util.LinkedList;
 
 /**
- * This class helps in the implementations of the Command Pattern.
- * <br><br>
- * Contains two stacks in the form of two linked lists. One of them, <b>currentCommands</b>
- * represents the current done commands. The other, <b>pastCommands</b> contains the previously
- * undone commands
+ * A class that handles {@link Command} instances. <br/>
+ * It manages executing commands, undoing previously
+ * executed command and redoing previously undone commands.
  */
 public class CommandList {
 
@@ -16,7 +14,7 @@ public class CommandList {
     private LinkedList<Command> currentCommands;
 
     /**
-     * Constructs a new <b>CommandList</b> object with both stacks being empty
+     * Create a new {@link CommandList} containing no command.
      */
     public CommandList() {
         pastCommands = new LinkedList<>();
@@ -24,20 +22,20 @@ public class CommandList {
     }
 
     /**
-     * Add command to the current commands stack and execute it. Will clear the undone commands
-     * stack at the same time
-     * @param command A command you want to execute
+     * Adds the given {@link Command} to the current commands stack and execute it.
+     * This will clear any previously undone command, making it impossible to redo them.
+     * @param command The command to execute
      */
-    public void addCommand(Command command) {
-
+    public void doCommand(Command command) {
         pastCommands.clear();
         currentCommands.add(command);
         command.doCommand();
     }
 
     /**
-     * Undo the command at the top of the current commands stack and will put it on top of the
-     * undone commands stack
+     * Undo the last executed {@link Command}.
+     * It can be redone by calling {@link #redoCommand()}.
+     * If no {@link Command} was previously called, nothing happens.
      */
     public void undoCommand() {
         if (!currentCommands.isEmpty()) {
@@ -48,8 +46,9 @@ public class CommandList {
     }
 
     /**
-     * Executes the command at the top of the undone commands stack and puts in on top of the current
-     * commands stack
+     * Executes the last undone {@link Command}.
+     * It can be undone again by calling {@link #undoCommand()}.
+     * If no {@link Command} was previously undone, nothing happens.
      */
     public void redoCommand() {
         if (!pastCommands.isEmpty()) {
@@ -60,26 +59,11 @@ public class CommandList {
     }
 
     /**
-     * Clears both stacks of command. They will be lost !
+     * Clears the {@link Command} history.<br/>
+     * <b>All executed and undone commands will be lost.</b>
      */
     public void resetCommand() {
         currentCommands.clear();
         pastCommands.clear();
-    }
-
-    /**
-     *
-     * @return the undone command stack
-     */
-    public LinkedList<Command> getPastCommands() {
-        return pastCommands;
-    }
-
-    /**
-     *
-     * @return the current commands stack
-     */
-    public LinkedList<Command> getCurrentCommands() {
-        return currentCommands;
     }
 }
