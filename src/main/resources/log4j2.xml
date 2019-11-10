@@ -2,20 +2,21 @@
 <Configuration status="info">
     <Properties>
         <Property name="prefix">[%-5level] %d{HH:mm:ss}</Property>
+        <Property name="suffix">%m%n%exception</Property>
     </Properties>
 
     <Appenders>
         <Console name="Errors" target="SYSTEM_OUT">
             <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout>
-                <pattern>%highlight{${prefix} - %C{-3}.%M(%F:%L) - %m%n}</pattern>
+                <pattern>%highlight{${prefix} - %C{-3}.%M(%F:%L) - ${suffix}}</pattern>
             </PatternLayout>
         </Console>
 
         <Console name="Info" target="SYSTEM_OUT">
             <ThresholdFilter level="warn" onMatch="DENY" onMismatch="ACCEPT"/>
             <PatternLayout>
-                <pattern>%highlight{${prefix} - %C{-3} - %m%n}</pattern>
+                <pattern>%highlight{${prefix} - %C{-3} - ${suffix}}</pattern>
             </PatternLayout>
         </Console>
     </Appenders>
