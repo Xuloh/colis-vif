@@ -19,16 +19,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that creates a {@link CityMap} out of a file.
+ */
 public class CityMapFactory {
-    private File xmlFile;
 
-
-
+    /**
+     * Creates a {@link CityMapFactory}.
+     */
     public CityMapFactory() {
-
     }
 
-    //TODO on doit pouvoir passer le fichier en paramètre !
+    /**
+     * Reads and build a {@link CityMap} from a XML File.
+     * @param file the file to read, must be XML.
+     * @return a {@link CityMap} corresponding to the XML file.
+     * @throws IOException if the file does not exists or is not readable
+     * (permissions) or any IO errors occur.
+     * @throws SAXException if the XML file is not well formed.
+     * @throws ParserConfigurationException if a DocumentBuilder
+     * cannot be created which satisfies the configuration requested.
+     * @throws IdException
+     */
     public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, IdException {
         try {
             Element root = loadFile(file);
@@ -49,8 +61,17 @@ public class CityMapFactory {
         return null;
     }
 
+    /**
+     * Loads a {@link File} to read it.
+     * @param file the file to read
+     * @return an {@link Element} corresponding to the root of the XML file.
+     * @throws IOException if the file does not exists or is not readable (permissions)
+     * or any IO errors occur.
+     * @throws ParserConfigurationException if a DocumentBuilder
+     * cannot be created which satisfies the configuration requested.
+     * @throws SAXException If any parse errors occur.
+     */
     public Element loadFile(File file) throws IOException, ParserConfigurationException, SAXException {
-        this.xmlFile = file;
 
         if (!file.exists()) {
             throw new FileNotFoundException(file.getAbsolutePath() + " not found.");
@@ -61,16 +82,22 @@ public class CityMapFactory {
         }
 
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = docBuilder.parse(this.xmlFile);
+        Document document = docBuilder.parse(file);
         Element root = document.getDocumentElement();
 
         return root;
     }
 
-
+    /**
+     * Read all the {@link Node} out of an {@link Element} that corresponds to the
+     * root of a XML document.
+     * @param root the root of the XML document.
+     * @return a {@link List} of {@link Triplet} of long double double,
+     * the three arguments of a {@link Node} (id, latitude, longitude).
+     * @throws XMLException if the XML document is not well formed.
+     */
     public List<Triplet<Long, Double, Double>> readNodes(Element root) throws XMLException {
         ArrayList<Triplet<Long, Double, Double>> result = new ArrayList<>();
-
 
         if (root.getNodeName().equals("reseau")) {
             NodeList nodeList = root.getElementsByTagName("noeud");
@@ -89,6 +116,14 @@ public class CityMapFactory {
         return result;
     }
 
+    /**
+     * Read all the {@link Section} out of an {@link Element} that corresponds to the
+     * root of a XML document.
+     * @param root the root of the XML document.
+     * @return a {@link List} of {@link Quadruplet} of double, String, long, long,
+     * the four arguments of a {@link Section} (lenght, road name, destination, origin).
+     * @throws XMLException if the XML document is not well formed.
+     */
     public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) throws XMLException {
         ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
 
