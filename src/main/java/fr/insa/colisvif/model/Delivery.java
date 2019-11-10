@@ -112,7 +112,7 @@ public class Delivery {
      * Determines if the given {@link Object} is "equal"
      * to this {@link Delivery}.
      * Only other {@link Delivery} are considered for comparison.
-     * The method compares pick up and drop off {@link Node} id
+     * The method compares the ids, the pick up and drop off {@link Node} id
      * as well as the the pick up and drop off duration
      *
      * @param o the {@link Object} to compare this {@link Delivery} to
@@ -129,7 +129,8 @@ public class Delivery {
             return false;
         }
         Delivery delivery = (Delivery) o;
-        return this.pickUp.getNodeId() == delivery.pickUp.getNodeId()
+        return  this.id == delivery.id
+                && this.pickUp.getNodeId() == delivery.pickUp.getNodeId()
                 && this.dropOff.getNodeId() == delivery.dropOff.getNodeId()
                 && this.pickUp.getDuration() == delivery.pickUp.getDuration()
                 && this.dropOff.getDuration() == delivery.dropOff.getDuration();
