@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
  * to render instances of {@link CityMap} and {@link DeliveryMap}.
+ * @see Canvas
  */
 public class MapCanvas extends BorderPane {
 
@@ -49,10 +50,26 @@ public class MapCanvas extends BorderPane {
 
     private ToolsPane toolsPane;
 
+    /**
+     * Creates a new {@link MapCanvas} with a {@link ToolsPane}.
+     * Equivalent to calling {@link MapCanvas#MapCanvas(boolean)}
+     * with <code>true</code>.
+     * @see ToolsPane
+     */
     public MapCanvas() {
         this(true);
     }
 
+    /**
+     * Creates a new {@link MapCanvas}.
+     * Optionaly adds a {@link ToolsPane} depending on the value of
+     * <code>useTools</code>.
+     *
+     * @param useTools if <code>true</code>, adds a {@link ToolsPane} to
+     * the {@link MapCanvas}
+     *
+     * @see ToolsPane
+     */
     public MapCanvas(boolean useTools) {
         super();
 
@@ -135,6 +152,9 @@ public class MapCanvas extends BorderPane {
         });
     }
 
+    /**
+     * Clears the {@link Canvas}
+     */
     public void clearCanvas() {
         this.context.clearRect(
             0,
@@ -144,6 +164,13 @@ public class MapCanvas extends BorderPane {
         );
     }
 
+    /**
+     * Renders the {@link CityMap} on the {@link Canvas}.
+     * If no {@link CityMap} has been specified with
+     * {@link #setCityMap(CityMap)}, does nothing.
+     *
+     * @see #setCityMap(CityMap)
+     */
     public void drawCityMap() {
         if (this.cityMap == null) {
             return;
@@ -171,6 +198,13 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    /**
+     * Renders the {@link DeliveryMap} on the {@link Canvas}.
+     * If no {@link DeliveryMap} has been specified with
+     * {@link #setDeliveryMap(DeliveryMap)}, does nothing.
+     *
+     * @see #setDeliveryMap(DeliveryMap)
+     */
     public void drawDeliveryMap() {
         if (this.deliveryMap == null) {
             return;
@@ -242,19 +276,41 @@ public class MapCanvas extends BorderPane {
         this.drawDeliveryMap();
     }
 
-    public void setCityMap(CityMap map) {
-        this.cityMap = map;
+    /**
+     * Assigns the given {@link CityMap} to this {@link MapCanvas}.
+     * If <code>null</code> is passed, the {@link MapCanvas}
+     * will stop rendering a {@link CityMap}.
+     *
+     * @param cityMap The {@link CityMap} to render on this {@link MapCanvas}
+     */
+    public void setCityMap(CityMap cityMap) {
+        this.cityMap = cityMap;
         this.computeBaseZoom();
     }
 
+    /**
+     * Returns the {@link CityMap} assigned to this {@link MapCanvas}
+     * @return the {@link CityMap} assigned to this {@link MapCanvas}
+     */
     public CityMap getCityMap() {
         return this.cityMap;
     }
 
+    /**
+     * Assigns the given {@link DeliveryMap} to this {@link MapCanvas}.
+     * If <code>null</code> is passed, the {@link MapCanvas}
+     * will stop rendering a {@link DeliveryMap}.
+     *
+     * @param deliveryMap The {@link DeliveryMap} to render on this {@link MapCanvas}
+     */
     public void setDeliveryMap(DeliveryMap deliveryMap) {
         this.deliveryMap = deliveryMap;
     }
 
+    /**
+     * Returns the {@link DeliveryMap} assigned to this {@link MapCanvas}
+     * @return the {@link DeliveryMap} assigned to this {@link MapCanvas}
+     */
     public DeliveryMap getDeliveryMap() {
         return this.deliveryMap;
     }
