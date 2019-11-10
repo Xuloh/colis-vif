@@ -5,6 +5,8 @@ import fr.insa.colisvif.exception.InvalidFilePermissionException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.util.Quadruplet;
 import javafx.util.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,6 +25,9 @@ import java.util.List;
  * Class that creates a {@link DeliveryMap} out of a file.
  */
 public class DeliveryMapFactory {
+
+    private static final Logger LOGGER = LogManager.getLogger(DeliveryMapFactory.class);
+
     private File xmlFile;
 
     /**
@@ -57,8 +62,8 @@ public class DeliveryMapFactory {
             }
             deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
             return deliveryMap;
-        } catch (XMLException e) {
-            e.printStackTrace();
+        } catch (XMLException e) { //TODO il faut vraiment catch ça ?
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }
