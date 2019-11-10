@@ -1,21 +1,12 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.model.*;
-import fr.insa.colisvif.util.Quadruplet;
-import javafx.beans.InvalidationListener;
-import javafx.scene.canvas.Canvas;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Delivery;
-import fr.insa.colisvif.model.DeliveryMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -24,6 +15,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * JavaFX controller used to handle all the different view components
+ */
 public class UIController {
 
     @FXML
@@ -73,6 +67,12 @@ public class UIController {
 
     private TextualView textualView;
 
+    /**
+     * Creates a new UIController, passing in the {@link Stage} and the MVC {@link Controller}
+     * of the app
+     * @param stage the main {@link Stage} of the app
+     * @param controller the MVC {@link Controller} of the app
+     */
     public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
@@ -80,6 +80,9 @@ public class UIController {
         this.textualView = new TextualView();
     }
 
+    /**
+     * Called by JavaFX when creating the window.
+     */
     public void initialize() {
 
         FileChooser fileChooser = new FileChooser();
@@ -117,23 +120,40 @@ public class UIController {
         this.mainPane.setCenter(this.mapCanvas);
     }
 
+    /**
+     * Renders the associated {@link TextualView}
+     */
     public void printTextualView() {
         this.textualView.printVertices(controller.getVertexList());
     }
 
+    /**
+     * Clears the associated {@link MapCanvas}.
+     */
     public void clearCanvas() {
         this.mapCanvas.clearCanvas();
     }
 
+    /**
+     * Renders the associated {@link MapCanvas}
+     */
     public void drawCanvas() {
         this.mapCanvas.drawCityMap();
         this.mapCanvas.drawDeliveryMap();
     }
 
+    /**
+     * Returns the associated {@link MapCanvas}
+     * @return the associated {@link MapCanvas}
+     */
     public MapCanvas getMapCanvas() {
         return this.mapCanvas;
     }
 
+    /**
+     * Returns the associated {@link TextualView}
+     * @return the associated {@link TextualView}
+     */
     public TextualView getTextualView() {
         return this.textualView;
     }
