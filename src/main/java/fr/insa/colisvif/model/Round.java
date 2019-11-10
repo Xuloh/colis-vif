@@ -15,7 +15,7 @@ public class Round {
      * Constructor of Round.
      * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
      */
-    public Round(DeliveryMap deliveries){
+    public Round(DeliveryMap deliveries) {
         steps = new ArrayList<>();
         this.deliveryMap = deliveries;
     }
@@ -24,7 +24,7 @@ public class Round {
      * Returns the warehouse {@link Node} id of the {@link DeliveryMap}.
      * @return the warehouse {@link Node} id of the {@link DeliveryMap}.
      */
-    public long getWarehouseNodeId(){
+    public long getWarehouseNodeId() {
         return this.deliveryMap.getWarehouseNodeId();
     }
 
@@ -32,7 +32,7 @@ public class Round {
      * Returns the start date of the {@link DeliveryMap}.
      * @return the start date of the {@link DeliveryMap}.
      */
-    public int getStartDate(){
+    public int getStartDate() {
         return this.deliveryMap.getStartDateInSeconds();
     }
 
@@ -40,7 +40,7 @@ public class Round {
      * Returns the {@link List} of {@link Step}.
      * @return the {@link List} of {@link Step}.
      */
-    public List<Step> getSteps(){
+    public List<Step> getSteps() {
         return steps;
     }
 
@@ -49,7 +49,7 @@ public class Round {
      * @param stepPickup the pickup from the delivery
      * @param stepDelivery the dropoff from the delivery
      */
-    public void removeDelivery(Step stepPickup, Step stepDelivery){             // Make callable with Delivery or one step
+    public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
         if (!(steps.contains(stepPickup) && steps.contains(stepDelivery))) {    // The steps are in the list steps
             throw new IllegalArgumentException();
         }
@@ -61,7 +61,7 @@ public class Round {
         Step stepAfterPickup = steps.get(steps.indexOf(stepPickup) + 1);
         Step stepAfterDelivery = null;
 
-        if(steps.indexOf(stepDelivery) != steps.size() - 1){
+        if (steps.indexOf(stepDelivery) != steps.size() - 1) {
             stepAfterDelivery = steps.get(steps.indexOf(stepDelivery) + 1);
         }
 
@@ -70,7 +70,7 @@ public class Round {
         steps.remove(stepDelivery);
 
         // Change all hours
-        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i++) {
 
         }
     }
@@ -80,7 +80,7 @@ public class Round {
      * @param stepPickup step to go from the previous location to the pickup location
      * @param stepDelivery step to go from the previous location to the delivery pickup
      */
-    public void addDelivery(Step stepPickup, Step stepDelivery){
+    public void addDelivery(Step stepPickup, Step stepDelivery) {
         // /!\ calculer le chemin !!!!!!!!!!
         //
         if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {   // The steps are in the list steps
@@ -95,7 +95,7 @@ public class Round {
         steps.add(stepDelivery);
 
         // Change all hours
-        for (int i = steps.indexOf(stepPickup); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepPickup); i < steps.size(); i++) {
 
         }
     }
@@ -105,7 +105,7 @@ public class Round {
      * @param stepChangeOrder the step that the order will be changed
      * @param stepJustAfter the step that will follow stepChangeOrder
      */
-    public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter){
+    public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter) {
         if (!(steps.contains(stepChangeOrder) && steps.contains(stepJustAfter))) { // The steps are in the list steps
             throw new IllegalArgumentException();
         }
@@ -122,7 +122,7 @@ public class Round {
 
         for (int i = start; i < end; i++) {
             if (steps.get(i).getDeliveryID() == stepChangeOrder.getDeliveryID()) {
-               throw new IllegalArgumentException();    // One of the previous assessment is false
+                throw new IllegalArgumentException();    // One of the previous assessment is false
             }
         }
 
@@ -132,7 +132,7 @@ public class Round {
         // /!\ CHANGE THE LIST OF STEPS FOR stepJustAfter
 
         // Change all hours
-        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i ++){
+        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i++) {
 
         }
     }
