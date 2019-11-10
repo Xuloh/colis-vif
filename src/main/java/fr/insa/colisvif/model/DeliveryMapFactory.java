@@ -26,12 +26,6 @@ public class DeliveryMapFactory {
     private File xmlFile;
 
     /**
-     * Creates a {@link DeliveryMapFactory}.
-     */
-    public DeliveryMapFactory() {
-    }
-
-    /**
      * Reads and build a {@link DeliveryMap} from a XML File.
      *
      * @param file the file to read, must be XML.
@@ -138,11 +132,10 @@ public class DeliveryMapFactory {
             long positionId = Long.parseLong(warehouse.getAttribute("adresse"));
             String startDateString = warehouse.getAttribute("heureDepart");
             int startDate = transformStartDateToSeconds(startDateString);
-            return new Pair(positionId, startDate);
+            return new Pair<>(positionId, startDate);
         } else {
             throw new XMLException("Document non conforme");
         }
-
     }
 
     /**
@@ -153,9 +146,8 @@ public class DeliveryMapFactory {
     private int transformStartDateToSeconds(String startDate) {
         // TODO: tester que startDate est bien formé avec regex
         String[] timeComponents = startDate.split(":");
-        int startInSeconds = Integer.parseInt(timeComponents[0]) * 3600
+        return Integer.parseInt(timeComponents[0]) * 3600
                              + Integer.parseInt(timeComponents[1]) * 60
                              + Integer.parseInt(timeComponents[2]);
-        return startInSeconds;
     }
 }

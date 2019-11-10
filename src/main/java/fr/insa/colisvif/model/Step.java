@@ -13,7 +13,7 @@ public class Step {
 
     private int deliveryID;
 
-    private boolean type; //0 if it is a pick up and 1 if it is a drop off
+    private boolean type; //true if it is a pick up and false if it is a drop off
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 

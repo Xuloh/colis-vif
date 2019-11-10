@@ -91,7 +91,6 @@ public class Section {
      * @return <code>true</code> if o is a {@link Section} whose values are
      * "equal" to those of this {@link Section}
      */
-
     @Override
     public boolean equals(Object o) {
 
