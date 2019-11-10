@@ -9,8 +9,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Main class of the App
+ */
 public class App extends Application {
 
+    /**
+     * Entry point called by JavaFX to launch the app
+     * @param stage the main {@link Stage} of the app
+     * @throws IOException if the main FXML document could not be loaded
+     */
     @Override
     public void start(Stage stage) throws IOException {
         Controller controller = new Controller();
