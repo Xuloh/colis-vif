@@ -16,8 +16,8 @@ public class DeliveryMapLoadedState implements State {
     public void loadCityMap(Controller c, UIController mc, File file) {
         mc.clearCanvas();
         try {
-            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
-            mc.getMapCanvas().setCityMap(c.getMap());
+            c.setCityMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
+            mc.getMapCanvas().setCityMap(c.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }

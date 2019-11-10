@@ -25,6 +25,14 @@ public class Delivery {
         return this.id;
     }
 
+    public Vertex getPickUp() {
+        return this.pickUp;
+    }
+
+    public Vertex getDropOff() {
+        return this.dropOff;
+    }
+
     public long getPickUpNodeId() {
         return pickUp.getNodeId();
     }

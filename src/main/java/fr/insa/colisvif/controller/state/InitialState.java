@@ -14,8 +14,8 @@ public class InitialState implements State {
     @Override
     public void loadCityMap(Controller c, UIController mc, File file) {
         try {
-            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
-            mc.getMapCanvas().setCityMap(c.getMap());
+            c.setCityMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
+            mc.getMapCanvas().setCityMap(c.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
             e.printStackTrace();
         }
