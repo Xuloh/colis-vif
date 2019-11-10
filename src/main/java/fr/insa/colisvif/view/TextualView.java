@@ -1,28 +1,28 @@
 package fr.insa.colisvif.view;
 
-import fr.insa.colisvif.model.Delivery;
-import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Vertex;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
-import javafx.scene.control.TableView;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * A custom {@link Pane} that wraps and handles a {@link TableView}
+ * to render instances of {@link Vertex} before the calculated itinerary
+ * @see TableView
+ */
 public class TextualView extends Pane {
 
     private TableView<Vertex> table;
 
-    private TableColumn<Vertex, Long> nodeIdColumn;
-
-    private TableColumn<Vertex, Integer> durationColumn;
-
+    /**
+     * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}.
+     * The first {@link TableColumn} corresponds to the nodeId
+     * and the second {@link TableColumn} corresponds to the duration.
+     *
+     * @see TableView
+     */
     public TextualView() {
         super();
 
@@ -42,6 +42,14 @@ public class TextualView extends Pane {
         this.table.getColumns().add(durationColumn);
     }
 
+    /**
+     * Add rows of {@link Vertex}'s information in the {@link TableView}.
+     *
+     * @param vertexList the list of vertices to print.
+     *
+     * @see Vertex
+     * @see TableView
+     */
     public void printVertices(ObservableList<Vertex> vertexList) {
         table.setItems(vertexList);
     }
