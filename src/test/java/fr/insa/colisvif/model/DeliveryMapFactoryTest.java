@@ -43,7 +43,7 @@ public class DeliveryMapFactoryTest {
 
     }
 
-    @Test
+    @Test(expected = IdException.class)
     public void testCreateDeliveryMapFromXMLImpossibleDeliveries()
             throws ParserConfigurationException, SAXException, IOException, IdException, URISyntaxException {
         File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
