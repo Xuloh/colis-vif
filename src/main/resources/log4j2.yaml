@@ -1,0 +1,13 @@
+Configuration:
+    status: info
+    appenders:
+        Console:
+            name: STDOUT
+            PatternLayout:
+                charset: "UTF-8"
+                Pattern: "%highlight{[%-5level] %d{HH:mm:ss} - %l - %m%n}{Logback}"
+    Loggers:
+        Root:
+            level: trace
+            AppenderRef:
+                ref: STDOUT
