@@ -42,6 +42,22 @@ public class Delivery {
     }
 
     /**
+     * Returns the pick up {@link Vertex} of this {@link Delivery}
+     * @return the pick up {@link Vertex} of this {@link Delivery}
+     */
+    public Vertex getPickUp() {
+        return this.pickUp;
+    }
+
+    /**
+     * Returns the drop off {@link Vertex} of this {@link Delivery}
+     * @return the drop off {@link Vertex} of this {@link Delivery}
+     */
+    public Vertex getDropOff() {
+        return this.dropOff;
+    }
+
+    /**
      * Returns the id of the {@link Delivery}.
      *
      * @return the id of the {@link Delivery}.
