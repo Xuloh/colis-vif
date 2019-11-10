@@ -32,6 +32,7 @@ public class CityMapFactory {
 
     /**
      * Reads and build a {@link CityMap} from a XML File.
+     *
      * @param file the file to read, must be XML.
      * @return a {@link CityMap} corresponding to the XML file.
      * @throws IOException if the file does not exists or is not readable
@@ -51,11 +52,11 @@ public class CityMapFactory {
             for (Triplet<Long, Double, Double> node : nodes) {
                 cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
             }
-            for(Quadruplet<Double, String, Long, Long> section : sections) {
+            for (Quadruplet<Double, String, Long, Long> section : sections) {
                 cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
             }
             return cityMap;
-        } catch (XMLException e){
+        } catch (XMLException e) {
             e.printStackTrace();
         }
         return null;
@@ -63,6 +64,7 @@ public class CityMapFactory {
 
     /**
      * Loads a {@link File} to read it.
+     *
      * @param file the file to read
      * @return an {@link Element} corresponding to the root of the XML file.
      * @throws IOException if the file does not exists or is not readable (permissions)
@@ -91,6 +93,7 @@ public class CityMapFactory {
     /**
      * Read all the {@link Node} out of an {@link Element} that corresponds to the
      * root of a XML document.
+     *
      * @param root the root of the XML document.
      * @return a {@link List} of {@link Triplet} of long double double,
      * the three arguments of a {@link Node} (id, latitude, longitude).
@@ -119,6 +122,7 @@ public class CityMapFactory {
     /**
      * Read all the {@link Section} out of an {@link Element} that corresponds to the
      * root of a XML document.
+     *
      * @param root the root of the XML document.
      * @return a {@link List} of {@link Quadruplet} of double, String, long, long,
      * the four arguments of a {@link Section} (lenght, road name, destination, origin).
@@ -127,20 +131,20 @@ public class CityMapFactory {
     public List<Quadruplet<Double, String, Long, Long>> readSections(Element root) throws XMLException {
         ArrayList<Quadruplet<Double, String, Long, Long>> result = new ArrayList<>();
 
-            if (root.getNodeName().equals("reseau")) {
-                NodeList nodeList = root.getElementsByTagName("troncon");
-                for (int i = 0; i < nodeList.getLength(); i++) {
-                    Element node = (Element) nodeList.item(i);
-                    double length = Double.parseDouble(node.getAttribute("longueur"));
-                    String roadName = node.getAttribute("nomRue");
-                    long origin = Long.parseLong(node.getAttribute("origine"));
-                    long destination = Long.parseLong(node.getAttribute("destination"));
-                    Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, destination, origin);
-                    result.add(newSection);
-                }
-            } else {
-                throw new XMLException("Document non conforme");
+        if (root.getNodeName().equals("reseau")) {
+            NodeList nodeList = root.getElementsByTagName("troncon");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element node = (Element) nodeList.item(i);
+                double length = Double.parseDouble(node.getAttribute("longueur"));
+                String roadName = node.getAttribute("nomRue");
+                long origin = Long.parseLong(node.getAttribute("origine"));
+                long destination = Long.parseLong(node.getAttribute("destination"));
+                Quadruplet<Double, String, Long, Long> newSection = new Quadruplet<>(length, roadName, destination, origin);
+                result.add(newSection);
             }
+        } else {
+            throw new XMLException("Document non conforme");
+        }
 
         return result;
     }
