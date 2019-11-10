@@ -12,12 +12,16 @@ import java.util.*;
  * from a {@link DeliveryMap} on the CityMap.
  */
 public class CityMap {
-/*
-    public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
-        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/grandPlan.xml");
+    /*
+    public static void main(String args[]) throws SAXException,
+    IdError, ParserConfigurationException, IOException {
+        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
+        fichiersXML2019/grandPlan.xml");
         CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
-        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/demandeGrand7.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file, map);
+        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
+        fichiersXML2019/demandeGrand7.xml");
+        DeliveryMap deliveries = new DeliveryMapFactory()
+        .createDeliveryMapFromXML(file, map);
 
         Round round = map.naiveRound(deliveries);
     }*/
@@ -45,8 +49,10 @@ public class CityMap {
     private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
     /**
-     * Constructor of CityMap. Initialize the min/max latitudes and min/max longitudes
-     * It also initialises the map of {@link Node}, {@link Section} and {@link PathsFromVertex}
+     * Constructor of CityMap. Initialize the min/max latitudes and min/max
+     * longitudes
+     * It also initialises the map of {@link Node}, {@link Section}
+     * and {@link PathsFromVertex}
      */
     public CityMap() {
         this.latMin = LAT_MAX;
@@ -59,12 +65,14 @@ public class CityMap {
     }
 
     /**
-     * Creates a Node from an id, a latitude and longitude and ads it to the map of {@link Node}.
+     * Creates a Node from an id, a latitude and longitude and ads it
+     * to the map of {@link Node}.
      *
      * @param id the id of the Node
      * @param latitude the latitude of the Node
      * @param longitude the longitude of the Node
-     * @throws IllegalArgumentException when the latitude or longitude is out of bounds
+     * @throws IllegalArgumentException when the latitude or longitude
+     * is out of bounds
      */
     public void createNode(long id, double latitude, double longitude) throws IllegalArgumentException {
 
@@ -90,16 +98,18 @@ public class CityMap {
     }
 
     /**
-     * Creates a {@Section} and adds it to the successors of the {@link Node} that has the same origin.
+     * Creates a {@link Section} and adds it to the successors of the {@link Node}
+     * that has the same origin.
      *
      * @param length the length of the section
      * @param roadName the road name of the section
      * @param destination the destination of the section
      * @param origin the origin of the section
-     * @throws IllegalArgumentException if the origin of the new {@link Section} does not match any {@link Node}
+     * @throws IllegalArgumentException if the origin of the new {@link Section}
+     * does not match any {@link Node}
      * that has the same origin
      */
-    public void createSection(double length, String roadName, long destination, long origin) throws IllegalArgumentException{
+    public void createSection(double length, String roadName, long destination, long origin) throws IllegalArgumentException {
         Section newSection = new Section(length, roadName, destination, origin);
 
         if (this.mapSection.get(roadName) == null) {
@@ -110,10 +120,9 @@ public class CityMap {
             this.mapSection.get(roadName).add(newSection);
         }
 
-        if (! this.mapNode.containsKey(origin)) {
+        if (!this.mapNode.containsKey(origin)) {
             throw new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes");
-        }
-        else{
+        } else {
             try {
                 this.mapNode.get(origin).addToSuccessors(newSection);
             } catch (IdException e) {
@@ -184,7 +193,7 @@ public class CityMap {
      * @param finish the ending point
      * @return the minimum length between two coordinates
      */
-    public double getLength(long start, long finish){
+    public double getLength(long start, long finish) {
         return pathsFromVertices.get(start).getLength(finish);
     }
 
@@ -197,9 +206,9 @@ public class CityMap {
      * @throws IllegalArgumentException when it does not find a {@link Section}
      * between start and finish.
      */
-    public Section getSection(long start, long finish) throws IllegalArgumentException{
-        for(Section section : getMapNode().get(start).getSuccessors()){
-            if(section.getDestination() == finish){
+    public Section getSection(long start, long finish) throws IllegalArgumentException {
+        for (Section section : getMapNode().get(start).getSuccessors()) {
+            if (section.getDestination() == finish) {
                 return section;
             }
         }
@@ -239,26 +248,26 @@ public class CityMap {
      *
      * @param start the coordinate of the starting point
      */
-    private void dijkstra(long start){
-        //TODO @Felix : tester si start est une bonne coordonnée??
+    private void dijkstra(long start) {
+        // TODO @Felix : tester si start est une bonne coordonnée??
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);
 
         Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
-        PriorityQueue<Long> Q = new PriorityQueue<Long>(cmp);
-        Q.add(start);
+        PriorityQueue<Long> priorityQueue = new PriorityQueue<>(cmp);
+        priorityQueue.add(start);
 
-        while(!Q.isEmpty()){
-            Long node = Q.poll();
+        while (!priorityQueue.isEmpty()) {
+            Long node = priorityQueue.poll();
             double length = pathsFromStart.getLength(node);
-            for(Section section : getMapNode().get(node).getSuccessors()){
+            for (Section section : getMapNode().get(node).getSuccessors()) {
                 double destinationLength = pathsFromStart.getLength(section.getDestination());
-                if(destinationLength == -1 || length + section.getLength() < destinationLength){
-                    pathsFromStart.setLength(section.getDestination(),length + section.getLength());
+                if (destinationLength == -1 || length + section.getLength() < destinationLength) {
+                    pathsFromStart.setLength(section.getDestination(), length + section.getLength());
                     pathsFromStart.setPrev(node, section);
-                    Q.remove(section.getDestination());
-                    Q.add(section.getDestination());
+                    priorityQueue.remove(section.getDestination());
+                    priorityQueue.add(section.getDestination());
                 }
             }
         }
@@ -275,14 +284,14 @@ public class CityMap {
      * @return a {@link Round} object from a {@link DeliveryMap} that contains
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries){
+    public Round shortestRound(DeliveryMap deliveries) {
         dijkstra(deliveries.getWarehouseNodeId());
-        for(Delivery delivery : deliveries.getDeliveryList()){
+        for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        VerticesGraph G = new VerticesGraph(deliveries, pathsFromVertices);
-        return G.shortestRound();
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
+        return verticesGraph.shortestRound();
     }
 
     /**
@@ -299,15 +308,19 @@ public class CityMap {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CityMap cityMap = (CityMap) o;
-        return Double.compare(cityMap.lngMin, lngMin) == 0 &&
-                Double.compare(cityMap.lngMax, lngMax) == 0 &&
-                Double.compare(cityMap.latMin, latMin) == 0 &&
-                Double.compare(cityMap.latMax, latMax) == 0 &&
-                Objects.equals(mapNode, cityMap.mapNode) &&
-                Objects.equals(mapSection, cityMap.mapSection);
+        return Double.compare(cityMap.lngMin, lngMin) == 0
+                && Double.compare(cityMap.lngMax, lngMax) == 0
+                && Double.compare(cityMap.latMin, latMin) == 0
+                && Double.compare(cityMap.latMax, latMax) == 0
+                && Objects.equals(mapNode, cityMap.mapNode)
+                && Objects.equals(mapSection, cityMap.mapSection);
     }
 
 }
