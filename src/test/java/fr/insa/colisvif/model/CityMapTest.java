@@ -1,85 +1,85 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdException;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CityMapTest {
 
     @Test
     public void testUpdateLatMax() {
-        CityMap citymap = new CityMap();
-        final double LNG_MIN = citymap.getLngMin();
-        citymap.createNode(2405632, -60, 180);
-        assertTrue(-60 == citymap.getLatMax() && citymap.getLngMin() == LNG_MIN);
+        CityMap cityMap = new CityMap();
+        final double LNG_MIN = cityMap.getLngMin();
+        cityMap.createNode(2405632, -60, 180);
+        assertTrue(-60 == cityMap.getLatMax() && cityMap.getLngMin() == LNG_MIN);
     }
 
     @Test
     public void testUpdateLongMin() {
-        CityMap citymap = new CityMap();
-        final double LAT_MAX = citymap.getLatMax();
-        citymap.createNode(2405632, -90, 120);
-        assertTrue(120 == citymap.getLngMin() && citymap.getLatMax() == LAT_MAX);
+        CityMap cityMap = new CityMap();
+        final double LAT_MAX = cityMap.getLatMax();
+        cityMap.createNode(2405632, -90, 120);
+        assertTrue(120 == cityMap.getLngMin() && cityMap.getLatMax() == LAT_MAX);
     }
 
     @Test
     public void testUpdateLatMaxLongMin() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(2405632, -60, 120);
-        assertTrue(-60 == citymap.getLatMax() && citymap.getLngMin() == 120);
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(2405632, -60, 120);
+        assertTrue(-60 == cityMap.getLatMax() && cityMap.getLngMin() == 120);
     }
 
     @Test
-    public void testCreateSectionNewSection() throws IdException {
-        CityMap citymap = new CityMap();
-        citymap.createNode(101, -60, 120);
-        citymap.createNode(100, -66, 120);
-        citymap.createSection(10, "Rue de St-Germain", 101, 100);
-        assertNotNull(citymap.getMapSection().get("Rue de St-Germain"));
-        assertEquals("[Length : 10.0 | Road Name : Rue de St-Germain | Destination : 101 | Origin : 100\n]", citymap.getMapSection().get("Rue de St-Germain").toString());
+    public void testCreateSectionNewSection() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(101, -60, 120);
+        cityMap.createNode(100, -66, 120);
+        cityMap.createSection(10, "Rue de St-Germain", 101, 100);
+        assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
+        assertEquals("[Length : 10.0 | Road Name : Rue de St-Germain | Destination : 101 | Origin : 100\n]", cityMap.getMapSection().get("Rue de St-Germain").toString());
     }
 
     @Test
-    public void testCreateSectionUpdateSection() throws IdException {
-        CityMap citymap = new CityMap();
-        citymap.createNode(101, -60, 120);
-        citymap.createNode(100, -66, 120);
-        citymap.createNode(99, -65, 120);
-        citymap.createSection(10, "Rue de St-Germain", 101, 100);
-        citymap.createSection(10, "Rue de St-Germain", 100, 99);
+    public void testCreateSectionUpdateSection() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(101, -60, 120);
+        cityMap.createNode(100, -66, 120);
+        cityMap.createNode(99, -65, 120);
+        cityMap.createSection(10, "Rue de St-Germain", 101, 100);
+        cityMap.createSection(10, "Rue de St-Germain", 100, 99);
 
-        assertNotNull(citymap.getMapSection().get("Rue de St-Germain"));
+        assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
         assertEquals("[Length : 10.0 | Road Name : Rue de St-Germain | Destination : 101 | Origin : 100\n"
                      + ", Length : 10.0 | Road Name : Rue de St-Germain | Destination : 100 | Origin : 99\n]",
-                     citymap.getMapSection().get("Rue de St-Germain").toString());
+                     cityMap.getMapSection().get("Rue de St-Germain").toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateBadNode() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(2405632, -140, 120);
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(2405632, -140, 120);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateBadSection() throws IdException {
-        CityMap citymap = new CityMap();
-        citymap.createSection(-240, "Supé Rue", 120, 124);
+    public void testCreateBadSection() {
+        CityMap cityMap = new CityMap();
+        cityMap.createSection(-240, "Supé Rue", 120, 124);
     }
 
     @Test
-    public void testCityMapToString() throws IdException {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        citymap.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        citymap.createSection(100, "Rue Antoine Tout Court", 3, 2);
+    public void testCityMapToString() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 3, 2);
 
         String expected = "Nodes : \n"
                           + "ID : 1 | Latitude : 0.0 | Longitude : 0.0\n"
@@ -88,115 +88,115 @@ public class CityMapTest {
                           + "Sections : \n"
                           + "Length : 200.0 | Road Name : Rue Antoine Tout Court | Destination : 2 | Origin : 1\n"
                           + "Length : 100.0 | Road Name : Rue Antoine Tout Court | Destination : 3 | Origin : 2\n";
-        assertEquals("To String from CityMap is OK", expected, citymap.toString());
+        assertEquals("To String from CityMap is OK", expected, cityMap.toString());
 
 
     }
 
     @Test
-    public void testEquals() throws IdException {
-        CityMap citymap_1 = new CityMap();
-        citymap_1.createNode(1, 0, 0);
-        citymap_1.createNode(2, 1, 1);
-        citymap_1.createNode(3, 2, 2);
-        citymap_1.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        citymap_1.createSection(100, "Rue Antoine Tout Court", 3, 2);
+    public void testEquals() {
+        CityMap cityMap1 = new CityMap();
+        cityMap1.createNode(1, 0, 0);
+        cityMap1.createNode(2, 1, 1);
+        cityMap1.createNode(3, 2, 2);
+        cityMap1.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        cityMap1.createSection(100, "Rue Antoine Tout Court", 3, 2);
 
-        CityMap citymap_2 = new CityMap();
-        citymap_2.createNode(1, 0, 0);
-        citymap_2.createNode(2, 1, 1);
-        citymap_2.createNode(3, 2, 2);
-        citymap_2.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        citymap_2.createSection(100, "Rue Antoine Tout Court", 3, 2);
+        CityMap cityMap2 = new CityMap();
+        cityMap2.createNode(1, 0, 0);
+        cityMap2.createNode(2, 1, 1);
+        cityMap2.createNode(3, 2, 2);
+        cityMap2.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        cityMap2.createSection(100, "Rue Antoine Tout Court", 3, 2);
 
-        assertEquals(true,citymap_1.equals(citymap_2));
+        assertEquals(cityMap1, cityMap2);
 
     }
 
     @Test
     public void getLngMin() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        assert(0 == citymap.getLngMin());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        assertEquals(0, cityMap.getLngMin(), 0.0);
     }
 
     @Test
     public void getLngMax() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        assert(2 == citymap.getLngMax());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        assertEquals(2, cityMap.getLngMax(), 0.0);
     }
 
     @Test
     public void getLatMin() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        assert(0 == citymap.getLatMin());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        assertEquals(0, cityMap.getLatMin(), 0.0);
     }
 
     @Test
     public void getLatMax() {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        assert(2 == citymap.getLatMax());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        assertEquals(2, cityMap.getLatMax(), 0.0);
     }
 
     @Test
     public void getMapNode() {
-        HashMap<Long,Node> test_map = new HashMap<Long,Node>();
-        test_map.put((long) 1,new Node(1,0,0));
-        test_map.put((long) 2,new Node(2,4,10));
-        test_map.put((long) 3,new Node(3,56,20));
+        HashMap<Long, Node> testMap = new HashMap<>();
+        testMap.put(1L, new Node(1, 0, 0));
+        testMap.put(2L, new Node(2, 4, 10));
+        testMap.put(3L, new Node(3, 56, 20));
 
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2,4,10);
-        citymap.createNode(3,56,20);
-        assertEquals(test_map , citymap.getMapNode());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 4, 10);
+        cityMap.createNode(3, 56, 20);
+        assertEquals(testMap, cityMap.getMapNode());
     }
 
     @Test
     public void getMapSection() {
-        HashMap<Long,Node> test_map = new HashMap<Long,Node>();
-        test_map.put((long) 1,new Node(1,0,0));
-        test_map.put((long) 2,new Node(2,4,10));
-        test_map.put((long) 3,new Node(3,56,20));
+        HashMap<Long, Node> testMap = new HashMap<>();
+        testMap.put(1L, new Node(1, 0, 0));
+        testMap.put(2L, new Node(2, 4, 10));
+        testMap.put(3L, new Node(3, 56, 20));
 
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2,4,10);
-        citymap.createNode(3,56,20);
-        assertEquals(test_map , citymap.getMapNode());
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 4, 10);
+        cityMap.createNode(3, 56, 20);
+        assertEquals(testMap, cityMap.getMapNode());
     }
 
     @Test
-    public void testToString() throws IdException {
-        CityMap citymap = new CityMap();
-        citymap.createNode(1, 0, 0);
-        citymap.createNode(2, 1, 1);
-        citymap.createNode(3, 2, 2);
-        citymap.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        citymap.createSection(100, "Rue Antoine Tout Court", 3, 2);
-        citymap.createSection(50, "Rue du Test", 3, 1);
+    public void testToString() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 2, 1);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 3, 2);
+        cityMap.createSection(50, "Rue du Test", 3, 1);
 
-        HashMap<String, List<Section>> test_map = new HashMap<>();
+        HashMap<String, List<Section>> testMap = new HashMap<>();
         List<Section> newSections = new ArrayList<>();
-        newSections.add(new Section(200,"Rue Antoine Tout Court",2,1) );
-        newSections.add(new Section(100,"Rue Antoine Tout Court",3,2) );
-        test_map.put("Rue Antoine Tout Court",newSections);
+        newSections.add(new Section(200, "Rue Antoine Tout Court", 2, 1));
+        newSections.add(new Section(100, "Rue Antoine Tout Court", 3, 2));
+        testMap.put("Rue Antoine Tout Court", newSections);
 
         newSections = new ArrayList<>();
-        newSections.add(new Section(50,"Rue du Test",3,1) );
-        test_map.put("Rue du Test",newSections);
+        newSections.add(new Section(50, "Rue du Test", 3, 1));
+        testMap.put("Rue du Test", newSections);
 
-        assertEquals(test_map,citymap.getMapSection());
+        assertEquals(testMap, cityMap.getMapSection());
     }
 }
