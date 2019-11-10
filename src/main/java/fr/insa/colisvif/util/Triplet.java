@@ -7,9 +7,9 @@ import java.util.Objects;
 
 /**
  * A convenience class to hold together 3 values
- * @param <T> the type of 1st value
- * @param <U> the type of 2nd value
- * @param <V> the type of 3rd value
+ * @param <T> the type of the 1st value
+ * @param <U> the type of the 2nd value
+ * @param <V> the type of the 3rd value
  */
 public class Triplet<T, U, V> {
 
@@ -21,6 +21,7 @@ public class Triplet<T, U, V> {
 
     /**
      * Creates a new {@link Triplet} with the given values
+     *
      * @param first the 1st value
      * @param second the 2nd value
      * @param third the 3rd value
@@ -38,7 +39,9 @@ public class Triplet<T, U, V> {
      * The method compares the 3 values of this {@link Triplet}
      * with those of the other {@link Triplet} by calling their respective
      * <code>equals</code> method.
+     *
      * @param o the {@link Object} to compare this {@link Triplet} to
+     *
      * @return <code>true</code> if o is a {@link Triplet} whose values are
      * "equal" to those of this {@link Triplet}
      */
