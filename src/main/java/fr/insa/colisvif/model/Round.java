@@ -45,9 +45,10 @@ public class Round {
     }
 
     /**
-     * Remove the delivery composed by 2 steps from the list of steps
-     * @param stepPickup the pickup from the delivery
-     * @param stepDelivery the dropoff from the delivery
+     * Remove the delivery composed by 2 steps from the list of steps.
+     *
+     * @param stepPickup the pickup from the delivery.
+     * @param stepDelivery the dropoff from the delivery.
      */
     public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
         if (!(steps.contains(stepPickup) && steps.contains(stepDelivery))) {    // The steps are in the list steps
@@ -76,9 +77,10 @@ public class Round {
     }
 
     /**
-     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery
-     * @param stepPickup step to go from the previous location to the pickup location
-     * @param stepDelivery step to go from the previous location to the delivery pickup
+     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
+     *
+     * @param stepPickup step to go from the previous location to the pickup location.
+     * @param stepDelivery step to go from the previous location to the delivery pickup.
      */
     public void addDelivery(Step stepPickup, Step stepDelivery) {
         // /!\ calculer le chemin !!!!!!!!!!
@@ -101,9 +103,10 @@ public class Round {
     }
 
     /**
-     * Change the order of stepChangeOrder to be just before stepJustAfter
-     * @param stepChangeOrder the step that the order will be changed
-     * @param stepJustAfter the step that will follow stepChangeOrder
+     * Change the order of stepChangeOrder to be just before stepJustAfter.
+     *
+     * @param stepChangeOrder the step that the order will be changed.
+     * @param stepJustAfter the step that will follow stepChangeOrder.
      */
     public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter) {
         if (!(steps.contains(stepChangeOrder) && steps.contains(stepJustAfter))) { // The steps are in the list steps
@@ -139,6 +142,7 @@ public class Round {
 
     /**
      * Add a {@link Step} to the {@link List} of {@link Step}.
+     *
      * @param step that needs to be added.
      */
     public void addStep(Step step) {

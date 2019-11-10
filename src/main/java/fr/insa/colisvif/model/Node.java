@@ -20,6 +20,7 @@ public class Node {
 
     /**
      * Constructor of Node.
+     *
      * @param id the id of the Node.
      * @param latitude the longitude of the Node.
      * @param longitude the longitude of the Node.

@@ -50,9 +50,9 @@ public class CityMap {
 
     /**
      * Constructor of CityMap. Initialize the min/max latitudes and min/max
-     * longitudes
+     * longitudes.
      * It also initialises the map of {@link Node}, {@link Section}
-     * and {@link PathsFromVertex}
+     * and {@link PathsFromVertex}.
      */
     public CityMap() {
         this.latMin = LAT_MAX;
@@ -68,11 +68,11 @@ public class CityMap {
      * Creates a Node from an id, a latitude and longitude and ads it
      * to the map of {@link Node}.
      *
-     * @param id the id of the Node
-     * @param latitude the latitude of the Node
-     * @param longitude the longitude of the Node
+     * @param id the id of the Node.
+     * @param latitude the latitude of the Node.
+     * @param longitude the longitude of the Node.
      * @throws IllegalArgumentException when the latitude or longitude
-     * is out of bounds
+     * is out of bounds.
      */
     public void createNode(long id, double latitude, double longitude) throws IllegalArgumentException {
 
@@ -101,13 +101,12 @@ public class CityMap {
      * Creates a {@link Section} and adds it to the successors of the {@link Node}
      * that has the same origin.
      *
-     * @param length the length of the section
-     * @param roadName the road name of the section
-     * @param destination the destination of the section
-     * @param origin the origin of the section
+     * @param length the length of the section.
+     * @param roadName the road name of the section.
+     * @param destination the destination of the section.
+     * @param origin the origin of the section.
      * @throws IllegalArgumentException if the origin of the new {@link Section}
      * does not match any {@link Node}
-     * that has the same origin
      */
     public void createSection(double length, String roadName, long destination, long origin) throws IllegalArgumentException {
         Section newSection = new Section(length, roadName, destination, origin);
@@ -133,76 +132,76 @@ public class CityMap {
     }
 
     /**
-     * Returns the minimum longitude of the CityMap
+     * Returns the minimum longitude of the CityMap.
      *
-     * @return the minimum longitude of the CityMap
+     * @return the minimum longitude of the CityMap.
      */
     public double getLngMin() {
         return this.lngMin;
     }
 
     /**
-     * Returns the maximum longitude of the CityMap
+     * Returns the maximum longitude of the CityMap.
      *
-     * @return the maximum longitude of the CityMap
+     * @return the maximum longitude of the CityMap.
      */
     public double getLngMax() {
         return this.lngMax;
     }
 
     /**
-     * Returns the minimum latitude of the CityMap
+     * Returns the minimum latitude of the CityMap.
      *
-     * @return the minimum latitude of the CityMap
+     * @return the minimum latitude of the CityMap.
      */
     public double getLatMin() {
         return this.latMin;
     }
 
     /**
-     * Returns the maximum latitude of the CityMap
+     * Returns the maximum latitude of the CityMap.
      *
-     * @return the maximum latitude of the CityMap
+     * @return the maximum latitude of the CityMap.
      */
     public double getLatMax() {
         return this.latMax;
     }
 
     /**
-     * Returns the map of {@link Node} (idOfTheNode, {@link Node})
+     * Returns the map of {@link Node} (idOfTheNode, {@link Node}).
      *
-     * @return the map of {@link Node} (idOfTheNode, {@link Node})
+     * @return the map of {@link Node} (idOfTheNode, {@link Node}).
      */
     public Map<Long, Node> getMapNode() {
         return this.mapNode;
     }
 
     /**
-     * Returns the map of {@link Section} (Road name, List of {@link Section})
+     * Returns the map of {@link Section} (Road name, List of {@link Section}).
      *
-     * @return the map of {@link Section} (Road name, List of {@link Section})
+     * @return the map of {@link Section} (Road name, List of {@link Section}).
      */
     public Map<String, List<Section>> getMapSection() {
         return this.mapSection;
     }
 
     /**
-     * Returns the minimum length between two coordinates
+     * Returns the minimum length between two coordinates.
      *
-     * @param start the starting point
-     * @param finish the ending point
-     * @return the minimum length between two coordinates
+     * @param start the starting point.
+     * @param finish the ending point.
+     * @return the minimum length between two coordinates.
      */
     public double getLength(long start, long finish) {
         return pathsFromVertices.get(start).getLength(finish);
     }
 
     /**
-     * Returns the {@link Section} between start and finish
+     * Returns the {@link Section} between start and finish.
      *
-     * @param start the starting point
-     * @param finish the ending point
-     * @return the {@link Section} between start and finish
+     * @param start the starting point.
+     * @param finish the ending point.
+     * @return the {@link Section} between start and finish.
      * @throws IllegalArgumentException when it does not find a {@link Section}
      * between start and finish.
      */
@@ -246,7 +245,7 @@ public class CityMap {
      * Perform a dijkstra between the point at coordinate start and all
      * the {@link Node} stored in the map of {@link Node}.
      *
-     * @param start the coordinate of the starting point
+     * @param start the coordinate of the starting point.
      */
     private void dijkstra(long start) {
         // TODO @Felix : tester si start est une bonne coordonnée??
@@ -280,8 +279,8 @@ public class CityMap {
      * the best path to take from the warehouse going though all the pickup and dropoff
      * {@link Node} respecting the order (pick up node x is always before drop off node x).
      *
-     * @param deliveries a delivery object containing all the pickup and dropoff nodes and their information
-     * @return a {@link Round} object from a {@link DeliveryMap} that contains
+     * @param deliveries a delivery object containing all the pickup and dropoff nodes and their information.
+     * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
     public Round shortestRound(DeliveryMap deliveries) {
