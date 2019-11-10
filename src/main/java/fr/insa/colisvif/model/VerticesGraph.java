@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /*package-private*/ class VerticesGraph {
+
     /** The speed of the cyclist in meters per second */
     private static final int CYCLIST_SPEED = (int) (15. / 3.6);
 
@@ -22,14 +23,6 @@ import java.util.LinkedList;
 
     /** We will use dynamic programing, this is where we store the sub results */
     private HashMap<Long, SubResult> subResults;
-
-    private int deliveryIdFromIndex(int index){
-        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
-        if(index%2 == 1){
-            return delivery.getPickUpDuration();
-        }
-        return delivery.getId();
-    }
 
     /**
      * Let n be the number of deliveries we want to process
@@ -60,6 +53,14 @@ import java.util.LinkedList;
         }
 
         subResults = new HashMap<>();
+    }
+
+    private int deliveryIdFromIndex(int index) {
+        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
+        if (index % 2 == 1) {
+            return delivery.getPickUpDuration();
+        }
+        return delivery.getId();
     }
 
     /**
@@ -199,7 +200,7 @@ import java.util.LinkedList;
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 
         Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex));
-        if(departureId == arrivalId){
+        if (departureId == arrivalId) {
             step.setArrivalDate(time);
             return step;
         }
