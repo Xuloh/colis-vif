@@ -54,13 +54,12 @@ public class Controller {
         this.stateMap.put(InitialState.class, initialState);
         this.stateMap.put(CityMapLoadedState.class, new CityMapLoadedState());
         this.stateMap.put(DeliveryMapLoadedState.class, new DeliveryMapLoadedState());
-        this.stateMap.put(DropOffNodeAdding.class, new DropOffNodeAdding());
+        this.stateMap.put(PickUpNodeAddedState.class, new PickUpNodeAddedState());
         this.stateMap.put(LocalItineraryModificationState.class, new LocalItineraryModificationState());
         this.stateMap.put(ModifyStopLocationState.class, new ModifyStopLocationState());
         this.stateMap.put(ModifyOrderState.class, new ModifyOrderState());
-        this.stateMap.put(PickUpNodeAddingState.class, new PickUpNodeAddingState());
+        this.stateMap.put(ModeAddState.class, new ModeAddState());
         this.stateMap.put(PropertiesPrintedState.class, new PropertiesPrintedState());
-        this.stateMap.put(SuppressedNodeSelectedState.class, new SuppressedNodeSelectedState());
         this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
         this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());

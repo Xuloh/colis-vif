@@ -20,11 +20,10 @@ import java.io.File;
  *     <li>{@link ModifyOrderState}</li>
  *     <li>{@link ModifyStopLocationState}</li>
  *     <li>{@link NonOptimizedItineraryState}</li>
- *     <li>{@link PickUpNodeAddingState}</li>
+ *     <li>{@link ModeAddState}</li>
  *     <li>{@link PropertiesPrintedState}</li>
- *     <li>{@link SuppressedNodeSelectedState}</li>
  *     <li>{@link SuppressionModeState}</li>
- *     <li>{@link DropOffNodeAdding}</li>
+ *     <li>{@link PickUpNodeAddedState}</li>
  * </ul>
  *
  * @see <a href="https://en.wikipedia.org/wiki/State_pattern">State pattern</a>
@@ -76,13 +75,6 @@ public interface State {
      * Enter in suppression mode //todo : Ca fait quoi reellement ?
      */
     default void switchToSuppressionMode() {
-
-    }
-
-    /**
-     * Quit the suppression mode //todo : Ca fait quoi reellement ?
-     */
-    default void suppressStop() {
 
     }
 
@@ -144,13 +136,14 @@ public interface State {
 
     /**
      * Stop the calculation of the best itinerary.
+     * // todo : ça sera surement à supprimer (voir {@link NonOptimizedItineraryState}
      */
     default void stopCalculation() {
 
     }
 
     /**
-     * //todo: qu'est ce que ça fait ?
+     * Edit the order of the node to edit right after the picked stop
      */
     default void selectStopToPass() {
 
