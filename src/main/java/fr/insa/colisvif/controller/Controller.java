@@ -10,6 +10,8 @@ import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,6 +25,8 @@ import java.util.Map;
  * @see State
  */
 public class Controller {
+
+    private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 
     private Map<Class, State> stateMap = new HashMap<>();
 
@@ -63,6 +67,8 @@ public class Controller {
         this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
         this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
+
+        LOGGER.info("Initial Controller state : {}", this.currentState.getClass().getSimpleName());
     }
 
     /**
@@ -73,6 +79,7 @@ public class Controller {
      * @param file the {@link File} to load a {@link CityMap} from
      */
     public void loadCityMap(File file) {
+        LOGGER.info("Loading new CityMap from : " + file.getAbsolutePath());
         this.currentState.loadCityMap(this, uiController, file);
     }
 
@@ -84,6 +91,7 @@ public class Controller {
      * @param file the {@link File} to load a {@link DeliveryMap} from
      */
     public void loadDeliveryMap(File file) {
+        LOGGER.info("Loading new DeliveryMap from : " + file.getAbsolutePath());
         this.currentState.loadDeliveryMap(this, uiController, file, this.cityMap);
     }
 
@@ -104,8 +112,19 @@ public class Controller {
      * @param stateName The type of {@link State} to switch to
      */
     public <T extends State> void setCurrentState(Class<T> stateName) {
-        if (stateMap.containsKey(stateName)) {
+        if (this.stateMap.containsKey(stateName)) {
+            LOGGER.info(
+                "Switching Controller state from {} to {}",
+                this.currentState.getClass().getSimpleName(),
+                stateName.getSimpleName()
+            );
             this.currentState = stateMap.get(stateName);
+        } else {
+            LOGGER.warn(
+                "Tried to switch Controller state from {} to invalid {}",
+                this.currentState.getClass().getSimpleName(),
+                stateName.getSimpleName()
+            );
         }
     }
 
