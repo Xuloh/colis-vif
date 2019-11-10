@@ -1,9 +1,17 @@
 package fr.insa.colisvif.exception;
 
-public class IdException extends Exception{
+import fr.insa.colisvif.model.Node;
 
-    private static final long serialVersionUID = 1L;
+/**
+ * An {@link Exception} thrown when a problem occurs with
+ * {@link Node} IDs.
+ */
+public class IdException extends Exception {
 
+    /**
+     * Creates a new {@link IdException} with the given message and no cause.
+     * @param message the message to display with the {@link IdException}
+     */
     public IdException(String message) {
         super(message);
     }
