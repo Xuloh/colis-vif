@@ -105,13 +105,13 @@ public class MapCanvas extends BorderPane {
                 this.drawDeliveryMap();
             });
 
-            this.toolsPane.getZoomPlusButton().addEventHandler(ActionEvent.ACTION, event -> {
+            this.toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
                 double scale = this.scale.get();
                 scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
                 this.scale.set(scale);
             });
 
-            this.toolsPane.getZoomMinusButton().addEventHandler(ActionEvent.ACTION, event -> {
+            this.toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
                 double scale = this.scale.get();
                 scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
                 this.scale.set(scale);

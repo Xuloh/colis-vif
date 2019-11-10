@@ -17,9 +17,9 @@ public class ToolsPane extends FlowPane {
 
     private Button autoZoomButton;
 
-    private Button zoomPlusButton;
+    private Button zoomInButton;
 
-    private Button zoomMinusButton;
+    private Button zoomOutButton;
 
     private Slider zoomSlider;
 
@@ -38,8 +38,8 @@ public class ToolsPane extends FlowPane {
 
         this.getChildren().addAll(
             this.autoZoomButton,
-            this.zoomPlusButton,
-            this.zoomMinusButton,
+            this.zoomInButton,
+            this.zoomOutButton,
             this.zoomSlider
         );
     }
@@ -53,19 +53,19 @@ public class ToolsPane extends FlowPane {
     }
 
     private void createZoomPlusButton() {
-        this.zoomPlusButton = new Button("+");
-        this.zoomPlusButton.setMaxWidth(BUTTON_SIZE);
-        this.zoomPlusButton.setMaxHeight(BUTTON_SIZE);
-        this.zoomPlusButton.setMinWidth(BUTTON_SIZE);
-        this.zoomPlusButton.setMinHeight(BUTTON_SIZE);
+        this.zoomInButton = new Button("+");
+        this.zoomInButton.setMaxWidth(BUTTON_SIZE);
+        this.zoomInButton.setMaxHeight(BUTTON_SIZE);
+        this.zoomInButton.setMinWidth(BUTTON_SIZE);
+        this.zoomInButton.setMinHeight(BUTTON_SIZE);
     }
 
     private void createZoomMinusButton() {
-        this.zoomMinusButton = new Button("-");
-        this.zoomMinusButton.setMaxWidth(BUTTON_SIZE);
-        this.zoomMinusButton.setMaxHeight(BUTTON_SIZE);
-        this.zoomMinusButton.setMinWidth(BUTTON_SIZE);
-        this.zoomMinusButton.setMinHeight(BUTTON_SIZE);
+        this.zoomOutButton = new Button("-");
+        this.zoomOutButton.setMaxWidth(BUTTON_SIZE);
+        this.zoomOutButton.setMaxHeight(BUTTON_SIZE);
+        this.zoomOutButton.setMinWidth(BUTTON_SIZE);
+        this.zoomOutButton.setMinHeight(BUTTON_SIZE);
     }
 
     private void createZoomSlider() {
@@ -82,19 +82,19 @@ public class ToolsPane extends FlowPane {
     }
 
     /**
-     * Returns the zoom plus {@link Button} of this {@link ToolsPane}
-     * @return the zoom plus {@link Button} of this {@link ToolsPane}
+     * Returns the zoom in {@link Button} of this {@link ToolsPane}
+     * @return the zoom in {@link Button} of this {@link ToolsPane}
      */
-    public Button getZoomPlusButton() {
-        return this.zoomPlusButton;
+    public Button getZoomInButton() {
+        return this.zoomInButton;
     }
 
     /**
-     * Returns the zoom minus {@link Button} of this {@link ToolsPane}
-     * @return the zoom minus {@link Button} of this {@link ToolsPane}
+     * Returns the zoom out {@link Button} of this {@link ToolsPane}
+     * @return the zoom out {@link Button} of this {@link ToolsPane}
      */
-    public Button getZoomMinusButton() {
-        return this.zoomMinusButton;
+    public Button getZoomOutButton() {
+        return this.zoomOutButton;
     }
 
     /**
