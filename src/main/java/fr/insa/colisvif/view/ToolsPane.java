@@ -6,6 +6,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 
+/**
+ * A simple {@link FlowPane} wrapping a few widgets
+ * to control a {@link MapCanvas}.
+ * @see MapCanvas
+ */
 public class ToolsPane extends FlowPane {
 
     private static final double BUTTON_SIZE = 30d;
@@ -18,6 +23,9 @@ public class ToolsPane extends FlowPane {
 
     private Slider zoomSlider;
 
+    /**
+     * Creates a new {@link ToolsPane}
+     */
     public ToolsPane() {
         super(Orientation.VERTICAL);
         this.setColumnHalignment(HPos.CENTER);
@@ -65,18 +73,34 @@ public class ToolsPane extends FlowPane {
         this.zoomSlider.setOrientation(Orientation.VERTICAL);
     }
 
+    /**
+     * Returns the auto zoom {@link Button} of this {@link ToolsPane}
+     * @return the auto zoom {@link Button} of this {@link ToolsPane}
+     */
     public Button getAutoZoomButton() {
         return this.autoZoomButton;
     }
 
+    /**
+     * Returns the zoom plus {@link Button} of this {@link ToolsPane}
+     * @return the zoom plus {@link Button} of this {@link ToolsPane}
+     */
     public Button getZoomPlusButton() {
         return this.zoomPlusButton;
     }
 
+    /**
+     * Returns the zoom minus {@link Button} of this {@link ToolsPane}
+     * @return the zoom minus {@link Button} of this {@link ToolsPane}
+     */
     public Button getZoomMinusButton() {
         return this.zoomMinusButton;
     }
 
+    /**
+     * Returns the zoom {@link Slider} of this {@link ToolsPane}
+     * @return the zoom {@link Slider} of this {@link ToolsPane}
+     */
     public Slider getZoomSlider() {
         return this.zoomSlider;
     }
