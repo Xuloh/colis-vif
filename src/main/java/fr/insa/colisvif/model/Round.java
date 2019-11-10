@@ -3,31 +3,45 @@ package fr.insa.colisvif.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the round to do all the deliveries that needs to be made, as a {@link List} of {@link Step}.
+ */
 public class Round {
     private List<Step> steps;
-    private long warehouseNodeId;
-    private int startDate;
 
-    public long getWarehouseNodeId(){
-        return warehouseNodeId;
-    }
-    public void setWarehouseNodeId(long warehouseNodeId){
-        this.warehouseNodeId = warehouseNodeId;
-    }
-    public int getStartDate(){
-        return startDate;
-    }
-    public void setStartDate(int startDate){
-        this.startDate = startDate;
-    }
-    public List<Step> getSteps(){
-        return steps;
-    }
+    private DeliveryMap deliveryMap;
 
+    /**
+     * Constructor of Round.
+     * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
+     */
     public Round(DeliveryMap deliveries){
         steps = new ArrayList<>();
-        warehouseNodeId = deliveries.getWarehouseNodeId();
-        startDate = deliveries.getStartDateInSeconds();
+        this.deliveryMap = deliveries;
+    }
+
+    /**
+     * Returns the warehouse {@link Node} id of the {@link DeliveryMap}.
+     * @return the warehouse {@link Node} id of the {@link DeliveryMap}.
+     */
+    public long getWarehouseNodeId(){
+        return this.deliveryMap.getWarehouseNodeId();
+    }
+
+    /**
+     * Returns the start date of the {@link DeliveryMap}.
+     * @return the start date of the {@link DeliveryMap}.
+     */
+    public int getStartDate(){
+        return this.deliveryMap.getStartDateInSeconds();
+    }
+
+    /**
+     * Returns the {@link List} of {@link Step}.
+     * @return the {@link List} of {@link Step}.
+     */
+    public List<Step> getSteps(){
+        return steps;
     }
 
     /**
@@ -63,7 +77,7 @@ public class Round {
 
     /**
      * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery
-      * @param stepPickup step to go from the previous location to the pickup location
+     * @param stepPickup step to go from the previous location to the pickup location
      * @param stepDelivery step to go from the previous location to the delivery pickup
      */
     public void addDelivery(Step stepPickup, Step stepDelivery){
@@ -123,6 +137,10 @@ public class Round {
         }
     }
 
+    /**
+     * Add a {@link Step} to the {@link List} of {@link Step}.
+     * @param step that needs to be added.
+     */
     public void addStep(Step step) {
         steps.add(step);
     }
