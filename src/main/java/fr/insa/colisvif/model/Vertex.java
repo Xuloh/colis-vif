@@ -13,7 +13,7 @@ public class Vertex implements Comparable<Vertex> {
 
     private long nodeId;
 
-    private boolean type; //true if it is a pick up and false if it is a drop off
+    private boolean type; //false if it is a pick up and true if it is a drop off
 
     private int duration;
 
@@ -68,12 +68,21 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     /**
+     * Returns the type of the {@link Vertex}.
+     *
+     * @return the type of the {@link Vertex}.
+     */
+    public boolean getType() {
+        return this.type;
+    }
+
+    /**
      * Returns <code>true</code> if the {@link Vertex} corresponds to a pick up.
      *
      * @return <code>true</code> if the {@link Vertex} corresponds to a pick up.
      */
     public boolean isPickUp() {
-        return type == Vertex.PICK_UP;
+        return Objects.equals(type, Vertex.PICK_UP);
     }
 
     /**
@@ -82,7 +91,7 @@ public class Vertex implements Comparable<Vertex> {
      * @return <code>true</code> if the {@link Vertex} corresponds to a drop off.
      */
     public boolean isDropOff() {
-        return type == Vertex.DROP_OFF;
+        return Objects.equals(type, Vertex.DROP_OFF);
     }
 
     /**

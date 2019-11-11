@@ -13,7 +13,7 @@ public class Step {
 
     private int deliveryID;
 
-    private boolean type; //true if it is a pick up and false if it is a drop off
+    private boolean type; //false if it is a pick up and true if it is a drop off
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
@@ -26,9 +26,18 @@ public class Step {
      */
     public Step(Vertex vertex, int deliveryID) {
         sections = new LinkedList<>();
-        this.type = vertex.isPickUp();
+        this.type = vertex.getType();
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
+    }
+
+    /**
+     * Returns the type of the Step.
+     *
+     * @return the type of the Step.
+     */
+    public boolean getType() {
+        return this.type;
     }
 
     /**
@@ -98,7 +107,7 @@ public class Step {
      * @return <code>true</code> if the {@link Step} corresponds to a pick up.
      */
     public boolean isPickUp() {
-        return type;
+        return !type;
     }
 
     /**
@@ -107,7 +116,7 @@ public class Step {
      * @return <code>true</code> if the {@link Step} corresponds to a drop off.
      */
     public boolean isDropOff() {
-        return !type;
+        return type;
     }
 
     /**
@@ -117,10 +126,12 @@ public class Step {
      * @throws IllegalArgumentException if the new {@link Section}'s origin {@link Node} id does not correspond to the lastly added {@link Section}'s destination {@link Node} id.
      */
     public void addSection(Section section) throws IllegalArgumentException {
+        /*
+        //  if (sections.size() > 0 && sections.getFirst().getOrigin() != section.getDestination()) { ????? //TODO
         if (sections.size() > 0 && sections.getFirst().getDestination() != section.getOrigin()) {
             throw new IllegalArgumentException("The origin of the new Section does not correspond to the last Section in the list. Got "
                     + section.getOrigin() + " instead of " + sections.getFirst().getDestination());
-        }
+        }*/
         sections.addFirst(section); //TODO @Felix : normal que add first?
     }
 
@@ -149,5 +160,20 @@ public class Step {
                 && arrivalDate == step.arrivalDate
                 && duration == step.duration
                 && Objects.equals(sections, step.sections);
+    }
+
+    /**
+     * Returns a {@link String} representation of this {@link Step}.
+     * @return a {@link String} representation of this {@link Step}.
+     */
+    @Override
+    public String toString() {
+        return "Step{"
+                + "sections=" + sections
+                + ", deliveryID=" + deliveryID
+                + ", type=" + type
+                + ", arrivalDate=" + arrivalDate
+                + ", duration=" + duration
+                + '}';
     }
 }
