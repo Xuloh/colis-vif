@@ -1,7 +1,8 @@
 package fr.insa.colisvif.view;
 
 public enum NodeType {
-    WAREHOUSE,
-    PICKUP,
-    DROP_OFF
+    DELIVERY_WAREHOUSE,
+    DELIVERY_PICKUP,
+    DELIVERY_DROP_OFF,
+    CITY_MAP_NODE
 }
