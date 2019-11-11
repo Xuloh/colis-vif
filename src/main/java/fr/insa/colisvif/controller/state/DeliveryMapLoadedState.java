@@ -78,6 +78,7 @@ public class DeliveryMapLoadedState implements State {
     @Override
     public void calculateItinerary(Controller controller, UIController uiController) {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
+        uiController.updateTable();
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }

@@ -202,6 +202,14 @@ public class Controller {
         return this.vertexList;
     }
 
+    /**
+     * Returns the associated {@link Step} {@link List}
+     * @return the associated {@link Step} {@link List}
+     */
+    public List<Step> getStepList() {
+        return this.round.getSteps();
+    }
+
     public void computeRound() {
         this.currentState.calculateItinerary(this, this.uiController);
     }
@@ -230,7 +238,7 @@ public class Controller {
     /**
      * Switch to "change location" mode
      */
-    public void editLocationDelivery() {
+    public void editLocationDelivery(Step step) {
         this.currentState.switchToLocationChange();
     }
 

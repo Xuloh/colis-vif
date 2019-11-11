@@ -126,6 +126,16 @@ public class Step {
         sections.addFirst(section); //TODO @Felix : normal que add first? - oui c'est normal
     }
 
+    @Override
+    public String toString() {
+        return "Step{" +
+            ", deliveryID=" + deliveryID +
+            ", type=" + type +
+            ", arrivalDate=" + arrivalDate +
+            ", duration=" + duration +
+            '}';
+    }
+
     /**
      * Determines if the given {@link Object} is "equal"
      * to this {@link Step}.
@@ -136,6 +146,8 @@ public class Step {
      * @return <code>true</code> if o is a {@link Step} whose values are
      * "equal" to those of this {@link Step}
      */
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
