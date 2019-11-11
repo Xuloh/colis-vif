@@ -3,6 +3,7 @@ package fr.insa.colisvif.controller.state;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,7 +75,8 @@ public class ItineraryCalculatedState implements State {
      * Saves the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
     @Override
-    public void saveRoadMap() {
+    public void saveRoadMap(Controller controller) {
+        Round deliveryRound = controller.getRound();
 
     }
 
@@ -85,8 +87,8 @@ public class ItineraryCalculatedState implements State {
      * @see SuppressionModeState
      */
     @Override
-    public void switchToSuppressionMode() {
-
+    public void switchToSuppressionMode(Controller controller) {
+        controller.setCurrentState(SuppressionModeState.class);
     }
 
     /**
@@ -94,8 +96,8 @@ public class ItineraryCalculatedState implements State {
      * to allow the user to add more deliveries
      */
     @Override
-    public void switchToAddMode() {
-
+    public void switchToAddMode(Controller controller) {
+        controller.setCurrentState(ModeAddState.class);
     }
 
     /**

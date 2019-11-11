@@ -60,14 +60,14 @@ public interface State {
      * Calculate a {@link fr.insa.colisvif.model.Round}
      * when a {@link CityMap} and a {@link fr.insa.colisvif.model.DeliveryMap} are loaded.
      */
-    default void calculateItinerary() {
+    default void calculateItinerary(Controller controller, UIController uiController) {
 
     }
 
     /**
      * Save the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
-    default void saveRoadMap() {
+    default void saveRoadMap(Controller controller) {
 
     }
 
@@ -76,7 +76,7 @@ public interface State {
      *
      * @see SuppressionModeState
      */
-    default void switchToSuppressionMode() {
+    default void switchToSuppressionMode(Controller controller) {
 
     }
 
@@ -85,7 +85,7 @@ public interface State {
      *
      * @see ModeAddState
      */
-    default void switchToAddMode() {
+    default void switchToAddMode(Controller controller) {
 
     }
 

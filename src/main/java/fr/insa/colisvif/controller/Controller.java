@@ -1,12 +1,7 @@
 package fr.insa.colisvif.controller;
 
 import fr.insa.colisvif.controller.state.*;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.CityMapFactory;
-import fr.insa.colisvif.model.Delivery;
-import fr.insa.colisvif.model.DeliveryMap;
-import fr.insa.colisvif.model.DeliveryMapFactory;
-import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +36,8 @@ public class Controller {
     private State currentState;
 
     private DeliveryMap deliveryMap;
+
+    private Round round;
 
     private ObservableList<Vertex> vertexList;
 
@@ -138,6 +135,23 @@ public class Controller {
     }
 
     /**
+     * Assigns the given {@link Round} to this {@link Controller}
+     *
+     * @param round the {@link Round} to assign to this {@link Controller}
+     */
+    public void setRound(Round round) {
+        this.round = round;
+    }
+
+    /**
+     * Returns the associated {@link Round}
+     * @return the associated {@link Round}
+     */
+    public Round getRound() {
+        return round;
+    }
+
+    /**
      * Returns the associated {@link CityMap}
      * @return the associated {@link CityMap}
      */
@@ -189,20 +203,21 @@ public class Controller {
     }
 
     public void computeRound() {
+        this.currentState.calculateItinerary(this, this.uiController);
     }
 
     /**
      * Switch to "add delivery" mode
      */
     public void addDelivery() {
-        this.currentState.switchToAddMode();
+        this.currentState.switchToAddMode(this);
     }
 
     /**
      * Switch to "delete delivery" mode
      */
     public void deleteDelivery() {
-        this.currentState.switchToSuppressionMode();
+        this.currentState.switchToSuppressionMode(this);
     }
 
     /**

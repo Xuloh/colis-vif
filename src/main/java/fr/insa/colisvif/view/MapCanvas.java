@@ -28,6 +28,9 @@ import java.util.Map;
  * to render instances of {@link CityMap} and {@link DeliveryMap}.
  * @see Canvas
  */
+
+// todo : ajouter une méthode drawRound (from Brice)
+// todo : méthode qui prend un point (de clic de souris) et qui renvoie un noeud si possible
 public class MapCanvas extends BorderPane {
 
     private static final Logger LOGGER = LogManager.getLogger(MapCanvas.class);
