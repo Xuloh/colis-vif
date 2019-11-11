@@ -1,0 +1,6 @@
+<?fr.insa.colisvif.xml version="1.0" encoding="UTF-8" standalone="no"?>
+<reseau>
+<noeud id="2684668925" latitude="45.775486" longitude="4.888253"/>
+<noeud id="2509481775" latitude="45.775345" longitude="4.8870163"/>
+<troncon destination="2509481775" longueur="97.249695" nomRue="Rue Château-Gaillard" origine="2684668925"/>
+</reseau>
