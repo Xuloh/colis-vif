@@ -20,8 +20,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
@@ -52,6 +52,10 @@ public class MapCanvas extends BorderPane {
 
     private double dragOriginY;
 
+    private ArrayList<CanvasNode> deliveryCanvasNodes;
+
+    private ArrayList<Section> mapSections;
+
     /**
      * Creates a new {@link MapCanvas} with a {@link ToolsPane}.
      * Equivalent to calling {@link MapCanvas#MapCanvas(boolean)}
@@ -79,6 +83,7 @@ public class MapCanvas extends BorderPane {
         this.baseZoom = 1d;
         this.originX = 0d;
         this.originY = 0d;
+        this.deliveryCanvasNodes = new ArrayList<>();
 
         Pane canvasContainer = new Pane();
         this.canvas = new Canvas();
@@ -183,23 +188,16 @@ public class MapCanvas extends BorderPane {
         }
 
         Map<Long, Node> nodes = this.cityMap.getMapNode();
-        List<Section> sections = this.cityMap
-            .getMapSection()
-            .values()
-            .stream()
-            .reduce(new ArrayList<>(), (acc, val) -> {
-                acc.addAll(val);
-                return acc;
-            });
 
-        for (Section section : sections) {
+        for (Section section : this.mapSections) {
             Node origin = nodes.get(section.getOrigin());
             Node destination = nodes.get(section.getDestination());
-            this.drawLine(
+            this.drawLineLatLng(
                 origin.getLatitude(),
                 origin.getLongitude(),
                 destination.getLatitude(),
-                destination.getLongitude()
+                destination.getLongitude(),
+                CanvasConstants.SECTION_COLOR
             );
         }
     }
@@ -219,46 +217,10 @@ public class MapCanvas extends BorderPane {
             return;
         }
 
-        Map<Long, Node> nodes = this.cityMap.getMapNode();
-
-        List<Node> pickupNodes = new ArrayList<>();
-        List<Node> dropOffNodes = new ArrayList<>();
-
-        this.deliveryMap.getDeliveryList()
-            .forEach(delivery -> {
-                dropOffNodes.add(nodes.get(delivery.getDropOffNodeId()));
-                pickupNodes.add(nodes.get(delivery.getPickUpNodeId()));
-            });
-
-        ColorGenerator colorGenerator = new ColorGenerator(pickupNodes.size(), CanvasConstants.NODE_OPACITY);
-
-        for (int i = 0; i < pickupNodes.size(); i++) {
-            Node pickupNode = pickupNodes.get(i);
-            Node dropOffNode = dropOffNodes.get(i);
-            Color color = colorGenerator.next();
-
-            this.drawTriangle(
-                pickupNode.getLatitude(),
-                pickupNode.getLongitude(),
-                color
-            );
-
-            this.drawPoint(
-                dropOffNode.getLatitude(),
-                dropOffNode.getLongitude(),
-                color,
-                CanvasConstants.DELIVERY_NODE_DIAMETER
-            );
+        for (CanvasNode canvasNode : this.deliveryCanvasNodes) {
+            canvasNode.updateCoords();
+            canvasNode.draw();
         }
-
-        Node warehouse = nodes.get(this.deliveryMap.getWarehouseNodeId());
-        Color color = Color.rgb(255, 255, 255, CanvasConstants.NODE_OPACITY);
-
-        this.drawSquare(
-            warehouse.getLatitude(),
-            warehouse.getLongitude(),
-            color
-        );
     }
 
     private void computeBaseZoom() {
@@ -296,6 +258,14 @@ public class MapCanvas extends BorderPane {
     public void setCityMap(CityMap cityMap) {
         this.cityMap = cityMap;
         this.computeBaseZoom();
+        this.mapSections = (ArrayList<Section>) (this.cityMap
+            .getMapSection()
+            .values()
+            .stream()
+            .reduce(new ArrayList<>(), (acc, val) -> {
+                acc.addAll(val);
+                return acc;
+            }));
     }
 
     /**
@@ -315,6 +285,35 @@ public class MapCanvas extends BorderPane {
      */
     public void setDeliveryMap(DeliveryMap deliveryMap) {
         this.deliveryMap = deliveryMap;
+
+        this.deliveryCanvasNodes.clear();
+
+        if (this.deliveryMap != null) {
+            this.deliveryCanvasNodes.ensureCapacity(deliveryMap.getSize() * 2 + 1);
+
+            ColorGenerator colorGenerator = new ColorGenerator(
+                this.deliveryMap.getSize(),
+                CanvasConstants.NODE_OPACITY,
+                2
+            );
+
+            this.deliveryMap
+                .getDeliveryList()
+                .stream()
+                .flatMap(delivery -> Stream.of(delivery.getPickUp(), delivery.getDropOff()))
+                .map(vertex -> new CanvasNode(
+                    vertex.getNodeId(),
+                    vertex.isPickUp() ? NodeType.PICKUP : NodeType.DROP_OFF,
+                    colorGenerator.next()
+                ))
+                .forEach(canvasNode -> this.deliveryCanvasNodes.add(canvasNode));
+
+            this.deliveryCanvasNodes.add(new CanvasNode(
+                this.deliveryMap.getWarehouseNodeId(),
+                NodeType.WAREHOUSE,
+                CanvasConstants.WAREHOUSE_COLOR
+            ));
+        }
     }
 
     /**
@@ -325,10 +324,11 @@ public class MapCanvas extends BorderPane {
         return this.deliveryMap;
     }
 
-    private void drawPoint(double lat, double lng, Paint paint, int size) {
-        double x = this.lngToPx(lng);
-        double y = this.latToPx(lat);
+    private void drawPointLatLng(double lat, double lng, Paint paint, int size) {
+        this.drawPoint(this.lngToPx(lng), this.latToPx(lat), paint, size);
+    }
 
+    private void drawPoint(double x, double y, Paint paint, int size) {
         Paint prevFill = this.context.getFill();
         this.context.setFill(paint);
         this.context.fillOval(
@@ -350,27 +350,22 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
-    private void drawLine(double lat1, double lng1, double lat2, double lng2) {
-        this.drawLine(lat1, lng1, lat2, lng2, CanvasConstants.SECTION_COLOR);
+    private void drawLineLatLng(double lat1, double lng1, double lat2, double lng2, Paint paint) {
+        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint);
     }
 
-    private void drawLine(double lat1, double lng1, double lat2, double lng2, Paint paint) {
-        double x1 = this.lngToPx(lng1);
-        double y1 = this.latToPx(lat1);
-
-        double x2 = this.lngToPx(lng2);
-        double y2 = this.latToPx(lat2);
-
+    private void drawLine(double x1, double y1, double x2, double y2, Paint paint) {
         Paint prevStroke = this.context.getStroke();
         this.context.setStroke(paint);
         this.context.strokeLine(x1, y1, x2, y2);
         this.context.setStroke(prevStroke);
     }
 
-    private void drawTriangle(double lat, double lng, Paint paint) {
-        double centerX = this.lngToPx(lng);
-        double centerY = this.latToPx(lat);
+    private void drawTriangleLatLng(double lat, double lng, Paint paint) {
+        this.drawTriangle(this.lngToPx(lng), this.latToPx(lat), paint);
+    }
 
+    private void drawTriangle(double centerX, double centerY, Paint paint) {
         double[] x = new double[3];
         double[] y = new double[3];
 
@@ -390,24 +385,23 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
-    private void drawSquare(double lat, double lng, Paint paint) {
-        double centerX = this.lngToPx(lng);
-        double centerY = this.latToPx(lat);
+    private void drawSquareLatLng(double lat, double lng, Paint paint) {
+        this.drawSquare(this.lngToPx(lng), this.latToPx(lat), paint);
+    }
 
-        final int RADIUS = CanvasConstants.DELIVERY_NODE_DIAMETER / 2;
-
+    private void drawSquare(double centerX, double centerY, Paint paint) {
         double[] x = {
-            centerX - RADIUS,
-            centerX + RADIUS,
-            centerX + RADIUS,
-            centerX - RADIUS
+            centerX - CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerX + CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerX + CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerX - CanvasConstants.DELIVERY_NODE_RADIUS
         };
 
         double[] y = {
-            centerY - RADIUS,
-            centerY - RADIUS,
-            centerY + RADIUS,
-            centerY + RADIUS
+            centerY - CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerY - CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerY + CanvasConstants.DELIVERY_NODE_RADIUS,
+            centerY + CanvasConstants.DELIVERY_NODE_RADIUS
         };
 
         Paint prevFill = this.context.getFill();
@@ -428,4 +422,72 @@ public class MapCanvas extends BorderPane {
     private double lngToPx(double lng) {
         return (lng - this.cityMap.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
     }
+
+    private class CanvasNode {
+
+        /*package-private*/ double x;
+
+        /*package-private*/ double y;
+
+        private long nodeId;
+
+        private NodeType type;
+
+        private Paint paint;
+
+        /*package-private*/ CanvasNode(long nodeId, NodeType type, Paint paint) {
+            this.nodeId = nodeId;
+            this.type = type;
+            this.paint = paint;
+            this.x = 0;
+            this.y = 0;
+        }
+
+        /*package-private*/ void updateCoords() {
+            Node node = cityMap.getMapNode().get(this.nodeId);
+            this.x = lngToPx(node.getLongitude());
+            this.y = latToPx(node.getLatitude());
+        }
+
+        /*package-private*/ void draw() {
+            switch (this.type) {
+            case PICKUP:
+                drawTriangle(
+                    this.x,
+                    this.y,
+                    this.paint
+                );
+                break;
+            case DROP_OFF:
+                drawPoint(
+                    this.x,
+                    this.y,
+                    this.paint,
+                    CanvasConstants.DELIVERY_NODE_DIAMETER
+                );
+                break;
+            case WAREHOUSE:
+                drawSquare(
+                    this.x,
+                    this.y,
+                    this.paint
+                );
+                break;
+            default:
+                break;
+            }
+        }
+
+        /*package-private*/ boolean intersects(double x, double y) {
+            double squaredDistance = (x - this.x) + (y - this.y);
+            return squaredDistance <= CanvasConstants.DELIVERY_NODE_SQUARED_RADIUS;
+        }
+
+        @Override
+        public String toString() {
+            return "CanvasNode{" + "x=" + x + ", y=" + y + ", nodeId=" + nodeId + ", type=" + type + '}';
+        }
+
+    }
+
 }
