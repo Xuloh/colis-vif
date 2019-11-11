@@ -22,7 +22,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -54,9 +56,13 @@ public class MapCanvas extends BorderPane {
 
     private double dragOriginY;
 
-    private ArrayList<CanvasNode> deliveryCanvasNodes;
+    private List<CanvasNode> deliveryCanvasNodes;
 
-    private ArrayList<Section> mapSections;
+    private List<CanvasNode> cityMapCanvasNodes;
+
+    private List<Section> mapSections;
+
+    private boolean showCityMapNodesOnHover;
 
     /**
      * Creates a new {@link MapCanvas} with a {@link ToolsPane}.
@@ -86,6 +92,8 @@ public class MapCanvas extends BorderPane {
         this.originX = 0d;
         this.originY = 0d;
         this.deliveryCanvasNodes = new ArrayList<>();
+        this.cityMapCanvasNodes = new ArrayList<>();
+        this.showCityMapNodesOnHover = false;
 
         // wrap canvas in a pane to handle resize
         Pane canvasContainer = new Pane();
@@ -93,7 +101,6 @@ public class MapCanvas extends BorderPane {
         this.context = this.canvas.getGraphicsContext2D();
         canvasContainer.getChildren().add(this.canvas);
         this.setCenter(canvasContainer);
-
 
         if (useTools) {
             this.createToolsPane();
@@ -117,6 +124,25 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
+     * Clears the canvas and redraws everything
+     *
+     * @see #clearCanvas()
+     * @see #drawCityMap()
+     * @see #drawDeliveryMap()
+     * @see #drawCityMapNodesOverlay()
+     */
+    public void redraw() {
+        LOGGER.info("Rendering canvas");
+        long start = System.nanoTime();
+        this.clearCanvas();
+        this.drawCityMap();
+        this.drawDeliveryMap();
+        this.drawCityMapNodesOverlay();
+        long renderTimeMillis = (System.nanoTime() - start) / 1_000_000;
+        LOGGER.debug("Rendered canvas in {} ms", renderTimeMillis);
+    }
+
+    /**
      * Clears the {@link Canvas}
      */
     public void clearCanvas() {
@@ -137,7 +163,7 @@ public class MapCanvas extends BorderPane {
      * @see #setCityMap(CityMap)
      */
     public void drawCityMap() {
-        LOGGER.debug("Drawing CityMap");
+        LOGGER.debug("Rendering CityMap");
 
         if (this.cityMap == null) {
             LOGGER.warn("Tried to draw CityMap but CityMap is null");
@@ -167,7 +193,7 @@ public class MapCanvas extends BorderPane {
      * @see #setDeliveryMap(DeliveryMap)
      */
     public void drawDeliveryMap() {
-        LOGGER.debug("Drawing DeliveryMap");
+        LOGGER.debug("Rendering DeliveryMap");
 
         if (this.deliveryMap == null) {
             LOGGER.warn("Tried to draw DeliveryMap but DeliveryMap is null");
@@ -181,6 +207,24 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
+     * Renders the nodes hovered by the mouse.
+     */
+    public void drawCityMapNodesOverlay() {
+        for (CanvasNode canvasNode : this.cityMapCanvasNodes) {
+            canvasNode.updateCoords();
+            canvasNode.draw();
+        }
+    }
+
+    /**
+     * Changes the mode to show city map nodes when the mouse hovers them.
+     * @param showCityMapNodesOnHover true to activate the mode, false to deactivate
+     */
+    public void setShowCityMapNodesOnHover(boolean showCityMapNodesOnHover) {
+        this.showCityMapNodesOnHover = showCityMapNodesOnHover;
+    }
+
+    /**
      * Assigns the given {@link CityMap} to this {@link MapCanvas}.
      * If <code>null</code> is passed, the {@link MapCanvas}
      * will stop rendering a {@link CityMap}.
@@ -190,14 +234,29 @@ public class MapCanvas extends BorderPane {
     public void setCityMap(CityMap cityMap) {
         this.cityMap = cityMap;
         this.computeBaseZoom();
-        this.mapSections = (ArrayList<Section>) (this.cityMap
-            .getMapSection()
-            .values()
-            .stream()
-            .reduce(new ArrayList<>(), (acc, val) -> {
-                acc.addAll(val);
-                return acc;
-            }));
+
+        if (this.cityMap != null) {
+            this.mapSections = this.cityMap
+                .getMapSection()
+                .values()
+                .stream()
+                .reduce(new ArrayList<>(), (acc, val) -> {
+                    acc.addAll(val);
+                    return acc;
+                });
+
+            this.cityMapCanvasNodes = this.cityMap
+                .getMapNode()
+                .values()
+                .stream()
+                .map(node -> new CanvasNode(
+                    node.getId(),
+                    NodeType.CITY_MAP_NODE,
+                    CanvasConstants.CITY_MAP_NODE_COLOR,
+                    CanvasConstants.CITY_MAP_NODE_RADIUS
+                ))
+                .collect(Collectors.toList());
+        }
     }
 
     /**
@@ -218,11 +277,7 @@ public class MapCanvas extends BorderPane {
     public void setDeliveryMap(DeliveryMap deliveryMap) {
         this.deliveryMap = deliveryMap;
 
-        this.deliveryCanvasNodes.clear();
-
         if (this.deliveryMap != null) {
-            this.deliveryCanvasNodes.ensureCapacity(deliveryMap.getSize() * 2 + 1);
-
             ColorGenerator colorGenerator = new ColorGenerator(
                 this.deliveryMap.getSize(),
                 CanvasConstants.NODE_OPACITY,
@@ -235,15 +290,17 @@ public class MapCanvas extends BorderPane {
                 .flatMap(delivery -> Stream.of(delivery.getPickUp(), delivery.getDropOff()))
                 .map(vertex -> new CanvasNode(
                     vertex.getNodeId(),
-                    vertex.isPickUp() ? NodeType.PICKUP : NodeType.DROP_OFF,
-                    colorGenerator.next()
+                    vertex.isPickUp() ? NodeType.DELIVERY_PICKUP : NodeType.DELIVERY_DROP_OFF,
+                    colorGenerator.next(),
+                    CanvasConstants.DELIVERY_NODE_RADIUS
                 ))
                 .forEach(canvasNode -> this.deliveryCanvasNodes.add(canvasNode));
 
             this.deliveryCanvasNodes.add(new CanvasNode(
                 this.deliveryMap.getWarehouseNodeId(),
-                NodeType.WAREHOUSE,
-                CanvasConstants.WAREHOUSE_COLOR
+                NodeType.DELIVERY_WAREHOUSE,
+                CanvasConstants.WAREHOUSE_COLOR,
+                CanvasConstants.DELIVERY_NODE_RADIUS
             ));
         }
     }
@@ -268,9 +325,7 @@ public class MapCanvas extends BorderPane {
         if (event.getButton() == MouseButton.MIDDLE) {
             this.originX = event.getX() + this.dragOriginX;
             this.originY = event.getY() + this.dragOriginY;
-            this.clearCanvas();
-            this.drawCityMap();
-            this.drawDeliveryMap();
+            this.redraw();
         }
     }
 
@@ -281,22 +336,36 @@ public class MapCanvas extends BorderPane {
     }
 
     private void canvasOnMouseMoved(MouseEvent event) {
-        boolean foundIntersect = false;
-        Iterator<CanvasNode> it = this.deliveryCanvasNodes.iterator();
+        LOGGER.trace("Updating hovered nodes");
+        long start = System.nanoTime();
 
-        while (!foundIntersect && it.hasNext()) {
+        boolean foundIntersect = false;
+
+        Iterator<CanvasNode> it = this.showCityMapNodesOnHover
+            ? this.cityMapCanvasNodes.iterator()
+            : this.deliveryCanvasNodes.iterator();
+
+        while (it.hasNext()) {
             CanvasNode canvasNode = it.next();
 
             if (canvasNode.intersects(event.getX(), event.getY())) {
                 LOGGER.trace("CanvasNode intersection : " + canvasNode);
                 this.canvas.setCursor(Cursor.HAND);
+                canvasNode.selected = true;
                 foundIntersect = true;
+            } else {
+                canvasNode.selected = false;
             }
         }
 
         if (!foundIntersect) {
             this.canvas.setCursor(Cursor.DEFAULT);
         }
+
+        this.redraw();
+
+        long computeTimeMillis = (System.nanoTime() - start) / 1_000_000;
+        LOGGER.trace("Updated hovered nodes in {} ms", computeTimeMillis);
     }
 
     private void createToolsPane() {
@@ -305,18 +374,14 @@ public class MapCanvas extends BorderPane {
 
         this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
         this.scale.addListener((observable, oldValue, newValue) -> {
-            this.clearCanvas();
-            this.drawCityMap();
-            this.drawDeliveryMap();
+            this.redraw();
         });
 
         toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
             this.scale.set(1d);
             this.originX = 0;
             this.originY = 0;
-            this.clearCanvas();
-            this.drawCityMap();
-            this.drawDeliveryMap();
+            this.redraw();
         });
 
         toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
@@ -352,9 +417,7 @@ public class MapCanvas extends BorderPane {
     private void onResize() {
         LOGGER.debug("Resizing map");
         this.computeBaseZoom();
-        this.clearCanvas();
-        this.drawCityMap();
-        this.drawDeliveryMap();
+        this.redraw();
     }
 
     private void drawCircleLatLng(double lat, double lng, Paint paint, double radius) {
@@ -462,18 +525,24 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ double y;
 
+        /*package-private*/ boolean selected;
+
         private long nodeId;
 
         private NodeType type;
 
         private Paint paint;
 
-        /*package-private*/ CanvasNode(long nodeId, NodeType type, Paint paint) {
+        private double radius;
+
+        /*package-private*/ CanvasNode(long nodeId, NodeType type, Paint paint, double radius) {
             this.nodeId = nodeId;
             this.type = type;
             this.paint = paint;
             this.x = 0;
             this.y = 0;
+            this.selected = false;
+            this.radius = radius;
         }
 
         /*package-private*/ void updateCoords() {
@@ -484,29 +553,39 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ void draw() {
             switch (this.type) {
-            case PICKUP:
+            case DELIVERY_PICKUP:
                 drawTriangle(
                     this.x,
                     this.y,
                     this.paint,
-                    CanvasConstants.DELIVERY_NODE_RADIUS
+                    this.radius
                 );
                 break;
-            case DROP_OFF:
+            case DELIVERY_DROP_OFF:
                 drawCircle(
                     this.x,
                     this.y,
                     this.paint,
-                    CanvasConstants.DELIVERY_NODE_RADIUS
+                    this.radius
                 );
                 break;
-            case WAREHOUSE:
+            case DELIVERY_WAREHOUSE:
                 drawSquare(
                     this.x,
                     this.y,
                     this.paint,
-                    CanvasConstants.DELIVERY_NODE_RADIUS
+                    this.radius
                 );
+                break;
+            case CITY_MAP_NODE:
+                if (this.selected) {
+                    drawCircle(
+                        this.x,
+                        this.y,
+                        this.paint,
+                        this.radius
+                    );
+                }
                 break;
             default:
                 break;
@@ -520,8 +599,7 @@ public class MapCanvas extends BorderPane {
 
         @Override
         public String toString() {
-            return "CanvasNode{" + "x=" + x + ", y=" + y + ", nodeId=" + nodeId + ", type=" + type + '}';
+            return "CanvasNode{" + "x=" + x + ", y=" + y + ", selected=" + selected + ", nodeId=" + nodeId + ", type=" + type + '}';
         }
     }
-
 }
