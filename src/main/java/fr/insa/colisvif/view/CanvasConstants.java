@@ -29,9 +29,19 @@ public final class CanvasConstants {
     public static final Color SECTION_COLOR = Color.grayRgb(85);
 
     /**
-     * Size at which delivery nodes are drawn on the map (diameter in pixels).
+     * Radius used to render the nodes on the map (in pixels).
      */
-    public static final int DELIVERY_NODE_SIZE = 15;
+    public static final int DELIVERY_NODE_RADIUS = 7;
+
+    /**
+     * Square of the radius used to render the nodes on the map (in pixels)
+     */
+    public static final int DELIVERY_NODE_SQUARED_RADIUS = DELIVERY_NODE_RADIUS * DELIVERY_NODE_RADIUS;
+
+    /**
+     * Diameter used to render the nodes on the map (in pixels).
+     */
+    public static final int DELIVERY_NODE_DIAMETER = DELIVERY_NODE_RADIUS * 2;
 
     /**
      * Opacity used for delivery nodes' colors
