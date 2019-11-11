@@ -63,6 +63,9 @@ public class UIController {
     @FXML
     private Button editSequence;
 
+    @FXML
+    private Button computeRound;
+
     private Stage stage;
 
     private Controller controller;
@@ -113,6 +116,10 @@ public class UIController {
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
+
+        this.computeRound.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.computeRound();
+        });
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {

@@ -26,7 +26,7 @@
    <right>
       <BorderPane fx:id="rightPane" prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER">
          <top>
-            <Button mnemonicParsing="false" text="Calculer l'itinéraire" BorderPane.alignment="CENTER" />
+            <Button fx:id="computeRound" text="Calculer l'itinéraire" BorderPane.alignment="CENTER" />
          </top>
          <center>
             <!--<TableView fx:id="textualView" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER" />-->
@@ -37,7 +37,7 @@
                   <Button fx:id="addDelivery" mnemonicParsing="false" text="Ajouter une livraison" />
                   <Button fx:id="deleteDelivery" mnemonicParsing="false" text="Supprimer une livraison" />
                   <Button fx:id="editLocation" mnemonicParsing="false" text="Modifier lieu" />
-                  <Button fx:id="editSequence" mnemonicParsing="false" text="Modier ordre" />
+                  <Button fx:id="editSequence" mnemonicParsing="false" text="Modifier ordre" />
                </children>
             </FlowPane>
          </bottom>

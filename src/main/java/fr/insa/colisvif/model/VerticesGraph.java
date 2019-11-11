@@ -1,8 +1,6 @@
 package fr.insa.colisvif.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /*package-private*/ class VerticesGraph {
 
@@ -214,6 +212,17 @@ import java.util.LinkedList;
         return step;
     }
 
+    /*package-private*/ Round roundFromPath(ArrayList<Integer> path) {
+        Round round = new Round(deliveries);
+        int time = round.getStartDate();
+        for (int i = 0; i < path.size() - 1; ++i) {
+            Step step = makeStep(path.get(i), path.get(i + 1), time);
+            round.addStep(step);
+            time = step.getArrivalDate() + step.getDuration();
+        }
+        return round;
+    }
+
     /**
      * @return a round that minimize the total length
      */
@@ -227,14 +236,41 @@ import java.util.LinkedList;
         System.out.print("TSP length : ");
         System.out.println(subResult.getLength());
         ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
-        Round round = new Round(deliveries);
-        int time = round.getStartDate();
-        for (int i = 0; i < path.size() - 1; ++i) {
-            Step step = makeStep(path.get(i), path.get(i + 1), time);
-            round.addStep(step);
-            time = step.getArrivalDate() + step.getDuration();
+        return roundFromPath(path);
+    }
+
+    private Set<Integer> pickUpSet() {
+        int n = deliveries.getSize();
+        Set<Integer> pickUps = new TreeSet<>();
+        for (int i = 1; i < 2 * n; i += 2) {
+            pickUps.add(i);
         }
-        return round;
+        return pickUps;
+    }
+
+    /*package-private*/ Round naiveRound() {
+        int n = deliveries.getSize();
+        ArrayList<Integer> path = new ArrayList<>(2 * n + 1);
+        path.add(0);
+        Set<Integer> candidates = pickUpSet();
+        int last = 0;
+        while (!candidates.isEmpty()) {
+            int best = candidates.iterator().next();
+            double bestDistance = lengths.get(last).get(best);
+            for (int candidate : candidates) {
+                if (lengths.get(last).get(candidate) < bestDistance) {
+                    best = candidate;
+                    bestDistance = lengths.get(last).get(candidate);
+                }
+            }
+            candidates.remove(best);
+            if (best % 2 == 1) {
+                candidates.add(best + 1);
+            }
+            path.add(best);
+            last = best;
+        }
+        return roundFromPath(path);
     }
 
     /**

@@ -15,6 +15,7 @@ import javafx.scene.layout.Pane;
  * to render instances of {@link Vertex} before the calculated itinerary
  * @see TableView
  */
+// todo : une méthode
 public class TextualView extends Pane {
 
     private TableView<Vertex> vertexTable;
