@@ -21,7 +21,9 @@ public class SuppressionModeState implements State {
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user want to switch back to the
+     * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
+     * where no modifications can be done.
      * @param controller
      */
     @Override

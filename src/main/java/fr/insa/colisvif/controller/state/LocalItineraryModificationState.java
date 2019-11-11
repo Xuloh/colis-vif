@@ -12,7 +12,7 @@ package fr.insa.colisvif.controller.state;
 public class LocalItineraryModificationState implements State {
 
     /**
-     * When a modification appear, calculate locally the best new itinerary.
+     * When a modification appears, calculates locally the best new itinerary.
      */
     @Override
     public void calculateItineraryLocally() {

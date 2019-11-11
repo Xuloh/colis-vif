@@ -71,7 +71,7 @@ public class DeliveryMapLoadedState implements State {
     }
 
     /**
-     * Calculate a {@link fr.insa.colisvif.model.Round}.
+     * Calculates a {@link fr.insa.colisvif.model.Round}.
      */
     @Override
     public void calculateItinerary() {
