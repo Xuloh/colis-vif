@@ -231,7 +231,7 @@ public class Controller {
     /**
      * Switch to "change delivery order" mode
      */
-    public void editSequenceDelivery() {
+    public void editSequenceDelivery(Step step) {
         this.currentState.switchToOrderChangeMode();
     }
 
