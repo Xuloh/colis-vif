@@ -90,13 +90,11 @@ public class ModeAddState implements State {
             try {
                 int dropOffDuration = Integer.parseInt(askedDuration);
                 pickUpVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-                /*Delivery deliveryToAdd = controller.getDeliveryMap().createDelivery(pickUpVertex.getNodeId(),
+                int newDeliveryId = controller.getDeliveryMap().createDelivery(pickUpVertex.getNodeId(),
                                                     dropOffVertex.getNodeId(), pickUpVertex.getDuration(),
-                                                    dropOffVertex.getDuration());*/
-                //Ca devrait build avec le push de Mathieu
-                Delivery deliveryToAdd = null; // A supprimer après décommentation d'en dessus
-                controller.getRound().addDelivery(new Step(pickUpVertex, deliveryToAdd.getId()),
-                                                  new Step(dropOffVertex, deliveryToAdd.getId()));
+                                                    dropOffVertex.getDuration());
+                controller.getRound().addDelivery(new Step(pickUpVertex, newDeliveryId),
+                                                  new Step(dropOffVertex, newDeliveryId));
                 pickUpVertex = null;
                 dropOffVertex = null;
                 pickUpNodeId = -1;
