@@ -113,8 +113,8 @@ public class CityMap {
      * @throws IllegalArgumentException if the origin of the new {@link Section}
      * does not match any {@link Node}
      */
-    public void createSection(double length, String roadName, long destination, long origin) throws IllegalArgumentException {
-        Section newSection = new Section(length, roadName, destination, origin);
+    public void createSection(double length, String roadName, long origin, long destination) throws IllegalArgumentException {
+        Section newSection = new Section(length, roadName, origin, destination);
 
         if (this.mapSection.get(roadName) == null) {
             List<Section> newSections = new ArrayList<>();
@@ -124,16 +124,14 @@ public class CityMap {
             this.mapSection.get(roadName).add(newSection);
         }
 
-        if (!this.mapNode.containsKey(origin)) {
-            throw new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes");
-        } else {
-            try {
-                this.mapNode.get(origin).addToSuccessors(newSection);
-            } catch (IdException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+        try {
+            Optional
+                .ofNullable(this.mapNode.get(origin))
+                .orElseThrow(() -> new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes"))
+                .addToSuccessors(newSection);
+        } catch (IdException e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
-
     }
 
     /**

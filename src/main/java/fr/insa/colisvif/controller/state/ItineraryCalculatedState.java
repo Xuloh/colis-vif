@@ -1,7 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.exception.IdException;
+import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +39,7 @@ public class ItineraryCalculatedState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
         uiController.getMapCanvas().setDeliveryMap(null);
@@ -62,7 +62,7 @@ public class ItineraryCalculatedState implements State {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
             //mc.writeDeliveries(c.getDeliveryMap());
             uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
+        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
         uiController.clearCanvas();

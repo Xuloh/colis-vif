@@ -1,123 +1,171 @@
 package fr.insa.colisvif.model;
 
-/*
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
-*/
+
 public class StepTest {
-/*
     @Test
     public void testStepGood() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testStepNegativeArrival() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, -1, 50);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testStepNegativeDuration() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 10, -1);    }
-
-
-    @Test
-    public void getSections() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        sections.add(new Section(40,"Rue de la Péx",40,101));
-
-        Step step = new Step(sections, true, 100, 50);
-        assertEquals(sections, step.getSections());
-
-        ArrayList<Section> sections2 = new ArrayList();
-        sections2.add(new Section(20,"Rue de la Paix",100,101));
-        sections2.add(new Section(40,"Rue de la Péx",41,101));
-        assertNotEquals(sections2, step.getSections());
-
-        sections2.add(new Section(40,"Rue de la Péx",40,101));
-        assertNotEquals(sections2, step.getSections());
+        new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
     }
 
     @Test
-    public void getArrivalDateInSeconds() {
+    public void getSections1() {
+        LinkedList<Section> sections = new LinkedList<>();
+        sections.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections.add(new Section(40, "Rue de la Péx", 101, 102));
+
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        step.addSection(sections.get(0));
+        step.addSection(sections.get(1));
+
+        LinkedList<Section> sections2 = new LinkedList<>();
+        sections2.addFirst(new Section(20, "Rue de la Paix", 100, 101));
+        sections2.addFirst(new Section(40, "Rue de la Péx", 101, 102));
+
+        assertEquals(sections2, step.getSections());
+
+        ArrayList<Section> sections3 = new ArrayList<>();
+        sections3.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections3.add(new Section(40, "Rue de la Péx", 41, 101));
+        assertNotEquals(sections3, step.getSections());
+
+        sections3.add(new Section(40, "Rue de la Péx", 40, 101));
+        assertNotEquals(sections3, step.getSections());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getSections2() {
+        LinkedList<Section> sections = new LinkedList<>();
+        sections.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections.add(new Section(40, "Rue de la Péx", 102, 103));
+
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        step.addSection(sections.get(0));
+        step.addSection(sections.get(1));
+    }
+
+    @Test
+    public void setArrivalDate() {
+        int expected = 10;
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
+        step.setArrivalDate(expected);
+
+        assertEquals(expected, step.getArrivalDate());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setArrivalDateNegative() {
+        int expected = -10;
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 1), 1);
+        step.setArrivalDate(expected);
+    }
+
+    @Test
+    public void getDuration1() {
         int expected = 100;
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, expected, 50);
-        assertEquals(step.getArrivalDateInSeconds(), expected);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected), 1);
+        assertEquals(step.getDuration(), expected);
     }
 
     @Test
-    public void setArrivalDateInSeconds() {
-        int expected_new = 10;
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-        step.setArrivalDateInSeconds(expected_new);
-
-        assertEquals(expected_new, step.getArrivalDateInSeconds());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setArrivalDateInSecondsNegative() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-        step.setArrivalDateInSeconds(-1);
-    }
-
-    @Test
-    public void getDurationInSeconds() {
+    public void getDuration2() {
         int expected = 100;
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, expected);
-        assertEquals(step.getDurationInSeconds(), expected);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
+        assertNotEquals(step.getDuration(), expected);
     }
 
     @Test
-    public void setDurationInSeconds() {
-        int expected_new = 10;
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-        step.setDurationInSeconds(expected_new);
+    public void setDuration() {
+        int expected = 10;
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
+        step.setDuration(expected);
 
-        assertEquals(expected_new, step.getDurationInSeconds());
+        assertEquals(expected, step.getDuration());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void setDurationInSecondsNegative() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-        step.setDurationInSeconds(-1);
+    public void setDurationNegative() {
+        int expected = -10;
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 1), 1);
+        step.setDuration(expected);
     }
 
     @Test
     public void isPickUp() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, true, 100, 50);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 1), 1);
         assertTrue(step.isPickUp());
     }
 
     @Test
     public void isDropOff() {
-        ArrayList<Section> sections = new ArrayList();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        Step step = new Step(sections, false, 100, 50);
-        assertFalse(step.isDropOff());
-    }*/
+        Step step = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 1);
+        assertTrue(step.isDropOff());
+    }
+
+    @Test
+    public void getDeliveryID1() {
+        int expected = 1;
+        assertEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected).getDeliveryID(), expected);
+    }
+
+    @Test
+    public void getDeliveryID2() {
+        int expected = 1;
+        assertNotEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1).getDeliveryID(), expected);
+    }
+
+    @Test
+    public void equals1() {
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        assertEquals(step, step);
+    }
+
+    @Test
+    public void equals2() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        Step step2 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        assertEquals(step1, step2);
+    }
+
+    @Test
+    public void equals3() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        Step step2 = new Step(new Vertex(1, Vertex.PICK_UP, 11), 1);
+        assertNotEquals(step1, step2);
+    }
+
+    @Test
+    public void equals4() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 10), 1);
+        assertNotEquals(step1, step2);
+    }
+
+    @Test
+    public void equals5() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        step1.addSection(new Section(1, "test", 1, 1));
+        Step step2 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        step2.addSection(new Section(2, "test", 1, 1));
+
+        assertNotEquals(step1, step2);
+    }
+
+    @Test
+    public void equals6() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        Step step2 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 2);
+        assertNotEquals(step1, step2);
+    }
+
+    @Test
+    public void equals7() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        assertNotEquals(step1, 1);
+    }
 }

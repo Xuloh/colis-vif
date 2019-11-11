@@ -29,12 +29,12 @@ public class DeliveryMap {
      * @param pickUpNodeId the {@link Node} id of the pick up.
      * @param deliveryNodeId the {@link Node} id of the drop off.
      * @param pickUpDuration the duration of the pick up in seconds.
-     * @param deliveryDuration the duration of the drop off in seconds.
+     * @param dropOffDuration the duration of the drop off in seconds.
      * @throws IllegalArgumentException if the pickUpDuration / deliveryDuration is less or equal to 0 seconds or the pickUpNodeId is equal to the deliveryNodeId.
      */
-    public void createDelivery(int id, long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int deliveryDuration) throws IllegalArgumentException {
+    public void createDelivery(int id, long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
         //TODO Le pickUpNodeId et le deliveryNodeId doivent correspondre à un noeud existant.
-        Delivery newDelivery = new Delivery(id, pickUpNodeId, deliveryNodeId, pickUpDuration, deliveryDuration);
+        Delivery newDelivery = new Delivery(id, pickUpNodeId, deliveryNodeId, pickUpDuration, dropOffDuration);
         this.deliveryRequests.add(newDelivery);
     }
 
@@ -113,7 +113,7 @@ public class DeliveryMap {
      *
      * @return the size of the {@link List} of {@link Delivery}.
      */
-    public int size() {
+    public int getSize() {
         return deliveryRequests.size();
     }
 

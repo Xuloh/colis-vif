@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CityMapTest {
 
@@ -40,9 +38,16 @@ public class CityMapTest {
         CityMap cityMap = new CityMap();
         cityMap.createNode(101, -60, 120);
         cityMap.createNode(100, -66, 120);
-        cityMap.createSection(10, "Rue de St-Germain", 101, 100);
+        cityMap.createSection(10, "Rue de St-Germain", 100, 101);
         assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
         assertEquals("[Length : 10.0 | Road Name : Rue de St-Germain | Destination : 101 | Origin : 100\n]", cityMap.getMapSection().get("Rue de St-Germain").toString());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testCreateSectionIllegalOrigin() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, -60, 120);
+        cityMap.createSection(10, "Rue de St-Germain", 2, 101);
     }
 
     @Test
@@ -51,8 +56,8 @@ public class CityMapTest {
         cityMap.createNode(101, -60, 120);
         cityMap.createNode(100, -66, 120);
         cityMap.createNode(99, -65, 120);
-        cityMap.createSection(10, "Rue de St-Germain", 101, 100);
-        cityMap.createSection(10, "Rue de St-Germain", 100, 99);
+        cityMap.createSection(10, "Rue de St-Germain", 100, 101);
+        cityMap.createSection(10, "Rue de St-Germain", 99, 100);
 
         assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
         assertEquals("[Length : 10.0 | Road Name : Rue de St-Germain | Destination : 101 | Origin : 100\n"
@@ -69,7 +74,7 @@ public class CityMapTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateBadSection() {
         CityMap cityMap = new CityMap();
-        cityMap.createSection(-240, "Supé Rue", 120, 124);
+        cityMap.createSection(-240, "Supé Rue", 124, 120);
     }
 
     @Test
@@ -78,8 +83,8 @@ public class CityMapTest {
         cityMap.createNode(1, 0, 0);
         cityMap.createNode(2, 1, 1);
         cityMap.createNode(3, 2, 2);
-        cityMap.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        cityMap.createSection(100, "Rue Antoine Tout Court", 3, 2);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 2, 3);
 
         String expected = "Nodes : \n"
                           + "ID : 1 | Latitude : 0.0 | Longitude : 0.0\n"
@@ -94,23 +99,47 @@ public class CityMapTest {
     }
 
     @Test
-    public void testEquals() {
+    public void testEquals1() {
         CityMap cityMap1 = new CityMap();
         cityMap1.createNode(1, 0, 0);
         cityMap1.createNode(2, 1, 1);
         cityMap1.createNode(3, 2, 2);
-        cityMap1.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        cityMap1.createSection(100, "Rue Antoine Tout Court", 3, 2);
+        cityMap1.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap1.createSection(100, "Rue Antoine Tout Court", 2, 3);
 
         CityMap cityMap2 = new CityMap();
         cityMap2.createNode(1, 0, 0);
         cityMap2.createNode(2, 1, 1);
         cityMap2.createNode(3, 2, 2);
-        cityMap2.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        cityMap2.createSection(100, "Rue Antoine Tout Court", 3, 2);
+        cityMap2.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap2.createSection(100, "Rue Antoine Tout Court", 2, 3);
 
         assertEquals(cityMap1, cityMap2);
+    }
 
+    @Test
+    public void testEquals2() {
+        CityMap cityMap1 = new CityMap();
+        cityMap1.createNode(1, 0, 0);
+        cityMap1.createNode(2, 1, 1);
+        cityMap1.createNode(3, 2, 2);
+        cityMap1.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap1.createSection(100, "Rue Antoine Tout Court", 2, 3);
+
+        assertEquals(cityMap1, cityMap1);
+    }
+
+    @Test
+    public void testEquals3() {
+        Integer test = 1;
+        CityMap cityMap1 = new CityMap();
+        cityMap1.createNode(1, 0, 0);
+        cityMap1.createNode(2, 1, 1);
+        cityMap1.createNode(3, 2, 2);
+        cityMap1.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap1.createSection(100, "Rue Antoine Tout Court", 2, 3);
+
+        assertNotEquals(cityMap1, test);
     }
 
     @Test
@@ -178,25 +207,92 @@ public class CityMapTest {
     }
 
     @Test
-    public void testToString() {
+    public void testMapSection() {
         CityMap cityMap = new CityMap();
         cityMap.createNode(1, 0, 0);
         cityMap.createNode(2, 1, 1);
         cityMap.createNode(3, 2, 2);
-        cityMap.createSection(200, "Rue Antoine Tout Court", 2, 1);
-        cityMap.createSection(100, "Rue Antoine Tout Court", 3, 2);
-        cityMap.createSection(50, "Rue du Test", 3, 1);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 2, 3);
+        cityMap.createSection(50, "Rue du Test", 1, 3);
 
         HashMap<String, List<Section>> testMap = new HashMap<>();
         List<Section> newSections = new ArrayList<>();
-        newSections.add(new Section(200, "Rue Antoine Tout Court", 2, 1));
-        newSections.add(new Section(100, "Rue Antoine Tout Court", 3, 2));
+        newSections.add(new Section(200, "Rue Antoine Tout Court", 1, 2));
+        newSections.add(new Section(100, "Rue Antoine Tout Court", 2, 3));
         testMap.put("Rue Antoine Tout Court", newSections);
 
         newSections = new ArrayList<>();
-        newSections.add(new Section(50, "Rue du Test", 3, 1));
+        newSections.add(new Section(50, "Rue du Test", 1, 3));
         testMap.put("Rue du Test", newSections);
 
         assertEquals(testMap, cityMap.getMapSection());
+    }
+
+    @Test
+    public void testMapSection2() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 2, 3);
+        cityMap.createSection(50, "Rue du Test", 1, 3);
+
+        HashMap<String, List<Section>> testMap = new HashMap<>();
+        List<Section> newSections = new ArrayList<>();
+        newSections.add(new Section(200, "Rue Antoine Tout Court", 1, 2));
+        newSections.add(new Section(100, "Rue Antoine Tout Court", 2, 3));
+        testMap.put("Rue Antoine Tout Court", newSections);
+
+        newSections = new ArrayList<>();
+        newSections.add(new Section(50, "Rue du Test", 1, 2));
+        testMap.put("Rue du Test", newSections);
+
+        assertNotEquals(testMap, cityMap.getMapSection());
+    }
+
+    @Test
+    public void testMapSection3() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 0, 0);
+        cityMap.createNode(2, 1, 1);
+        cityMap.createNode(3, 2, 2);
+        cityMap.createSection(200, "Rue Antoine Tout Court", 1, 2);
+        cityMap.createSection(100, "Rue Antoine Tout Court", 2, 3);
+        cityMap.createSection(50, "Rue du Test", 1, 3);
+
+        HashMap<String, List<Section>> testMap = new HashMap<>();
+        List<Section> newSections = new ArrayList<>();
+        newSections.add(new Section(200, "Rue Antoine Tout Court", 1, 2));
+        newSections.add(new Section(100, "Rue Antoine Tout Court", 2, 4));
+        testMap.put("Rue Antoine Tout Court", newSections);
+
+        newSections = new ArrayList<>();
+        newSections.add(new Section(50, "Rue du Test", 1, 3));
+        testMap.put("Rue du Test", newSections);
+
+        assertNotEquals(testMap, cityMap.getMapSection());
+    }
+
+    @Test
+    public void getSection1() {
+        Section expected =  new Section(2, "Rue du test", 1, 2);
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.createNode(2, 10, 10);
+
+        cityMap.createSection(expected.getLength(), expected.getRoadName(), expected.getOrigin(), expected.getDestination());
+
+        assertEquals(cityMap.getSection(expected.getOrigin(), expected.getDestination()), expected);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getSection2() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.createNode(2, 10, 10);
+        cityMap.createSection(2, "erzr", 1, 2);
+        cityMap.getSection(1, 3);
     }
 }
