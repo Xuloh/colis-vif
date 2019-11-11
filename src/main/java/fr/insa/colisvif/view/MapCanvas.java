@@ -479,7 +479,7 @@ public class MapCanvas extends BorderPane {
         }
 
         /*package-private*/ boolean intersects(double x, double y) {
-            double squaredDistance = (x - this.x) + (y - this.y);
+            double squaredDistance = (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
             return squaredDistance <= CanvasConstants.DELIVERY_NODE_SQUARED_RADIUS;
         }
 
@@ -487,7 +487,6 @@ public class MapCanvas extends BorderPane {
         public String toString() {
             return "CanvasNode{" + "x=" + x + ", y=" + y + ", nodeId=" + nodeId + ", type=" + type + '}';
         }
-
     }
 
 }
