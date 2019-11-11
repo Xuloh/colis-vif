@@ -49,8 +49,8 @@ public class CityMapTest {
         invokeMethod(CityMap.class, cityMap, "dijkstra", paramType, param);
     }
 
-    public int timeTravel(int distance){
-        return (distance / (int) (15. / 3.6));
+    public int timeTravel(int distance) {
+        return distance / (int) (15. / 3.6);
     }
 
     @Test
@@ -418,7 +418,7 @@ public class CityMapTest {
             e.printStackTrace();
         }
 
-        assertEquals(cityMap.getLength(1, 3), lengthSection3,0.1);
+        assertEquals(cityMap.getLength(1, 3), lengthSection3, 0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
     }
 
@@ -446,7 +446,7 @@ public class CityMapTest {
         assertEquals(cityMap.getLength(1, 1), 0, 0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
         assertEquals(cityMap.getLength(1, 3), lengthSection4, 0.1);
-        assertEquals(cityMap.getLength(1, 4), lengthSection4 + lengthSection3,0.1);
+        assertEquals(cityMap.getLength(1, 4), lengthSection4 + lengthSection3, 0.1);
     }
 
     @Test
@@ -474,8 +474,8 @@ public class CityMapTest {
         assertEquals(cityMap.getLength(1, 1), 0, 0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
         assertEquals(cityMap.getLength(1, 3), lengthSection1 + lengthSection2, 0.1);
-        assertEquals(cityMap.getLength(1, 4), lengthSection1 + lengthSection3,0.1);
-        assertEquals(cityMap.getLength(1, 5), lengthSection1 + lengthSection3 + lengthSection4,0.1);
+        assertEquals(cityMap.getLength(1, 4), lengthSection1 + lengthSection3, 0.1);
+        assertEquals(cityMap.getLength(1, 5), lengthSection1 + lengthSection3 + lengthSection4, 0.1);
     }
 
     @Test
@@ -490,7 +490,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 2), 0);
         step2.addSection(new Section(250, "Rue 1.2", 1, 2));
@@ -520,7 +520,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 2), 0);
         step2.addSection(new Section(250, "Rue 3.2", 3, 2));
@@ -551,7 +551,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 2), 0);
         step2.addSection(new Section(500, "Rue 1.2", 1, 2));
@@ -581,7 +581,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0);
         step2.addSection(new Section(250, "Rue 1.3", 1, 3));
@@ -621,7 +621,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0);
         step2.addSection(new Section(1250, "Rue 6.4", 6, 4));
@@ -662,7 +662,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(6, Vertex.PICK_UP, 1), 1);
         step2.addSection(new Section(500, "Rue 7.6", 7, 6));
@@ -702,7 +702,7 @@ public class CityMapTest {
         List<Step> expected = new ArrayList<>();
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
-        step1.setArrivalDate(8*3600);
+        step1.setArrivalDate(8 * 3600);
 
         Step step2 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 2);
         step2.setArrivalDate(step1.getArrivalDate() + step1.getDuration());
@@ -756,7 +756,7 @@ public class CityMapTest {
         List<Step> expected = new ArrayList<>();
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
-        step1.setArrivalDate(8*3600);
+        step1.setArrivalDate(8 * 3600);
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0);
         step2.addSection(new Section(250, "Rue 0.1", 0, 1));
@@ -812,7 +812,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 1.0", 1, 0));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0);
         step2.setArrivalDate(step1.getArrivalDate() + step1.getDuration() + timeTravel(0));
@@ -840,7 +840,7 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(2, Vertex.PICK_UP, 1), 0);
         step1.addSection(new Section(250, "Rue 1.2", 1, 2));
-        step1.setArrivalDate(8*3600 + timeTravel(250));
+        step1.setArrivalDate(8 * 3600 + timeTravel(250));
 
         Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0);
         step2.addSection(new Section(250, "Rue 2.0", 2, 0));
