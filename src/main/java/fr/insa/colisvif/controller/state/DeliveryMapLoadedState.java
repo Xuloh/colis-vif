@@ -77,7 +77,7 @@ public class DeliveryMapLoadedState implements State {
     // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
     @Override
     public void calculateItinerary(Controller controller, UIController uiController) {
-        //controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
+        controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }

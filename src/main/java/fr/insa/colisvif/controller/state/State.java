@@ -178,7 +178,7 @@ public interface State {
     }
 
     default void leftClick(Controller controller) {
-        
+
     }
 
 }

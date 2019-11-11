@@ -33,10 +33,13 @@ import java.util.Map;
 // todo : ajouter une méthode drawRound
 
 /* todo : Pour ce qui est des états, il va falloir que je change toutes les méthodes d'états de
- type 'Clic sur le canvas' en une seule méthode 'Clic gauche'. Ca implique que du coup le mapCanvas
- aient plusieurs méthodes qui me permettent de convertir un point de clic :
+ type 'Clic sur le canvas' en une seule méthode 'Clic gauche'. Ca implique que j'aient plusieurs méthodes
+ qui me permettent de convertir un point de clic :
     - en Node (si le point cliqué est un Node on le renvoie)
     - en Step (si le point cliqué est un Vertex alors on renvoie la Step associé)
+
+    Ca implique de pouvoir passer les clics de souris en paramètres. (coordonnées dans le canvas ?)
+
  */
 
 public class MapCanvas extends BorderPane {
