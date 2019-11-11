@@ -3,7 +3,6 @@ package fr.insa.colisvif.model;
 import java.util.*;
 
 /*package-private*/ class VerticesGraph {
-
     /** The speed of the cyclist in meters per second */
     private static final int CYCLIST_SPEED = (int) (15. / 3.6); // TODO @Felix: mettre ces constantes dans la classes contenant toutes les constantes
 
@@ -127,8 +126,8 @@ import java.util.*;
         long a = 2; //will be 2^k, used to add and remove elements from the set
         long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
         for (int k = 1; k < 2 * n + 1; ++k) {
-            if (copy % 2 == 1) { //k belongs to the set
-                if (k % 2 == 1) { //k is a pick up
+            if ((copy & 1) == 1) { //k belongs to the set
+                if ((k & 1) == 1) { //k is a pick up
                     //we remove the pick up from the set and add his associated drop off instead
                     SubResult candidate = resolveSubProblem(k, setCode + a);
                     //setCode+a is in fact setCode-a+2a, i.e.setCode-2^k+2^(k+1)
@@ -140,8 +139,8 @@ import java.util.*;
                     update(start, k, subResult, candidate);
                 }
             }
-            a = 2 * a;
-            copy = copy / 2;
+            a = a << 1;
+            copy = copy >> 1;
         }
         subResult.setPath(new LinkedList<>(subResult.getPath()));
         subResult.addVertex(start);
@@ -212,7 +211,7 @@ import java.util.*;
         return step;
     }
 
-    /*package-private*/ Round roundFromPath(ArrayList<Integer> path) {
+    private Round roundFromPath(ArrayList<Integer> path) {
         Round round = new Round(deliveries);
         int time = round.getStartDate();
         for (int i = 0; i < path.size() - 1; ++i) {

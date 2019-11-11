@@ -20,18 +20,18 @@ public class StepTest {
         sections.add(new Section(40, "Rue de la Péx", 101, 102));
 
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
-        step.addSection(sections.get(0));
         step.addSection(sections.get(1));
+        step.addSection(sections.get(0));
 
         LinkedList<Section> sections2 = new LinkedList<>();
-        sections2.addFirst(new Section(20, "Rue de la Paix", 100, 101));
         sections2.addFirst(new Section(40, "Rue de la Péx", 101, 102));
+        sections2.addFirst(new Section(20, "Rue de la Paix", 100, 101));
 
         assertEquals(sections2, step.getSections());
 
         ArrayList<Section> sections3 = new ArrayList<>();
-        sections3.add(new Section(20, "Rue de la Paix", 100, 101));
         sections3.add(new Section(40, "Rue de la Péx", 41, 101));
+        sections3.add(new Section(20, "Rue de la Paix", 100, 101));
         assertNotEquals(sections3, step.getSections());
 
         sections3.add(new Section(40, "Rue de la Péx", 40, 101));
