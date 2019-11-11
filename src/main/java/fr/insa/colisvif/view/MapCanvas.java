@@ -52,8 +52,6 @@ public class MapCanvas extends BorderPane {
 
     private double dragOriginY;
 
-    private ToolsPane toolsPane;
-
     /**
      * Creates a new {@link MapCanvas} with a {@link ToolsPane}.
      * Equivalent to calling {@link MapCanvas#MapCanvas(boolean)}
@@ -90,17 +88,17 @@ public class MapCanvas extends BorderPane {
 
 
         if (useTools) {
-            this.toolsPane = new ToolsPane();
+            ToolsPane toolsPane = new ToolsPane();
             this.setRight(toolsPane);
 
-            this.scale.bindBidirectional(this.toolsPane.getZoomSlider().valueProperty());
+            this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
             this.scale.addListener((observable, oldValue, newValue) -> {
                 this.clearCanvas();
                 this.drawCityMap();
                 this.drawDeliveryMap();
             });
 
-            this.toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
+            toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
                 this.scale.set(1d);
                 this.originX = 0;
                 this.originY = 0;
@@ -109,13 +107,13 @@ public class MapCanvas extends BorderPane {
                 this.drawDeliveryMap();
             });
 
-            this.toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
+            toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
                 double scale = this.scale.get();
                 scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
                 this.scale.set(scale);
             });
 
-            this.toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
+            toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
                 double scale = this.scale.get();
                 scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
                 this.scale.set(scale);
