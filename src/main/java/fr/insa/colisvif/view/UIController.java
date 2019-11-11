@@ -71,8 +71,11 @@ public class UIController {
 
     private TextualView textualView;
 
+    private StatusBar statusBar;
+
     /**
-     * Creates a new UIController, passing in the {@link Stage} and the MVC {@link Controller}
+     * Creates a new UIController, passing in the {@link Stage}
+     * and the MVC {@link Controller}
      * of the app
      * @param stage the main {@link Stage} of the app
      * @param controller the MVC {@link Controller} of the app
@@ -82,6 +85,7 @@ public class UIController {
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
         this.textualView = new TextualView();
+        this.statusBar = new StatusBar();
     }
 
     /**
@@ -123,6 +127,7 @@ public class UIController {
 
         this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);
+        this.mainPane.setBottom(this.statusBar);
 
         LOGGER.info("UI successfully initialized");
     }
@@ -163,5 +168,13 @@ public class UIController {
      */
     public TextualView getTextualView() {
         return this.textualView;
+    }
+
+    public void printStatus(String text) {
+        this.statusBar.setStatus(text);
+    }
+
+    public void printError(String text) {
+        this.statusBar.setError(text);
     }
 }
