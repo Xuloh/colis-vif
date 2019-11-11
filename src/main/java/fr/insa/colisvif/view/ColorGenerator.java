@@ -52,7 +52,7 @@ public class ColorGenerator implements Iterator<Color> {
      * @param duplicate the number of times each color is to be generated
      */
     public ColorGenerator(int count, double opacity, int duplicate) {
-        this.count = count;
+        this.count = count * duplicate;
         this.current = 0;
         this.opacity = opacity;
         this.duplicate = duplicate;
