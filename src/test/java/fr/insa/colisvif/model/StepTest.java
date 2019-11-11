@@ -16,33 +16,33 @@ public class StepTest {
     @Test
     public void getSections1() {
         LinkedList<Section> sections = new LinkedList<>();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        sections.add(new Section(40,"Rue de la Péx",101,102));
+        sections.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections.add(new Section(40, "Rue de la Péx", 101, 102));
 
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
         step.addSection(sections.get(0));
         step.addSection(sections.get(1));
 
         LinkedList<Section> sections2 = new LinkedList<>();
-        sections2.addFirst(new Section(20,"Rue de la Paix",100,101));
-        sections2.addFirst(new Section(40,"Rue de la Péx",101,102));
+        sections2.addFirst(new Section(20, "Rue de la Paix", 100, 101));
+        sections2.addFirst(new Section(40, "Rue de la Péx", 101, 102));
 
         assertEquals(sections2, step.getSections());
 
         ArrayList<Section> sections3 = new ArrayList<>();
-        sections3.add(new Section(20,"Rue de la Paix",100,101));
-        sections3.add(new Section(40,"Rue de la Péx",41,101));
+        sections3.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections3.add(new Section(40, "Rue de la Péx", 41, 101));
         assertNotEquals(sections3, step.getSections());
 
-        sections3.add(new Section(40,"Rue de la Péx",40,101));
+        sections3.add(new Section(40, "Rue de la Péx", 40, 101));
         assertNotEquals(sections3, step.getSections());
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void getSections2() {
         LinkedList<Section> sections = new LinkedList<>();
-        sections.add(new Section(20,"Rue de la Paix",100,101));
-        sections.add(new Section(40,"Rue de la Péx",102,103));
+        sections.add(new Section(20, "Rue de la Paix", 100, 101));
+        sections.add(new Section(40, "Rue de la Péx", 102, 103));
 
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
         step.addSection(sections.get(0));
@@ -52,7 +52,7 @@ public class StepTest {
     @Test
     public void setArrivalDate() {
         int expected = 10;
-        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected+1), 1);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
         step.setArrivalDate(expected);
 
         assertEquals(expected, step.getArrivalDate());
@@ -75,14 +75,14 @@ public class StepTest {
     @Test
     public void getDuration2() {
         int expected = 100;
-        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected+1), 1);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
         assertNotEquals(step.getDuration(), expected);
     }
 
     @Test
     public void setDuration() {
         int expected = 10;
-        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected+1), 1);
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
         step.setDuration(expected);
 
         assertEquals(expected, step.getDuration());
@@ -116,7 +116,7 @@ public class StepTest {
     @Test
     public void getDeliveryID2() {
         int expected = 1;
-        assertNotEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected+1).getDeliveryID(), expected);
+        assertNotEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1).getDeliveryID(), expected);
     }
 
     @Test
