@@ -84,7 +84,7 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
-        this.textualView = new TextualView(true);
+        this.textualView = new TextualView(false);
         this.statusBar = new StatusBar();
     }
 
@@ -125,6 +125,7 @@ public class UIController {
             this.controller.editLocationDelivery();
         });
 
+        this.rightPane.setCenter(this.textualView);
         this.rightPane.setCenter(this.textualView);
         this.mainPane.setCenter(this.mapCanvas);
         this.mainPane.setBottom(this.statusBar);
