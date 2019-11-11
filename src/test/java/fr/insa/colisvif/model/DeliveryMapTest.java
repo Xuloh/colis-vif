@@ -147,13 +147,13 @@ public class DeliveryMapTest {
         deliveryMap1.createDelivery(3, 4, 5, 6, 7);
         String expected = "DeliveryMap{"
                 + "deliveryRequests="
-                + "[id : " + 3 + "pickUpNodeId : " + 4 + " | deliveryNodeId : " + 5 + " | pickUpDuration : "
+                + "[id : " + 3 + " | pickUpNodeId : " + 4 + " | deliveryNodeId : " + 5 + " | pickUpDuration : "
                 + 6 + " | deliveryDuration : " + 7 + "\n]"
                 + ", warehouseNodeId="
                 + 1
                 + ", startDateInSeconds="
                 + 2
                 + '}';
-        assertEquals(deliveryMap1.toString(), expected);
+        assertEquals(expected, deliveryMap1.toString());
     }
 }

@@ -13,11 +13,6 @@ public class DeliveryTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testOriginEqualsDestination() {
-        new Delivery(1, 100, 100, 10, 10);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration1() {
         new Delivery(1, 100, 100, -10, 10);
     }
@@ -106,7 +101,7 @@ public class DeliveryTest {
     @Test
     public void testToString() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 1 + "pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected = "id : " + 1 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
         assertEquals(delivery.toString(), exptected);
     }
@@ -114,7 +109,7 @@ public class DeliveryTest {
     @Test
     public void testToStringWrong() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 2 + "pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected = "id : " + 2 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
         assertNotEquals(delivery.toString(), exptected);
     }
