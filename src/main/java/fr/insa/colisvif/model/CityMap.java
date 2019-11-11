@@ -197,7 +197,7 @@ public class CityMap {
      * @throws IllegalArgumentException if the parameter start and / or finish does not exist in the map of {@link Node},
      * or if the shortestRound has not been performed yet.
      */
-    public double getLength(long start, long finish) throws IllegalArgumentException{
+    public double getLength(long start, long finish) throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
             throw new IllegalArgumentException("The Node " + start + " does not exist in the map of Nodes");
         }
@@ -264,7 +264,7 @@ public class CityMap {
      * @throws IllegalArgumentException if the paramater start does not exist in the map of {@link Node}.
      */
     private void dijkstra(long start) throws IllegalArgumentException {
-        if (!mapNode.containsKey(start)){
+        if (!mapNode.containsKey(start)) {
             throw new IllegalArgumentException("The Node " + start + " does not exist in the map of Nodes");
         }
 
@@ -279,11 +279,11 @@ public class CityMap {
         while (!priorityQueue.isEmpty()) {
             Long node = priorityQueue.poll();
             double length = pathsFromStart.getLength(node);
-            for(Section section : getMapNode().get(node).getSuccessors()){
+            for (Section section : getMapNode().get(node).getSuccessors()) {
                 long next = section.getDestination();
                 double destinationLength = pathsFromStart.getLength(next);
-                if(destinationLength == -1 || length + section.getLength() < destinationLength){
-                    pathsFromStart.setLength(next,length + section.getLength());
+                if (destinationLength == -1 || length + section.getLength() < destinationLength) {
+                    pathsFromStart.setLength(next, length + section.getLength());
                     pathsFromStart.setPrev(next, section);
                     priorityQueue.remove(next);
                     priorityQueue.add(next);
@@ -302,7 +302,7 @@ public class CityMap {
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries){
+    public Round shortestRound(DeliveryMap deliveries) {
         var debut = System.nanoTime();
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
@@ -311,7 +311,7 @@ public class CityMap {
         }
         var fin = System.nanoTime();
         System.out.print("Dijkstra time : ");
-        System.out.println((fin - debut)*0.000000001);
+        System.out.println((fin - debut) * 0.000000001);
         VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
         return verticesGraph.shortestRound();
     }

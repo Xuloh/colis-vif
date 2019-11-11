@@ -220,7 +220,7 @@ import java.util.LinkedList;
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
         var fin = System.nanoTime();
         System.out.print("TSP time : ");
-        System.out.println((fin - debut)*0.000000001);
+        System.out.println((fin - debut) * 0.000000001);
         System.out.print("TSP length : ");
         System.out.println(subResult.getLength());
         ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
