@@ -21,7 +21,8 @@ public class Step {
 
     /**
      * The constructor of Step.
-     * @param vertex the {@link Vertex} (pick up or drop off).
+     *
+     * @param vertex     the {@link Vertex} (pick up or drop off).
      * @param deliveryID the deliveryID corresponding to the {@link Delivery} of the {@link Vertex}.
      */
     public Step(Vertex vertex, int deliveryID) {
@@ -42,6 +43,7 @@ public class Step {
 
     /**
      * Sets the arrival date (in seconds) of the {@link Step}.
+     *
      * @param arrivalDate the arrival date (in seconds) of the {@link Step}.
      * @throws IllegalArgumentException if the arrival date is under 0 second.
      */
@@ -131,7 +133,6 @@ public class Step {
      * The method compares the deliveryID, the type, the arrivalDate, the duration and the {@link LinkedList} of {@link Section}.
      *
      * @param o the {@link Object} to compare this {@link Step} to
-     *
      * @return <code>true</code> if o is a {@link Step} whose values are
      * "equal" to those of this {@link Step}
      */
