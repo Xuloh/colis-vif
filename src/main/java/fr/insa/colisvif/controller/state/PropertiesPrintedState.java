@@ -12,7 +12,9 @@ package fr.insa.colisvif.controller.state;
 public class PropertiesPrintedState implements State {
 
     /**
-     * Enter in order change mode //todo : Ca fait quoi reellement ?
+     * Enter in order change mode to enable new actions.
+     *
+     * @see ModifyOrderState
      */
     @Override
     public void switchToOrderChangeMode() {
@@ -20,7 +22,9 @@ public class PropertiesPrintedState implements State {
     }
 
     /**
-     * Enter in location change mode //todo : Ca fait quoi reellement ?
+     * Enter in location change mode to enable new actions.
+     *
+     * @see ModifyStopLocationState}.
      */
     @Override
     public void switchToLocationChange() {

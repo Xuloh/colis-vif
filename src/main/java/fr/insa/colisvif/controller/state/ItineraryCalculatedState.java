@@ -71,7 +71,7 @@ public class ItineraryCalculatedState implements State {
     }
 
     /**
-     * Save the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
+     * Saves the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
     @Override
     public void saveRoadMap() {
@@ -79,7 +79,10 @@ public class ItineraryCalculatedState implements State {
     }
 
     /**
-     * Enter in suppression mode //todo : Ca fait quoi reellement ?
+     * Enters in suppression mode to enable actions like selecting a vertex to suppress
+     * the linked delivery.
+     *
+     * @see SuppressionModeState
      */
     @Override
     public void switchToSuppressionMode() {
@@ -87,7 +90,8 @@ public class ItineraryCalculatedState implements State {
     }
 
     /**
-     * Quit the suppression mode //todo : Ca fait quoi reellement ?
+     * Enters the {@link fr.insa.colisvif.controller.state.ModeAddState}
+     * to allow the user to add more deliveries
      */
     @Override
     public void switchToAddMode() {

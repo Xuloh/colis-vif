@@ -72,14 +72,18 @@ public interface State {
     }
 
     /**
-     * Enter in suppression mode //todo : Ca fait quoi reellement ?
+     * Enter in suppression mode to allow the user to delete a delivery
+     *
+     * @see SuppressionModeState
      */
     default void switchToSuppressionMode() {
 
     }
 
     /**
-     * Enter in add mode //todo : Ca fait quoi reellement ?
+     * Enter in add mode to allow the user to ad a new delivery to the map
+     *
+     * @see ModeAddState
      */
     default void switchToAddMode() {
 
@@ -107,14 +111,14 @@ public interface State {
     }
 
     /**
-     * Enter in order change mode //todo : Ca fait quoi reellement ?
+     * Enter in order change mode to allow the user to changer the delivery order
      */
     default void switchToOrderChangeMode() {
 
     }
 
     /**
-     * Enter in location change mode //todo : Ca fait quoi reellement ?
+     * Enter in location change mode to allow the user to change the position of a vertex
      */
     default void switchToLocationChange() {
 
@@ -164,7 +168,8 @@ public interface State {
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user wants to get back to a stable state where no modifications
+     * are happening.
      * @param controller
      */
     default void getBackToPreviousState(Controller controller) {
