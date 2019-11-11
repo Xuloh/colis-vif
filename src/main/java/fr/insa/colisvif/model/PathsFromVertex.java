@@ -31,7 +31,7 @@ import java.util.HashMap;
         }
         return -1;
     }
-    
+
     /*package-private*/ void setLength(long id, double length) {
         lengths.put(id, length);
     }

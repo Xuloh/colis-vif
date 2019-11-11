@@ -13,6 +13,7 @@ public class Round {
 
     /**
      * Constructor of Round.
+     *
      * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
      */
     public Round(DeliveryMap deliveries) {
@@ -22,6 +23,7 @@ public class Round {
 
     /**
      * Returns the warehouse {@link Node} id of the {@link DeliveryMap}.
+     *
      * @return the warehouse {@link Node} id of the {@link DeliveryMap}.
      */
     public long getWarehouseNodeId() {
@@ -30,6 +32,7 @@ public class Round {
 
     /**
      * Returns the start date of the {@link DeliveryMap}.
+     *
      * @return the start date of the {@link DeliveryMap}.
      */
     public int getStartDate() {
@@ -38,6 +41,7 @@ public class Round {
 
     /**
      * Returns the {@link List} of {@link Step}.
+     *
      * @return the {@link List} of {@link Step}.
      */
     public List<Step> getSteps() {
@@ -47,7 +51,7 @@ public class Round {
     /**
      * Remove the delivery composed by 2 steps from the list of steps.
      *
-     * @param stepPickup the pickup from the delivery.
+     * @param stepPickup   the pickup from the delivery.
      * @param stepDelivery the dropoff from the delivery.
      */
     public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
@@ -79,7 +83,7 @@ public class Round {
     /**
      * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
      *
-     * @param stepPickup step to go from the previous location to the pickup location.
+     * @param stepPickup   step to go from the previous location to the pickup location.
      * @param stepDelivery step to go from the previous location to the delivery pickup.
      */
     public void addDelivery(Step stepPickup, Step stepDelivery) {
@@ -106,7 +110,7 @@ public class Round {
      * Change the order of stepChangeOrder to be just before stepJustAfter.
      *
      * @param stepChangeOrder the step that the order will be changed.
-     * @param stepJustAfter the step that will follow stepChangeOrder.
+     * @param stepJustAfter   the step that will follow stepChangeOrder.
      */
     public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter) {
         if (!(steps.contains(stepChangeOrder) && steps.contains(stepJustAfter))) { // The steps are in the list steps
