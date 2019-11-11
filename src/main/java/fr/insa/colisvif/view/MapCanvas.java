@@ -344,28 +344,28 @@ public class MapCanvas extends BorderPane {
         return this.deliveryMap;
     }
 
-    private void drawPointLatLng(double lat, double lng, Paint paint, int size) {
-        this.drawPoint(this.lngToPx(lng), this.latToPx(lat), paint, size);
+    private void drawPointLatLng(double lat, double lng, Paint paint, double radius) {
+        this.drawPoint(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawPoint(double x, double y, Paint paint, int size) {
+    private void drawPoint(double x, double y, Paint paint, double radius) {
         Paint prevFill = this.context.getFill();
         this.context.setFill(paint);
         this.context.fillOval(
-            x - size / 2d,
-            y - size / 2d,
-            size,
-            size
+            x - radius / 2d,
+            y - radius / 2d,
+            radius,
+            radius
         );
         this.context.setFill(prevFill);
 
         Paint prevStroke = this.context.getStroke();
         this.context.setStroke(Color.BLACK);
         this.context.strokeOval(
-            x - size / 2d,
-            y - size / 2d,
-            size,
-            size
+            x - radius / 2d,
+            y - radius / 2d,
+            radius,
+            radius
         );
         this.context.setStroke(prevStroke);
     }
@@ -381,17 +381,17 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
-    private void drawTriangleLatLng(double lat, double lng, Paint paint) {
-        this.drawTriangle(this.lngToPx(lng), this.latToPx(lat), paint);
+    private void drawTriangleLatLng(double lat, double lng, Paint paint, double radius) {
+        this.drawTriangle(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawTriangle(double centerX, double centerY, Paint paint) {
+    private void drawTriangle(double centerX, double centerY, Paint paint, double radius) {
         double[] x = new double[3];
         double[] y = new double[3];
 
         for (int k = 0; k < 3; k++) {
-            x[k] = CanvasConstants.DELIVERY_NODE_RADIUS * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
-            y[k] = CanvasConstants.DELIVERY_NODE_RADIUS * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
+            x[k] = radius * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
+            y[k] = radius * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
         }
 
         Paint prevFill = this.context.getFill();
@@ -405,23 +405,23 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
-    private void drawSquareLatLng(double lat, double lng, Paint paint) {
-        this.drawSquare(this.lngToPx(lng), this.latToPx(lat), paint);
+    private void drawSquareLatLng(double lat, double lng, Paint paint, double radius) {
+        this.drawSquare(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawSquare(double centerX, double centerY, Paint paint) {
+    private void drawSquare(double centerX, double centerY, Paint paint, double radius) {
         double[] x = {
-            centerX - CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerX + CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerX + CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerX - CanvasConstants.DELIVERY_NODE_RADIUS
+            centerX - radius,
+            centerX + radius,
+            centerX + radius,
+            centerX - radius
         };
 
         double[] y = {
-            centerY - CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerY - CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerY + CanvasConstants.DELIVERY_NODE_RADIUS,
-            centerY + CanvasConstants.DELIVERY_NODE_RADIUS
+            centerY - radius,
+            centerY - radius,
+            centerY + radius,
+            centerY + radius
         };
 
         Paint prevFill = this.context.getFill();
@@ -475,7 +475,8 @@ public class MapCanvas extends BorderPane {
                 drawTriangle(
                     this.x,
                     this.y,
-                    this.paint
+                    this.paint,
+                    CanvasConstants.DELIVERY_NODE_RADIUS
                 );
                 break;
             case DROP_OFF:
@@ -490,7 +491,8 @@ public class MapCanvas extends BorderPane {
                 drawSquare(
                     this.x,
                     this.y,
-                    this.paint
+                    this.paint,
+                    CanvasConstants.DELIVERY_NODE_RADIUS
                 );
                 break;
             default:
