@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -86,6 +87,7 @@ public class MapCanvas extends BorderPane {
         this.originY = 0d;
         this.deliveryCanvasNodes = new ArrayList<>();
 
+        // wrap canvas in a pane to handle resize
         Pane canvasContainer = new Pane();
         this.canvas = new Canvas();
         this.context = this.canvas.getGraphicsContext2D();
@@ -94,40 +96,12 @@ public class MapCanvas extends BorderPane {
 
 
         if (useTools) {
-            ToolsPane toolsPane = new ToolsPane();
-            this.setRight(toolsPane);
-
-            this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
-            this.scale.addListener((observable, oldValue, newValue) -> {
-                this.clearCanvas();
-                this.drawCityMap();
-                this.drawDeliveryMap();
-            });
-
-            toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
-                this.scale.set(1d);
-                this.originX = 0;
-                this.originY = 0;
-                this.clearCanvas();
-                this.drawCityMap();
-                this.drawDeliveryMap();
-            });
-
-            toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
-                double scale = this.scale.get();
-                scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
-                this.scale.set(scale);
-            });
-
-            toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
-                double scale = this.scale.get();
-                scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
-                this.scale.set(scale);
-            });
+            this.createToolsPane();
         }
 
         this.scale.set(1d);
 
+        // canvas resize listeners
         this.canvas.heightProperty().bind(canvasContainer.heightProperty());
         this.canvas.widthProperty().bind(canvasContainer.widthProperty());
 
@@ -135,48 +109,11 @@ public class MapCanvas extends BorderPane {
         this.canvas.heightProperty().addListener(listener);
         this.canvas.widthProperty().addListener(listener);
 
-        this.canvas.setOnMousePressed(event -> {
-            if (event.getButton() == MouseButton.MIDDLE) {
-                this.canvas.setCursor(Cursor.CLOSED_HAND);
-                this.dragOriginX = this.originX - event.getX();
-                this.dragOriginY = this.originY - event.getY();
-            }
-        });
-
-        this.canvas.setOnMouseDragged(event -> {
-            if (event.getButton() == MouseButton.MIDDLE) {
-                this.originX = event.getX() + this.dragOriginX;
-                this.originY = event.getY() + this.dragOriginY;
-                this.clearCanvas();
-                this.drawCityMap();
-                this.drawDeliveryMap();
-            }
-        });
-
-        this.canvas.setOnMouseReleased(event -> {
-            if (event.getButton() == MouseButton.MIDDLE) {
-                this.canvas.setCursor(Cursor.DEFAULT);
-            }
-        });
-
-        this.canvas.setOnMouseMoved(event -> {
-            boolean foundIntersect = false;
-            Iterator<CanvasNode> it = this.deliveryCanvasNodes.iterator();
-
-            while (!foundIntersect && it.hasNext()) {
-                CanvasNode canvasNode = it.next();
-
-                if (canvasNode.intersects(event.getX(), event.getY())) {
-                    LOGGER.trace("CanvasNode intersection : " + canvasNode);
-                    this.canvas.setCursor(Cursor.HAND);
-                    foundIntersect = true;
-                }
-            }
-
-            if (!foundIntersect) {
-                this.canvas.setCursor(Cursor.DEFAULT);
-            }
-        });
+        // canvas mouse events handlers
+        this.canvas.setOnMousePressed(this::canvasOnMousePressed);
+        this.canvas.setOnMouseDragged(this::canvasOnMouseDragged);
+        this.canvas.setOnMouseReleased(this::canvasOnMouseReleased);
+        this.canvas.setOnMouseMoved(this::canvasOnMouseMoved);
     }
 
     /**
@@ -317,6 +254,82 @@ public class MapCanvas extends BorderPane {
      */
     public DeliveryMap getDeliveryMap() {
         return this.deliveryMap;
+    }
+
+    private void canvasOnMousePressed(MouseEvent event) {
+        if (event.getButton() == MouseButton.MIDDLE) {
+            this.canvas.setCursor(Cursor.CLOSED_HAND);
+            this.dragOriginX = this.originX - event.getX();
+            this.dragOriginY = this.originY - event.getY();
+        }
+    }
+
+    private void canvasOnMouseDragged(MouseEvent event) {
+        if (event.getButton() == MouseButton.MIDDLE) {
+            this.originX = event.getX() + this.dragOriginX;
+            this.originY = event.getY() + this.dragOriginY;
+            this.clearCanvas();
+            this.drawCityMap();
+            this.drawDeliveryMap();
+        }
+    }
+
+    private void canvasOnMouseReleased(MouseEvent event) {
+        if (event.getButton() == MouseButton.MIDDLE) {
+            this.canvas.setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    private void canvasOnMouseMoved(MouseEvent event) {
+        boolean foundIntersect = false;
+        Iterator<CanvasNode> it = this.deliveryCanvasNodes.iterator();
+
+        while (!foundIntersect && it.hasNext()) {
+            CanvasNode canvasNode = it.next();
+
+            if (canvasNode.intersects(event.getX(), event.getY())) {
+                LOGGER.trace("CanvasNode intersection : " + canvasNode);
+                this.canvas.setCursor(Cursor.HAND);
+                foundIntersect = true;
+            }
+        }
+
+        if (!foundIntersect) {
+            this.canvas.setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    private void createToolsPane() {
+        ToolsPane toolsPane = new ToolsPane();
+        this.setRight(toolsPane);
+
+        this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
+        this.scale.addListener((observable, oldValue, newValue) -> {
+            this.clearCanvas();
+            this.drawCityMap();
+            this.drawDeliveryMap();
+        });
+
+        toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
+            this.scale.set(1d);
+            this.originX = 0;
+            this.originY = 0;
+            this.clearCanvas();
+            this.drawCityMap();
+            this.drawDeliveryMap();
+        });
+
+        toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
+            double scale = this.scale.get();
+            scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
+            this.scale.set(scale);
+        });
+
+        toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
+            double scale = this.scale.get();
+            scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
+            this.scale.set(scale);
+        });
     }
 
     private void computeBaseZoom() {
