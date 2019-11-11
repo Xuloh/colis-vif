@@ -84,7 +84,7 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
-        this.textualView = new TextualView();
+        this.textualView = new TextualView(true);
         this.statusBar = new StatusBar();
     }
 
