@@ -44,25 +44,21 @@ public class CityMapFactory {
      * @throws SAXException if the XML file is not well formed.
      * @throws ParserConfigurationException if a DocumentBuilder
      * cannot be created which satisfies the configuration requested.
+     * @throws XMLException if the XML file is not valid.
      */
-    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException {
-        try {
-            Element root = loadFile(file);
-            CityMap cityMap = new CityMap();
-            List<Triplet<Long, Double, Double>> nodes = readNodes(root);
-            List<Quadruplet<Double, String, Long, Long>> sections = readSections(root);
+    public CityMap createCityMapFromXMLFile(File file) throws IOException, SAXException, ParserConfigurationException, XMLException {
+        Element root = loadFile(file);
+        CityMap cityMap = new CityMap();
+        List<Triplet<Long, Double, Double>> nodes = readNodes(root);
+        List<Quadruplet<Double, String, Long, Long>> sections = readSections(root);
 
-            for (Triplet<Long, Double, Double> node : nodes) {
-                cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
-            }
-            for (Quadruplet<Double, String, Long, Long> section : sections) {
-                cityMap.createSection(section.getFirst(), section.getSecond(), section.getThird(), section.getFourth());
-            }
-            return cityMap;
-        } catch (XMLException e) { //TODO il faut vraiment catch ça ?
-            LOGGER.error(e.getMessage(), e);
+        for (Triplet<Long, Double, Double> node : nodes) {
+            cityMap.createNode(node.getFirst(), node.getSecond(), node.getThird());
         }
-        return null;
+        for (Quadruplet<Double, String, Long, Long> section : sections) {
+            cityMap.createSection(section.getFirst(), section.getSecond(), section.getFourth(), section.getThird());
+        }
+        return cityMap;
     }
 
     /**
