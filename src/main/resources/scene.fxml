@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
@@ -35,16 +34,15 @@
          <bottom>
             <FlowPane prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="Ajouter une livraison" fx:id="addDelivery"/>
-                  <Button mnemonicParsing="false" text="Supprimer une livraison" fx:id="deleteDelivery"/>
-                  <Button mnemonicParsing="false" text="Modifier lieu" fx:id="editLocation"/>
-                  <Button mnemonicParsing="false" text="Modier ordre" fx:id="editSequence"/>
+                  <Button fx:id="addDelivery" mnemonicParsing="false" text="Ajouter une livraison" />
+                  <Button fx:id="deleteDelivery" mnemonicParsing="false" text="Supprimer une livraison" />
+                  <Button fx:id="editLocation" mnemonicParsing="false" text="Modifier lieu" />
+                  <Button fx:id="editSequence" mnemonicParsing="false" text="Modier ordre" />
                </children>
             </FlowPane>
          </bottom>
       </BorderPane>
    </right>
    <bottom>
-      <TextArea fx:id="statusView" prefHeight="150.0" prefWidth="200.0" text="" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
