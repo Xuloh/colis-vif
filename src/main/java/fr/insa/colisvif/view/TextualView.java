@@ -103,4 +103,8 @@ public class TextualView extends Pane {
     public void printVertices(ObservableList<Vertex> vertexList) {
         vertexTable.setItems(vertexList);
     }
+
+    public TableView<Step> getStepTable(){
+        return this.stepTable;
+    }
 }

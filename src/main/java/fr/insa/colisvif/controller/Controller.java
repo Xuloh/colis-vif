@@ -6,6 +6,7 @@ import fr.insa.colisvif.model.CityMapFactory;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.DeliveryMapFactory;
+import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
@@ -212,7 +213,7 @@ public class Controller {
     /**
      * Switch to "change location" mode
      */
-    public void editLocationDelivery() {
+    public void editLocationDelivery(Step step) {
         this.currentState.switchToLocationChange();
     }
 

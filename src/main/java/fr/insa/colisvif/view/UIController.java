@@ -125,7 +125,7 @@ public class UIController {
             this.controller.editSequenceDelivery();
         });
         this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.editLocationDelivery();
+            this.controller.editLocationDelivery(this.stepView.getStepTable().getSelectionModel().getSelectedItem());
         });
 
         this.rightPane.setCenter(this.vertexView);
