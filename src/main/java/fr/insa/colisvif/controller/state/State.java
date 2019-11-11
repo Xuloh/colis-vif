@@ -177,7 +177,11 @@ public interface State {
 
     }
 
-    default void leftClick(Controller controller) {
+    default void leftClick(Controller controller, UIController uiController) {
+
+    }
+
+    default void setDuration(Controller controller, UIController uiController) {
 
     }
 
