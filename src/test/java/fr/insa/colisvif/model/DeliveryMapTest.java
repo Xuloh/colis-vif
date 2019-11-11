@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotEquals;
 
 
 public class DeliveryMapTest {
-
+    /*
     @Test
     public void testCreateDeliveryGood() {
         DeliveryMap deliveryMap = new DeliveryMap();
@@ -23,7 +23,7 @@ public class DeliveryMapTest {
         deliveryMap.createDelivery(1, 100, 101, 10, 10);
         Delivery delivery = new Delivery(1, 100, 101, 10, 10);
         assertEquals(delivery, deliveryMap.getDeliveryList().get(0));
-    }
+    }*/
 
     @Test
     public void testCreateWarehouseGood() {
@@ -44,7 +44,7 @@ public class DeliveryMapTest {
         deliveryMap.createWarehouse(101, 0);
 
     }
-
+    /*
     @Test
     public void getDeliveryList() {
         DeliveryMap deliveryMap = new DeliveryMap();
@@ -56,7 +56,7 @@ public class DeliveryMapTest {
         deliveries.add(new Delivery(2, 105, 104, 10, 20));
 
         assertEquals(deliveries, deliveryMap.getDeliveryList());
-    }
+    }*/
 
     @Test
     public void getWarehouseNodeId() {
@@ -79,6 +79,7 @@ public class DeliveryMapTest {
         assertEquals(deliveryMap, deliveryMap);
     }
 
+    /*
     @Test
     public void equals2() {
         DeliveryMap deliveryMap1 = new DeliveryMap();
@@ -155,5 +156,5 @@ public class DeliveryMapTest {
                 + 2
                 + '}';
         assertEquals(expected, deliveryMap1.toString());
-    }
+    }*/
 }

@@ -10,6 +10,8 @@ import java.util.Objects;
 public class DeliveryMap {
     private List<Delivery> deliveryRequests;
 
+    private int cptId;
+
     private long warehouseNodeId;
 
     private int startDateInSeconds;
@@ -18,6 +20,7 @@ public class DeliveryMap {
      * Constructor of the {@link DeliveryMap}
      */
     public DeliveryMap() {
+        this.cptId = -1;
         this.deliveryRequests = new ArrayList<>();
     }
 
@@ -25,17 +28,34 @@ public class DeliveryMap {
      * Create a {@link Delivery} out of a pick up {@link Node} id, a delivery {@link Node} id, a pick up duration and a delivery duration (in seconds).
      * It also attaches an id to the {@link Delivery}.
      *
-     * @param id : the id of the {@link Delivery}.
      * @param pickUpNodeId the {@link Node} id of the pick up.
      * @param deliveryNodeId the {@link Node} id of the drop off.
      * @param pickUpDuration the duration of the pick up in seconds.
      * @param dropOffDuration the duration of the drop off in seconds.
+     * @return the id of the created {@link Delivery}.
      * @throws IllegalArgumentException if the pickUpDuration / deliveryDuration is less or equal to 0 seconds or the pickUpNodeId is equal to the deliveryNodeId.
      */
-    public void createDelivery(int id, long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
+    public int createDelivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
         //TODO Le pickUpNodeId et le deliveryNodeId doivent correspondre à un noeud existant.
-        Delivery newDelivery = new Delivery(id, pickUpNodeId, deliveryNodeId, pickUpDuration, dropOffDuration);
+        this.cptId++;
+        Delivery newDelivery = new Delivery(this.cptId, pickUpNodeId, deliveryNodeId, pickUpDuration, dropOffDuration);
         this.deliveryRequests.add(newDelivery);
+        return this.cptId;
+    }
+
+    /**
+    * Search all Deliveries and returns the one with the given id if it exists
+    * @param id the id of the searched delivey
+    * @return <li>the Delivery found if it exists</li>
+    * <li>null if it doesn't</li>
+    */
+    public Delivery getDeliveryPerId(int id) {
+        for (Delivery delivery : deliveryRequests) {
+            if (delivery.getId() == id) {
+                return delivery;
+            }
+        }
+        return null;
     }
 
     /**

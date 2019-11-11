@@ -45,7 +45,6 @@ public class DeliveryMapFactory {
      * @throws XMLException if the XML file is not valid.
      */
     public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws XMLException, IdException, ParserConfigurationException, SAXException, IOException {
-        int cptId = 0;
         Element root = loadFile(file);
         DeliveryMap deliveryMap = new DeliveryMap();
         List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery(root);
@@ -53,9 +52,8 @@ public class DeliveryMapFactory {
         for (Quadruplet<Long, Long, Integer, Integer> delivery : deliveryList) {
             if (cityMap.getMapNode().containsKey(delivery.getFirst()) && cityMap.getMapNode()
                 .containsKey(delivery.getSecond())) {
-                deliveryMap.createDelivery(cptId, delivery.getFirst(), delivery.getSecond(),
+                deliveryMap.createDelivery(delivery.getFirst(), delivery.getSecond(),
                     delivery.getThird(), delivery.getFourth());
-                cptId++;
             } else {
                 throw new IdException(file.getAbsolutePath() + " refers to nodes outside the current city map");
             }
