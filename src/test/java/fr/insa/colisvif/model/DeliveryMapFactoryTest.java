@@ -1,6 +1,6 @@
-package fr.insa.colisvif.xml;
+package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.CityMapFactory;
@@ -27,7 +27,7 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testCreateDeliveryMapFromXML()
-            throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+            throws ParserConfigurationException, SAXException, IOException, IdException, URISyntaxException {
         File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
         File deliveryFile = new File(getClass().getResource("/validDeliveryMatchingMap.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();
@@ -36,17 +36,16 @@ public class DeliveryMapFactoryTest {
         DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(deliveryFile, cityMap);
 
         DeliveryMap expectedResult = new DeliveryMap();
-        expectedResult.createDelivery(2684668925L, 2509481775L, 420, 600);
-        expectedResult.setWarehouseNodeId(2684668925L);
-        expectedResult.setStartDateInSeconds(28800);
+        expectedResult.createDelivery(0, 2684668925L, 2509481775L, 420, 600);
+        expectedResult.createWarehouse(2684668925L, 28800);
 
         assertEquals(deliveryMap, expectedResult);
 
     }
 
-    @Test
+    @Test(expected = IdException.class)
     public void testCreateDeliveryMapFromXMLImpossibleDeliveries()
-            throws ParserConfigurationException, SAXException, IOException, IdError, URISyntaxException {
+            throws ParserConfigurationException, SAXException, IOException, IdException, URISyntaxException {
         File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
         File deliveryFile = new File(getClass().getResource("/validDelivery.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();
@@ -101,8 +100,8 @@ public class DeliveryMapFactoryTest {
 
 
         List<Quadruplet<Long, Long, Integer, Integer>> expectedResult = new ArrayList<>();
-        expectedResult.add(new Quadruplet((long) 1679901320, (long) 208769457, 420, 600));
-        expectedResult.add(new Quadruplet((long) 208769120, (long) 25336179, 420, 480));
+        expectedResult.add(new Quadruplet<>(1679901320L, 208769457L, 420, 600));
+        expectedResult.add(new Quadruplet<>(208769120L, 25336179L, 420, 480));
 
         assertEquals(expectedResult, result);
 
@@ -116,7 +115,7 @@ public class DeliveryMapFactoryTest {
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         Pair<Long, Integer> warehouse = factory.readWarehouse(root);
-        Pair expectedResult = new Pair((long) 2835339774L, 28800);
+        Pair expectedResult = new Pair<>(2835339774L, 28800);
         assertEquals(warehouse, expectedResult);
 
         assertEquals(warehouse, expectedResult);

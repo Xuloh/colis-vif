@@ -6,18 +6,26 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 
+/**
+ * A simple {@link FlowPane} wrapping a few widgets
+ * to control a {@link MapCanvas}.
+ * @see MapCanvas
+ */
 public class ToolsPane extends FlowPane {
 
     private static final double BUTTON_SIZE = 30d;
 
     private Button autoZoomButton;
 
-    private Button zoomPlusButton;
+    private Button zoomInButton;
 
-    private Button zoomMinusButton;
+    private Button zoomOutButton;
 
     private Slider zoomSlider;
 
+    /**
+     * Creates a new {@link ToolsPane}
+     */
     public ToolsPane() {
         super(Orientation.VERTICAL);
         this.setColumnHalignment(HPos.CENTER);
@@ -30,8 +38,8 @@ public class ToolsPane extends FlowPane {
 
         this.getChildren().addAll(
             this.autoZoomButton,
-            this.zoomPlusButton,
-            this.zoomMinusButton,
+            this.zoomInButton,
+            this.zoomOutButton,
             this.zoomSlider
         );
     }
@@ -45,23 +53,55 @@ public class ToolsPane extends FlowPane {
     }
 
     private void createZoomPlusButton() {
-        this.zoomPlusButton = new Button("+");
-        this.zoomPlusButton.setMaxWidth(BUTTON_SIZE);
-        this.zoomPlusButton.setMaxHeight(BUTTON_SIZE);
-        this.zoomPlusButton.setMinWidth(BUTTON_SIZE);
-        this.zoomPlusButton.setMinHeight(BUTTON_SIZE);
+        this.zoomInButton = new Button("+");
+        this.zoomInButton.setMaxWidth(BUTTON_SIZE);
+        this.zoomInButton.setMaxHeight(BUTTON_SIZE);
+        this.zoomInButton.setMinWidth(BUTTON_SIZE);
+        this.zoomInButton.setMinHeight(BUTTON_SIZE);
     }
 
     private void createZoomMinusButton() {
-        this.zoomMinusButton = new Button("-");
-        this.zoomMinusButton.setMaxWidth(BUTTON_SIZE);
-        this.zoomMinusButton.setMaxHeight(BUTTON_SIZE);
-        this.zoomMinusButton.setMinWidth(BUTTON_SIZE);
-        this.zoomMinusButton.setMinHeight(BUTTON_SIZE);
+        this.zoomOutButton = new Button("-");
+        this.zoomOutButton.setMaxWidth(BUTTON_SIZE);
+        this.zoomOutButton.setMaxHeight(BUTTON_SIZE);
+        this.zoomOutButton.setMinWidth(BUTTON_SIZE);
+        this.zoomOutButton.setMinHeight(BUTTON_SIZE);
     }
 
     private void createZoomSlider() {
-        this.zoomSlider = new Slider(0, 10, 1);
+        this.zoomSlider = new Slider(CanvasConstants.MIN_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE, 1d);
         this.zoomSlider.setOrientation(Orientation.VERTICAL);
+    }
+
+    /**
+     * Returns the auto zoom {@link Button} of this {@link ToolsPane}
+     * @return the auto zoom {@link Button} of this {@link ToolsPane}
+     */
+    public Button getAutoZoomButton() {
+        return this.autoZoomButton;
+    }
+
+    /**
+     * Returns the zoom in {@link Button} of this {@link ToolsPane}
+     * @return the zoom in {@link Button} of this {@link ToolsPane}
+     */
+    public Button getZoomInButton() {
+        return this.zoomInButton;
+    }
+
+    /**
+     * Returns the zoom out {@link Button} of this {@link ToolsPane}
+     * @return the zoom out {@link Button} of this {@link ToolsPane}
+     */
+    public Button getZoomOutButton() {
+        return this.zoomOutButton;
+    }
+
+    /**
+     * Returns the zoom {@link Slider} of this {@link ToolsPane}
+     * @return the zoom {@link Slider} of this {@link ToolsPane}
+     */
+    public Slider getZoomSlider() {
+        return this.zoomSlider;
     }
 }

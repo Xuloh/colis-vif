@@ -1,6 +1,6 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import org.junit.Test;
 
 import java.util.List;
@@ -35,14 +35,14 @@ public class NodeTest {
     }
 
     @Test
-    public void testNodeAddToSuccessorsOK() throws IdError {
+    public void testNodeAddToSuccessorsOK() throws IdException {
         Section testSection = new Section(158, "Rue A 11h30", 241, 240);
         Node testNode = new Node(240, 0, 0);
         testNode.addToSuccessors(testSection);
     }
 
-    @Test(expected = IdError.class)
-    public void testNodeAddToSuccessorsNotOK() throws IdError {
+    @Test(expected = IdException.class)
+    public void testNodeAddToSuccessorsNotOK() throws IdException {
         Section testSection = new Section(158, "Rue A 11h30", 240, 241);
         Node testNode = new Node(240, 0, 0);
         testNode.addToSuccessors(testSection);
@@ -85,8 +85,8 @@ public class NodeTest {
         try {
             testNode.addToSuccessors(section1);
             testNode.addToSuccessors(section2);
-        } catch (IdError idError) {
-            idError.printStackTrace();
+        } catch (IdException idException) {
+            idException.printStackTrace();
         }
 
         List<Section> successors = testNode.getSuccessors();

@@ -24,14 +24,6 @@ import java.util.LinkedList;
     /** We will use dynamic programing, this is where we store the sub results */
     private HashMap<Long, SubResult> subResults;
 
-    private int deliveryIdFromIndex(int index) {
-        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
-        if (index % 2 == 1) {
-            return delivery.getPickUpDuration();
-        }
-        return delivery.getId();
-    }
-
     /**
      * Let n be the number of deliveries we want to process
      * Creates a graph G with 2n+1 vertices : one for the warehouse and two for each delivery (the pick up and the drop off)
@@ -61,6 +53,14 @@ import java.util.LinkedList;
         }
 
         subResults = new HashMap<>();
+    }
+
+    private int deliveryIdFromIndex(int index) {
+        Delivery delivery = deliveries.getDelivery((index - 1) / 2);
+        if (index % 2 == 1) {
+            return delivery.getPickUpDuration();
+        }
+        return delivery.getId();
     }
 
     /**

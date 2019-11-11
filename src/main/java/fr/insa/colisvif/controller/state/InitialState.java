@@ -1,26 +1,46 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.exception.IdError;
+import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.view.UIController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Class that implements State interface.
+ * This class represents the initial state of the application.
+ * It overrides all the actions that can be done during this state.
+ *
+ * @see State
+ * @see <a href="https://en.wikipedia.org/wiki/State_pattern">State pattern</a>
+ */
 public class InitialState implements State {
 
+    private static final Logger LOGGER = LogManager.getLogger(InitialState.class);
+
+    /**
+     * Creates a {@link fr.insa.colisvif.model.CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * @param controller controller of the application
+     * @param uiController controller of the user interface
+     * @param file an xml file that contains the map to load
+     *
+     * @see Controller
+     */
     @Override
-    public void loadCityMap(Controller c, UIController mc, File file) {
+    public void loadCityMap(Controller controller, UIController uiController, File file) {
         try {
-            c.setMap(c.getCityMapFactory().createCityMapFromXMLFile(file));
-            mc.getMapCanvas().setCityMap(c.getMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdError e) {
-            e.printStackTrace();
+            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            uiController.getMapCanvas().setCityMap(controller.getCityMap());
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            LOGGER.error(e.getMessage(), e);
         }
-        mc.getMapCanvas().setDeliveryMap(null);
-        mc.drawCanvas();
-        c.setCurrentState(CityMapLoadedState.class);
+        uiController.getMapCanvas().setDeliveryMap(null);
+        uiController.drawCanvas();
+        controller.setCurrentState(CityMapLoadedState.class);
     }
 }
