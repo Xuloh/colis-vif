@@ -1,6 +1,8 @@
 package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -12,6 +14,9 @@ import java.util.*;
  * from a {@link DeliveryMap} on the CityMap.
  */
 public class CityMap {
+
+    private static final Logger LOGGER = LogManager.getLogger(CityMap.class);
+
     /*
     public static void main(String args[]) throws SAXException,
     IdError, ParserConfigurationException, IOException {
@@ -125,7 +130,7 @@ public class CityMap {
             try {
                 this.mapNode.get(origin).addToSuccessors(newSection);
             } catch (IdException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
 

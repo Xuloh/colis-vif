@@ -1,5 +1,8 @@
 package fr.insa.colisvif.controller.command;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.LinkedList;
 
 /**
@@ -8,6 +11,8 @@ import java.util.LinkedList;
  * executed command and redoing previously undone commands.
  */
 public class CommandList {
+
+    private static final Logger LOGGER = LogManager.getLogger(CommandList.class);
 
     private LinkedList<Command> pastCommands;
 
@@ -27,6 +32,7 @@ public class CommandList {
      * @param command The command to execute
      */
     public void doCommand(Command command) {
+        LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
         pastCommands.clear();
         currentCommands.add(command);
         command.doCommand();
@@ -40,6 +46,7 @@ public class CommandList {
     public void undoCommand() {
         if (!currentCommands.isEmpty()) {
             Command commandToUndo = currentCommands.pop();
+            LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
             commandToUndo.undoCommand();
             pastCommands.add(commandToUndo);
         }
@@ -53,6 +60,7 @@ public class CommandList {
     public void redoCommand() {
         if (!pastCommands.isEmpty()) {
             Command commandToRedo = pastCommands.pop();
+            LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());
             commandToRedo.doCommand();
             currentCommands.add(commandToRedo);
         }
@@ -63,6 +71,7 @@ public class CommandList {
      * <b>All executed and undone commands will be lost.</b>
      */
     public void resetCommand() {
+        LOGGER.info("Clearing command history");
         currentCommands.clear();
         pastCommands.clear();
     }

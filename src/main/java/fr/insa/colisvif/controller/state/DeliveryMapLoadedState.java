@@ -4,6 +4,8 @@ import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.UIController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,6 +22,8 @@ import java.io.IOException;
  */
 public class DeliveryMapLoadedState implements State {
 
+    private static final Logger LOGGER = LogManager.getLogger(DeliveryMapLoadedState.class);
+
     /**
      * Creates a {@link CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
      * @param controller controller of the application
@@ -34,8 +38,8 @@ public class DeliveryMapLoadedState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         uiController.getMapCanvas().setDeliveryMap(null);
         uiController.drawCanvas();
@@ -57,8 +61,8 @@ public class DeliveryMapLoadedState implements State {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
             //mc.writeDeliveries(c.getDeliveryMap());
             uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         uiController.clearCanvas();
         uiController.drawCanvas();

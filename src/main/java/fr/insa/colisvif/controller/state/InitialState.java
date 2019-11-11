@@ -3,6 +3,8 @@ package fr.insa.colisvif.controller.state;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.IdException;
 import fr.insa.colisvif.view.UIController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,6 +21,7 @@ import java.io.IOException;
  */
 public class InitialState implements State {
 
+    private static final Logger LOGGER = LogManager.getLogger(InitialState.class);
 
     /**
      * Creates a {@link fr.insa.colisvif.model.CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
@@ -33,8 +36,8 @@ public class InitialState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         uiController.getMapCanvas().setDeliveryMap(null);
         uiController.drawCanvas();

@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ import java.io.IOException;
  */
 public class App extends Application {
 
+    private static final Logger LOGGER = LogManager.getLogger(App.class);
+
     /**
      * Entry point called by JavaFX to launch the app
      * @param stage the main {@link Stage} of the app
@@ -21,6 +25,8 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
+        LOGGER.info("Starting JavaFX application ...");
+
         Controller controller = new Controller();
         // create fxml loader
         FXMLLoader loader = new FXMLLoader(
@@ -43,6 +49,8 @@ public class App extends Application {
         stage.setTitle("Colis Vif");
         stage.setScene(scene);
         stage.show();
+
+        LOGGER.info("JavaFX application successfully started");
     }
 
     public static void main(String[] args) {
