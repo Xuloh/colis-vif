@@ -1,6 +1,9 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.Step;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -145,8 +148,15 @@ public class UIController {
     /**
      * Renders the associated {@link TextualView}
      */
-    public void printTextualView() {
+    public void printVertexView() {
         this.vertexView.printVertices(controller.getVertexList());
+    }
+
+    /**
+     * Renders the associated {@link TextualView}
+     */
+    private void printStepView() {
+        this.stepView.printSteps(FXCollections.observableArrayList( controller.getStepList()));
     }
 
     /**
@@ -189,6 +199,7 @@ public class UIController {
     }
 
     public void updateTable(){
+        this.printStepView();
         this.rightPane.setCenter(this.stepView);
     }
 }

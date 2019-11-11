@@ -9,6 +9,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A custom {@link Pane} that wraps and handles a {@link TableView}
@@ -17,6 +19,9 @@ import javafx.scene.layout.Pane;
  */
 // todo : une méthode
 public class TextualView extends Pane {
+
+    private static final Logger LOGGER = LogManager.getLogger(TextualView.class);
+
 
     private TableView<Vertex> vertexTable;
 
@@ -54,17 +59,46 @@ public class TextualView extends Pane {
 
             TableColumn<Step, Integer> arrivalColumn = new TableColumn<>("Arrival");
             arrivalColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
+            arrivalColumn.setCellFactory(col -> new TableCell<>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty) ;
+                    if(item==null)
+                    {
+                        setText(null);
+                    } else {
+                        int secondes = item % 60;
+                        int minutes = item / 60;
+                        int heures = minutes / 60;
+                        minutes = minutes % 60;
+                        setText(heures + ":" + minutes + ":" + secondes);
+                    }
+                }
+            });
+
 
             TableColumn<Step, Integer> durationColumn = new TableColumn<>("Duration");
             durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
+            //TODO : change with initialArrivalDate
             TableColumn<Step, Integer> timeIntervalColumn = new TableColumn<>("Time Interval");
             timeIntervalColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
             timeIntervalColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
                 @Override
                 protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty) ;
-                setText("[" + (item - 3600) + " - " + (item + 3600) + "]" );
+                    if(item==null)
+                    {
+                        setText(null);
+                    } else {
+                        //int secondes = item % 60;
+                        int minutes = item / 60;
+                        int heures = minutes / 60;
+                        minutes = minutes % 60;
+
+                        setText("[" +  (heures - 1) + ":" + minutes + ":" + 0 +
+                            " - " + (heures + 1) + ":" + minutes + ":" + 0 +  "]" );
+                    }
                 }
             });
 
@@ -107,5 +141,10 @@ public class TextualView extends Pane {
 
     public TableView<Step> getStepTable(){
         return this.stepTable;
+    }
+
+    public void printSteps(ObservableList<Step> stepList){
+        stepTable.setItems(stepList);
+        LOGGER.info("Steps printed");
     }
 }
