@@ -17,12 +17,20 @@ public class ColorGenerator implements Iterator<Color> {
 
     private double opacity;
 
+    private int duplicate;
+
+    private double hue;
+
+    private double saturation;
+
+    private double brightness;
+
     /**
      * Creates a new {@link ColorGenerator} to generate the given number of colors
      * @param count the number of colors to generate
      */
     public ColorGenerator(int count) {
-        this(count, 1.0);
+        this(count, 1.0, 1);
     }
 
     /**
@@ -32,9 +40,22 @@ public class ColorGenerator implements Iterator<Color> {
      * @param opacity the opacity to apply to the colors
      */
     public ColorGenerator(int count, double opacity) {
-        this.count = count;
+        this(count, opacity, 1);
+    }
+
+    /**
+     * Creates a new {@link ColorGenerator} to generate the given number of colors
+     * and applying the given opacity. Each color will be returned in sequence
+     * as much time as the value of <code>duplicate</code>.
+     * @param count the number of colors to generate
+     * @param opacity the opacity to apply to the colors
+     * @param duplicate the number of times each color is to be generated
+     */
+    public ColorGenerator(int count, double opacity, int duplicate) {
+        this.count = count * duplicate;
         this.current = 0;
         this.opacity = opacity;
+        this.duplicate = duplicate;
     }
 
     @Override
@@ -48,12 +69,13 @@ public class ColorGenerator implements Iterator<Color> {
             throw new NoSuchElementException("No more colors to generate");
         }
 
-        double hue = this.current * 360 / this.count;
-        double saturation = 1.0;
-        double brightness = 1.0;
+        if (this.current % this.duplicate == 0) {
+            this.hue = this.current * 360 / this.count;
+            this.saturation = 1.0;
+            this.brightness = 1.0;
+        }
 
         this.current++;
-
-        return Color.hsb(hue, saturation, brightness, this.opacity);
+        return Color.hsb(this.hue, this.saturation, this.brightness, this.opacity);
     }
 }
