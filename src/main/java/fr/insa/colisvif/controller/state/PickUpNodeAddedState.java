@@ -14,7 +14,7 @@ import fr.insa.colisvif.controller.Controller;
 public class PickUpNodeAddedState implements State {
 
     /**
-     * When in add mode, allow the user to add a drop off node.
+     * When in add mode, allows the user to add a drop off node.
      */
     @Override
     public void addDropOffNode() {
@@ -22,7 +22,9 @@ public class PickUpNodeAddedState implements State {
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user want to switch back to the
+     * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
+     * where no modifications can be done.
      * @param controller
      */
     @Override
