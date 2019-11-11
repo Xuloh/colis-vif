@@ -135,16 +135,6 @@ public class Step {
         sections.addFirst(section);
     }
 
-    @Override
-    public String toString() {
-        return "Step{" +
-            ", deliveryID=" + deliveryID +
-            ", type=" + type +
-            ", arrivalDate=" + arrivalDate +
-            ", duration=" + duration +
-            '}';
-    }
-
     /**
      * Determines if the given {@link Object} is "equal"
      * to this {@link Step}.
