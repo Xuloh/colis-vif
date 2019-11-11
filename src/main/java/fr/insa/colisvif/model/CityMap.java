@@ -9,15 +9,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class CityMap {
-/*
-    public static void main(String args[]) throws SAXException, IdError, ParserConfigurationException, IOException {
-        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/grandPlan.xml");
-        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
-        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/fichiersXML2019/demandeGrand7.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory().createDeliveryMapFromXML(file, map);
-
-        Round round = map.naiveRound(deliveries);
-    }*/
 
     private static final int LNG_MIN = -180;
 
@@ -149,6 +140,7 @@ public class CityMap {
     public void dijkstra(Long start){
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);
+        pathsFromStart.setPrev(start, null);
 
         Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> Q = new PriorityQueue<Long>(cmp);
@@ -158,12 +150,13 @@ public class CityMap {
             Long node = Q.poll();
             double length = pathsFromStart.getLength(node);
             for(Section section : getMapNode().get(node).getSuccessors()){
-                double destinationLength = pathsFromStart.getLength(section.getDestination());
+                long next = section.getDestination();
+                double destinationLength = pathsFromStart.getLength(next);
                 if(destinationLength == -1 || length + section.getLength() < destinationLength){
-                    pathsFromStart.setLength(section.getDestination(),length + section.getLength());
-                    pathsFromStart.setPrev(node, section);
-                    Q.remove(section.getDestination());
-                    Q.add(section.getDestination());
+                    pathsFromStart.setLength(next,length + section.getLength());
+                    pathsFromStart.setPrev(next, section);
+                    Q.remove(next);
+                    Q.add(next);
                 }
             }
         }
@@ -172,11 +165,15 @@ public class CityMap {
     }
 
     public Round shortestRound(DeliveryMap deliveries){
+        var debut = System.nanoTime();
         dijkstra(deliveries.getWarehouseNodeId());
         for(Delivery delivery : deliveries.getDeliveryList()){
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
+        var fin = System.nanoTime();
+        System.out.print("Dijkstra time : ");
+        System.out.println((fin - debut)*0.000000001);
         VerticesGraph G = new VerticesGraph(deliveries, pathsFromVertices);
         return G.shortestRound();
     }
