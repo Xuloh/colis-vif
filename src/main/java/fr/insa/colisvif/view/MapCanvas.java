@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -154,6 +155,25 @@ public class MapCanvas extends BorderPane {
 
         this.canvas.setOnMouseReleased(event -> {
             if (event.getButton() == MouseButton.MIDDLE) {
+                this.canvas.setCursor(Cursor.DEFAULT);
+            }
+        });
+
+        this.canvas.setOnMouseMoved(event -> {
+            boolean foundIntersect = false;
+            Iterator<CanvasNode> it = this.deliveryCanvasNodes.iterator();
+
+            while (!foundIntersect && it.hasNext()) {
+                CanvasNode canvasNode = it.next();
+
+                if (canvasNode.intersects(event.getX(), event.getY())) {
+                    LOGGER.trace("CanvasNode intersection : " + canvasNode);
+                    this.canvas.setCursor(Cursor.HAND);
+                    foundIntersect = true;
+                }
+            }
+
+            if (!foundIntersect) {
                 this.canvas.setCursor(Cursor.DEFAULT);
             }
         });
