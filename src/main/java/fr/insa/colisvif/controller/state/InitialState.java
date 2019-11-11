@@ -2,6 +2,7 @@ package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.IdException;
+import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.view.UIController;
 import org.xml.sax.SAXException;
 
@@ -33,7 +34,7 @@ public class InitialState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException | IdException e) {
+        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             e.printStackTrace();
         }
         uiController.getMapCanvas().setDeliveryMap(null);
