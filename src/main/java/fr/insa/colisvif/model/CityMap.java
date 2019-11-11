@@ -1,9 +1,14 @@
 package fr.insa.colisvif.model;
 
 import fr.insa.colisvif.exception.IdException;
+import fr.insa.colisvif.exception.XMLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -16,20 +21,6 @@ import java.util.*;
 public class CityMap {
 
     private static final Logger LOGGER = LogManager.getLogger(CityMap.class);
-
-    /*
-    public static void main(String args[]) throws SAXException,
-    IdError, ParserConfigurationException, IOException {
-        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
-        fichiersXML2019/grandPlan.xml");
-        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
-        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
-        fichiersXML2019/demandeGrand7.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory()
-        .createDeliveryMapFromXML(file, map);
-
-        Round round = map.naiveRound(deliveries);
-    }*/
 
     private static final int LNG_MIN = -180;
 
@@ -126,9 +117,9 @@ public class CityMap {
 
         try {
             Optional
-                .ofNullable(this.mapNode.get(origin))
-                .orElseThrow(() -> new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes"))
-                .addToSuccessors(newSection);
+                    .ofNullable(this.mapNode.get(origin))
+                    .orElseThrow(() -> new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes"))
+                    .addToSuccessors(newSection);
         } catch (IdException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
@@ -300,6 +291,20 @@ public class CityMap {
         System.out.println((fin - debut) * 0.000000001);
         VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
         return verticesGraph.shortestRound();
+    }
+
+    public Round naiveRound(DeliveryMap deliveries) {
+        var debut = System.nanoTime();
+        dijkstra(deliveries.getWarehouseNodeId());
+        for (Delivery delivery : deliveries.getDeliveryList()) {
+            dijkstra(delivery.getPickUpNodeId());
+            dijkstra(delivery.getDropOffNodeId());
+        }
+        var fin = System.nanoTime();
+        System.out.print("Dijkstra time : ");
+        System.out.println((fin - debut) * 0.000000001);
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
+        return verticesGraph.naiveRound();
     }
 
     /**
