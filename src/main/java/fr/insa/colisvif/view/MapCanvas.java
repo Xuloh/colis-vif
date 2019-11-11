@@ -29,8 +29,16 @@ import java.util.Map;
  * @see Canvas
  */
 
-// todo : ajouter une méthode drawRound (from Brice)
-// todo : méthode qui prend un point (de clic de souris) et qui renvoie un noeud si possible
+// liste de Brice
+// todo : ajouter une méthode drawRound
+
+/* todo : Pour ce qui est des états, il va falloir que je change toutes les méthodes d'états de
+ type 'Clic sur le canvas' en une seule méthode 'Clic gauche'. Ca implique que du coup le mapCanvas
+ aient plusieurs méthodes qui me permettent de convertir un point de clic :
+    - en Node (si le point cliqué est un Node on le renvoie)
+    - en Step (si le point cliqué est un Vertex alors on renvoie la Step associé)
+ */
+
 public class MapCanvas extends BorderPane {
 
     private static final Logger LOGGER = LogManager.getLogger(MapCanvas.class);

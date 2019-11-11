@@ -2,6 +2,7 @@ package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.view.UIController;
 
 import java.io.File;
@@ -92,7 +93,7 @@ public interface State {
     /**
      * When in add mode, allow the user to add a pick up node.
      */
-    default void addPickUpNode() {
+    default void addPickUpNode(Controller controller, UIController uiController, Node node) {
 
     }
 
@@ -174,6 +175,10 @@ public interface State {
      */
     default void getBackToPreviousState(Controller controller) {
 
+    }
+
+    default void leftClick(Controller controller) {
+        
     }
 
 }

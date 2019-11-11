@@ -103,6 +103,8 @@ public class ItineraryCalculatedState implements State {
     /**
      * Show the properties of a node selected from the textual view or from the canvas.
      */
+    // todo : dégager ça et déplacer les méthodes de PropertiesPrintedState dans cet état
+    // todo : utiliser les méthodes que Sophie filera
     @Override
     public void showNodeProperties() {
 
