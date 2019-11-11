@@ -24,7 +24,8 @@ public class CanvasNode {
     }
 
     public boolean intersects(double x, double y) {
-        return false;
+        double squaredDistance = (x - this.x) + (y - this.y);
+        return squaredDistance <= CanvasConstants.DELIVERY_NODE_SQUARED_RADIUS;
     }
 
     @Override
