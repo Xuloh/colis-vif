@@ -1,6 +1,8 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.Node;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -17,7 +19,7 @@ public class ModeAddState implements State {
      * When in add mode, allows the user to add a pick up node.
      */
     @Override
-    public void addPickUpNode() {
+    public void addPickUpNode(Controller controller, UIController uiController, Node node) {
 
     }
 
