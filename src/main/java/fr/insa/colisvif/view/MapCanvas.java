@@ -243,31 +243,6 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    private void computeBaseZoom() {
-        if (this.cityMap == null) {
-            this.baseZoom = 1d;
-        } else {
-            final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
-            final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
-            final double CANVAS_WIDTH = this.canvas.getWidth();
-            final double CANVAS_HEIGHT = this.canvas.getHeight();
-
-            if (CANVAS_WIDTH > CANVAS_HEIGHT) {
-                this.baseZoom = CANVAS_HEIGHT / MAP_HEIGHT;
-            } else {
-                this.baseZoom = CANVAS_WIDTH / MAP_WIDTH;
-            }
-        }
-    }
-
-    private void onResize() {
-        LOGGER.debug("Resizing map");
-        this.computeBaseZoom();
-        this.clearCanvas();
-        this.drawCityMap();
-        this.drawDeliveryMap();
-    }
-
     /**
      * Assigns the given {@link CityMap} to this {@link MapCanvas}.
      * If <code>null</code> is passed, the {@link MapCanvas}
@@ -342,6 +317,31 @@ public class MapCanvas extends BorderPane {
      */
     public DeliveryMap getDeliveryMap() {
         return this.deliveryMap;
+    }
+
+    private void computeBaseZoom() {
+        if (this.cityMap == null) {
+            this.baseZoom = 1d;
+        } else {
+            final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
+            final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
+            final double CANVAS_WIDTH = this.canvas.getWidth();
+            final double CANVAS_HEIGHT = this.canvas.getHeight();
+
+            if (CANVAS_WIDTH > CANVAS_HEIGHT) {
+                this.baseZoom = CANVAS_HEIGHT / MAP_HEIGHT;
+            } else {
+                this.baseZoom = CANVAS_WIDTH / MAP_WIDTH;
+            }
+        }
+    }
+
+    private void onResize() {
+        LOGGER.debug("Resizing map");
+        this.computeBaseZoom();
+        this.clearCanvas();
+        this.drawCityMap();
+        this.drawDeliveryMap();
     }
 
     private void drawCircleLatLng(double lat, double lng, Paint paint, double radius) {
