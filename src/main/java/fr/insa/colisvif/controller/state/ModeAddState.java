@@ -30,7 +30,8 @@ public class ModeAddState implements State {
     private long dropOffNodeId = -1;
 
     /**
-     * When in add mode, allows the user to add a pick up node.
+     * When in add mode, allows the user to select the position of the pick-up and drop-off nodes
+     * of the delivery the user wants to add.
      */
     // todo : prendra un point de coordonnées
     // todo : l'état PickUpNodeAdded risque de disparaitre
@@ -47,14 +48,25 @@ public class ModeAddState implements State {
      * Used when the user want to switch back to the
      * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
+     * <br><br>
+     * Note that everything added will be lost.
      * @param controller
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
         pickUpVertex = null;
+        dropOffVertex = null;
+        pickUpNodeId = -1;
+        dropOffNodeId = -1;
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
+    /**
+     * Sets the pick-up or drop-off duration of the added delivery to a given number.
+     * @param controller controller of the application
+     * @param uiController controller of the user interface
+     * @param askedDuration String input by the user when asked for a duration
+     */
     public void setDuration(Controller controller, UIController uiController, String askedDuration) {
         if (pickUpVertex == null) {
             try {
@@ -78,12 +90,17 @@ public class ModeAddState implements State {
             try {
                 int dropOffDuration = Integer.parseInt(askedDuration);
                 pickUpVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-                int deliveryId = controller.getDeliveryMap().getSize();
-                controller.getDeliveryMap().createDelivery(deliveryId, pickUpVertex.getNodeId(),
+                /*Delivery deliveryToAdd = controller.getDeliveryMap().createDelivery(pickUpVertex.getNodeId(),
                                                     dropOffVertex.getNodeId(), pickUpVertex.getDuration(),
-                                                    dropOffVertex.getDuration());
-                controller.getRound().addDelivery(new Step(pickUpVertex, deliveryId),
-                                                  new Step(dropOffVertex, deliveryId));
+                                                    dropOffVertex.getDuration());*/
+                //Ca devrait build avec le push de Mathieu
+                Delivery deliveryToAdd = null; // A supprimer après décommentation d'en dessus
+                controller.getRound().addDelivery(new Step(pickUpVertex, deliveryToAdd.getId()),
+                                                  new Step(dropOffVertex, deliveryToAdd.getId()));
+                pickUpVertex = null;
+                dropOffVertex = null;
+                pickUpNodeId = -1;
+                dropOffNodeId = -1;
                 controller.setCurrentState(LocalItineraryModificationState.class);
             } catch (NumberFormatException | NullPointerException e) {
                 LOGGER.error(e.getMessage(), e);

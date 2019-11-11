@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
  * to render instances of {@link Vertex} before the calculated itinerary
  * @see TableView
  */
-// todo : permettre de demander une durée de pickup / dropoff @Sophie
+/* todo : permettre de demander une durée de pickup / dropoff (renvoyer un String) @Sophie */
 
 public class TextualView extends Pane {
 
