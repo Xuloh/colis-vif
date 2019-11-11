@@ -5,45 +5,46 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class NodeTest {
 
     @Test
     public void testNodeGood() {
-        Node testNode = new Node(2405632, 50, 24);
+        new Node(2405632, 50, 24);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testLatitudeLowBound() {
-        Node testNode = new Node(2405632, -120, 24);
+        new Node(2405632, -120, 24);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testLatitudeHighBound() {
-        Node testNode = new Node(2405632, 178, 24);
+        new Node(2405632, 178, 24);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testLongitudeLowBound() {
-        Node testNode = new Node(2405632, -10, -248);
+        new Node(2405632, -10, -248);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testLongitudeHighBound() {
-        Node testNode = new Node(2405632, -10, 245);
+        new Node(2405632, -10, 245);
     }
 
     @Test
     public void testNodeAddToSuccessorsOK() throws IdException {
-        Section testSection = new Section(158, "Rue A 11h30", 241, 240);
+        Section testSection = new Section(158, "Rue A 11h30", 240, 241);
         Node testNode = new Node(240, 0, 0);
         testNode.addToSuccessors(testSection);
     }
 
     @Test(expected = IdException.class)
     public void testNodeAddToSuccessorsNotOK() throws IdException {
-        Section testSection = new Section(158, "Rue A 11h30", 240, 241);
+        Section testSection = new Section(158, "Rue A 11h30", 241, 240);
         Node testNode = new Node(240, 0, 0);
         testNode.addToSuccessors(testSection);
     }
@@ -77,22 +78,47 @@ public class NodeTest {
     }
 
     @Test
-    public void getSuccessors() {
+    public void getSuccessors() throws IdException {
         Node testNode = new Node(123456, 12.451, 24.64);
         Section section1 = new Section(12, "Truc1", 123456, 123456);
         Section section2 = new Section(12, "Truc2", 123456, 123456);
 
-        try {
-            testNode.addToSuccessors(section1);
-            testNode.addToSuccessors(section2);
-        } catch (IdException idException) {
-            idException.printStackTrace();
-        }
+
+        testNode.addToSuccessors(section1);
+        testNode.addToSuccessors(section2);
 
         List<Section> successors = testNode.getSuccessors();
         assertEquals(successors.get(0), section1);
         assertEquals(successors.get(1), section2);
+    }
 
+    @Test
+    public void equals1() {
+        Node node1 = new Node(1, 10, 10);
+        Node node2 = new Node(1, 10, 10);
 
+        assertEquals(node1, node2);
+    }
+
+    @Test
+    public void equals2() {
+        Node node1 = new Node(1, 10, 10);
+
+        assertEquals(node1, node1);
+    }
+
+    @Test
+    public void equals3() {
+        Node node1 = new Node(1, 10, 10);
+
+        assertNotEquals(node1, 1);
+    }
+
+    @Test
+    public void equals4() {
+        Node node1 = new Node(1, 10, 10);
+        Node node2 = new Node(2, 10, 10);
+
+        assertNotEquals(node1, node2);
     }
 }

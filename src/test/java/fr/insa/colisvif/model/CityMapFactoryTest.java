@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class CityMapFactoryTest {
 
@@ -79,14 +78,14 @@ public class CityMapFactoryTest {
     }
 
     @Test
-    public void testCreateCityMapFromXML() throws IOException, SAXException, ParserConfigurationException, IdException, URISyntaxException {
+    public void testCreateCityMapFromXML() throws XMLException, IOException, SAXException, ParserConfigurationException, IdException, URISyntaxException {
         File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
-        CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile((file));
+        CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile(file);
         CityMap citymap = new CityMap();
         citymap.createNode(2684668925L, 45.775486, 4.888253);
         citymap.createNode(2509481775L, 45.775345, 4.8870163);
-        citymap.createSection(97.249695, "Rue Château-Gaillard", 2509481775L, 2684668925L);
+        citymap.createSection(97.249695, "Rue Château-Gaillard", 2684668925L, 2509481775L);
 
         assertEquals(cityMapFromFile, citymap);
 
@@ -110,14 +109,12 @@ public class CityMapFactoryTest {
         cityMapParser.readSections(root);
     }
 
-    @Test
-    public void testCreateCityMapFromInvalidXML() throws IOException, SAXException, ParserConfigurationException, IdException, URISyntaxException {
+    @Test (expected = XMLException.class)
+    public void testCreateCityMapFromInvalidXML() throws IOException, SAXException, ParserConfigurationException, URISyntaxException, XMLException {
         File file = new File(getClass().getResource("/InvalidPlan_test.xml").toURI());
 
         CityMapFactory cityMapParser = new CityMapFactory();
-        CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile((file));
-
-        assertNull(cityMapFromFile);
+        CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile(file);
     }
 
 }

@@ -1,23 +1,25 @@
 package fr.insa.colisvif.model;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class SectionTest {
 
     @Test
     public void testSectionGood() {
-        Section section = new Section(20, "Rue de la Paix", 100, 101);
+        new Section(20, "Rue de la Paix", 100, 101);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSectionNegativeLength() {
-        Section section = new Section(-20, "Rue de la Paix", 100, 101);
+        new Section(-20, "Rue de la Paix", 100, 101);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSectionZeroLength() {
-        Section section = new Section(0, "Rue de la Paix", 100, 101);
+        new Section(0, "Rue de la Paix", 100, 101);
     }
 
     /*
@@ -29,7 +31,7 @@ public class SectionTest {
 
     @Test
     public void testSectionToString() {
-        Section section = new Section(20, "Rue de la Paix", 100, 101);
+        Section section = new Section(20, "Rue de la Paix", 101, 100);
         assertEquals("Length : 20.0 | Road Name : Rue de la Paix | Destination : 100 | Origin : 101\n", section.toString());
     }
 
@@ -51,8 +53,29 @@ public class SectionTest {
     @Test
     public void getDestination() {
         long expected = 100;
-        Section section = new Section(20, "Rue de la Paix", expected, 101);
+        Section section = new Section(20, "Rue de la Paix", 101, expected);
         assertEquals(expected, section.getDestination());
+    }
+
+    @Test
+    public void getDestinationWrong() {
+        long expected = 100;
+        Section section = new Section(20, "Rue de la Paix", 101, expected + 1);
+        assertNotEquals(expected, section.getDestination());
+    }
+
+    @Test
+    public void getOrigin() {
+        long expected = 100;
+        Section section = new Section(20, "Rue de la Paix", expected, 101);
+        assertEquals(expected, section.getOrigin());
+    }
+
+    @Test
+    public void getOriginWrong() {
+        long expected = 100;
+        Section section = new Section(20, "Rue de la Paix", expected + 1, 101);
+        assertNotEquals(expected, section.getOrigin());
     }
 
     @Test
@@ -66,5 +89,6 @@ public class SectionTest {
         assertNotEquals(expected, section);
         expected = new Section(20, "Rue de la Paix", 100, 100);
         assertNotEquals(expected, section);
+        assertNotEquals(expected, 1);
     }
 }
