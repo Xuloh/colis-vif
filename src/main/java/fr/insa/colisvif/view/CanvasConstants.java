@@ -24,11 +24,6 @@ public final class CanvasConstants {
     public static final double DELTA_ZOOM_SCALE = 0.1d;
 
     /**
-     * Color used to draw the sections of the map
-     */
-    public static final Color SECTION_COLOR = Color.grayRgb(85);
-
-    /**
      * Radius used to render the nodes on the map (in pixels).
      */
     public static final int DELIVERY_NODE_RADIUS = 7;
@@ -47,6 +42,21 @@ public final class CanvasConstants {
      * Opacity used for delivery nodes' colors
      */
     public static final double NODE_OPACITY = 0.7d;
+
+    /**
+     * Color used to render the sections of the map
+     */
+    public static final Color SECTION_COLOR = Color.grayRgb(85);
+
+    /**
+     * Color used to render the warehouse
+     */
+    public static final Color WAREHOUSE_COLOR = Color.rgb(
+        255,
+        255,
+        255,
+        CanvasConstants.NODE_OPACITY
+    );
 
     private CanvasConstants() {
 
