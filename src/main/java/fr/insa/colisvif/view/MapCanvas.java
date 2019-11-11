@@ -16,6 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ import java.util.Map;
  * @see Canvas
  */
 public class MapCanvas extends BorderPane {
+
+    private static final Logger LOGGER = LogManager.getLogger(MapCanvas.class);
 
     private CityMap cityMap;
 
@@ -156,6 +160,7 @@ public class MapCanvas extends BorderPane {
      * Clears the {@link Canvas}
      */
     public void clearCanvas() {
+        LOGGER.debug("Clearing canvas");
         this.context.clearRect(
             0,
             0,
@@ -172,7 +177,10 @@ public class MapCanvas extends BorderPane {
      * @see #setCityMap(CityMap)
      */
     public void drawCityMap() {
+        LOGGER.debug("Drawing CityMap");
+
         if (this.cityMap == null) {
+            LOGGER.warn("Tried to draw CityMap but CityMap is null");
             return;
         }
 
@@ -206,7 +214,10 @@ public class MapCanvas extends BorderPane {
      * @see #setDeliveryMap(DeliveryMap)
      */
     public void drawDeliveryMap() {
+        LOGGER.debug("Drawing DeliveryMap");
+
         if (this.deliveryMap == null) {
+            LOGGER.warn("Tried to draw DeliveryMap but DeliveryMap is null");
             return;
         }
 
@@ -270,6 +281,7 @@ public class MapCanvas extends BorderPane {
     }
 
     private void onResize() {
+        LOGGER.debug("Resizing map");
         this.computeBaseZoom();
         this.clearCanvas();
         this.drawCityMap();
