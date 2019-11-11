@@ -247,7 +247,7 @@ public class MapCanvas extends BorderPane {
                 dropOffNode.getLatitude(),
                 dropOffNode.getLongitude(),
                 color,
-                CanvasConstants.DELIVERY_NODE_SIZE
+                CanvasConstants.DELIVERY_NODE_DIAMETER
             );
         }
 
@@ -374,11 +374,9 @@ public class MapCanvas extends BorderPane {
         double[] x = new double[3];
         double[] y = new double[3];
 
-        final int RADIUS = CanvasConstants.DELIVERY_NODE_SIZE / 2;
-
         for (int k = 0; k < 3; k++) {
-            x[k] = RADIUS * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
-            y[k] = RADIUS * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
+            x[k] = CanvasConstants.DELIVERY_NODE_RADIUS * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
+            y[k] = CanvasConstants.DELIVERY_NODE_RADIUS * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
         }
 
         Paint prevFill = this.context.getFill();
@@ -396,7 +394,7 @@ public class MapCanvas extends BorderPane {
         double centerX = this.lngToPx(lng);
         double centerY = this.latToPx(lat);
 
-        final int RADIUS = CanvasConstants.DELIVERY_NODE_SIZE / 2;
+        final int RADIUS = CanvasConstants.DELIVERY_NODE_DIAMETER / 2;
 
         double[] x = {
             centerX - RADIUS,
