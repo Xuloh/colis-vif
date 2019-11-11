@@ -21,7 +21,7 @@ public class VertexTest {
     @Test
     public void getDuration() {
         int expected = 10;
-        assertEquals(new Vertex(1, Vertex.PICK_UP, expected).getDuration(), expected);
+        assertEquals(expected, new Vertex(1, Vertex.PICK_UP, expected).getDuration());
     }
 
     @Test
@@ -29,7 +29,7 @@ public class VertexTest {
         int expected = 11;
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
         vertex.setDuration(expected);
-        assertEquals(vertex.getDuration(), expected);
+        assertEquals(expected, vertex.getDuration());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class VertexTest {
         int expected = 12;
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
         vertex.setDuration(expected + 1);
-        assertNotEquals(vertex.getDuration(), expected);
+        assertNotEquals(expected, vertex.getDuration());
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -50,7 +50,7 @@ public class VertexTest {
     @Test
     public void getNodeId() {
         int expected = 10;
-        assertEquals(new Vertex(expected, Vertex.PICK_UP, 10).getNodeId(), expected);
+        assertEquals(expected, new Vertex(expected, Vertex.PICK_UP, 10).getNodeId());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class VertexTest {
     @Test
     public void equals5() {
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
-        assertNotEquals(vertex, 1);
+        assertNotEquals(1, vertex);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class VertexTest {
                 + ", type=" + Vertex.PICK_UP
                 + ", durationInSeconds=" + 10
                 + '}';
-        assertEquals(vertex.toString(), expected);
+        assertEquals(expected, vertex.toString());
     }
 
     @Test
@@ -148,13 +148,13 @@ public class VertexTest {
     public void compareTo6() {
         Vertex vertex1 = new Vertex(1, Vertex.PICK_UP, 10);
         Vertex vertex2 = new Vertex(1, Vertex.DROP_OFF, 10);
-        assertEquals(vertex1.compareTo(vertex2), -1);
+        assertEquals(-1, vertex1.compareTo(vertex2));
     }
 
     @Test
     public void hashCode1() {
         Vertex vertex1 = new Vertex(1, Vertex.PICK_UP, 10);
         int expected = Objects.hash(1, Vertex.PICK_UP);
-        assertEquals(vertex1.hashCode(), expected);
+        assertEquals(expected, vertex1.hashCode());
     }
 }

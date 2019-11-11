@@ -7,7 +7,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
@@ -18,17 +17,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class CityMapTest {
-
-    public static <T> Object getAttribute(Class<T> clazz, T targetObject, String attributeName) {
-        try {
-            Field field = clazz.getDeclaredField(attributeName);
-            field.setAccessible(true);
-            return field.get(targetObject);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static <T> Object invokeMethod(Class<T> clazz, T targetObject, String methodName, Class<?>[] parametersTypes, Object[] parametersValues) throws InvocationTargetException {
         try {

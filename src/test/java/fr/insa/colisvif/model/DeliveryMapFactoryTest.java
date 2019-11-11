@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class DeliveryMapFactoryTest {
-    /*
+
     @Test
     public void testCreateDeliveryMapFromXML()
             throws ParserConfigurationException, XMLException, SAXException, IOException, IdException, URISyntaxException {
@@ -32,12 +32,12 @@ public class DeliveryMapFactoryTest {
         DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(deliveryFile, cityMap);
 
         DeliveryMap expectedResult = new DeliveryMap();
-        expectedResult.createDelivery(0, 2684668925L, 2509481775L, 420, 600);
+        expectedResult.createDelivery(2684668925L, 2509481775L, 420, 600);
         expectedResult.createWarehouse(2684668925L, 28800);
 
-        assertEquals(deliveryMap, expectedResult);
+        assertEquals(expectedResult, deliveryMap);
 
-    }*/
+    }
 
     @Test(expected = IdException.class)
     public void testCreateDeliveryMapFromXMLImpossibleDeliveries()
@@ -112,9 +112,9 @@ public class DeliveryMapFactoryTest {
         Element root = factory.loadFile(file);
         Pair<Long, Integer> warehouse = factory.readWarehouse(root);
         Pair expectedResult = new Pair<>(2835339774L, 28800);
-        assertEquals(warehouse, expectedResult);
+        assertEquals(expectedResult, warehouse);
 
-        assertEquals(warehouse, expectedResult);
+        assertEquals(expectedResult, warehouse);
     }
 
     @Test(expected = XMLException.class)
