@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /*package-private*/ class VerticesGraph {
 
     /** The speed of the cyclist in meters per second */
-    private static final int CYCLIST_SPEED = (int) (15. / 3.6);
+    private static final int CYCLIST_SPEED = (int) (15. / 3.6); // TODO @Felix: mettre ces constantes dans la classes contenant toutes les constantes
 
     /** 2^(2n+1) where n is the number of deliveries, N is the number of subsets of the vertices */
     private long powerSetSize;
@@ -35,7 +35,7 @@ import java.util.LinkedList;
      * @param pathsFromVertices the results of Dijkstra's algorithms from all nodes in deliveries
      */
     /*package-private*/ VerticesGraph(DeliveryMap deliveries, HashMap<Long, PathsFromVertex> pathsFromVertices) {
-        int n = deliveries.size();
+        int n = deliveries.getSize();
         powerSetSize = 0b1 << (2 * n + 1); //makes 2^(2n+1), thanks Pacôme
         this.deliveries = deliveries;
         this.pathsFromVertices = pathsFromVertices;
@@ -125,7 +125,7 @@ import java.util.LinkedList;
         }
         SubResult subResult = new SubResult();
         subResult.setLength(-1);
-        int n = deliveries.size();
+        int n = deliveries.getSize();
         long a = 2; //will be 2^k, used to add and remove elements from the set
         long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
         for (int k = 1; k < 2 * n + 1; ++k) {
@@ -174,7 +174,7 @@ import java.util.LinkedList;
      * @return the number that codes the set of all pick ups
      */
     private long pickUpSetCode() {
-        int n = deliveries.size();
+        int n = deliveries.getSize();
         long code = 0;
         long a = 1;
         for (int k = 0; k < n; ++k) {

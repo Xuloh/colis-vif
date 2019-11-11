@@ -21,7 +21,7 @@ public class Section {
      * @param origin the {@link Node} id of the origin.
      * @param destination the {@link Node} id of the destination.
      */
-    public Section(double length, String roadName, long destination, long origin) {
+    public Section(double length, String roadName, long origin, long destination) {
         // TODO change destination origin to origin destination
         this.length = length;
         this.roadName = roadName;

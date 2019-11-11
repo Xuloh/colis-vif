@@ -23,8 +23,12 @@ public class Vertex implements Comparable<Vertex> {
      * @param nodeId the {@link Node} id corresponding.
      * @param type the type, drop off or pick up.
      * @param duration the time to do the drop off or the pick up.
+     * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is less than 0.
      */
-    public Vertex(long nodeId, boolean type, int duration) {
+    public Vertex(long nodeId, boolean type, int duration) throws IllegalArgumentException {
+        if (duration < 0) {
+            throw new IllegalArgumentException("The duration must be more or equal than 0 seconds, got " + duration);
+        }
         this.nodeId = nodeId;
         this.type = type;
         this.duration = duration;
@@ -69,7 +73,16 @@ public class Vertex implements Comparable<Vertex> {
      * @return <code>true</code> if the {@link Vertex} corresponds to a pick up.
      */
     public boolean isPickUp() {
-        return type;
+        return type == Vertex.PICK_UP;
+    }
+
+    /**
+     * Returns <code>true</code> if the {@link Vertex} corresponds to a drop off.
+     *
+     * @return <code>true</code> if the {@link Vertex} corresponds to a drop off.
+     */
+    public boolean isDropOff() {
+        return type == Vertex.DROP_OFF;
     }
 
     /**

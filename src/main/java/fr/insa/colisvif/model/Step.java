@@ -111,17 +111,17 @@ public class Step {
     }
 
     /**
-     * Add a section to the {@link LinkedList} of {@link Section} of the {@link Step}.
+     * Add a section to the front of the {@link LinkedList} of {@link Section} of the {@link Step}.
      *
      * @param section the {@link Section} to add.
      * @throws IllegalArgumentException if the new {@link Section}'s origin {@link Node} id does not correspond to the lastly added {@link Section}'s destination {@link Node} id.
      */
     public void addSection(Section section) throws IllegalArgumentException {
-        if (sections.size() > 0 && sections.getLast().getDestination() != section.getOrigin()) {
+        if (sections.size() > 0 && sections.getFirst().getDestination() != section.getOrigin()) {
             throw new IllegalArgumentException("The origin of the new Section does not correspond to the last Section in the list. Got "
-                    + section.getOrigin() + " instead of " + sections.getLast().getDestination());
+                    + section.getOrigin() + " instead of " + sections.getFirst().getDestination());
         }
-        sections.addFirst(section);
+        sections.addFirst(section); //TODO @Felix : normal que add first?
     }
 
     /**

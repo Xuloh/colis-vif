@@ -37,30 +37,26 @@ public class DeliveryMapFactory {
      * @throws ParserConfigurationException if a DocumentBuilder
      * cannot be created which satisfies the configuration requested.
      * @throws IdException if the delivery id does not correspond to any existing {@link Node} id.
+     * @throws XMLException if the XML file is not valid.
      */
-    public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws IdException, ParserConfigurationException, SAXException, IOException {
+    public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap) throws XMLException, IdException, ParserConfigurationException, SAXException, IOException {
         int cptId = 0;
-        try {
-            Element root = loadFile(file);
-            DeliveryMap deliveryMap = new DeliveryMap();
-            List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery(root);
-            Pair<Long, Integer> warehouse = readWarehouse(root);
-            for (Quadruplet<Long, Long, Integer, Integer> delivery : deliveryList) {
-                if (cityMap.getMapNode().containsKey(delivery.getFirst()) && cityMap.getMapNode()
-                    .containsKey(delivery.getSecond())) {
-                    deliveryMap.createDelivery(cptId, delivery.getFirst(), delivery.getSecond(),
-                        delivery.getThird(), delivery.getFourth());
-                    cptId++;
-                } else {
-                    throw new IdException(file.getAbsolutePath() + " refers to nodes outside the current city map");
-                }
+        Element root = loadFile(file);
+        DeliveryMap deliveryMap = new DeliveryMap();
+        List<Quadruplet<Long, Long, Integer, Integer>> deliveryList = readDelivery(root);
+        Pair<Long, Integer> warehouse = readWarehouse(root);
+        for (Quadruplet<Long, Long, Integer, Integer> delivery : deliveryList) {
+            if (cityMap.getMapNode().containsKey(delivery.getFirst()) && cityMap.getMapNode()
+                .containsKey(delivery.getSecond())) {
+                deliveryMap.createDelivery(cptId, delivery.getFirst(), delivery.getSecond(),
+                    delivery.getThird(), delivery.getFourth());
+                cptId++;
+            } else {
+                throw new IdException(file.getAbsolutePath() + " refers to nodes outside the current city map");
             }
-            deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
-            return deliveryMap;
-        } catch (XMLException e) {
-            e.printStackTrace();
-            return null;
         }
+        deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
+        return deliveryMap;
     }
 
     /**
