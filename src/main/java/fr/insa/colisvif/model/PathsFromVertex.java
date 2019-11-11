@@ -8,12 +8,12 @@ import java.util.HashMap;
 
     private HashMap<Long, Double> lengths;
 
-    /*package-private*/ PathsFromVertex(){
+    /*package-private*/ PathsFromVertex() {
         prevSections = new HashMap<>();
         lengths = new HashMap<>();
     }
 
-    /*package-private*/ Section getPrevSection(long id){
+    /*package-private*/ Section getPrevSection(long id) {
         return prevSections.get(id);
     }
 
@@ -31,7 +31,7 @@ import java.util.HashMap;
         }
         return -1;
     }
-
+    
     /*package-private*/ void setLength(long id, double length) {
         lengths.put(id, length);
     }
