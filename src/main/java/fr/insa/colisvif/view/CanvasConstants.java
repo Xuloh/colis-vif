@@ -26,17 +26,17 @@ public final class CanvasConstants {
     /**
      * Radius used to render the nodes on the map (in pixels).
      */
-    public static final int DELIVERY_NODE_RADIUS = 7;
+    public static final double DELIVERY_NODE_RADIUS = 7d;
 
     /**
      * Square of the radius used to render the nodes on the map (in pixels)
      */
-    public static final int DELIVERY_NODE_SQUARED_RADIUS = DELIVERY_NODE_RADIUS * DELIVERY_NODE_RADIUS;
+    public static final double DELIVERY_NODE_SQUARED_RADIUS = DELIVERY_NODE_RADIUS * DELIVERY_NODE_RADIUS;
 
     /**
-     * Diameter used to render the nodes on the map (in pixels).
+     * Radius used to render the city map nodes (in pixels)
      */
-    public static final int DELIVERY_NODE_DIAMETER = DELIVERY_NODE_RADIUS * 2;
+    public static final double CITY_MAP_NODE_RADIUS = DELIVERY_NODE_RADIUS / 2d;
 
     /**
      * Opacity used for delivery nodes' colors
@@ -57,6 +57,11 @@ public final class CanvasConstants {
         255,
         CanvasConstants.NODE_OPACITY
     );
+
+    /**
+     * Color used to render the city map nodes
+     */
+    public static final Color CITY_MAP_NODE_COLOR = Color.DARKORANGE;
 
     private CanvasConstants() {
 
