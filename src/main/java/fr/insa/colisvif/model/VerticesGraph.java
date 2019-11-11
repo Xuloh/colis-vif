@@ -54,9 +54,6 @@ import java.util.*;
 
     private int deliveryIdFromIndex(int index) {
         Delivery delivery = deliveries.getDelivery((index - 1) / 2);
-        if (index % 2 == 1) {
-            return delivery.getPickUpDuration();
-        }
         return delivery.getId();
     }
 
@@ -192,7 +189,7 @@ import java.util.*;
     private Step makeStep(int departureIndex, int arrivalIndex, int time) {
         long departureId = idFromIndex(departureIndex);
         long arrivalId = idFromIndex(arrivalIndex);
-        boolean arrivalType = arrivalIndex % 2 == 1;
+        boolean arrivalType = arrivalIndex % 2 == 1 ? Vertex.PICK_UP : Vertex.DROP_OFF;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 

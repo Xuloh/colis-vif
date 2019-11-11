@@ -19,15 +19,8 @@ public class Delivery {
      * @param dropOffNodeId the drop off {@link Node} id of the delivery.
      * @param pickUpDuration the pick up duration of the delivery.
      * @param dropOffDuration the drop off duration of the delivery
-     * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is less than 0.
      */
     public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
-        //TODO @Felix : Est-ce qu'un pickup et dropoff d'un même delivery peuvent être sur un même noeud?
-        if (pickUpNodeId == dropOffNodeId) {
-            throw new IllegalArgumentException("The drop off and the pick up must correspond to two different Nodes, got "
-                    + pickUpNodeId + " (pick up node ID) and "
-                    + dropOffNodeId + " (drop off node ID) and ");
-        }
 
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
@@ -121,7 +114,7 @@ public class Delivery {
      */
     @Override
     public String toString() {
-        return "id : " + id + "pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
+        return "id : " + id + " | pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
                 + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
     }
 
