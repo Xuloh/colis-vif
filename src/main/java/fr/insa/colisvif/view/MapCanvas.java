@@ -344,28 +344,28 @@ public class MapCanvas extends BorderPane {
         return this.deliveryMap;
     }
 
-    private void drawPointLatLng(double lat, double lng, Paint paint, double radius) {
-        this.drawPoint(this.lngToPx(lng), this.latToPx(lat), paint, radius);
+    private void drawCircleLatLng(double lat, double lng, Paint paint, double radius) {
+        this.drawCircle(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawPoint(double x, double y, Paint paint, double radius) {
+    private void drawCircle(double x, double y, Paint paint, double radius) {
         Paint prevFill = this.context.getFill();
         this.context.setFill(paint);
         this.context.fillOval(
-            x - radius / 2d,
-            y - radius / 2d,
-            radius,
-            radius
+            x - radius,
+            y - radius,
+            radius * 2d,
+            radius * 2d
         );
         this.context.setFill(prevFill);
 
         Paint prevStroke = this.context.getStroke();
         this.context.setStroke(Color.BLACK);
         this.context.strokeOval(
-            x - radius / 2d,
-            y - radius / 2d,
-            radius,
-            radius
+            x - radius,
+            y - radius,
+            radius * 2d,
+            radius * 2d
         );
         this.context.setStroke(prevStroke);
     }
@@ -480,11 +480,11 @@ public class MapCanvas extends BorderPane {
                 );
                 break;
             case DROP_OFF:
-                drawPoint(
+                drawCircle(
                     this.x,
                     this.y,
                     this.paint,
-                    CanvasConstants.DELIVERY_NODE_DIAMETER
+                    CanvasConstants.DELIVERY_NODE_RADIUS
                 );
                 break;
             case WAREHOUSE:
