@@ -280,29 +280,21 @@ public class CityMap {
      * the best path.
      */
     public Round shortestRound(DeliveryMap deliveries) {
-        var debut = System.nanoTime();
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        var fin = System.nanoTime();
-        System.out.print("Dijkstra time : ");
-        System.out.println((fin - debut) * 0.000000001);
         VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
         return verticesGraph.shortestRound();
     }
 
     public Round naiveRound(DeliveryMap deliveries) {
-        var debut = System.nanoTime();
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        var fin = System.nanoTime();
-        System.out.print("Dijkstra time : ");
-        System.out.println((fin - debut) * 0.000000001);
         VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
         return verticesGraph.naiveRound();
     }
