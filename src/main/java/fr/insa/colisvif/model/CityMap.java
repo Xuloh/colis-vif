@@ -255,6 +255,7 @@ public class CityMap {
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);
+        pathsFromStart.setPrev(start, null);
 
         Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> priorityQueue = new PriorityQueue<>(cmp);
@@ -263,17 +264,17 @@ public class CityMap {
         while (!priorityQueue.isEmpty()) {
             Long node = priorityQueue.poll();
             double length = pathsFromStart.getLength(node);
-            for (Section section : getMapNode().get(node).getSuccessors()) {
-                double destinationLength = pathsFromStart.getLength(section.getDestination());
-                if (destinationLength == -1 || length + section.getLength() < destinationLength) {
-                    pathsFromStart.setLength(section.getDestination(), length + section.getLength());
-                    pathsFromStart.setPrev(node, section);
-                    priorityQueue.remove(section.getDestination());
-                    priorityQueue.add(section.getDestination());
+            for(Section section : getMapNode().get(node).getSuccessors()){
+                long next = section.getDestination();
+                double destinationLength = pathsFromStart.getLength(next);
+                if(destinationLength == -1 || length + section.getLength() < destinationLength){
+                    pathsFromStart.setLength(next,length + section.getLength());
+                    pathsFromStart.setPrev(next, section);
+                    priorityQueue.remove(next);
+                    priorityQueue.add(next);
                 }
             }
         }
-
         pathsFromVertices.put(start, pathsFromStart);
     }
 
@@ -286,12 +287,16 @@ public class CityMap {
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries) {
+    public Round shortestRound(DeliveryMap deliveries){
+        var debut = System.nanoTime();
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
+        var fin = System.nanoTime();
+        System.out.print("Dijkstra time : ");
+        System.out.println((fin - debut)*0.000000001);
         VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
         return verticesGraph.shortestRound();
     }

@@ -205,8 +205,9 @@ import java.util.LinkedList;
             return step;
         }
         Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
-        while (prevSection.getOrigin() != arrivalId) {
+        while (prevSection != null) {
             step.addSection(prevSection);
+            prevSection = pathsFromVertices.get(departureId).getPrevSection(prevSection.getOrigin());
         }
         double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
@@ -218,7 +219,13 @@ import java.util.LinkedList;
      */
 
     /*package-private*/ Round shortestRound() {
+        var debut = System.nanoTime();
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
+        var fin = System.nanoTime();
+        System.out.print("TSP time : ");
+        System.out.println((fin - debut)*0.000000001);
+        System.out.print("TSP length : ");
+        System.out.println(subResult.getLength());
         ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
         Round round = new Round(deliveries);
         int time = round.getStartDate();

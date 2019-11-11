@@ -8,9 +8,12 @@ import java.util.HashMap;
 
     private HashMap<Long, Double> lengths;
 
-    //No need to make a special constructor
+    /*package-private*/ PathsFromVertex(){
+        prevSections = new HashMap<>();
+        lengths = new HashMap<>();
+    }
 
-    /*package-private*/ Section getPrevSection(long id) {
+    /*package-private*/ Section getPrevSection(long id){
         return prevSections.get(id);
     }
 
@@ -22,8 +25,11 @@ import java.util.HashMap;
         prevSections.put(id, section);
     }
 
-    /*package-private*/ Double getLength(long id) {
-        return lengths.get(id);
+    /*package-private*/ double getLength(long id) {
+        if (lengths.containsKey(id)) {
+            return lengths.get(id);
+        }
+        return -1;
     }
 
     /*package-private*/ void setLength(long id, double length) {
