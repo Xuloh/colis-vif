@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /*package-private*/ class VerticesGraph {
+
     /** The speed of the cyclist in meters per second */
     private static final int CYCLIST_SPEED = (int) (15. / 3.6);
 
@@ -23,9 +24,9 @@ import java.util.LinkedList;
     /** We will use dynamic programing, this is where we store the sub results */
     private HashMap<Long, SubResult> subResults;
 
-    private int deliveryIdFromIndex(int index){
+    private int deliveryIdFromIndex(int index) {
         Delivery delivery = deliveries.getDelivery((index - 1) / 2);
-        if(index%2 == 1){
+        if (index % 2 == 1) {
             return delivery.getPickUpDuration();
         }
         return delivery.getId();
@@ -199,13 +200,14 @@ import java.util.LinkedList;
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 
         Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex));
-        if(departureId == arrivalId){
+        if (departureId == arrivalId) {
             step.setArrivalDate(time);
             return step;
         }
         Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
-        while (prevSection.getOrigin() != arrivalId) {
+        while (prevSection != null) {
             step.addSection(prevSection);
+            prevSection = pathsFromVertices.get(departureId).getPrevSection(prevSection.getOrigin());
         }
         double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
@@ -217,7 +219,13 @@ import java.util.LinkedList;
      */
 
     /*package-private*/ Round shortestRound() {
+        var debut = System.nanoTime();
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
+        var fin = System.nanoTime();
+        System.out.print("TSP time : ");
+        System.out.println((fin - debut)*0.000000001);
+        System.out.print("TSP length : ");
+        System.out.println(subResult.getLength());
         ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
         Round round = new Round(deliveries);
         int time = round.getStartDate();
