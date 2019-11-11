@@ -17,7 +17,8 @@ import org.apache.logging.log4j.Logger;
  * to render instances of {@link Vertex} before the calculated itinerary
  * @see TableView
  */
-// todo : une méthode
+/* todo : permettre de demander une durée de pickup / dropoff (renvoyer un String) @Sophie */
+
 public class TextualView extends Pane {
 
     private static final Logger LOGGER = LogManager.getLogger(TextualView.class);
