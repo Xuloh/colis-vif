@@ -1,7 +1,6 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;

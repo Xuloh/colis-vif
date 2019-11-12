@@ -2,6 +2,7 @@ package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.XMLException;
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,9 +36,17 @@ public class InitialState implements State {
     public void loadCityMap(Controller controller, UIController uiController, File file) {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            controller.setCurrentState(CityMapLoadedState.class);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
-        controller.setCurrentState(CityMapLoadedState.class);
+    }
+
+    @Override
+    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
+        uiController.printError("Chargez un plan de la ville avant de charger un plan de livraison !");
     }
 }
