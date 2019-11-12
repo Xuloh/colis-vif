@@ -68,6 +68,7 @@ public class ItineraryCalculatedState implements State {
         }
         uiController.clearCanvas();
         uiController.drawCanvas();
+        uiController.updateTable(false);
         controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 

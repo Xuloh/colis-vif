@@ -203,8 +203,13 @@ public class UIController {
         this.statusBar.setError(text);
     }
 
-    public void updateTable() {
-        this.printStepView();
-        this.rightPane.setCenter(this.stepView);
+    public void updateTable(boolean stepIsActive) {
+        if(stepIsActive){
+            this.printStepView();
+            this.rightPane.setCenter(this.stepView);
+        } else {
+            this.printVertexView();
+            this.rightPane.setCenter(this.vertexView);
+        }
     }
 }

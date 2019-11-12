@@ -67,6 +67,7 @@ public class DeliveryMapLoadedState implements State {
         }
         uiController.clearCanvas();
         uiController.drawCanvas();
+        uiController.updateTable(false);
         controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 
@@ -78,7 +79,7 @@ public class DeliveryMapLoadedState implements State {
     @Override
     public void calculateItinerary(Controller controller, UIController uiController) {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
-        uiController.updateTable();
+        uiController.updateTable(true);
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }

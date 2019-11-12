@@ -65,7 +65,7 @@ public class CityMapLoadedState implements State {
         }
         uiController.clearCanvas();
         uiController.drawCanvas();
-        uiController.printVertexView();
+        uiController.updateTable(false);
         controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 }
