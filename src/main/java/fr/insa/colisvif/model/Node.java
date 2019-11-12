@@ -9,6 +9,7 @@ import java.util.List;
  * A class representing a Node, formed with an id, a longitude and latitude in degrees, and a {@link List} of successors ({@link Section}).
  */
 public class Node {
+
     private long id;
 
     private double longitude;
@@ -86,6 +87,14 @@ public class Node {
         } else {
             throw new IdException("The origin of the new section does not correspond to the origin of this Node. Got " + section.getOrigin() + " instead of " + this.id);
         }
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     /**
