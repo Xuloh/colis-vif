@@ -4,7 +4,9 @@ import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -199,5 +201,9 @@ public class UIController {
 
     /*package-private*/ DeliveryMap getDeliveryMap() {
         return this.controller.getDeliveryMap();
+    }
+
+    /*package-private*/ ObservableList<Vertex> getVertexList() {
+        return this.controller.getVertexList();
     }
 }
