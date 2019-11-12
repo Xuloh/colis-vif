@@ -38,10 +38,10 @@ public class ItineraryCalculatedState implements State {
     public void loadCityMap(Controller controller, UIController uiController, File file) {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            controller.setCurrentState(CityMapLoadedState.class);
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        controller.setCurrentState(CityMapLoadedState.class);
     }
 
     /**
@@ -57,10 +57,10 @@ public class ItineraryCalculatedState implements State {
     public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setCurrentState(DeliveryMapLoadedState.class);
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 
     /**

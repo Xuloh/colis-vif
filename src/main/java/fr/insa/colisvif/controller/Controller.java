@@ -76,8 +76,12 @@ public class Controller {
      * @param file the {@link File} to load a {@link CityMap} from
      */
     public void loadCityMap(File file) {
-        LOGGER.info("Loading new CityMap from : " + file.getAbsolutePath());
-        this.currentState.loadCityMap(this, uiController, file);
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Loading new CityMap from : " + file.getAbsolutePath());
+            this.currentState.loadCityMap(this, uiController, file);
+        }
     }
 
     /**
@@ -88,8 +92,12 @@ public class Controller {
      * @param file the {@link File} to load a {@link DeliveryMap} from
      */
     public void loadDeliveryMap(File file) {
-        LOGGER.info("Loading new DeliveryMap from : " + file.getAbsolutePath());
-        this.currentState.loadDeliveryMap(this, uiController, file, this.cityMap);
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Loading new DeliveryMap from : " + file.getAbsolutePath());
+            this.currentState.loadDeliveryMap(this, uiController, file, this.cityMap);
+        }
     }
 
     /**
