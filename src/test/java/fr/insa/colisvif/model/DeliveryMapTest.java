@@ -93,7 +93,7 @@ public class DeliveryMapTest {
     public void getStartDateInSeconds() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createWarehouse(101, 10);
-        assertEquals(10, deliveryMap.getStartDateInSeconds());
+        assertEquals(10, deliveryMap.getStartDate());
 
     }
 
