@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,6 +181,7 @@ public class Controller {
         this.deliveryMap = deliveryMap;
         this.createVertexList();
         this.uiController.updateDeliveryMap();
+        this.setRound(null);
     }
 
     /**
@@ -219,7 +221,11 @@ public class Controller {
      * @return the associated {@link Step} {@link List}
      */
     public List<Step> getStepList() {
-        return this.round.getSteps();
+        if (round != null) {
+            return this.round.getSteps();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public void computeRound() {
@@ -258,6 +264,7 @@ public class Controller {
         this.vertexList = FXCollections.observableArrayList();
 
         if (this.deliveryMap != null) {
+            LOGGER.trace("Creating vertex list : {}", this.deliveryMap.getDeliveryList());
             for (Delivery d : this.deliveryMap.getDeliveryList()) {
                 vertexList.add(d.getPickUp());
                 vertexList.add(d.getDropOff());

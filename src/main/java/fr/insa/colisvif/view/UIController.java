@@ -78,9 +78,9 @@ public class UIController {
 
     private MapCanvas mapCanvas;
 
-    private TextualView vertexView;
+    private VertexView vertexView;
 
-    private TextualView stepView;
+    private StepView stepView;
 
     private StatusBar statusBar;
 
@@ -95,8 +95,8 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas(this, true);
-        this.vertexView = new TextualView(false);
-        this.stepView = new TextualView(true);
+        this.vertexView = new VertexView();
+        this.stepView = new StepView();
         this.statusBar = new StatusBar();
     }
 
@@ -163,10 +163,10 @@ public class UIController {
     }
 
     /**
-     * Returns the associated {@link TextualView}
-     * @return the associated {@link TextualView}
+     * Returns the associated {@link VertexView}
+     * @return the associated {@link VertexView}
      */
-    public TextualView getVertexView() {
+    public VertexView getVertexView() {
         return this.vertexView;
     }
 
@@ -180,19 +180,23 @@ public class UIController {
 
     public void updateCityMap() {
         this.mapCanvas.updateCityMap();
-        this.mapCanvas.redraw();
     }
 
     public void updateDeliveryMap() {
-        this.vertexView.printVertices(controller.getVertexList());
         this.rightPane.setCenter(this.vertexView);
         this.mapCanvas.updateDeliveryMap();
-        this.mapCanvas.redraw();
     }
 
     public void updateRound() {
-        this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
-        this.rightPane.setCenter(this.stepView);
+        if (this.controller.getRound() == null) {
+            this.stepView.clearSteps();
+            this.vertexView.printVertices(controller.getVertexList());
+            this.rightPane.setCenter(this.vertexView);
+        } else {
+            this.vertexView.clearVertices();
+            this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
+            this.rightPane.setCenter(this.stepView);
+        }
         this.mapCanvas.redraw();
     }
 
