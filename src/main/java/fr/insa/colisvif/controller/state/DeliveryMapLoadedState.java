@@ -34,16 +34,11 @@ public class DeliveryMapLoadedState implements State {
      */
     @Override
     public void loadCityMap(Controller controller, UIController uiController, File file) {
-        uiController.clearCanvas();
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-
-        uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawCanvas();
         controller.setCurrentState(CityMapLoadedState.class);
     }
 
@@ -60,13 +55,9 @@ public class DeliveryMapLoadedState implements State {
     public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            //mc.writeDeliveries(c.getDeliveryMap());
-            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        uiController.clearCanvas();
-        uiController.drawCanvas();
         controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 
@@ -78,7 +69,7 @@ public class DeliveryMapLoadedState implements State {
     @Override
     public void calculateItinerary(Controller controller, UIController uiController) {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
-        uiController.updateTable();
+        uiController.updateRound();
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }
