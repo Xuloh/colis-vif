@@ -36,12 +36,9 @@ public class CityMapLoadedState implements State {
     public void loadCityMap(Controller controller, UIController uiController, File file) {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawMapCanvas();
         controller.setCurrentState(CityMapLoadedState.class);
     }
 
@@ -58,12 +55,9 @@ public class CityMapLoadedState implements State {
     public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        uiController.drawMapCanvas();
-        uiController.printVertexView();
         controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 }
