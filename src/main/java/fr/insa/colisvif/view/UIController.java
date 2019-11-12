@@ -1,6 +1,8 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.Step;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -72,7 +74,9 @@ public class UIController {
 
     private MapCanvas mapCanvas;
 
-    private TextualView textualView;
+    private TextualView vertexView;
+
+    private TextualView stepView;
 
     private StatusBar statusBar;
 
@@ -87,7 +91,8 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas();
-        this.textualView = new TextualView();
+        this.vertexView = new TextualView(false);
+        this.stepView = new TextualView(true);
         this.statusBar = new StatusBar();
     }
 
@@ -126,13 +131,19 @@ public class UIController {
             this.controller.deleteDelivery();
         });
         this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.editSequenceDelivery();
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.editSequenceDelivery(step);
+            }
         });
         this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.editLocationDelivery();
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.editLocationDelivery(step);
+            }
         });
 
-        this.rightPane.setCenter(this.textualView);
+        this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
         this.mainPane.setBottom(this.statusBar);
 
@@ -142,8 +153,15 @@ public class UIController {
     /**
      * Renders the associated {@link TextualView}
      */
-    public void printTextualView() {
-        this.textualView.printVertices(controller.getVertexList());
+    public void printVertexView() {
+        this.vertexView.printVertices(controller.getVertexList());
+    }
+
+    /**
+     * Renders the associated {@link TextualView}
+     */
+    private void printStepView() {
+        this.stepView.printSteps(FXCollections.observableArrayList( controller.getStepList()));
     }
 
     /**
@@ -173,8 +191,8 @@ public class UIController {
      * Returns the associated {@link TextualView}
      * @return the associated {@link TextualView}
      */
-    public TextualView getTextualView() {
-        return this.textualView;
+    public TextualView getVertexView() {
+        return this.vertexView;
     }
 
     public void printStatus(String text) {
@@ -183,5 +201,10 @@ public class UIController {
 
     public void printError(String text) {
         this.statusBar.setError(text);
+    }
+
+    public void updateTable() {
+        this.printStepView();
+        this.rightPane.setCenter(this.stepView);
     }
 }

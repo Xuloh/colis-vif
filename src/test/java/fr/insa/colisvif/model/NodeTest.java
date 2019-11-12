@@ -88,8 +88,8 @@ public class NodeTest {
         testNode.addToSuccessors(section2);
 
         List<Section> successors = testNode.getSuccessors();
-        assertEquals(successors.get(0), section1);
-        assertEquals(successors.get(1), section2);
+        assertEquals(section1, successors.get(0));
+        assertEquals(section2, successors.get(1));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class NodeTest {
     public void equals3() {
         Node node1 = new Node(1, 10, 10);
 
-        assertNotEquals(node1, 1);
+        assertNotEquals(1, node1);
     }
 
     @Test

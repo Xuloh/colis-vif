@@ -1,6 +1,10 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.Delivery;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -29,5 +33,20 @@ public class SuppressionModeState implements State {
     @Override
     public void getBackToPreviousState(Controller controller) {
         controller.setCurrentState(ItineraryCalculatedState.class);
+    }
+
+    @Override
+    public void leftClick(Controller controller, UIController uiController) {
+        /*Step stepToSuppress = uiController.getMapCanvas().getStepFromCoordinates(); n'existe pas, sera
+         suivi de tests pour savoir si on a bien un bon vertex de cliqué*/
+        Step stepToSuppress = null; // pour pas casser le build
+        Step otherStep;
+        Delivery deliveryToSuppress = controller.getDeliveryMap().getDeliveryPerId(stepToSuppress.getDeliveryID());
+        if (stepToSuppress.isPickUp()) {
+            otherStep = new Step(deliveryToSuppress.getDropOff(), deliveryToSuppress.getId());
+        } else {
+            otherStep = new Step(deliveryToSuppress.getPickUp(), deliveryToSuppress.getId());
+        }
+        controller.getRound().removeDelivery(stepToSuppress, otherStep);
     }
 }

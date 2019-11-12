@@ -187,8 +187,20 @@ public class CityMap {
      * @param start  the starting point.
      * @param finish the ending point.
      * @return the minimum length between two coordinates.
+     * @throws IllegalArgumentException if the parameter start and / or finish does not exist in the map of {@link Node},
+     * or if the shortestRound has not been performed yet.
      */
-    public double getLength(long start, long finish) {
+    public double getLength(long start, long finish) throws IllegalArgumentException {
+        if (!mapNode.containsKey(start)) {
+            throw new IllegalArgumentException("The Node " + start + " does not exist in the map of Nodes");
+        }
+        if (!mapNode.containsKey(finish)) {
+            throw new IllegalArgumentException("The Node " + finish + " does not exist in the map of Nodes");
+        }
+        if (!pathsFromVertices.containsKey(start)) {
+            throw new IllegalArgumentException("The shortestRound has not been made on key Nodes (Key : " + start + ")");
+        }
+
         return pathsFromVertices.get(start).getLength(finish);
     }
 
@@ -254,7 +266,9 @@ public class CityMap {
      * the {@link Node} stored in the map of {@link Node}.
      *
      * @param start the coordinate of the starting point.
+     * @throws IllegalArgumentException if the paramater start does not exist in the map of {@link Node}.
      */
+
     /*package-private*/ void dijkstra(long start) throws IllegalArgumentException {
         if (!mapNode.containsKey(start)){
             throw new IllegalArgumentException("The stating node of Dijkstra's algorithm does not belong to the map");

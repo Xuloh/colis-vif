@@ -69,14 +69,14 @@ public class StepTest {
     public void getDuration1() {
         int expected = 100;
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected), 1);
-        assertEquals(step.getDuration(), expected);
+        assertEquals(expected, step.getDuration());
     }
 
     @Test
     public void getDuration2() {
         int expected = 100;
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, expected + 1), 1);
-        assertNotEquals(step.getDuration(), expected);
+        assertNotEquals(expected, step.getDuration());
     }
 
     @Test
@@ -110,13 +110,13 @@ public class StepTest {
     @Test
     public void getDeliveryID1() {
         int expected = 1;
-        assertEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected).getDeliveryID(), expected);
+        assertEquals(expected, new Step(new Vertex(1, Vertex.PICK_UP, 10), expected).getDeliveryID());
     }
 
     @Test
     public void getDeliveryID2() {
         int expected = 1;
-        assertNotEquals(new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1).getDeliveryID(), expected);
+        assertNotEquals(expected, new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1).getDeliveryID());
     }
 
     @Test
@@ -166,6 +166,18 @@ public class StepTest {
     @Test
     public void equals7() {
         Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
-        assertNotEquals(step1, 1);
+        assertNotEquals(1, step1);
+    }
+
+    @Test
+    public void getType() {
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1);
+        assertEquals(Vertex.PICK_UP, step1.getType());
+
+        Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 10), 1);
+        assertEquals(Vertex.DROP_OFF, step2.getType());
+
+        assertNotEquals(Vertex.PICK_UP, step2.getType());
+        assertNotEquals(Vertex.DROP_OFF, step1.getType());
     }
 }

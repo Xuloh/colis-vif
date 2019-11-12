@@ -15,7 +15,7 @@ public class Step {
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
-    private int interalStart;
+    private int intervalStart;
 
     private Vertex arrival;
 
@@ -36,11 +36,20 @@ public class Step {
     public Step(Vertex vertex, int deliveryID, int arrivalDate) {
         sections = new LinkedList<>();
         arrival = vertex;
-        this.type = vertex.isPickUp();
+        this.type = vertex.getType();
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
         this.arrivalDate = arrivalDate;
-        interalStart = ModelConstants.DELTA * (arrivalDate / ModelConstants.DELTA);
+        intervalStart = ModelConstants.DELTA * (arrivalDate / ModelConstants.DELTA);
+    }
+
+    /**
+     * Returns the type of the Step.
+     *
+     * @return the type of the Step.
+     */
+    public boolean getType() {
+        return this.type;
     }
 
     /**
@@ -52,8 +61,8 @@ public class Step {
         return arrivalDate;
     }
 
-    public int getInteralStart() {
-        return interalStart;
+    public int getIntervalStart() {
+        return intervalStart;
     }
 
     /**
@@ -147,7 +156,7 @@ public class Step {
             throw new IllegalArgumentException("The origin of the new Section does not correspond to the last Section in the list. Got "
                     + section.getOrigin() + " instead of " + sections.getFirst().getDestination());
         }
-        sections.addFirst(section); //TODO @Felix : normal que add first? - oui c'est normal
+        sections.addFirst(section);
     }
 
     /**
@@ -160,6 +169,8 @@ public class Step {
      * @return <code>true</code> if o is a {@link Step} whose values are
      * "equal" to those of this {@link Step}
      */
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -173,5 +184,20 @@ public class Step {
                 && Objects.equals(arrival, step.arrival)
                 && arrivalDate == step.arrivalDate
                 && Objects.equals(sections, step.sections);
+    }
+
+    /**
+     * Returns a {@link String} representation of this {@link Step}.
+     * @return a {@link String} representation of this {@link Step}.
+     */
+    @Override
+    public String toString() {
+        return "Step{"
+                + "sections=" + sections
+                + ", deliveryID=" + deliveryID
+                + ", type=" + type
+                + ", arrivalDate=" + arrivalDate
+                + ", duration=" + duration
+                + '}';
     }
 }

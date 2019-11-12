@@ -72,12 +72,17 @@ public class Section {
 
     /**
      * Returns a {@link String} representation of this {@link Section}.
+     *
      * @return a {@link String} representation of this {@link Section}.
      */
     @Override
     public String toString() {
-        String result = "Length : " + length + " | Road Name : " + roadName + " | Destination : " + destination + " | Origin : " + origin + "\n";
-        return result;
+        return "Section{"
+                + "length=" + length
+                + ", roadName='" + roadName + '\''
+                + ", origin=" + origin
+                + ", destination=" + destination
+                + '}';
     }
 
     /**
