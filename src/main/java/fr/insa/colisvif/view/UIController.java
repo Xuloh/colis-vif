@@ -1,6 +1,8 @@
 package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Step;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -90,7 +92,7 @@ public class UIController {
     public UIController(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
-        this.mapCanvas = new MapCanvas();
+        this.mapCanvas = new MapCanvas(this, true);
         this.vertexView = new TextualView(false);
         this.stepView = new TextualView(true);
         this.statusBar = new StatusBar();
@@ -151,27 +153,6 @@ public class UIController {
     }
 
     /**
-     * Renders the associated {@link TextualView}
-     */
-    public void printVertexView() {
-        this.vertexView.printVertices(controller.getVertexList());
-    }
-
-    /**
-     * Renders the associated {@link TextualView}
-     */
-    private void printStepView() {
-        this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
-    }
-
-    /**
-     * Renders the associated {@link MapCanvas}.
-     */
-    public void drawMapCanvas() {
-        this.mapCanvas.redraw();
-    }
-
-    /**
      * Returns the associated {@link MapCanvas}
      * @return the associated {@link MapCanvas}
      */
@@ -195,8 +176,28 @@ public class UIController {
         this.statusBar.setError(text);
     }
 
-    public void updateTable() {
-        this.printStepView();
+    public void updateCityMap() {
+        this.mapCanvas.updateCityMap();
+        this.mapCanvas.redraw();
+    }
+
+    public void updateDeliveryMap() {
+        this.vertexView.printVertices(controller.getVertexList());
+        this.mapCanvas.updateDeliveryMap();
+        this.mapCanvas.redraw();
+    }
+
+    public void updateRound() {
+        this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
         this.rightPane.setCenter(this.stepView);
+        this.mapCanvas.redraw();
+    }
+
+    /*package-private*/ CityMap getCityMap() {
+        return this.controller.getCityMap();
+    }
+
+    /*package-private*/ DeliveryMap getDeliveryMap() {
+        return this.controller.getDeliveryMap();
     }
 }
