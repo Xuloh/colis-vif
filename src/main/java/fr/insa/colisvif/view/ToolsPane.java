@@ -6,6 +6,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 
+import java.security.InvalidParameterException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 /**
  * A simple {@link FlowPane} wrapping a few widgets
  * to control a {@link MapCanvas}.
@@ -22,6 +27,8 @@ public class ToolsPane extends FlowPane {
     private Button zoomOutButton;
 
     private Slider zoomSlider;
+
+    private Map<String, Button> buttons;
 
     /**
      * Creates a new {@link ToolsPane}
@@ -42,6 +49,11 @@ public class ToolsPane extends FlowPane {
             this.zoomOutButton,
             this.zoomSlider
         );
+
+        this.buttons = new HashMap<>();
+        this.buttons.put("auto-zoom", this.autoZoomButton);
+        this.buttons.put("zoom-in", this.zoomInButton);
+        this.buttons.put("zoom-out", this.zoomOutButton);
     }
 
     private void createAutoZoomButton() {
@@ -103,5 +115,22 @@ public class ToolsPane extends FlowPane {
      */
     public Slider getZoomSlider() {
         return this.zoomSlider;
+    }
+
+    public Button createButton(String name, String text) {
+        if (this.buttons.containsKey(name)) {
+            throw new InvalidParameterException("Button with name " + name + " already exists");
+        }
+        Button button = new Button(text);
+        this.buttons.put(name, button);
+        this.getChildren().add(button);
+        return button;
+    }
+
+    public Button getButton(String name) {
+        if (!this.buttons.containsKey(name)) {
+            throw new NoSuchElementException("No button named " + name + " ToolsPane");
+        }
+        return this.buttons.get(name);
     }
 }
