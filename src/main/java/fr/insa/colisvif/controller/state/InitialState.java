@@ -40,7 +40,7 @@ public class InitialState implements State {
             LOGGER.error(e.getMessage(), e);
         }
         uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawCanvas();
+        uiController.drawMapCanvas();
         controller.setCurrentState(CityMapLoadedState.class);
     }
 }

@@ -161,22 +161,14 @@ public class UIController {
      * Renders the associated {@link TextualView}
      */
     private void printStepView() {
-        this.stepView.printSteps(FXCollections.observableArrayList( controller.getStepList()));
+        this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
     }
 
     /**
-     * Clears the associated {@link MapCanvas}.
+     * Renders the associated {@link MapCanvas}.
      */
-    public void clearCanvas() {
-        this.mapCanvas.clearCanvas();
-    }
-
-    /**
-     * Renders the associated {@link MapCanvas}
-     */
-    public void drawCanvas() {
-        this.mapCanvas.drawCityMap();
-        this.mapCanvas.drawDeliveryMap();
+    public void drawMapCanvas() {
+        this.mapCanvas.redraw();
     }
 
     /**
