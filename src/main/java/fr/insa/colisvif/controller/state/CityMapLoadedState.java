@@ -60,4 +60,10 @@ public class CityMapLoadedState implements State {
             LOGGER.error(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void calculateItinerary(Controller controller, UIController uiController) {
+        uiController.printError("Ouvrez d'abord un plan de livraison !");
+    }
+
 }
