@@ -50,9 +50,7 @@ public class MapCanvas extends BorderPane {
 
     private static final Logger LOGGER = LogManager.getLogger(MapCanvas.class);
 
-    private CityMap cityMap;
-
-    private DeliveryMap deliveryMap;
+    private UIController uiController;
 
     private Canvas canvas;
 
@@ -79,16 +77,6 @@ public class MapCanvas extends BorderPane {
     private boolean showCityMapNodesOnHover;
 
     /**
-     * Creates a new {@link MapCanvas} with a {@link ToolsPane}.
-     * Equivalent to calling {@link MapCanvas#MapCanvas(boolean)}
-     * with <code>true</code>.
-     * @see ToolsPane
-     */
-    public MapCanvas() {
-        this(true);
-    }
-
-    /**
      * Creates a new {@link MapCanvas}.
      * Optionaly adds a {@link ToolsPane} depending on the value of
      * <code>useTools</code>.
@@ -98,9 +86,10 @@ public class MapCanvas extends BorderPane {
      *
      * @see ToolsPane
      */
-    public MapCanvas(boolean useTools) {
+    public MapCanvas(UIController uiController, boolean useTools) {
         super();
 
+        this.uiController = uiController;
         this.scale = new SimpleDoubleProperty();
         this.baseZoom = 1d;
         this.originX = 0d;
@@ -157,80 +146,6 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
-     * Clears the {@link Canvas}
-     */
-    public void clearCanvas() {
-        LOGGER.debug("Clearing canvas");
-        this.context.clearRect(
-            0,
-            0,
-            this.canvas.getWidth(),
-            this.canvas.getHeight()
-        );
-    }
-
-    /**
-     * Renders the {@link CityMap} on the {@link Canvas}.
-     * If no {@link CityMap} has been specified with
-     * {@link #setCityMap(CityMap)}, does nothing.
-     *
-     * @see #setCityMap(CityMap)
-     */
-    public void drawCityMap() {
-        LOGGER.debug("Rendering CityMap");
-
-        if (this.cityMap == null) {
-            LOGGER.warn("Tried to draw CityMap but CityMap is null");
-            return;
-        }
-
-        Map<Long, Node> nodes = this.cityMap.getMapNode();
-
-        for (Section section : this.mapSections) {
-            Node origin = nodes.get(section.getOrigin());
-            Node destination = nodes.get(section.getDestination());
-            this.drawLineLatLng(
-                origin.getLatitude(),
-                origin.getLongitude(),
-                destination.getLatitude(),
-                destination.getLongitude(),
-                CanvasConstants.SECTION_COLOR
-            );
-        }
-    }
-
-    /**
-     * Renders the {@link DeliveryMap} on the {@link Canvas}.
-     * If no {@link DeliveryMap} has been specified with
-     * {@link #setDeliveryMap(DeliveryMap)}, does nothing.
-     *
-     * @see #setDeliveryMap(DeliveryMap)
-     */
-    public void drawDeliveryMap() {
-        LOGGER.debug("Rendering DeliveryMap");
-
-        if (this.deliveryMap == null) {
-            LOGGER.warn("Tried to draw DeliveryMap but DeliveryMap is null");
-            return;
-        }
-
-        for (CanvasNode canvasNode : this.deliveryCanvasNodes) {
-            canvasNode.updateCoords();
-            canvasNode.draw();
-        }
-    }
-
-    /**
-     * Renders the nodes hovered by the mouse.
-     */
-    public void drawCityMapNodesOverlay() {
-        for (CanvasNode canvasNode : this.cityMapCanvasNodes) {
-            canvasNode.updateCoords();
-            canvasNode.draw();
-        }
-    }
-
-    /**
      * Changes the mode to show city map nodes when the mouse hovers them.
      * @param showCityMapNodesOnHover true to activate the mode, false to deactivate
      */
@@ -242,15 +157,17 @@ public class MapCanvas extends BorderPane {
      * Assigns the given {@link CityMap} to this {@link MapCanvas}.
      * If <code>null</code> is passed, the {@link MapCanvas}
      * will stop rendering a {@link CityMap}.
-     *
-     * @param cityMap The {@link CityMap} to render on this {@link MapCanvas}
      */
-    public void setCityMap(CityMap cityMap) {
-        this.cityMap = cityMap;
+    //TODO javadoc
+    public void updateCityMap() {
+        LOGGER.debug("Updated CityMap data");
+
         this.computeBaseZoom();
 
-        if (this.cityMap != null) {
-            this.mapSections = this.cityMap
+        final CityMap CITY_MAP = this.uiController.getCityMap();
+
+        if (CITY_MAP != null) {
+            this.mapSections = CITY_MAP
                 .getMapSection()
                 .values()
                 .stream()
@@ -259,7 +176,7 @@ public class MapCanvas extends BorderPane {
                     return acc;
                 });
 
-            this.cityMapCanvasNodes = this.cityMap
+            this.cityMapCanvasNodes = CITY_MAP
                 .getMapNode()
                 .values()
                 .stream()
@@ -274,31 +191,26 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
-     * Returns the {@link CityMap} assigned to this {@link MapCanvas}
-     * @return the {@link CityMap} assigned to this {@link MapCanvas}
-     */
-    public CityMap getCityMap() {
-        return this.cityMap;
-    }
-
-    /**
      * Assigns the given {@link DeliveryMap} to this {@link MapCanvas}.
      * If <code>null</code> is passed, the {@link MapCanvas}
      * will stop rendering a {@link DeliveryMap}.
-     *
-     * @param deliveryMap The {@link DeliveryMap} to render on this {@link MapCanvas}
      */
-    public void setDeliveryMap(DeliveryMap deliveryMap) {
-        this.deliveryMap = deliveryMap;
+    //TODO javadoc
+    public void updateDeliveryMap() {
+        LOGGER.debug("Updated DeliveryMap data");
 
-        if (this.deliveryMap != null) {
+        //TODO générer légende dans une map de vertex/image
+
+        final DeliveryMap DELIVERY_MAP = this.uiController.getDeliveryMap();
+
+        if (DELIVERY_MAP != null) {
             ColorGenerator colorGenerator = new ColorGenerator(
-                this.deliveryMap.getSize(),
+                DELIVERY_MAP.getSize(),
                 CanvasConstants.NODE_OPACITY,
                 2
             );
 
-            this.deliveryMap
+            DELIVERY_MAP
                 .getDeliveryList()
                 .stream()
                 .flatMap(delivery -> Stream.of(delivery.getPickUp(), delivery.getDropOff()))
@@ -311,20 +223,12 @@ public class MapCanvas extends BorderPane {
                 .forEach(canvasNode -> this.deliveryCanvasNodes.add(canvasNode));
 
             this.deliveryCanvasNodes.add(new CanvasNode(
-                this.deliveryMap.getWarehouseNodeId(),
+                DELIVERY_MAP.getWarehouseNodeId(),
                 NodeType.DELIVERY_WAREHOUSE,
                 CanvasConstants.WAREHOUSE_COLOR,
                 CanvasConstants.DELIVERY_NODE_RADIUS
             ));
         }
-    }
-
-    /**
-     * Returns the {@link DeliveryMap} assigned to this {@link MapCanvas}
-     * @return the {@link DeliveryMap} assigned to this {@link MapCanvas}
-     */
-    public DeliveryMap getDeliveryMap() {
-        return this.deliveryMap;
     }
 
     private void canvasOnMousePressed(MouseEvent event) {
@@ -382,20 +286,74 @@ public class MapCanvas extends BorderPane {
         LOGGER.trace("Updated hovered nodes in {} ms", computeTimeMillis);
     }
 
+    private void clearCanvas() {
+        LOGGER.debug("Clearing canvas");
+        this.context.clearRect(
+            0,
+            0,
+            this.canvas.getWidth(),
+            this.canvas.getHeight()
+        );
+    }
+
+    private void drawCityMap() {
+        LOGGER.debug("Rendering CityMap");
+
+        final CityMap CITY_MAP = this.uiController.getCityMap();
+
+        if (CITY_MAP == null) {
+            LOGGER.warn("Tried to draw CityMap but CityMap is null");
+            return;
+        }
+
+        Map<Long, Node> nodes = CITY_MAP.getMapNode();
+
+        for (Section section : this.mapSections) {
+            Node origin = nodes.get(section.getOrigin());
+            Node destination = nodes.get(section.getDestination());
+            this.drawLineLatLng(
+                origin.getLatitude(),
+                origin.getLongitude(),
+                destination.getLatitude(),
+                destination.getLongitude(),
+                CanvasConstants.SECTION_COLOR
+            );
+        }
+    }
+
+    private void drawDeliveryMap() {
+        LOGGER.debug("Rendering DeliveryMap");
+
+        if (this.uiController.getDeliveryMap() == null) {
+            LOGGER.warn("Tried to draw DeliveryMap but DeliveryMap is null");
+            return;
+        }
+
+        for (CanvasNode canvasNode : this.deliveryCanvasNodes) {
+            canvasNode.updateCoords();
+            canvasNode.draw();
+        }
+    }
+
+    private void drawCityMapNodesOverlay() {
+        for (CanvasNode canvasNode : this.cityMapCanvasNodes) {
+            canvasNode.updateCoords();
+            canvasNode.draw();
+        }
+    }
+
     private void createToolsPane() {
         ToolsPane toolsPane = new ToolsPane();
         this.setRight(toolsPane);
 
         this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
-        this.scale.addListener((observable, oldValue, newValue) -> {
-            this.redraw();
-        });
+        this.scale.addListener((observable, oldValue, newValue) -> this.redraw());
 
         toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
             this.scale.set(1d);
             this.originX = 0;
             this.originY = 0;
-            this.redraw();
+            //this.redraw();
         });
 
         toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
@@ -412,11 +370,13 @@ public class MapCanvas extends BorderPane {
     }
 
     private void computeBaseZoom() {
-        if (this.cityMap == null) {
+        final CityMap CITY_MAP = this.uiController.getCityMap();
+
+        if (CITY_MAP == null) {
             this.baseZoom = 1d;
         } else {
-            final double MAP_WIDTH = this.cityMap.getLngMax() - this.cityMap.getLngMin();
-            final double MAP_HEIGHT = this.cityMap.getLatMax() - this.cityMap.getLatMin();
+            final double MAP_WIDTH = CITY_MAP.getLngMax() - CITY_MAP.getLngMin();
+            final double MAP_HEIGHT = CITY_MAP.getLatMax() - CITY_MAP.getLatMin();
             final double CANVAS_WIDTH = this.canvas.getWidth();
             final double CANVAS_HEIGHT = this.canvas.getHeight();
 
@@ -526,11 +486,13 @@ public class MapCanvas extends BorderPane {
     }
 
     private double latToPx(double lat) {
-        return (this.cityMap.getLatMax() - lat) * this.scale.get() * this.baseZoom + this.originY;
+        final CityMap CITY_MAP = this.uiController.getCityMap();
+        return (CITY_MAP.getLatMax() - lat) * this.scale.get() * this.baseZoom + this.originY;
     }
 
     private double lngToPx(double lng) {
-        return (lng - this.cityMap.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
+        final CityMap CITY_MAP = this.uiController.getCityMap();
+        return (lng - CITY_MAP.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
     }
 
     private class CanvasNode {
@@ -560,7 +522,7 @@ public class MapCanvas extends BorderPane {
         }
 
         /*package-private*/ void updateCoords() {
-            Node node = cityMap.getMapNode().get(this.nodeId);
+            Node node = uiController.getCityMap().getMapNode().get(this.nodeId);
             this.x = lngToPx(node.getLongitude());
             this.y = latToPx(node.getLatitude());
         }
