@@ -43,10 +43,10 @@ public class SuppressionModeState implements State {
         Step otherStep;
         Delivery deliveryToSuppress = controller.getDeliveryMap().getDeliveryPerId(stepToSuppress.getDeliveryID());
         if (stepToSuppress.isPickUp()) {
-            otherStep = new Step(deliveryToSuppress.getDropOff(), deliveryToSuppress.getId());
+            //otherStep = new Step(deliveryToSuppress.getDropOff(), deliveryToSuppress.getId());
         } else {
-            otherStep = new Step(deliveryToSuppress.getPickUp(), deliveryToSuppress.getId());
+            //otherStep = new Step(deliveryToSuppress.getPickUp(), deliveryToSuppress.getId());
         }
-        controller.getRound().removeDelivery(stepToSuppress, otherStep);
+        //controller.getRound().removeDelivery(stepToSuppress, otherStep);
     }
 }
