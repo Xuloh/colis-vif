@@ -396,9 +396,9 @@ public class MapCanvas extends BorderPane {
         this.scale.addListener((observable, oldValue, newValue) -> this.redraw());
 
         toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
-            this.scale.set(1d);
             this.originX = 0;
             this.originY = 0;
+            this.scale.set(1d);
             //this.redraw();
         });
 
@@ -426,11 +426,23 @@ public class MapCanvas extends BorderPane {
             final double CANVAS_WIDTH = this.canvas.getWidth();
             final double CANVAS_HEIGHT = this.canvas.getHeight();
 
-            if (CANVAS_WIDTH > CANVAS_HEIGHT) {
-                this.baseZoom = CANVAS_HEIGHT / MAP_HEIGHT;
-            } else {
-                this.baseZoom = CANVAS_WIDTH / MAP_WIDTH;
+            double widthScale = CANVAS_WIDTH / MAP_WIDTH;
+            double heightScale = CANVAS_HEIGHT / MAP_HEIGHT;
+
+            if (widthScale * MAP_HEIGHT <= CANVAS_HEIGHT) {
+                this.baseZoom = widthScale;
+            } else if (heightScale * MAP_WIDTH <= CANVAS_WIDTH) {
+                this.baseZoom = heightScale;
             }
+
+            LOGGER.trace(
+                "Computed base zoom : {}\nmap width, map_height : {}, {}\ncanvas_width, canvas_height : {}, {}",
+                this.baseZoom,
+                MAP_WIDTH,
+                MAP_HEIGHT,
+                CANVAS_WIDTH,
+                CANVAS_HEIGHT
+            );
         }
     }
 
