@@ -1,6 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
@@ -89,11 +90,9 @@ public class ModeAddState implements State {
             try {
                 int dropOffDuration = Integer.parseInt(askedDuration);
                 pickUpVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-                int newDeliveryId = controller.getDeliveryMap().createDelivery(pickUpVertex.getNodeId(),
+                controller.getRound().addDelivery(pickUpVertex.getNodeId(),
                                                     dropOffVertex.getNodeId(), pickUpVertex.getDuration(),
-                                                    dropOffVertex.getDuration());
-                controller.getRound().addDelivery(new Step(pickUpVertex, newDeliveryId),
-                                                  new Step(dropOffVertex, newDeliveryId));
+                                                    dropOffVertex.getDuration(), controller.getCityMap());
                 pickUpVertex = null;
                 dropOffVertex = null;
                 pickUpNodeId = -1;
