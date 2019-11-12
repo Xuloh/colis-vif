@@ -121,7 +121,7 @@ public class StepView extends Pane {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item==null) {
+                if (item == null) {
                     setText(null);
                 } else {
                     int secondes = item % 60;
