@@ -15,7 +15,10 @@ public class Step {
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
+    private int interalStart;
+
     private Vertex arrival;
+
 
     //TODO - @Sophie et @Guilhem virer ces deux trucs
     @Deprecated
@@ -30,12 +33,14 @@ public class Step {
      * @param vertex     the {@link Vertex} (pick up or drop off).
      * @param deliveryID the deliveryID corresponding to the {@link Delivery} of the {@link Vertex}.
      */
-    public Step(Vertex vertex, int deliveryID) {
+    public Step(Vertex vertex, int deliveryID, int arrivalDate) {
         sections = new LinkedList<>();
         arrival = vertex;
         this.type = vertex.isPickUp();
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
+        this.arrivalDate = arrivalDate;
+        interalStart = ModelConstants.DELTA * (arrivalDate / ModelConstants.DELTA);
     }
 
     /**
@@ -45,6 +50,10 @@ public class Step {
      */
     public int getArrivalDate() {
         return arrivalDate;
+    }
+
+    public int getInteralStart() {
+        return interalStart;
     }
 
     /**

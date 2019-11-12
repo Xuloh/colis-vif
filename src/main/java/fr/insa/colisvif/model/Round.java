@@ -1,5 +1,6 @@
 package fr.insa.colisvif.model;
 
+import javax.management.ImmutableDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Round {
     public Round(DeliveryMap deliveries) {
         steps = new ArrayList<>();
         this.deliveryMap = deliveries;
+        int n = deliveries.getSize();
     }
 
     /**
@@ -48,36 +50,8 @@ public class Round {
         return steps;
     }
 
-    /**
-     * Remove the delivery composed by 2 steps from the list of steps.
-     *
-     * @param stepPickup   the pickup from the delivery.
-     * @param stepDelivery the dropoff from the delivery.
-     */
-    public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
-        if (!(steps.contains(stepPickup) && steps.contains(stepDelivery))) {    // The steps are in the list steps
-            throw new IllegalArgumentException();
-        }
-        if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {       // The steps correspond to the same delivery
-            throw new IllegalArgumentException();
-        }
+    private void optimize(){
 
-        // Change the list section of the next step
-        Step stepAfterPickup = steps.get(steps.indexOf(stepPickup) + 1);
-        Step stepAfterDelivery = null;
-
-        if (steps.indexOf(stepDelivery) != steps.size() - 1) {
-            stepAfterDelivery = steps.get(steps.indexOf(stepDelivery) + 1);
-        }
-
-        // Remove the steps
-        steps.remove(stepPickup);
-        steps.remove(stepDelivery);
-
-        // Change all hours
-        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i++) {
-
-        }
     }
 
     private boolean areAssociated(Step step1, Step step2) {
@@ -85,7 +59,6 @@ public class Round {
     }
 
     private int associatedStepIndex(Step step) throws Exception {
-        boolean type = step.isPickUp();
         for (int i = 0; i < steps.size(); ++i) {
             if (areAssociated(step, steps.get(i))) {
                 return i;
@@ -95,56 +68,50 @@ public class Round {
     }
 
     private void removeIthStep(int i, CityMap map) throws IllegalArgumentException {
-        if (i == 0){
+        if (i == 0) {
             throw new IllegalArgumentException("Cannot remove warehouse");
         }
-        if (i < 0 || i >= steps.size()){
+        if (i < 0 || i >= steps.size()) {
             throw new IllegalArgumentException("Index " + i + " out of bounds (size : " + steps.size() + ")");
         }
 
-        if (i != steps.size() - 1){
+        if (i != steps.size() - 1) {
             long prevNode = steps.get(i - 1).getArrivalNodeId();
             long nextNode = steps.get(i + 1).getArrivalNodeId();
             steps.get(i + 1).setSections(map.getPath(prevNode, nextNode));
-
-
         }
 
+        double length = map.getLength(steps.get(i - 1).getArrivalNodeId(), steps.get(i + 1).getArrivalNodeId());
+        int arrivalDate = steps.get(i - 1).getArrivalDate();
+        int duration = steps.get(i - 1).getDuration();
+        int newArrivalDate = arrivalDate + duration+ (int)(length / ModelConstants.CYCLIST_SPEED);
+        int deltaTime = steps.get(i + 1).getArrivalDate() - newArrivalDate;
+
+        for(int j = i + 1; j < steps.size(); ++j){
+            arrivalDate = steps.get(j).getArrivalDate();
+            steps.get(j).setArrivalDate(arrivalDate - deltaTime);
+        }
         steps.remove(i);
     }
 
     public void removeDelivery(Step step, CityMap map) throws Exception {
         if (!steps.contains(step)) {
             throw new IllegalArgumentException("The step to remove does not belong to this round");
-        };
+        }
         removeIthStep(steps.indexOf(step), map);
         removeIthStep(associatedStepIndex(step), map);
+        optimize();
     }
 
     /**
-     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
+     * Add a new delivery at the end of the round. Add two steps, one for the pickup and one for the delivery.
      *
-     * @param stepPickup   step to go from the previous location to the pickup location.
-     * @param stepDelivery step to go from the previous location to the delivery pickup.
+     * @param pickUpNode The pick up node
+     * @param dropOffNode The drop off node
      */
-    public void addDelivery(Step stepPickup, Step stepDelivery) {
-        // /!\ calculer le chemin !!!!!!!!!!
-        //
-        if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {   // The steps are in the list steps
-            throw new IllegalArgumentException();
-        }
-
-        /*
-            MANQUE LE CALCUL DE TEMPS
-            MODIFIER LES LISTES DES SECTIONS EMPRUNTÉES
-         */
-        steps.add(stepPickup);
-        steps.add(stepDelivery);
-
-        // Change all hours
-        for (int i = steps.indexOf(stepPickup); i < steps.size(); i++) {
-
-        }
+    public void addDelivery(long pickUpNode, long dropOffNode, CityMap map) {
+        map.dijkstra(pickUpNode);
+        map.dijkstra(dropOffNode);
     }
 
     /**

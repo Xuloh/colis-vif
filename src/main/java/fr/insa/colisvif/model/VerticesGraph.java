@@ -9,6 +9,63 @@ import java.io.IOException;
 import java.util.*;
 
 /*package-private*/ class VerticesGraph {
+
+
+    private static final int truc = 13;
+
+    public static void main(String args[]){
+        int n = truc;
+        int k = 2*n+1;
+        ArrayList<ArrayList<Double>> len = new ArrayList<>();
+
+        for(int i = 0; i<k; ++i){
+            len.add(new ArrayList<>());
+            for(int j=0; j<k; ++j){
+                len.get(i).add(j, Math.abs(Math.cos(i) + Math.sin(j)) + 0.001);
+            }
+        }
+
+        VerticesGraph G = new VerticesGraph(n, len);
+        long pickUps = 0;
+        long a = 1;
+        for(int truc = 0; truc < n; ++truc){
+            pickUps += a;
+            a *= 4;
+        }
+        pickUps *= 2;
+
+        //System.out.println(pickUps);
+
+        var debut = System.nanoTime();
+        SubResult subResult = G.resolveSubProblem(0, pickUps);
+        ArrayList<Integer> L = G.makePath(subResult);
+        var fin = System.nanoTime();
+        for(int i : L){
+            System.out.print(i);
+            System.out.print("  ");
+        }
+        System.out.println(" ");
+        System.out.println((fin - debut)*0.000000001 + "  s");
+        System.out.println((float)(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576. + "  mo");
+
+//        var debut = System.nanoTime();
+//        var L = G.naiveRound();
+//        var fin = System.nanoTime();
+//        for(Vertex v : L){
+//            System.out.print(v.getId());
+//            System.out.print("  ");
+//        }
+//        System.out.println(" ");
+//        System.out.println((fin - debut)*0.000000001);
+    }
+
+
+    public VerticesGraph(int n, ArrayList<ArrayList<Double>> len){
+        powerSetSize = 0b1 << (2*n+1);
+        lengths = len;
+        subResults = new HashMap<>();
+    }
+
     /** The speed of the cyclist in meters per second */
     private static final int CYCLIST_SPEED = (int) (15. / 3.6); // TODO @Felix: mettre ces constantes dans la classes contenant toutes les constantes
 
@@ -127,7 +184,8 @@ import java.util.*;
         }
         double bestLength = -1;
         long nextKey = 0;
-        int n = deliveries.getSize();
+//        int n = deliveries.getSize();
+        int n = truc;
         long a = 2; //will be 2^k, used to add and remove elements from the set
         long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
         for (int k = 1; k < 2 * n + 1; ++k) {
@@ -190,9 +248,8 @@ import java.util.*;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
 
-        Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex));
+        Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex), time);
         if (departureId == arrivalId) {
-            step.setArrivalDate(time);
             return step;
         }
         Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
@@ -217,7 +274,8 @@ import java.util.*;
     }
 
     private ArrayList<Integer> makePath(SubResult subResult){
-        int n = deliveries.getSize();
+//        int n = deliveries.getSize();
+        int n = truc;
         ArrayList<Integer> path = new ArrayList<>(2 * n + 1);
         path.add(0);
         long key = subResult.getNextKey();

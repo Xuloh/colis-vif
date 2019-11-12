@@ -255,7 +255,7 @@ public class CityMap {
      *
      * @param start the coordinate of the starting point.
      */
-    private void dijkstra(long start) throws IllegalArgumentException {
+    /*package-private*/ void dijkstra(long start) throws IllegalArgumentException {
         if (!mapNode.containsKey(start)){
             throw new IllegalArgumentException("The stating node of Dijkstra's algorithm does not belong to the map");
         }
