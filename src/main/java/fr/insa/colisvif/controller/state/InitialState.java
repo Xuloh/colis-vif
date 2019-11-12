@@ -35,12 +35,9 @@ public class InitialState implements State {
     public void loadCityMap(Controller controller, UIController uiController, File file) {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getCityMap());
         } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawCanvas();
         controller.setCurrentState(CityMapLoadedState.class);
     }
 }

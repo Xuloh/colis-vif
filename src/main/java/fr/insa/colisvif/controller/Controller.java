@@ -132,6 +132,8 @@ public class Controller {
      */
     public void setCityMap(CityMap cityMap) {
         this.cityMap = cityMap;
+        this.uiController.updateCityMap();
+        this.setDeliveryMap(null);
     }
 
     /**
@@ -141,6 +143,7 @@ public class Controller {
      */
     public void setRound(Round round) {
         this.round = round;
+        this.uiController.updateRound();
     }
 
     /**
@@ -168,6 +171,7 @@ public class Controller {
     public void setDeliveryMap(DeliveryMap deliveryMap) {
         this.deliveryMap = deliveryMap;
         this.createVertexList();
+        this.uiController.updateDeliveryMap();
     }
 
     /**
@@ -245,12 +249,11 @@ public class Controller {
     private void createVertexList() {
         this.vertexList = FXCollections.observableArrayList();
 
-        for (Delivery d : this.deliveryMap.getDeliveryList()) {
-            vertexList.add(d.getPickUp());
-            vertexList.add(d.getDropOff());
+        if (this.deliveryMap != null) {
+            for (Delivery d : this.deliveryMap.getDeliveryList()) {
+                vertexList.add(d.getPickUp());
+                vertexList.add(d.getDropOff());
+            }
         }
     }
-
-
-
 }
