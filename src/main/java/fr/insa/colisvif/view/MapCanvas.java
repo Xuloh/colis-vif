@@ -3,6 +3,7 @@ package fr.insa.colisvif.view;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
+import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Section;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
@@ -24,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
@@ -43,7 +42,6 @@ import java.util.stream.Stream;
     - en Step (si le point cliqué est un Vertex alors on renvoie la Step associé)
 
     Ca implique de pouvoir passer les clics de souris en paramètres. (coordonnées dans le canvas ?)
-
  */
 
 public class MapCanvas extends BorderPane {
@@ -74,6 +72,8 @@ public class MapCanvas extends BorderPane {
 
     private List<Section> mapSections;
 
+    private List<Section> roundSections;
+
     private boolean showCityMapNodesOnHover;
 
     /**
@@ -86,6 +86,7 @@ public class MapCanvas extends BorderPane {
      *
      * @see ToolsPane
      */
+    //TODO javadoc
     public MapCanvas(UIController uiController, boolean useTools) {
         super();
 
@@ -97,6 +98,7 @@ public class MapCanvas extends BorderPane {
         this.deliveryCanvasNodes = new ArrayList<>();
         this.cityMapCanvasNodes = new ArrayList<>();
         this.mapSections = new ArrayList<>();
+        this.roundSections = new ArrayList<>();
         this.showCityMapNodesOnHover = false;
 
         // wrap canvas in a pane to handle resize
@@ -140,6 +142,7 @@ public class MapCanvas extends BorderPane {
         long start = System.nanoTime();
         this.clearCanvas();
         this.drawCityMap();
+        this.drawRound();
         this.drawDeliveryMap();
         this.drawCityMapNodesOverlay();
         long renderTimeMillis = (System.nanoTime() - start) / 1_000_000;
@@ -161,7 +164,7 @@ public class MapCanvas extends BorderPane {
      */
     //TODO javadoc
     public void updateCityMap() {
-        LOGGER.debug("Updated CityMap data");
+        LOGGER.debug("Updating CityMap data");
 
         this.computeBaseZoom();
 
@@ -186,18 +189,18 @@ public class MapCanvas extends BorderPane {
                     CanvasConstants.CITY_MAP_NODE_COLOR,
                     CanvasConstants.CITY_MAP_NODE_RADIUS
                 ))
-                .forEach(canvasNode -> this.cityMapCanvasNodes.add(canvasNode));
+                .forEach(this.cityMapCanvasNodes::add);
         }
     }
 
     /**
-     * Assigns the given {@link DeliveryMap} to this {@link MapCanvas}.
+     * Updates the given {@link DeliveryMap} to this {@link MapCanvas}.
      * If <code>null</code> is passed, the {@link MapCanvas}
      * will stop rendering a {@link DeliveryMap}.
      */
     //TODO javadoc
     public void updateDeliveryMap() {
-        LOGGER.debug("Updated DeliveryMap data");
+        LOGGER.debug("Updating DeliveryMap data");
 
         //TODO générer légende dans une map de vertex/image
 
@@ -221,7 +224,7 @@ public class MapCanvas extends BorderPane {
                     colorGenerator.next(),
                     CanvasConstants.DELIVERY_NODE_RADIUS
                 ))
-                .forEach(canvasNode -> this.deliveryCanvasNodes.add(canvasNode));
+                .forEach(this.deliveryCanvasNodes::add);
 
             this.deliveryCanvasNodes.add(new CanvasNode(
                 DELIVERY_MAP.getWarehouseNodeId(),
@@ -229,6 +232,22 @@ public class MapCanvas extends BorderPane {
                 CanvasConstants.WAREHOUSE_COLOR,
                 CanvasConstants.DELIVERY_NODE_RADIUS
             ));
+        }
+    }
+
+    //TODO javadoc
+    public void updateRound() {
+        LOGGER.debug("Updating Round data");
+
+        final Round ROUND = this.uiController.getRound();
+
+        this.roundSections.clear();
+
+        if (ROUND != null) {
+            ROUND.getSteps()
+                 .stream()
+                 .flatMap(step -> step.getSections().stream())
+                 .forEach(this.roundSections::add);
         }
     }
 
@@ -343,6 +362,32 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    private void drawRound() {
+        LOGGER.debug("Rendering Round");
+
+        final Round ROUND = this.uiController.getRound();
+
+        if (ROUND == null) {
+            LOGGER.warn("Tried to draw Round but Round is null");
+            return;
+        }
+
+        Map<Long, Node> nodes = this.uiController.getCityMap().getMapNode();
+
+        for (Section section : this.roundSections) {
+            Node origin = nodes.get(section.getOrigin());
+            Node destination = nodes.get(section.getDestination());
+            this.drawLineLatLng(
+                origin.getLatitude(),
+                origin.getLongitude(),
+                destination.getLatitude(),
+                destination.getLongitude(),
+                CanvasConstants.ROUND_SECTION_COLOR,
+                CanvasConstants.ROUND_SECTION_WIDTH
+            );
+        }
+    }
+
     private void createToolsPane() {
         ToolsPane toolsPane = new ToolsPane();
         this.setRight(toolsPane);
@@ -422,14 +467,25 @@ public class MapCanvas extends BorderPane {
     }
 
     private void drawLineLatLng(double lat1, double lng1, double lat2, double lng2, Paint paint) {
-        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint);
+        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint, 1.0);
+    }
+
+    private void drawLineLatLng(double lat1, double lng1, double lat2, double lng2, Paint paint, double lineWidth) {
+        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint, lineWidth);
     }
 
     private void drawLine(double x1, double y1, double x2, double y2, Paint paint) {
+        this.drawLine(x1, y1, x2, y2, paint, 1.0);
+    }
+
+    private void drawLine(double x1, double y1, double x2, double y2, Paint paint, double lineWidth) {
         Paint prevStroke = this.context.getStroke();
+        double prevLineWidth = this.context.getLineWidth();
         this.context.setStroke(paint);
+        this.context.setLineWidth(lineWidth);
         this.context.strokeLine(x1, y1, x2, y2);
         this.context.setStroke(prevStroke);
+        this.context.setLineWidth(prevLineWidth);
     }
 
     private void drawTriangleLatLng(double lat, double lng, Paint paint, double radius) {
