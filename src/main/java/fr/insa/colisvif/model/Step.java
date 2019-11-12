@@ -13,10 +13,15 @@ public class Step {
 
     private int deliveryID;
 
-    private boolean type; //true if it is a pick up and false if it is a drop off
-
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
+    private Vertex arrival;
+
+    //TODO - @Sophie et @Guilhem virer ces deux trucs
+    @Deprecated
+    private boolean type; //true if it is a pick up and false if it is a drop off
+
+    @Deprecated
     private int duration; //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
 
     /**
@@ -27,6 +32,7 @@ public class Step {
      */
     public Step(Vertex vertex, int deliveryID) {
         sections = new LinkedList<>();
+        arrival = vertex;
         this.type = vertex.isPickUp();
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
@@ -54,13 +60,17 @@ public class Step {
         this.arrivalDate = arrivalDate;
     }
 
+    public long getArrivalNodeId() {
+        return arrival.getNodeId();
+    }
+
     /**
      * Returns the duration (in seconds) of the pick up or drop off.
      *
      * @return the duration (in seconds) of the pick up or drop off.
      */
     public int getDuration() {
-        return duration;
+        return arrival.getDuration();
     }
 
     /**
@@ -75,14 +85,15 @@ public class Step {
     /**
      * Sets the duration in seconds of the {@link Step}.
      *
-     * @param durationInSeconds the duration in seconds of the {@link Step}.
+     * @param duration the duration in seconds of the {@link Step}.
      * @throws IllegalArgumentException if the duration in seconds is under 0 seconds.
      */
-    public void setDuration(int durationInSeconds) throws IllegalArgumentException {
-        if (durationInSeconds < 0) {
-            throw new IllegalArgumentException("The duration in seconds must be equal or over 0 second, got " + durationInSeconds);
+    public void setDuration(int duration) throws IllegalArgumentException {
+        if (duration < 0) {
+            throw new IllegalArgumentException("The duration in seconds must be equal or over 0 second, got " + duration);
         }
-        this.duration = durationInSeconds;
+        this.duration = duration;
+        arrival.setDuration(duration);
     }
 
     /**
@@ -94,13 +105,17 @@ public class Step {
         return sections;
     }
 
+    public void setSections(LinkedList<Section> sections) {
+        this.sections = new LinkedList<>(sections);
+    }
+
     /**
      * Returns true if the {@link Step} corresponds to a pick up.
      *
      * @return <code>true</code> if the {@link Step} corresponds to a pick up.
      */
     public boolean isPickUp() {
-        return type;
+        return arrival.isPickUp();
     }
 
     /**
@@ -109,7 +124,7 @@ public class Step {
      * @return <code>true</code> if the {@link Step} corresponds to a drop off.
      */
     public boolean isDropOff() {
-        return !type;
+        return arrival.isDropOff();
     }
 
     /**
@@ -146,9 +161,8 @@ public class Step {
         }
         Step step = (Step) o;
         return deliveryID == step.deliveryID
-                && type == step.type
+                && Objects.equals(arrival, step.arrival)
                 && arrivalDate == step.arrivalDate
-                && duration == step.duration
                 && Objects.equals(sections, step.sections);
     }
 }

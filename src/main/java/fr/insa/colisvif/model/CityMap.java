@@ -44,6 +44,8 @@ public class CityMap {
 
     private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
+    private Round round;
+
     /**
      * Constructor of CityMap. Initialize the min/max latitudes and min/max
      * longitudes.
@@ -190,6 +192,17 @@ public class CityMap {
         return pathsFromVertices.get(start).getLength(finish);
     }
 
+    public LinkedList<Section> getPath(long start, long finish) {
+        LinkedList<Section> path = new LinkedList<>();
+        Section prevSection = pathsFromVertices.get(start).getPrevSection(finish);
+        while (prevSection != null) {
+            path.addFirst(prevSection);
+            prevSection = pathsFromVertices.get(start).getPrevSection(prevSection.getOrigin());
+        }
+        return path;
+    }
+
+
     /**
      * Returns the {@link Section} between start and finish.
      *
@@ -242,8 +255,10 @@ public class CityMap {
      *
      * @param start the coordinate of the starting point.
      */
-    private void dijkstra(long start) {
-        // TODO @Felix : tester si start est une bonne coordonnée??
+    private void dijkstra(long start) throws IllegalArgumentException {
+        if (!mapNode.containsKey(start)){
+            throw new IllegalArgumentException("The stating node of Dijkstra's algorithm does not belong to the map");
+        }
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);

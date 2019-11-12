@@ -1,5 +1,11 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.exception.XMLException;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /*package-private*/ class VerticesGraph {
@@ -114,14 +120,13 @@ import java.util.*;
             return subResults.get(key);
         }
         if (setCode == 0) { //stop case, when S is the empty set
-            SubResult subResult = new SubResult();
-            subResult.setLength(0); //0 can be replaced by lengths.get(start).get(0) if we want the cyclist to come back
-            subResult.addVertex(start);
+            SubResult subResult = new SubResult(0, 0);
+            //the first 0 can be replaced by lengths.get(start).get(0) if we want the cyclist to come back
             subResults.put(key, subResult);
             return subResult;
         }
-        SubResult subResult = new SubResult();
-        subResult.setLength(-1);
+        double bestLength = -1;
+        long nextKey = 0;
         int n = deliveries.getSize();
         long a = 2; //will be 2^k, used to add and remove elements from the set
         long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
@@ -132,39 +137,28 @@ import java.util.*;
                     SubResult candidate = resolveSubProblem(k, setCode + a);
                     //setCode+a is in fact setCode-a+2a, i.e.setCode-2^k+2^(k+1)
                     //that means we remove int k from the set and add k+1 instead
-                    update(start, k, subResult, candidate);
+                    double candidateLength = candidate.getLength() + lengths.get(start).get(k);
+                    if (bestLength == -1 || bestLength > candidateLength){
+                        bestLength = candidateLength;
+                        nextKey = subProblemKey(k, setCode + a);
+                    }
                 } else { //k is a drop off
                     //we remove the drop off from the set
                     SubResult candidate = resolveSubProblem(k, setCode - a);
-                    update(start, k, subResult, candidate);
+                    double candidateLength = candidate.getLength() + lengths.get(start).get(k);
+                    if (bestLength == -1 || bestLength > candidateLength){
+                        bestLength = candidateLength;
+                        nextKey = subProblemKey(k, setCode - a);
+                    }
                 }
             }
             a = a << 1;
             copy = copy >> 1;
         }
-        subResult.setPath(new LinkedList<>(subResult.getPath()));
-        subResult.addVertex(start);
+        SubResult subResult = new SubResult(bestLength, nextKey);
         subResults.put(key, subResult);
+        //System.out.print("\r" + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576 + "  mo");
         return subResult;
-    }
-
-    /**
-     * Compares the sub results subResult and candidate, and updates subResult to candidate if candidate is better
-     * Before the treatment, subResult's length is the length of the path starting from start and continuing with
-     * subResult.getPath() . -1 stands for an "infinite" value
-     *
-     * @param start     the first vertex of the sub problem we are solving
-     * @param next      the fist vertex of candidate's path
-     * @param subResult the best result we found so far
-     * @param candidate a candidate that could be better
-     */
-    private void update(int start, int next, SubResult subResult, SubResult candidate) {
-        double a = subResult.getLength();
-        double b = candidate.getLength() + lengths.get(start).get(next);
-        if (a == -1 || a > b) {
-            subResult.setLength(b);
-            subResult.setPath(candidate.getPath());
-        }
     }
 
     /**
@@ -211,7 +205,7 @@ import java.util.*;
         return step;
     }
 
-    private Round roundFromPath(ArrayList<Integer> path) {
+    private Round makeRound(ArrayList<Integer> path) {
         Round round = new Round(deliveries);
         int time = round.getStartDate();
         for (int i = 0; i < path.size() - 1; ++i) {
@@ -220,6 +214,18 @@ import java.util.*;
             time = step.getArrivalDate() + step.getDuration();
         }
         return round;
+    }
+
+    private ArrayList<Integer> makePath(SubResult subResult){
+        int n = deliveries.getSize();
+        ArrayList<Integer> path = new ArrayList<>(2 * n + 1);
+        path.add(0);
+        long key = subResult.getNextKey();
+        for(int i = 0; i < 2 * n; ++i){
+            path.add((int)(key / powerSetSize));
+            key = subResults.get(key).getNextKey();
+        }
+        return path;
     }
 
     /**
@@ -234,8 +240,8 @@ import java.util.*;
         System.out.println((fin - debut) * 0.000000001);
         System.out.print("TSP length : ");
         System.out.println(subResult.getLength());
-        ArrayList<Integer> path = new ArrayList<>(subResult.getPath());
-        return roundFromPath(path);
+        ArrayList<Integer> path = makePath(subResult);
+        return makeRound(path);
     }
 
     private Set<Integer> pickUpSet() {
@@ -269,7 +275,7 @@ import java.util.*;
             path.add(best);
             last = best;
         }
-        return roundFromPath(path);
+        return makeRound(path);
     }
 
     /**
@@ -279,38 +285,29 @@ import java.util.*;
         private double length;
         /** The length of the path */
 
-        private LinkedList<Integer> path;
+        private long nextKey;
+
+        SubResult(double length, long nextKey){
+            this.length = length;
+            this.nextKey = nextKey;
+        }
 
         /** The indexes of the nodes of the path */
-
-        /*package-private*/ SubResult() {
-            length = 0;
-            path = new LinkedList<>();
-        }
 
         /*package-private*/ double getLength() {
             return length;
         }
 
-        /*package-private*/ LinkedList<Integer> getPath() {
-            return path;
+        /*package-private*/ long getNextKey() {
+            return nextKey;
         }
 
         /*package-private*/ void setLength(double length) {
             this.length = length;
         }
 
-        /*package-private*/ void setPath(LinkedList<Integer> path) {
-            this.path = path;
-        }
-
-        /**
-         * Add a vertex index at the beginning of the path
-         *
-         * @param vertexIndex the index added
-         */
-        /*package-private*/ void addVertex(int vertexIndex) {
-            path.addFirst(vertexIndex);
+        /*package-private*/ void setNextKey(long nextKey) {
+            this.nextKey = nextKey;
         }
     }
 }

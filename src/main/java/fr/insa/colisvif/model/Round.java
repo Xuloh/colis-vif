@@ -80,6 +80,47 @@ public class Round {
         }
     }
 
+    private boolean areAssociated(Step step1, Step step2) {
+        return step1 != step2 && step1.getDeliveryID() == step2.getDeliveryID();
+    }
+
+    private int associatedStepIndex(Step step) throws Exception {
+        boolean type = step.isPickUp();
+        for (int i = 0; i < steps.size(); ++i) {
+            if (areAssociated(step, steps.get(i))) {
+                return i;
+            }
+        }
+        throw new Exception("Associated step not found");
+    }
+
+    private void removeIthStep(int i, CityMap map) throws IllegalArgumentException {
+        if (i == 0){
+            throw new IllegalArgumentException("Cannot remove warehouse");
+        }
+        if (i < 0 || i >= steps.size()){
+            throw new IllegalArgumentException("Index " + i + " out of bounds (size : " + steps.size() + ")");
+        }
+
+        if (i != steps.size() - 1){
+            long prevNode = steps.get(i - 1).getArrivalNodeId();
+            long nextNode = steps.get(i + 1).getArrivalNodeId();
+            steps.get(i + 1).setSections(map.getPath(prevNode, nextNode));
+
+
+        }
+
+        steps.remove(i);
+    }
+
+    public void removeDelivery(Step step, CityMap map) throws Exception {
+        if (!steps.contains(step)) {
+            throw new IllegalArgumentException("The step to remove does not belong to this round");
+        };
+        removeIthStep(steps.indexOf(step), map);
+        removeIthStep(associatedStepIndex(step), map);
+    }
+
     /**
      * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
      *
