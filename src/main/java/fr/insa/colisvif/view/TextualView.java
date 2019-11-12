@@ -45,6 +45,7 @@ public class TextualView extends Pane {
             this.stepTable.prefHeightProperty().bind(this.heightProperty());
             this.stepTable.prefWidthProperty().bind(this.widthProperty());
 
+
             TableColumn<Step, Long> deliveryIdColumn = new TableColumn<>("N° de livraison");
             deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
 
@@ -147,7 +148,7 @@ public class TextualView extends Pane {
             });
 
             //TODO : change with initialArrivalDate
-            TableColumn<Step, Integer> timeIntervalColumn = new TableColumn<>("Interval d'arrivée");
+            TableColumn<Step, Integer> timeIntervalColumn = new TableColumn<>("Intervalle d'arrivée");
             timeIntervalColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
             timeIntervalColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
                 @Override
@@ -204,7 +205,19 @@ public class TextualView extends Pane {
      * @see TableView
      */
     public void printVertices(ObservableList<Vertex> vertexList) {
+        if (vertexTable != null) {
+            vertexTable.getItems().clear();
+            LOGGER.info("Vertices cleared");
+        }
+        if (stepTable != null) {
+            stepTable.getItems().clear();
+            stepTable = null;
+            LOGGER.info("Steps cleared");
+        }
+        LOGGER.info(vertexList);
         vertexTable.setItems(vertexList);
+        LOGGER.info("Vertices printed");
+
     }
 
     public TableView<Step> getStepTable(){
@@ -212,7 +225,16 @@ public class TextualView extends Pane {
     }
 
     public void printSteps(ObservableList<Step> stepList){
-        stepTable.setItems(stepList);
-        LOGGER.info("Steps printed");
+        if (vertexTable != null) {
+            vertexTable.getItems().clear();
+            LOGGER.info("Vertices cleared");
+            vertexTable = null;
+        }
+        if (stepTable != null) {
+            stepTable.getItems().clear();
+            LOGGER.info("Steps cleared");
+            stepTable.setItems(stepList);
+            LOGGER.info("Steps printed");
+        }
     }
 }
