@@ -63,6 +63,10 @@ public final class CanvasConstants {
      */
     public static final Color CITY_MAP_NODE_COLOR = Color.DARKORANGE;
 
+    public static final Color ROUND_SECTION_COLOR = Color.LIME;
+
+    public static final double ROUND_SECTION_WIDTH = 2d;
+
     private CanvasConstants() {
 
     }
