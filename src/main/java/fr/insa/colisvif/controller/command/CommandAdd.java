@@ -10,10 +10,13 @@ public class CommandAdd implements Command {
 
     private Round round;
 
-    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Round round) {
+    private CityMap cityMap;
+
+    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Round round, CityMap cityMap) {
         this.pickUpVertex = pickUpVertex;
         this.dropOffVertex = dropOffVertex;
         this.round = round;
+        this.cityMap = cityMap;
     }
 
     @Override
@@ -23,7 +26,7 @@ public class CommandAdd implements Command {
 
     @Override
     public void doCommand() {
-        /*round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
-                          pickUpVertex.getDuration(), dropOffVertex.getDuration()); #MethodeFelix*/
+        round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
+                          pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap);
     }
 }
