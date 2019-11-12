@@ -14,7 +14,7 @@ public class DeliveryMap {
 
     private long warehouseNodeId;
 
-    private int startDateInSeconds;
+    private int startDate;
 
     /**
      * Constructor of the {@link DeliveryMap}
@@ -28,27 +28,28 @@ public class DeliveryMap {
      * Create a {@link Delivery} out of a pick up {@link Node} id, a delivery {@link Node} id, a pick up duration and a delivery duration (in seconds).
      * It also attaches an id to the {@link Delivery}.
      *
-     * @param pickUpNodeId the {@link Node} id of the pick up.
-     * @param deliveryNodeId the {@link Node} id of the drop off.
-     * @param pickUpDuration the duration of the pick up in seconds.
+     * @param pickUpNodeId    the {@link Node} id of the pick up.
+     * @param deliveryNodeId  the {@link Node} id of the drop off.
+     * @param pickUpDuration  the duration of the pick up in seconds.
      * @param dropOffDuration the duration of the drop off in seconds.
      * @return the id of the created {@link Delivery}.
      * @throws IllegalArgumentException if the pickUpDuration / deliveryDuration is less or equal to 0 seconds or the pickUpNodeId is equal to the deliveryNodeId.
      */
-    public int createDelivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
+    public Delivery createDelivery(long pickUpNodeId, long deliveryNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
         //TODO Le pickUpNodeId et le deliveryNodeId doivent correspondre à un noeud existant.
         this.cptId++;
         Delivery newDelivery = new Delivery(this.cptId, pickUpNodeId, deliveryNodeId, pickUpDuration, dropOffDuration);
         this.deliveryRequests.add(newDelivery);
-        return this.cptId;
+        return newDelivery;
     }
 
     /**
-    * Search all Deliveries and returns the one with the given id if it exists
-    * @param id the id of the searched delivey
-    * @return <li>the Delivery found if it exists</li>
-    * <li>null if it doesn't</li>
-    */
+     * Search all Deliveries and returns the one with the given id if it exists
+     *
+     * @param id the id of the searched delivey
+     * @return <li>the Delivery found if it exists</li>
+     * <li>null if it doesn't</li>
+     */
     public Delivery getDeliveryPerId(int id) {
         for (Delivery delivery : deliveryRequests) {
             if (delivery.getId() == id) {
@@ -58,17 +59,22 @@ public class DeliveryMap {
         return null;
     }
 
+    public void removeDeliveryById(int id) {
+        Delivery delivery = getDeliveryPerId(id);
+        deliveryRequests.remove(delivery);
+    }
+
     /**
      * Creates the warehouse.
      *
-     * @param positionId the position of the warehouse
+     * @param positionId         the position of the warehouse
      * @param startDateInSeconds the starting date in seconds, when the rider can begin its round.
      * @throws IllegalArgumentException when the startDateInSeconds is less than 0 seconds.
      */
     public void createWarehouse(long positionId, int startDateInSeconds) throws IllegalArgumentException {
         //TODO La warehouse doit correspondre à un noeud.
         this.warehouseNodeId = positionId;
-        this.startDateInSeconds = startDateInSeconds;
+        this.startDate = startDateInSeconds;
         if (startDateInSeconds < 0) {
 
             throw new IllegalArgumentException("The startDateInSeconds must be more or equal than 0, got " + startDateInSeconds);
@@ -92,7 +98,6 @@ public class DeliveryMap {
      * and the {@link List} of {@link Delivery}.
      *
      * @param o the {@link Object} to compare this {@link DeliveryMap} to
-     *
      * @return <code>true</code> if o is a {@link DeliveryMap} whose values are
      * "equal" to those of this {@link DeliveryMap}
      */
@@ -106,7 +111,7 @@ public class DeliveryMap {
         }
         DeliveryMap that = (DeliveryMap) o;
         return warehouseNodeId == that.warehouseNodeId
-                && startDateInSeconds == that.startDateInSeconds
+                && startDate == that.startDate
                 && Objects.equals(deliveryRequests, that.deliveryRequests);
     }
 
@@ -124,8 +129,8 @@ public class DeliveryMap {
      *
      * @return the start date in seconds.
      */
-    public int getStartDateInSeconds() {
-        return startDateInSeconds;
+    public int getStartDate() {
+        return startDate;
     }
 
     /**
@@ -139,6 +144,7 @@ public class DeliveryMap {
 
     /**
      * Get the {@link Delivery} from the {@link List} of {@link Delivery} at index i.
+     *
      * @param i the index of the {@link Delivery} in the {@link List} of {@link Delivery}.
      * @return the {@link Delivery} in the {@link List} of {@link Delivery} at index i.
      * @throws IndexOutOfBoundsException if the index is not in the bounds of the {@link List}.
@@ -149,6 +155,7 @@ public class DeliveryMap {
 
     /**
      * Returns a {@link String} representation of this {@link DeliveryMap}.
+     *
      * @return a {@link String} representation of this {@link DeliveryMap}.
      */
     @Override
@@ -159,7 +166,7 @@ public class DeliveryMap {
                 + ", warehouseNodeId="
                 + warehouseNodeId
                 + ", startDateInSeconds="
-                + startDateInSeconds
+                + startDate
                 + '}';
     }
 }

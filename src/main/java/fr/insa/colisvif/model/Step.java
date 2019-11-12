@@ -82,6 +82,11 @@ public class Step {
         return arrival.getNodeId();
     }
 
+    public void setArrivalNodeId(long nodeId) {
+        Vertex vertex = new Vertex(nodeId, arrival.getType(), arrival.getDuration());
+        arrival = vertex;
+    }
+
     /**
      * Returns the duration (in seconds) of the pick up or drop off.
      *
@@ -188,6 +193,7 @@ public class Step {
 
     /**
      * Returns a {@link String} representation of this {@link Step}.
+     *
      * @return a {@link String} representation of this {@link Step}.
      */
     @Override
