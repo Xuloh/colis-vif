@@ -2,7 +2,7 @@ package fr.insa.colisvif.controller.command;
 
 import fr.insa.colisvif.model.*;
 
-public class CommandAdd implements Command{
+public class CommandAdd implements Command {
 
     private Vertex pickUpVertex;
 
