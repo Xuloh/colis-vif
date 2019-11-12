@@ -96,6 +96,7 @@ public class MapCanvas extends BorderPane {
         this.originY = 0d;
         this.deliveryCanvasNodes = new ArrayList<>();
         this.cityMapCanvasNodes = new ArrayList<>();
+        this.mapSections = new ArrayList<>();
         this.showCityMapNodesOnHover = false;
 
         // wrap canvas in a pane to handle resize
@@ -166,18 +167,17 @@ public class MapCanvas extends BorderPane {
 
         final CityMap CITY_MAP = this.uiController.getCityMap();
 
+        this.mapSections.clear();
+        this.cityMapCanvasNodes.clear();
+
         if (CITY_MAP != null) {
-            this.mapSections = CITY_MAP
-                .getMapSection()
+            CITY_MAP.getMapSection()
                 .values()
-                .stream()
-                .reduce(new ArrayList<>(), (acc, val) -> {
-                    acc.addAll(val);
-                    return acc;
+                .forEach(lsSections -> {
+                    this.mapSections.addAll(lsSections);
                 });
 
-            this.cityMapCanvasNodes = CITY_MAP
-                .getMapNode()
+            CITY_MAP.getMapNode()
                 .values()
                 .stream()
                 .map(node -> new CanvasNode(
@@ -186,7 +186,7 @@ public class MapCanvas extends BorderPane {
                     CanvasConstants.CITY_MAP_NODE_COLOR,
                     CanvasConstants.CITY_MAP_NODE_RADIUS
                 ))
-                .collect(Collectors.toList());
+                .forEach(canvasNode -> this.cityMapCanvasNodes.add(canvasNode));
         }
     }
 
@@ -203,6 +203,8 @@ public class MapCanvas extends BorderPane {
 
         final DeliveryMap DELIVERY_MAP = this.uiController.getDeliveryMap();
 
+        this.deliveryCanvasNodes.clear();
+
         if (DELIVERY_MAP != null) {
             ColorGenerator colorGenerator = new ColorGenerator(
                 DELIVERY_MAP.getSize(),
@@ -210,10 +212,9 @@ public class MapCanvas extends BorderPane {
                 2
             );
 
-            DELIVERY_MAP
-                .getDeliveryList()
+            this.uiController
+                .getVertexList()
                 .stream()
-                .flatMap(delivery -> Stream.of(delivery.getPickUp(), delivery.getDropOff()))
                 .map(vertex -> new CanvasNode(
                     vertex.getNodeId(),
                     vertex.isPickUp() ? NodeType.DELIVERY_PICKUP : NodeType.DELIVERY_DROP_OFF,
