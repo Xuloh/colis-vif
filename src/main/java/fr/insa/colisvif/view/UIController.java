@@ -198,6 +198,7 @@ public class UIController {
             this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
             this.rightPane.setCenter(this.stepView);
         }
+        this.mapCanvas.updateRound();
         this.mapCanvas.redraw();
     }
 
