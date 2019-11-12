@@ -3,6 +3,7 @@ package fr.insa.colisvif.view;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.DeliveryMap;
+import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import javafx.collections.FXCollections;
@@ -206,6 +207,10 @@ public class UIController {
 
     /*package-private*/ DeliveryMap getDeliveryMap() {
         return this.controller.getDeliveryMap();
+    }
+
+    /*package-private*/ Round getRound() {
+        return this.controller.getRound();
     }
 
     /*package-private*/ ObservableList<Vertex> getVertexList() {
