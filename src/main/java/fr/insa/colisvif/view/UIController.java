@@ -202,6 +202,10 @@ public class UIController {
         this.mapCanvas.redraw();
     }
 
+    public void setShowCityMapNodesOnHover(boolean enable) {
+        this.mapCanvas.setShowCityMapNodesOnHover(enable);
+    }
+
     /*package-private*/ CityMap getCityMap() {
         return this.controller.getCityMap();
     }
