@@ -1,6 +1,10 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.controller.command.CommandModifyLocation;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -12,12 +16,18 @@ import fr.insa.colisvif.controller.Controller;
  */
 public class ModifyStopLocationState implements State {
 
+    private Step stepToChange;
+
     /**
      * When in location change mode, allow the user to edit the node location.
      */
     @Override
-    public void changeNodeLocation() {
-
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
+        Long nodeIdSelected = null; //todo : récup avec la méthode @Pacome
+        if (nodeIdSelected != null) {
+            long nodeId = nodeIdSelected;
+            commandList.doCommand(new CommandModifyLocation(stepToChange, nodeId, controller.getRound(), controller.getCityMap()));
+        }
     }
 
     /**
@@ -29,5 +39,9 @@ public class ModifyStopLocationState implements State {
     @Override
     public void getBackToPreviousState(Controller controller) {
         controller.setCurrentState(PropertiesPrintedState.class);
+    }
+
+    protected void entryToState(Step stepToModify) {
+        this.stepToChange = stepToModify;
     }
 }
