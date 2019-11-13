@@ -29,7 +29,7 @@ public class CommandModifyOrder implements Command {
             round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex - 1), cityMap);
         } else {
             round.getSteps().remove(modifiedStep);
-            round.addStepAtFirst(modifiedStep, cityMap);
+            round.addStepInIthPlace(modifiedStep, 0, cityMap);
         }
     }
 

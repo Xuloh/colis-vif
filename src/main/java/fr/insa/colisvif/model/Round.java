@@ -99,7 +99,7 @@ public class Round {
         }
     }
 
-    public void addStepAtFirst(Step step, CityMap map) {
+    private void addStepAtFirst(Step step, CityMap map) {
         long node1 = deliveryMap.getWarehouseNodeId();
         long node2 = step.getArrivalNodeId();
         long node3 = steps.get(0).getArrivalNodeId();
@@ -128,7 +128,7 @@ public class Round {
         steps.add(step);
     }
 
-    private void addStepInIthPlace(Step step, int i, CityMap map) {
+    public void addStepInIthPlace(Step step, int i, CityMap map) {
         if (i < 0 || i >= steps.size()) {
             throw new IllegalArgumentException("Index " + i + " out of bounds (size : " + steps.size() + ")");
         }
