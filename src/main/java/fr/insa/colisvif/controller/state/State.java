@@ -1,6 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.view.UIController;
@@ -177,7 +178,7 @@ public interface State {
 
     }
 
-    default void leftClick(Controller controller, UIController uiController) {
+    default void leftClick(Controller controller, UIController uiController, CommandList commandList) {
 
     }
 

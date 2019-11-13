@@ -99,7 +99,7 @@ public class Round {
         }
     }
 
-    private void addStepAtFirst(Step step, CityMap map) {
+    public void addStepAtFirst(Step step, CityMap map) {
         long node1 = deliveryMap.getWarehouseNodeId();
         long node2 = step.getArrivalNodeId();
         long node3 = steps.get(0).getArrivalNodeId();
@@ -169,7 +169,7 @@ public class Round {
      * @param pickUpNode  The pick up node
      * @param dropOffNode The drop off node
      */
-    public void addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
+    public int addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
         map.dijkstra(pickUpNode);
         map.dijkstra(dropOffNode);
         int deliveryId = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration).getId();
@@ -189,6 +189,7 @@ public class Round {
         dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
         addStep(pickUpStep);
         addStep(dropOffStep);
+        return deliveryId;
     }
 
     /**

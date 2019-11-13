@@ -1,6 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
@@ -34,9 +35,9 @@ public class ModeAddState implements State {
      * of the delivery the user wants to add.
      */
     // todo : prendra un point de coordonnées
-    // todo : l'état PickUpNodeAdded risque de disparaitre
+    // todo : l'état PickUpNodeAdded sera appelé grâce à cet état et setDuration dégagera
     @Override
-    public void leftClick(Controller controller, UIController uiController) {
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
         if (pickUpVertex == null) {
             //pickUpNodeId = getNodeFromCoordinates().getNodeId() n'existe pas actuellement
         } else {

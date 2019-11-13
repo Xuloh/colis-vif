@@ -1,5 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
+// todo : va virer sans doute
+
 /**
  * Class that implements State interface.
  * This class represents the state when modification happened, and the {@link fr.insa.colisvif.model.Round}

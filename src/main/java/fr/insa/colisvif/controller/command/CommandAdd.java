@@ -1,8 +1,12 @@
 package fr.insa.colisvif.controller.command;
 
 import fr.insa.colisvif.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CommandAdd implements Command {
+
+    private static final Logger LOGGER = LogManager.getLogger(CommandRemove.class);
 
     private Vertex pickUpVertex;
 
@@ -11,6 +15,8 @@ public class CommandAdd implements Command {
     private Round round;
 
     private CityMap cityMap;
+
+    private int deliveryId;
 
     public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Round round, CityMap cityMap) {
         this.pickUpVertex = pickUpVertex;
@@ -21,12 +27,22 @@ public class CommandAdd implements Command {
 
     @Override
     public void undoCommand() {
-        /*round.removeDelivery(signatureDeLaNouvelleMethode) #MethodeFelix*/
+        for (Step step : round.getSteps()) {
+            if (step.getDeliveryID() == deliveryId) {
+                Step toRemove = step;
+                try {
+                    round.removeDelivery(step, cityMap);
+                } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
+            }
+        }
     }
 
     @Override
     public void doCommand() {
-        round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
+        int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
                           pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap);
+        this.deliveryId = deliveryId;
     }
 }

@@ -1,5 +1,6 @@
 package fr.insa.colisvif.controller.command;
 
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
 
@@ -13,22 +14,28 @@ public class CommandModifyOrder implements Command {
 
     private int modifiedIndex;
 
-    public CommandModifyOrder(Round round, Step modifiedStep, Step previousStep) {
+    private CityMap cityMap;
+
+    public CommandModifyOrder(Round round, Step modifiedStep, Step previousStep, CityMap cityMap) {
         this.round = round;
         this.modifiedStep = modifiedStep;
         this.previousStep = previousStep;
+        this.cityMap = cityMap;
     }
 
     @Override
     public void undoCommand() {
-        round.getSteps().remove(modifiedStep);
-        round.getSteps().add(modifiedIndex, modifiedStep);
+        if (modifiedIndex != 0) {
+            round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex - 1), cityMap);
+        } else {
+            round.getSteps().remove(modifiedStep);
+            round.addStepAtFirst(modifiedStep, cityMap);
+        }
     }
 
     @Override
     public void doCommand() {
         modifiedIndex = round.getSteps().indexOf(modifiedStep);
-        round.getSteps().remove(modifiedStep);
-        round.getSteps().add(round.getSteps().indexOf(previousStep) + 1, modifiedStep);
+        round.changeOrderStep(modifiedStep, previousStep, cityMap);
     }
 }
