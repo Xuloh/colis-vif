@@ -51,12 +51,13 @@ public class StepView extends Pane {
                 super.updateItem(item, empty);
                 if (uiController.getColorMap() != null
                     && uiController.getColorMap().get(item) != null) {
-                    Color color = uiController.getColorMap().get(item);
-                    String css_color = "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
-                        + "," + (255 * color.getBlue()) + ")";
 
-                    LOGGER.debug("CSS COLOR : " + css_color);
+                    Color color = uiController.getColorMap().get(item);
+                    String css_color =
+                        "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
+                            + "," + (255 * color.getBlue()) + ")";
                     setStyle("-fx-background-color:" + css_color);
+                    setText("" + item);
                 }
             }
         });
