@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -63,7 +62,6 @@ public class StepView extends Pane {
                 }
             });
 
-
         TableColumn<Step, Integer> deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
         deliveryIdColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
@@ -82,7 +80,6 @@ public class StepView extends Pane {
                 }
             }
         });
-
 
         TableColumn<Step, Boolean> typeColumn = new TableColumn<>("Type");
         typeColumn.setCellValueFactory(
@@ -115,7 +112,6 @@ public class StepView extends Pane {
                 }
             }
         });
-
 
         TableColumn<Step, Integer> durationColumn = new TableColumn<>("Durée");
         durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
