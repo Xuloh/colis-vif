@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.TilePane?>
 
 <BorderPane fx:id="mainPane" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <top>
@@ -25,11 +26,7 @@
     </center>
    <right>
       <BorderPane fx:id="rightPane" prefHeight="227.0" prefWidth="455.0" BorderPane.alignment="CENTER">
-         <top>
-            <Button fx:id="computeRound" text="Calculer l'itinéraire" BorderPane.alignment="CENTER" />
-         </top>
          <center>
-            <!--<TableView fx:id="textualView" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER" />-->
          </center>
          <bottom>
             <FlowPane prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER">
@@ -41,6 +38,13 @@
                </children>
             </FlowPane>
          </bottom>
+         <top>
+            <TilePane fx:id="tilePane" alignment="TOP_CENTER" maxWidth="200" prefWidth="200.0" BorderPane.alignment="CENTER" hgap="100">
+               <children>
+                   <Button fx:id="computeRound" text="Calculer l'itinéraire" />
+               </children>
+            </TilePane>
+         </top>
       </BorderPane>
    </right>
    <bottom>
