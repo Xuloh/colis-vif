@@ -15,6 +15,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -73,6 +74,9 @@ public class UIController {
     @FXML
     private Button computeRound;
 
+    @FXML
+    private TilePane tilePane;
+
     private Stage stage;
 
     private Controller controller;
@@ -84,6 +88,8 @@ public class UIController {
     private StepView stepView;
 
     private StatusBar statusBar;
+
+    private TimePicker timePicker;
 
     /**
      * Creates a new UIController, passing in the {@link Stage}
@@ -99,6 +105,7 @@ public class UIController {
         this.vertexView = new VertexView();
         this.stepView = new StepView();
         this.statusBar = new StatusBar();
+        this.timePicker = new TimePicker();
     }
 
     /**
@@ -148,6 +155,7 @@ public class UIController {
             }
         });
 
+        this.tilePane.getChildren().add(this.timePicker);
         this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
         this.mainPane.setBottom(this.statusBar);
@@ -186,6 +194,29 @@ public class UIController {
     public void updateDeliveryMap() {
         this.rightPane.setCenter(this.vertexView);
         this.mapCanvas.updateDeliveryMap();
+    }
+
+    public void addPickUp() {
+        this.timePicker.resetTimePicker("Durée d'enlèvement : ");
+        if (!this.tilePane.getChildren().contains(this.timePicker)) {
+            this.tilePane.getChildren().add(this.timePicker);
+        }
+    }
+
+    public void addDropOff() {
+        this.timePicker.resetTimePicker("Durée du dépôt : ");
+        if (!this.tilePane.getChildren().contains(this.timePicker)) {
+            this.tilePane.getChildren().add(this.timePicker);
+        }
+    }
+
+    public int getTimeFromPicker() {
+        LOGGER.info(this.timePicker.getTimeValue());
+        return this.timePicker.getTimeValue();
+    }
+
+    private void clearTimePicker() {
+        this.tilePane.getChildren().remove(this.timePicker);
     }
 
     public void updateRound() {
