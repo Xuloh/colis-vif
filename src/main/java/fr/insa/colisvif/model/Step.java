@@ -15,8 +15,6 @@ public class Step {
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
-    private int intervalStart;
-
     private Vertex arrival;
 
 
@@ -40,7 +38,6 @@ public class Step {
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
         this.arrivalDate = arrivalDate;
-        intervalStart = ModelConstants.DELTA * (arrivalDate / ModelConstants.DELTA);
     }
 
     /**
@@ -59,10 +56,6 @@ public class Step {
      */
     public int getArrivalDate() {
         return arrivalDate;
-    }
-
-    public int getIntervalStart() {
-        return intervalStart;
     }
 
     /**
@@ -198,12 +191,10 @@ public class Step {
      */
     @Override
     public String toString() {
-        return "Step{" +
-            "sections=" + sections +
-            ", deliveryID=" + deliveryID +
-            ", arrivalDate=" + arrivalDate +
-            ", intervalStart=" + intervalStart +
-            ", arrival=" + arrival +
-            '}';
+        return "Step{"
+                + "sections=" + sections
+                + ", deliveryID=" + deliveryID
+                + ", arrivalDate=" + arrivalDate
+                + ", arrival=" + arrival + '}';
     }
 }
