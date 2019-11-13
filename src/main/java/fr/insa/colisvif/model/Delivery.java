@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import javafx.beans.value.ChangeListener;
+
 /**
  * Represent a Delivery by its pick up and drop off {@link Vertex} and its id.
  */
@@ -106,6 +108,11 @@ public class Delivery {
      */
     public void setDropOffDuration(int dropOffDuration) throws IllegalArgumentException {
         this.dropOff.setDuration(dropOffDuration);
+    }
+
+    public void addVertexChangeListener(ChangeListener<Number> changeListener) {
+        this.pickUp.nodeIdProperty().addListener(changeListener);
+        this.dropOff.nodeIdProperty().addListener(changeListener);
     }
 
     /**
