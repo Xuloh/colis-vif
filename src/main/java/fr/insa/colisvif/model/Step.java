@@ -198,12 +198,12 @@ public class Step {
      */
     @Override
     public String toString() {
-        return "Step{"
-                + "sections=" + sections
-                + ", deliveryID=" + deliveryID
-                + ", type=" + type
-                + ", arrivalDate=" + arrivalDate
-                + ", duration=" + duration
-                + '}';
+        return "Step{" +
+            "sections=" + sections +
+            ", deliveryID=" + deliveryID +
+            ", arrivalDate=" + arrivalDate +
+            ", intervalStart=" + intervalStart +
+            ", arrival=" + arrival +
+            '}';
     }
 }
