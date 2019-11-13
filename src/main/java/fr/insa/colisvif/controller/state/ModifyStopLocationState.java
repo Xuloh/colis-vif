@@ -38,7 +38,7 @@ public class ModifyStopLocationState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
-        controller.setCurrentState(PropertiesPrintedState.class);
+        controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
     protected void entryToState(Step stepToModify) {

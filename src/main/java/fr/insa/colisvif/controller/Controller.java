@@ -228,6 +228,14 @@ public class Controller {
         }
     }
 
+    public PickUpNodeAddedState getPUNState() {
+        return (PickUpNodeAddedState) stateMap.get(PickUpNodeAddedState.class);
+    }
+
+    public ModifyStopLocationState getMSLState() {
+        return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
+    }
+
     public void computeRound() {
         this.currentState.calculateItinerary(this, this.uiController);
     }
@@ -257,7 +265,7 @@ public class Controller {
      * Switch to "change location" mode
      */
     public void editLocationDelivery(Step step) {
-        this.currentState.switchToLocationChange();
+        this.currentState.switchToLocationChange(this, this.uiController);
     }
 
     private void createVertexList() {

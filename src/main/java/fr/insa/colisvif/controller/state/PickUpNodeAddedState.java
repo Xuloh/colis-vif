@@ -13,6 +13,8 @@ import fr.insa.colisvif.controller.Controller;
  */
 public class PickUpNodeAddedState implements State {
 
+    private long pickUpNodeId;
+
     /**
      * When in add mode, allows the user to add a drop off node.
      */
@@ -30,6 +32,10 @@ public class PickUpNodeAddedState implements State {
     @Override
     public void getBackToPreviousState(Controller controller) {
         controller.setCurrentState(ItineraryCalculatedState.class);
+    }
+
+    protected void entryToState(long nodeId) {
+        this.pickUpNodeId = nodeId;
     }
 
 }

@@ -122,7 +122,7 @@ public interface State {
     /**
      * Enter in location change mode to allow the user to change the position of a vertex
      */
-    default void switchToLocationChange() {
+    default void switchToLocationChange(Controller controller, UIController uiController) {
 
     }
 

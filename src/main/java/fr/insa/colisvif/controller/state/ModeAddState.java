@@ -38,10 +38,11 @@ public class ModeAddState implements State {
     // todo : l'état PickUpNodeAdded sera appelé grâce à cet état et setDuration dégagera
     @Override
     public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
-        if (pickUpVertex == null) {
-            //pickUpNodeId = getNodeFromCoordinates().getNodeId() n'existe pas actuellement
-        } else {
-            //dropOffNodeId = getNodeFromCoordinates().getNodeId() n'existe pas actuellement
+        Long nodeId = null; // todo : METHODE PACOME
+        if (nodeId != null) {
+            long nodeIdSelected = nodeId;
+            controller.getPUNState().entryToState(nodeIdSelected);
+            controller.setCurrentState(PickUpNodeAddedState.class);
         }
     }
 
@@ -60,49 +61,6 @@ public class ModeAddState implements State {
         pickUpNodeId = -1;
         dropOffNodeId = -1;
         controller.setCurrentState(ItineraryCalculatedState.class);
-    }
-
-    /**
-     * Sets the pick-up or drop-off duration of the added delivery to a given number.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
-     * @param askedDuration String input by the user when asked for a duration
-     */
-    public void setDuration(Controller controller, UIController uiController, String askedDuration) {
-        if (pickUpVertex == null) {
-            try {
-                int pickUpDuration = Integer.parseInt(askedDuration);
-                pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
-            } catch (NumberFormatException | NullPointerException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        /* Ce bloc dégage pour le moment, il est là au cas où on autorise la modification
-        de durée pendant l'ajout (si le gars s'est planté par exemple)
-
-        } else if (dropOffNodeId == -1) {
-            try {
-                int startDuration = Integer.parseInt(askedDuration);
-                pickUpVertex.setDuration(startDuration);
-            } catch (NumberFormatException | NullPointerException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        */
-        } else {
-            try {
-                int dropOffDuration = Integer.parseInt(askedDuration);
-                pickUpVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-                controller.getRound().addDelivery(pickUpVertex.getNodeId(),
-                                                    dropOffVertex.getNodeId(), pickUpVertex.getDuration(),
-                                                    dropOffVertex.getDuration(), controller.getCityMap());
-                pickUpVertex = null;
-                dropOffVertex = null;
-                pickUpNodeId = -1;
-                dropOffNodeId = -1;
-                controller.setCurrentState(LocalItineraryModificationState.class);
-            } catch (NumberFormatException | NullPointerException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
     }
 
 }
