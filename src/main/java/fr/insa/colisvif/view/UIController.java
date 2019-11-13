@@ -87,6 +87,22 @@ public class UIController {
     private Button computeRound;
 
     @FXML
+    private MenuItem addDeliveryItem;
+
+    @FXML
+    private MenuItem deleteDeliveryItem;
+
+    @FXML
+    private MenuItem editLocationItem;
+
+    @FXML
+    private MenuItem editSequenceItem;
+
+    @FXML
+    private MenuItem computeRoundItem;
+
+
+    @FXML
     private TilePane tilePane;
 
     private Stage stage;
@@ -156,13 +172,22 @@ public class UIController {
         this.computeRound.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.computeRound();
         });
+        this.computeRoundItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.computeRound();
+        });
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.addDelivery();
         });
+        this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.addDelivery();
+        });
 
         this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            this.controller.deleteDelivery();
+        });
+        this.deleteDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.deleteDelivery();
         });
 
@@ -172,15 +197,27 @@ public class UIController {
                 this.controller.editSequenceDelivery(step);
             }
         });
-
-        this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
             if (step != null) {
-                this.controller.editLocationDelivery(step);
+                this.controller.editSequenceDelivery(step);
             }
         });
 
-        this.stepView.addEventHandlerCustom( step -> {
+        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.editSequenceDelivery(step);
+            }
+        });
+        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.editSequenceDelivery(step);
+            }
+        });
+
+        this.stepView.addEventHandlerCustom(step -> {
             if (step != null) {
                 LOGGER.debug("Delivery selected " + step.getDeliveryID());
             }
@@ -234,8 +271,8 @@ public class UIController {
                 1
             );
 
-            for(Delivery d : getDeliveryMap().getDeliveryList()){
-                this.colorMap.put(d.getId(),colorGenerator.next());
+            for (Delivery d : getDeliveryMap().getDeliveryList()) {
+                this.colorMap.put(d.getId(), colorGenerator.next());
             }
         }
         this.rightPane.setCenter(this.vertexView);
@@ -251,6 +288,11 @@ public class UIController {
         this.deleteDelivery.setDisable(false);
         this.editSequence.setDisable(false);
         this.editLocation.setDisable(false);
+        this.computeRoundItem.setDisable(false);
+        this.addDeliveryItem.setDisable(false);
+        this.deleteDeliveryItem.setDisable(false);
+        this.editSequenceItem.setDisable(false);
+        this.editLocationItem.setDisable(false);
     }
 
     private void disableButtons() {
@@ -261,6 +303,11 @@ public class UIController {
         this.deleteDelivery.setDisable(true);
         this.editSequence.setDisable(true);
         this.editLocation.setDisable(true);
+        this.computeRoundItem.setDisable(true);
+        this.addDeliveryItem.setDisable(true);
+        this.deleteDeliveryItem.setDisable(true);
+        this.editSequenceItem.setDisable(true);
+        this.editLocationItem.setDisable(true);
     }
 
     public void setButtons() {
@@ -270,8 +317,11 @@ public class UIController {
         } else if (this.controller.getRound() == null) {
             this.openDeliveryMap.setDisable(false);
             this.computeRound.setDisable(false);
+            this.computeRoundItem.setDisable(false);
         } else {
             this.enableButtons();
+            this.computeRound.setDisable(true);
+            this.computeRoundItem.setDisable(true);
         }
     }
 
