@@ -1,6 +1,9 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -15,12 +18,10 @@ public class PickUpNodeAddedState implements State {
 
     private long pickUpNodeId;
 
-    /**
-     * When in add mode, allows the user to add a drop off node.
-     */
     @Override
-    public void addDropOffNode() {
-
+    public void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
+        controller.getPUNASState().entryToState(pickUpNodeId, step);
+        controller.setCurrentState(PickUpNodeAddedStepAddedState.class);
     }
 
     /**

@@ -38,22 +38,9 @@ public class SuppressionModeState implements State {
     }
 
     @Override
-    public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
-        /*Step stepToSuppress = uiController.getMapCanvas().getStepFromCoordinates(); n'existe pas, sera
-         suivi de tests pour savoir si on a bien un bon vertex de cliqué*/
-        /*Step stepToSuppress = null; // pour pas casser le build
-        Step otherStep;
-        Delivery deliveryToSuppress = controller.getDeliveryMap().getDeliveryPerId(stepToSuppress.getDeliveryID());
-        if (stepToSuppress.isPickUp()) {
-            //otherStep = new Step(deliveryToSuppress.getDropOff(), deliveryToSuppress.getId());
-        } else {
-            //otherStep = new Step(deliveryToSuppress.getPickUp(), deliveryToSuppress.getId());
-        }
-        //controller.getRound().removeDelivery(stepToSuppress, otherStep);*/
-
-        Long nodeReturned = null;
-        if (nodeReturned != null) {
-            long nodeSelectedId = nodeReturned;
+    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
+        if (nodeId != null) {
+            long nodeSelectedId = nodeId;
             for (Step step : controller.getStepList()) {
                 if (step.getArrivalNodeId() == nodeSelectedId) {
                     Step stepSelected = step;
@@ -62,7 +49,6 @@ public class SuppressionModeState implements State {
                         if (step1.getDeliveryID() == deliveryId && step != step1) {
                             Step otherDeliveyStep = step1;
                             commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap()));
-
                         }
                     }
                 }

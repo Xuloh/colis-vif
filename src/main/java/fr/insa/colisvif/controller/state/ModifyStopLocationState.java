@@ -22,11 +22,10 @@ public class ModifyStopLocationState implements State {
      * When in location change mode, allow the user to edit the node location.
      */
     @Override
-    public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
-        Long nodeIdSelected = null; //todo : récup avec la méthode @Pacome
-        if (nodeIdSelected != null) {
-            long nodeId = nodeIdSelected;
-            commandList.doCommand(new CommandModifyLocation(stepToChange, nodeId, controller.getRound(), controller.getCityMap()));
+    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
+        if (nodeId != null) {
+            long nodeIdSelected = nodeId;
+            commandList.doCommand(new CommandModifyLocation(stepToChange, nodeIdSelected, controller.getRound(), controller.getCityMap()));
         }
     }
 

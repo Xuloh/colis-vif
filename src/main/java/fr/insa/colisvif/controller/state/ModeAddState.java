@@ -37,8 +37,7 @@ public class ModeAddState implements State {
     // todo : prendra un point de coordonnées
     // todo : l'état PickUpNodeAdded sera appelé grâce à cet état et setDuration dégagera
     @Override
-    public void leftClick(Controller controller, UIController uiController, CommandList commandList) {
-        Long nodeId = null; // todo : METHODE PACOME
+    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
         if (nodeId != null) {
             long nodeIdSelected = nodeId;
             controller.getPUNState().entryToState(nodeIdSelected);

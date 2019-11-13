@@ -1,4 +1,5 @@
 package fr.insa.colisvif.controller.state;
 
-public class DropOffNodeAddedState {
+public class DropOffNodeAddedState implements State {
+
 }

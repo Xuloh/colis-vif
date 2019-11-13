@@ -65,6 +65,9 @@ public class Controller {
         this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
         this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
+        this.stateMap.put(PickUpNodeAddedStepAddedState.class, new PickUpNodeAddedStepAddedState());
+        this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
+        this.stateMap.put(DropOffNodeAddedState.class, new DropOffNodeAddedState());
 
         LOGGER.info("Initial Controller state : {}", this.currentState.getClass().getSimpleName());
     }
@@ -230,6 +233,10 @@ public class Controller {
 
     public PickUpNodeAddedState getPUNState() {
         return (PickUpNodeAddedState) stateMap.get(PickUpNodeAddedState.class);
+    }
+
+    public PickUpNodeAddedStepAddedState getPUNASState() {
+        return (PickUpNodeAddedStepAddedState) stateMap.get(PickUpNodeAddedStepAddedState.class);
     }
 
     public ModifyStopLocationState getMSLState() {

@@ -12,37 +12,67 @@ public class CommandAdd implements Command {
 
     private Vertex dropOffVertex;
 
+    private Step stepBefore;
+
+    private Step stepAfter;
+
     private Round round;
 
     private CityMap cityMap;
 
-    private int deliveryId;
+    private Step pickUpStep;
 
-    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Round round, CityMap cityMap) {
+    private Step dropOffStep;
+
+    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Step stepBefore, Step stepAfter, Round round, CityMap cityMap) {
         this.pickUpVertex = pickUpVertex;
         this.dropOffVertex = dropOffVertex;
+        this.stepBefore = stepBefore;
+        this.stepAfter = stepAfter;
         this.round = round;
         this.cityMap = cityMap;
     }
 
     @Override
     public void undoCommand() {
-        for (Step step : round.getSteps()) {
-            if (step.getDeliveryID() == deliveryId) {
-                Step toRemove = step;
-                try {
-                    round.removeDelivery(step, cityMap);
-                } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            }
+        try {
+            round.removeDelivery(pickUpStep, cityMap);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
     @Override
     public void doCommand() {
-        int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
-                          pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap);
-        this.deliveryId = deliveryId;
+        if (round.getSteps().indexOf(stepAfter) > round.getSteps().indexOf(stepBefore)) {
+            throw new IllegalArgumentException("L'étape choisie après la livraison est antérieure à celle avant la récupération.");
+        } else {
+            int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
+                    pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap);
+
+            // Searching Steps created
+
+            for (Step step : round.getSteps()) {
+                if (step.getDeliveryID() == deliveryId) {
+                    if (step.isPickUp()) {
+                        pickUpStep = step;
+                    } else {
+                        dropOffStep = step;
+                    }
+                }
+            }
+
+            // Modifying Positions
+
+            round.changeOrderStep(pickUpStep, stepBefore, cityMap);
+
+            if (stepAfter == null) {
+                round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
+            } else {
+                round.changeOrderStep(dropOffStep, stepAfter, cityMap);
+            }
+
+
+        }
     }
 }
