@@ -20,5 +20,6 @@ public class PickUpNodeAddedStepAddedState implements State {
         //int pickUpDuration = uiController.getSpinnerValue(); METHODE SOPHIE
         int pickUpDuration = 10;
         Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
+        controller.getMADOState().entryToState(pickUpVertex, stepBefore);
     }
 }

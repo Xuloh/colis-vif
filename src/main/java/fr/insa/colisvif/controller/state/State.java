@@ -1,6 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.Command;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Node;
@@ -192,6 +193,10 @@ public interface State {
     }
 
     default void addPickUpNode(Controller controller) {
+
+    }
+
+    default void addDropOffNode(Controller controller, CommandList commandList) {
 
     }
 

@@ -20,7 +20,7 @@ public class PickUpNodeAddedState implements State {
 
     @Override
     public void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
-        controller.getPUNASState().entryToState(pickUpNodeId, step);
+        controller.getPUNASAState().entryToState(pickUpNodeId, step);
         controller.setCurrentState(PickUpNodeAddedStepAddedState.class);
     }
 
