@@ -2,6 +2,7 @@ package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -49,6 +50,7 @@ public class StepView extends Pane {
         this.getChildren().add(this.stepTable);
         this.stepTable.prefHeightProperty().bind(this.heightProperty());
         this.stepTable.prefWidthProperty().bind(this.widthProperty());
+        this.eventHandlers = new ArrayList<>();
 
         this.stepTable.getSelectionModel().selectedItemProperty()
             .addListener((obs, oldSelection, newSelection) -> {
@@ -57,7 +59,7 @@ public class StepView extends Pane {
                     for (Consumer<Step> eventHandler : this.eventHandlers) {
                         eventHandler.accept(step);
                     }
-                    LOGGER.debug("CLICK DANS LA STEPVIEW : " + step.getDeliveryID());
+                    //LOGGER.debug("CLICK DANS LA STEPVIEW : " + step.getDeliveryID());
                 }
             });
 
@@ -187,12 +189,12 @@ public class StepView extends Pane {
         }
     }
 
-    public void addEventHandler(Consumer<Step> eventHandler) {
+    public void addEventHandlerCustom(Consumer<Step> eventHandler) {
         this.eventHandlers.add(eventHandler);
     }
 
 
-   
+
 /*
     public void onSelection(int deliveryID , boolean type){
         this.stepTable.getSelectionModel().clearSelection();

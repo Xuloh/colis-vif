@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -176,6 +177,12 @@ public class UIController {
             Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
             if (step != null) {
                 this.controller.editLocationDelivery(step);
+            }
+        });
+
+        this.stepView.addEventHandlerCustom( step -> {
+            if (step != null) {
+                LOGGER.debug("Delivery selected " + step.getDeliveryID());
             }
         });
 
