@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -151,15 +153,18 @@ public class UIController {
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.addDelivery();
         });
+
         this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.deleteDelivery();
         });
+
         this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
             if (step != null) {
                 this.controller.editSequenceDelivery(step);
             }
         });
+
         this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
             if (step != null) {
@@ -167,10 +172,11 @@ public class UIController {
             }
         });
 
-        this.tilePane.getChildren().add(this.timePicker);
         this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
         this.mainPane.setBottom(this.statusBar);
+
+        this.disableButtons();
 
         LOGGER.info("UI successfully initialized");
     }
@@ -201,11 +207,46 @@ public class UIController {
 
     public void updateCityMap() {
         this.mapCanvas.updateCityMap();
+
+        this.disableButtons();
+        this.openDeliveryMap.setDisable(false);
     }
 
     public void updateDeliveryMap() {
         this.rightPane.setCenter(this.vertexView);
         this.mapCanvas.updateDeliveryMap();
+    }
+
+    private void enableButtons() {
+        this.openDeliveryMap.setDisable(false);
+        this.exportRound.setDisable(false);
+        this.computeRound.setDisable(false);
+        this.addDelivery.setDisable(false);
+        this.deleteDelivery.setDisable(false);
+        this.editSequence.setDisable(false);
+        this.editLocation.setDisable(false);
+    }
+
+    private void disableButtons() {
+        this.openDeliveryMap.setDisable(true);
+        this.exportRound.setDisable(true);
+        this.computeRound.setDisable(true);
+        this.addDelivery.setDisable(true);
+        this.deleteDelivery.setDisable(true);
+        this.editSequence.setDisable(true);
+        this.editLocation.setDisable(true);
+    }
+
+    public void setButtons() {
+        this.disableButtons();
+        if (this.controller.getDeliveryMap() == null) {
+            this.openDeliveryMap.setDisable(false);
+        } else if (this.controller.getRound() == null) {
+            this.openDeliveryMap.setDisable(false);
+            this.computeRound.setDisable(false);
+        } else {
+            this.enableButtons();
+        }
     }
 
     public void addPickUp() {

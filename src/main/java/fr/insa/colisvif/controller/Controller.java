@@ -167,6 +167,7 @@ public class Controller {
     public void setRound(Round round) {
         this.round = round;
         this.uiController.updateRound();
+        this.uiController.setButtons();
     }
 
     /**
