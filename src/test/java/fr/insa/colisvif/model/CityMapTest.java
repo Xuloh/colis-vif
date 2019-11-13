@@ -630,9 +630,7 @@ public class CityMapTest {
 
         CityMap cityMap = cf
                 .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
-        Deli[ERROR] / home / mathieu / Documents / Cours / pld - agile / src / test / java / fr / insa / colisvif / model / CityMapTest.java:
-        813:'method def' child has incorrect indentation level 4, expected level should be 8.[Indentation]
-        veryMap deliveryMap = df
+        DeliveryMap deliveryMap = df
                 .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
