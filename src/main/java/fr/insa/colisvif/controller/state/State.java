@@ -68,7 +68,7 @@ public interface State {
     /**
      * Save the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
-    default void saveRoadMap(Controller controller) {
+    default void saveRoadMap(Controller controller, File file) {
 
     }
 

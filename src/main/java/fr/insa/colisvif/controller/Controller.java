@@ -111,6 +111,11 @@ public class Controller {
         this.uiController = uiController;
     }
 
+
+    public UIController getUIController() {
+        return this.uiController;
+    }
+
     /**
      * Changes the current {@link State} of this {@link Controller}
      * to the given one.
@@ -270,5 +275,9 @@ public class Controller {
                 vertexList.add(d.getDropOff());
             }
         }
+    }
+
+    public void saveRoadMap(File file) {
+        this.currentState.saveRoadMap(this, file);
     }
 }

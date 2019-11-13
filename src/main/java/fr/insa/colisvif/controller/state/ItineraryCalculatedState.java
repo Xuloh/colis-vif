@@ -4,6 +4,7 @@ import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Round;
+import fr.insa.colisvif.view.ExportView;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,9 +68,10 @@ public class ItineraryCalculatedState implements State {
      * Saves the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
     @Override
-    public void saveRoadMap(Controller controller) {
+    public void saveRoadMap(Controller controller, File file) {
         Round deliveryRound = controller.getRound();
-
+        ExportView ev = new ExportView(controller.getUIController());
+        ev.exportRound(deliveryRound, file);
     }
 
     /**
