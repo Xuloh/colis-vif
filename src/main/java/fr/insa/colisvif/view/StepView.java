@@ -39,7 +39,7 @@ public class StepView extends Pane {
         this.stepTable.prefWidthProperty().bind(this.widthProperty());
 
 
-        TableColumn<Step, Long> deliveryIdColumn = new TableColumn<>("N° de livraison");
+        TableColumn<Step, Long> deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
 
         /*
@@ -73,16 +73,14 @@ public class StepView extends Pane {
                 if(item == null) {
                     setText(null);
                 } else {
-                    int secondes = item % 60;
                     int minutes = item / 60;
                     int heures = minutes / 60;
                     minutes = minutes % 60;
 
-                    String secondes_str = secondes < 10 ? "0" + secondes : "" + secondes;
                     String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
                     String heures_str = heures < 10 ? "0" + heures : "" + heures;
 
-                    setText(heures_str + ":" + minutes_str + ":" + secondes_str);
+                    setText(heures_str + ":" + minutes_str );
                 }
             }
         });
@@ -155,8 +153,7 @@ public class StepView extends Pane {
                     String heures_str_inf = (heures - 1) < 10 ? "0" + (heures - 1) : "" + (heures - 1);
                     String heures_str_sup = (heures + 1) < 10 ? "0" + (heures + 1) : "" + (heures + 1);
 
-                    setText("[" +  heures_str_inf + ":" + minutes_str + ":" + "00"
-                            + " - " + heures_str_sup + ":" + minutes_str + ":" + "00" + "]");
+                    setText("[" +  heures_str_inf + ":" + minutes_str + " - " + heures_str_sup + ":" + minutes_str + "]");
                 }
             }
         });
