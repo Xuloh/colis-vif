@@ -48,6 +48,9 @@ public class UIController {
     private MenuItem openDeliveryMap;
 
     @FXML
+    private MenuItem exportRound;
+
+    @FXML
     private MenuItem close;
 
     @FXML
@@ -91,6 +94,8 @@ public class UIController {
 
     private TimePicker timePicker;
 
+    private ExportView exportView;
+
     /**
      * Creates a new UIController, passing in the {@link Stage}
      * and the MVC {@link Controller}
@@ -106,6 +111,7 @@ public class UIController {
         this.stepView = new StepView();
         this.statusBar = new StatusBar();
         this.timePicker = new TimePicker();
+        this.exportView = new ExportView(this);
     }
 
     /**
@@ -127,6 +133,12 @@ public class UIController {
             fileChooser.setTitle("Ouvrir un plan de livraison");
             File file = fileChooser.showOpenDialog(this.stage);
             this.controller.loadDeliveryMap(file);
+        });
+
+        this.exportRound.addEventHandler(ActionEvent.ACTION, event -> {
+            fileChooser.setTitle("Choisir un dossier de sauvegarde");
+            File file = fileChooser.showSaveDialog(this.stage);
+            this.controller.exportRound(file);
         });
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());

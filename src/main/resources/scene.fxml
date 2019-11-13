@@ -16,6 +16,7 @@
                     <items>
                         <MenuItem fx:id="openMap" mnemonicParsing="false" text="Ouvrir un plan de ville" />
                         <MenuItem fx:id="openDeliveryMap" mnemonicParsing="false" text="Ouvrir un plan de livraison" />
+                        <MenuItem fx:id="exportRound" mnemonicParsing="false" text="Exporter le plan de livraison" />
                         <MenuItem fx:id="close" mnemonicParsing="false" text="Fermer" />
                     </items>
                 </Menu>

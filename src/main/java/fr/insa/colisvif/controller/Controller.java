@@ -101,6 +101,15 @@ public class Controller {
         }
     }
 
+    public void exportRound(File file) {
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Exportation du fichier à l'emplacement " + file.getAbsolutePath());
+            this.currentState.saveRoadMap(this, file);
+        }
+    }
+
     /**
      * Assigns the given {@link UIController} to this {@link Controller}.
      * It must be assigned before attempting any action on the {@link Controller}.
