@@ -212,6 +212,11 @@ public class Round {
     }
 
     public void changeLocationStep(Step stepToChange, long nodeId, CityMap map) {
+        if (stepToChange.isPickUp()) {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID()).getPickUp().setNodeId(nodeId);
+        } else {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID()).getDropOff().setNodeId(nodeId);
+        }
         int index = steps.indexOf(stepToChange);
         removeIthStep(index, map);
         stepToChange.setArrivalNodeId(nodeId);

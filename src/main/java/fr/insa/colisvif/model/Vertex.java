@@ -23,8 +23,8 @@ public class Vertex implements Comparable<Vertex> {
     /**
      * Constructor of Vertex.
      *
-     * @param nodeId the {@link Node} id corresponding.
-     * @param type the type, drop off or pick up.
+     * @param nodeId   the {@link Node} id corresponding.
+     * @param type     the type, drop off or pick up.
      * @param duration the time to do the drop off or the pick up.
      * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is less than 0.
      */
@@ -107,6 +107,7 @@ public class Vertex implements Comparable<Vertex> {
 
     /**
      * Performs a comparison with the {@link Vertex} vertex.
+     *
      * @param vertex the {@link Vertex} to compare to.
      * @return 0 if they are the same, -1 if this < vertex, 1 if this > vertex.
      */
@@ -134,7 +135,6 @@ public class Vertex implements Comparable<Vertex> {
      * The method compares the {@link Node} id, the type and the duration.
      *
      * @param o the {@link Object} to compare this {@link Vertex} to
-     *
      * @return <code>true</code> if o is a {@link Vertex} whose values are
      * "equal" to those of this {@link Vertex}
      */
