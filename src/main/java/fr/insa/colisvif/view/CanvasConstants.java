@@ -28,10 +28,7 @@ public final class CanvasConstants {
      */
     public static final double DELIVERY_NODE_RADIUS = 7d;
 
-    /**
-     * Square of the radius used to render the nodes on the map (in pixels)
-     */
-    public static final double DELIVERY_NODE_SQUARED_RADIUS = DELIVERY_NODE_RADIUS * DELIVERY_NODE_RADIUS;
+    public static final double DELIVERY_NODE_SELECTED_RADIUS_SCALE = 1.5d;
 
     /**
      * Radius used to render the city map nodes (in pixels)
