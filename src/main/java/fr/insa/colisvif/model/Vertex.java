@@ -1,5 +1,8 @@
 package fr.insa.colisvif.model;
 
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyLongWrapper;
+
 import java.util.Objects;
 
 /**
@@ -11,7 +14,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public static final boolean PICK_UP = false;
 
-    private long nodeId;
+    private ReadOnlyLongWrapper nodeId;
 
     private boolean type; //false if it is a pick up and true if it is a drop off
 
@@ -29,7 +32,7 @@ public class Vertex implements Comparable<Vertex> {
         if (duration < 0) {
             throw new IllegalArgumentException("The duration must be more or equal than 0 seconds, got " + duration);
         }
-        this.nodeId = nodeId;
+        this.nodeId = new ReadOnlyLongWrapper(this, "nodeId", nodeId);
         this.type = type;
         this.duration = duration;
     }
@@ -64,7 +67,15 @@ public class Vertex implements Comparable<Vertex> {
      * @return the {@link Node} id corresponding to the {@link Vertex}.
      */
     public long getNodeId() {
-        return nodeId;
+        return nodeId.getValue();
+    }
+
+    public void setNodeId(long nodeId) {
+        this.nodeId.set(nodeId);
+    }
+
+    public ReadOnlyLongProperty nodeIdProperty() {
+        return this.nodeId.getReadOnlyProperty();
     }
 
     /**
@@ -113,7 +124,7 @@ public class Vertex implements Comparable<Vertex> {
             }
             return -1;
         }
-        return (int) (this.nodeId - vertex.nodeId);
+        return (int) (this.nodeId.getValue() - vertex.nodeId.getValue());
     }
 
     /**

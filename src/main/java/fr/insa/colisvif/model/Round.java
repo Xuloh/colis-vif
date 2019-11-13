@@ -1,13 +1,16 @@
 package fr.insa.colisvif.model;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.List;
 
 /**
  * Represents the round to do all the deliveries that needs to be made, as a {@link List} of {@link Step}.
  */
 public class Round {
-    private List<Step> steps;
+
+    private ObservableList<Step> steps;
 
     private DeliveryMap deliveryMap;
 
@@ -17,9 +20,8 @@ public class Round {
      * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
      */
     public Round(DeliveryMap deliveries) {
-        steps = new ArrayList<>();
+        steps = FXCollections.observableArrayList();
         this.deliveryMap = deliveries;
-        int n = deliveries.getSize();
     }
 
     /**

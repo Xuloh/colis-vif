@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import javafx.beans.value.ChangeListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -8,6 +10,7 @@ import java.util.Objects;
  * Create and contains all the {@link Delivery} in a {@link List}, the warehouse {@link Node} id and the starting date in seconds.
  */
 public class DeliveryMap {
+
     private List<Delivery> deliveryRequests;
 
     private int cptId;
@@ -151,6 +154,12 @@ public class DeliveryMap {
      */
     public Delivery getDelivery(int i) throws IndexOutOfBoundsException {
         return deliveryRequests.get(i);
+    }
+
+    public void addDeliveryChangeListener(ChangeListener<Number> changeListener) {
+        for (Delivery delivery : this.deliveryRequests) {
+            delivery.addVertexChangeListener(changeListener);
+        }
     }
 
     /**

@@ -189,8 +189,6 @@ public class MapCanvas extends BorderPane {
     public void updateDeliveryMap() {
         LOGGER.debug("Updating DeliveryMap data");
 
-        //TODO générer légende dans une map de vertex/image
-
         final DeliveryMap DELIVERY_MAP = this.uiController.getDeliveryMap();
 
         this.deliveryCanvasNodes.clear();
