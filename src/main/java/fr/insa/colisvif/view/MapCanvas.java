@@ -5,6 +5,7 @@ import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Section;
+import fr.insa.colisvif.model.Step;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
@@ -62,6 +65,10 @@ public class MapCanvas extends BorderPane {
     private List<Section> roundSections;
 
     private boolean showCityMapNodesOnHover;
+
+    private List<BiConsumer<Long, Step>> nodeMouseHoverHandlers;
+
+    private List<BiConsumer<Long, Step>> nodeMouseClickHandlers;
 
     /**
      * Creates a new {@link MapCanvas}.
@@ -114,6 +121,10 @@ public class MapCanvas extends BorderPane {
         this.canvas.setOnMouseDragged(this::canvasOnMouseDragged);
         this.canvas.setOnMouseReleased(this::canvasOnMouseReleased);
         this.canvas.setOnMouseMoved(this::canvasOnMouseMoved);
+        this.canvas.setOnMouseExited(this::canvasOnMouseExited);
+
+        this.nodeMouseHoverHandlers = new ArrayList<>();
+        this.nodeMouseClickHandlers = new ArrayList<>();
     }
 
     /**
@@ -221,6 +232,7 @@ public class MapCanvas extends BorderPane {
     }
 
     //TODO javadoc
+
     public void updateRound() {
         LOGGER.debug("Updating Round data");
 
@@ -236,11 +248,59 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    public void addNodeMouseHoverHandler(BiConsumer<Long, Step> eventHandler) {
+        this.nodeMouseHoverHandlers.add(eventHandler);
+    }
+
+    public void addNodeMouseClickHandler(BiConsumer<Long, Step> eventHandler) {
+        this.nodeMouseClickHandlers.add(eventHandler);
+    }
+
+    public void zoomIn() {
+        double scale = this.scale.get();
+        scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
+        this.scale.set(scale);
+    }
+
+    public void zoomOut() {
+        double scale = this.scale.get();
+        scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
+        this.scale.set(scale);
+    }
+
+    public void autoZoom() {
+        this.originX = 0;
+        this.originY = 0;
+        this.scale.set(1d);
+        //this.redraw();
+    }
+
+    private void canvasOnMouseExited(MouseEvent event) {
+        this.cityMapCanvasNodes.forEach(node -> node.selected = false);
+        this.deliveryCanvasNodes.forEach(node -> node.selected = false);
+        this.redraw();
+    }
+
     private void canvasOnMousePressed(MouseEvent event) {
         if (event.getButton() == MouseButton.MIDDLE) {
             this.canvas.setCursor(Cursor.CLOSED_HAND);
             this.dragOriginX = this.originX - event.getX();
             this.dragOriginY = this.originY - event.getY();
+        } else if (event.getButton() == MouseButton.PRIMARY) {
+
+            CanvasNode selectedNode = this.getNodeFromCoords(event.getX(), event.getY());
+
+            if (selectedNode != null) {
+                selectedNode.selected = true;
+                this.canvas.setCursor(Cursor.HAND);
+                for (var handler : this.nodeMouseClickHandlers) {
+                    handler.accept(selectedNode.nodeId, null);
+                }
+            } else {
+                this.canvas.setCursor(Cursor.DEFAULT);
+            }
+
+            this.redraw();
         }
     }
 
@@ -262,6 +322,25 @@ public class MapCanvas extends BorderPane {
         LOGGER.trace("Updating hovered nodes");
         long start = System.nanoTime();
 
+        CanvasNode selectedNode = this.getNodeFromCoords(event.getX(), event.getY());
+
+        if (selectedNode != null) {
+            selectedNode.selected = true;
+            this.canvas.setCursor(Cursor.HAND);
+            for (var handler : this.nodeMouseHoverHandlers) {
+                handler.accept(selectedNode.nodeId, null);
+            }
+        } else {
+            this.canvas.setCursor(Cursor.DEFAULT);
+        }
+
+        this.redraw();
+
+        long computeTimeMillis = (System.nanoTime() - start) / 1_000_000;
+        LOGGER.trace("Updated hovered nodes in {} ms", computeTimeMillis);
+    }
+
+    private CanvasNode getNodeFromCoords(double x, double y) {
         boolean foundIntersect = false;
 
         Iterator<CanvasNode> it = this.showCityMapNodesOnHover
@@ -273,9 +352,9 @@ public class MapCanvas extends BorderPane {
 
         while (it.hasNext()) {
             CanvasNode canvasNode = it.next();
-            double squaredDistance = canvasNode.squaredDistance(event.getX(), event.getY());
+            double squaredDistance = canvasNode.squaredDistance(x, y);
 
-            if (canvasNode.intersects(event.getX(), event.getY())) {
+            if (canvasNode.intersects(x, y)) {
                 LOGGER.trace("CanvasNode intersection : " + canvasNode);
 
                 if (squaredDistance < closestSquaredDistance) {
@@ -284,25 +363,11 @@ public class MapCanvas extends BorderPane {
                     }
                     closestNode = canvasNode;
                 }
-
-                canvasNode.selected = true;
-                foundIntersect = true;
             } else {
                 canvasNode.selected = false;
             }
         }
-
-        if (foundIntersect) {
-            this.canvas.setCursor(Cursor.HAND);
-
-        } else {
-            this.canvas.setCursor(Cursor.DEFAULT);
-        }
-
-        this.redraw();
-
-        long computeTimeMillis = (System.nanoTime() - start) / 1_000_000;
-        LOGGER.trace("Updated hovered nodes in {} ms", computeTimeMillis);
+        return closestNode;
     }
 
     private void clearCanvas() {
@@ -394,24 +459,11 @@ public class MapCanvas extends BorderPane {
         this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
         this.scale.addListener((observable, oldValue, newValue) -> this.redraw());
 
-        toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> {
-            this.originX = 0;
-            this.originY = 0;
-            this.scale.set(1d);
-            //this.redraw();
-        });
+        toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> this.autoZoom());
 
-        toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> {
-            double scale = this.scale.get();
-            scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
-            this.scale.set(scale);
-        });
+        toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> this.zoomIn());
 
-        toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> {
-            double scale = this.scale.get();
-            scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
-            this.scale.set(scale);
-        });
+        toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> this.zoomOut());
     }
 
     private void computeBaseZoom() {
