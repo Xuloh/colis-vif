@@ -31,19 +31,6 @@ import java.util.Map;
  * to render instances of {@link CityMap} and {@link DeliveryMap}.
  * @see Canvas
  */
-
-// liste de Brice
-// todo : ajouter une méthode drawRound
-
-/* todo : Pour ce qui est des états, il va falloir que je change toutes les méthodes d'états de
- type 'Clic sur le canvas' en une seule méthode 'Clic gauche'. Ca implique que j'aient plusieurs méthodes
- qui me permettent de convertir un point de clic :
-    - en Node (si le point cliqué est un Node on le renvoie)
-    - en Step (si le point cliqué est un Vertex alors on renvoie la Step associé)
-
-    Ca implique de pouvoir passer les clics de souris en paramètres. (coordonnées dans le canvas ?)
- */
-
 public class MapCanvas extends BorderPane {
 
     private static final Logger LOGGER = LogManager.getLogger(MapCanvas.class);
@@ -151,10 +138,10 @@ public class MapCanvas extends BorderPane {
 
     /**
      * Changes the mode to show city map nodes when the mouse hovers them.
-     * @param showCityMapNodesOnHover true to activate the mode, false to deactivate
+     * @param enable true to activate the mode, false to deactivate
      */
-    public void setShowCityMapNodesOnHover(boolean showCityMapNodesOnHover) {
-        this.showCityMapNodesOnHover = showCityMapNodesOnHover;
+    public void setShowCityMapNodesOnHover(boolean enable) {
+        this.showCityMapNodesOnHover = enable;
     }
 
     /**
@@ -283,12 +270,23 @@ public class MapCanvas extends BorderPane {
             ? this.cityMapCanvasNodes.iterator()
             : this.deliveryCanvasNodes.iterator();
 
+        CanvasNode closestNode = null;
+        double closestSquaredDistance = Double.MAX_VALUE;
+
         while (it.hasNext()) {
             CanvasNode canvasNode = it.next();
+            double squaredDistance = canvasNode.squaredDistance(event.getX(), event.getY());
 
             if (canvasNode.intersects(event.getX(), event.getY())) {
                 LOGGER.trace("CanvasNode intersection : " + canvasNode);
-                this.canvas.setCursor(Cursor.HAND);
+
+                if (squaredDistance < closestSquaredDistance) {
+                    if (closestNode != null) {
+                        closestNode.selected = false;
+                    }
+                    closestNode = canvasNode;
+                }
+
                 canvasNode.selected = true;
                 foundIntersect = true;
             } else {
@@ -296,7 +294,10 @@ public class MapCanvas extends BorderPane {
             }
         }
 
-        if (!foundIntersect) {
+        if (foundIntersect) {
+            this.canvas.setCursor(Cursor.HAND);
+
+        } else {
             this.canvas.setCursor(Cursor.DEFAULT);
         }
 
@@ -580,6 +581,8 @@ public class MapCanvas extends BorderPane {
 
         private double radius;
 
+        private double squaredRadius;
+
         /*package-private*/ CanvasNode(long nodeId, NodeType type, Paint paint, double radius) {
             this.nodeId = nodeId;
             this.type = type;
@@ -588,6 +591,7 @@ public class MapCanvas extends BorderPane {
             this.y = 0;
             this.selected = false;
             this.radius = radius;
+            this.squaredRadius = radius * radius;
         }
 
         /*package-private*/ void updateCoords() {
@@ -597,13 +601,19 @@ public class MapCanvas extends BorderPane {
         }
 
         /*package-private*/ void draw() {
+            double radius = this.radius;
+
+            if (this.selected) {
+                radius *= CanvasConstants.DELIVERY_NODE_SELECTED_RADIUS_SCALE;
+            }
+
             switch (this.type) {
             case DELIVERY_PICKUP:
                 drawTriangle(
                     this.x,
                     this.y,
                     this.paint,
-                    this.radius
+                    radius
                 );
                 break;
             case DELIVERY_DROP_OFF:
@@ -611,7 +621,7 @@ public class MapCanvas extends BorderPane {
                     this.x,
                     this.y,
                     this.paint,
-                    this.radius
+                    radius
                 );
                 break;
             case DELIVERY_WAREHOUSE:
@@ -619,7 +629,7 @@ public class MapCanvas extends BorderPane {
                     this.x,
                     this.y,
                     this.paint,
-                    this.radius
+                    radius
                 );
                 break;
             case CITY_MAP_NODE:
@@ -638,8 +648,16 @@ public class MapCanvas extends BorderPane {
         }
 
         /*package-private*/ boolean intersects(double x, double y) {
-            double squaredDistance = (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
-            return squaredDistance <= CanvasConstants.DELIVERY_NODE_SQUARED_RADIUS;
+            double squaredRadius = this.squaredRadius;
+            if (this.selected) {
+                squaredRadius *= CanvasConstants.DELIVERY_NODE_SELECTED_RADIUS_SCALE;
+            }
+            double squaredDistance = this.squaredDistance(x, y);
+            return squaredDistance <= squaredRadius;
+        }
+
+        /*package-private*/ double squaredDistance(double x, double y) {
+            return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
         }
 
         @Override
