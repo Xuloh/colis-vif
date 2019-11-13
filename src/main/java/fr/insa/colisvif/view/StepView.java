@@ -9,38 +9,59 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * A custom {@link Pane} that wraps and handles a {@link TableView}
- * to render instances of {@link Vertex} before the calculated itinerary
+ * A custom {@link Pane} that wraps and handles a {@link TableView} to render instances of {@link
+ * Vertex} before the calculated itinerary
+ *
  * @see TableView
  */
 /* todo : permettre de demander une durée de pickup / dropoff (renvoyer un String) @Sophie */
 //todo : adapter
 public class StepView extends Pane {
+
     private static final Logger LOGGER = LogManager.getLogger(StepView.class);
 
     private TableView<Step> stepTable;
+    private UIController uiController;
 
     /**
-     * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}.
-     * The first {@link TableColumn} corresponds to the nodeId
-     * and the second {@link TableColumn} corresponds to the duration.
+     * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}. The first
+     * {@link TableColumn} corresponds to the nodeId and the second {@link TableColumn} corresponds
+     * to the duration.
      *
      * @see TableView
      */
-    public StepView() {
+    public StepView(UIController uiController) {
         super();
+        this.uiController = uiController;
         this.stepTable = new TableView<>();
         this.getChildren().add(this.stepTable);
         this.stepTable.prefHeightProperty().bind(this.heightProperty());
         this.stepTable.prefWidthProperty().bind(this.widthProperty());
 
-
-        TableColumn<Step, Long> deliveryIdColumn = new TableColumn<>("N° livraison");
+        TableColumn<Step, Integer> deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
+        deliveryIdColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (uiController.getColorMap() != null
+                    && uiController.getColorMap().get(item) != null) {
+
+                    Color color = uiController.getColorMap().get(item);
+                    String css_color =
+                        "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
+                            + "," + (255 * color.getBlue()) + ")";
+                    setStyle("-fx-background-color:" + css_color);
+                    setText("" + item);
+                }
+            }
+        });
+
 
         /*
         TableColumn<Step, Vertex> typeColumn = new TableColumn<>("Durée");
@@ -54,7 +75,8 @@ public class StepView extends Pane {
         });
          */
         TableColumn<Step, Boolean> typeColumn = new TableColumn<>("Type");
-        typeColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isPickUp()));
+        typeColumn.setCellValueFactory(
+            cellData -> new SimpleBooleanProperty(cellData.getValue().isPickUp()));
         typeColumn.setCellFactory(col -> new TableCell<Step, Boolean>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -63,14 +85,13 @@ public class StepView extends Pane {
             }
         });
 
-
         TableColumn<Step, Integer> arrivalColumn = new TableColumn<>("Arrivée");
         arrivalColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
         arrivalColumn.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if(item == null) {
+                if (item == null) {
                     setText(null);
                 } else {
                     int minutes = item / 60;
@@ -80,7 +101,7 @@ public class StepView extends Pane {
                     String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
                     String heures_str = heures < 10 ? "0" + heures : "" + heures;
 
-                    setText(heures_str + ":" + minutes_str );
+                    setText(heures_str + ":" + minutes_str);
                 }
             }
         });
@@ -150,10 +171,13 @@ public class StepView extends Pane {
                     int heures = minutes / 60;
                     minutes = minutes % 60;
                     String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
-                    String heures_str_inf = (heures - 1) < 10 ? "0" + (heures - 1) : "" + (heures - 1);
-                    String heures_str_sup = (heures + 1) < 10 ? "0" + (heures + 1) : "" + (heures + 1);
+                    String heures_str_inf =
+                        (heures - 1) < 10 ? "0" + (heures - 1) : "" + (heures - 1);
+                    String heures_str_sup =
+                        (heures + 1) < 10 ? "0" + (heures + 1) : "" + (heures + 1);
 
-                    setText("[" +  heures_str_inf + ":" + minutes_str + " - " + heures_str_sup + ":" + minutes_str + "]");
+                    setText("[" + heures_str_inf + ":" + minutes_str + " - " + heures_str_sup + ":"
+                        + minutes_str + "]");
                 }
             }
         });

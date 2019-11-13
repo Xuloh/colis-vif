@@ -2,10 +2,13 @@ package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +37,8 @@ import java.util.ResourceBundle;
 public class UIController {
 
     private static final Logger LOGGER = LogManager.getLogger(UIController.class);
+
+    private Map<Integer, Color> colorMap;
 
     @FXML
     private URL location;
@@ -110,10 +116,11 @@ public class UIController {
         this.controller = controller;
         this.mapCanvas = new MapCanvas(this, true);
         this.vertexView = new VertexView();
-        this.stepView = new StepView();
+        this.stepView = new StepView(this);
         this.statusBar = new StatusBar();
         this.timePicker = new TimePicker();
         this.exportView = new ExportView(this);
+        this.colorMap = new HashMap<>();
     }
 
     /**
@@ -213,8 +220,20 @@ public class UIController {
     }
 
     public void updateDeliveryMap() {
+        if (getDeliveryMap() != null) {
+            ColorGenerator colorGenerator = new ColorGenerator(
+                getDeliveryMap().getSize(),
+                CanvasConstants.NODE_OPACITY,
+                1
+            );
+
+            for(Delivery d : getDeliveryMap().getDeliveryList()){
+                this.colorMap.put(d.getId(),colorGenerator.next());
+            }
+        }
         this.rightPane.setCenter(this.vertexView);
         this.mapCanvas.updateDeliveryMap();
+
     }
 
     private void enableButtons() {
@@ -305,4 +324,9 @@ public class UIController {
     /*package-private*/ ObservableList<Vertex> getVertexList() {
         return this.controller.getVertexList();
     }
+
+    public Map<Integer, Color> getColorMap() {
+        return colorMap;
+    }
+
 }
