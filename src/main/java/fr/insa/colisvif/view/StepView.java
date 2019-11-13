@@ -2,8 +2,11 @@ package fr.insa.colisvif.view;
 
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
+import java.util.List;
+import java.util.function.Consumer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,7 +29,11 @@ public class StepView extends Pane {
     private static final Logger LOGGER = LogManager.getLogger(StepView.class);
 
     private TableView<Step> stepTable;
+
     private UIController uiController;
+
+    private List<Consumer<Step>> eventHandlers;
+
 
     /**
      * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}. The first
@@ -42,6 +49,18 @@ public class StepView extends Pane {
         this.getChildren().add(this.stepTable);
         this.stepTable.prefHeightProperty().bind(this.heightProperty());
         this.stepTable.prefWidthProperty().bind(this.widthProperty());
+
+        this.stepTable.getSelectionModel().selectedItemProperty()
+            .addListener((obs, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    Step step = this.stepTable.getSelectionModel().getSelectedItem();
+                    for (Consumer<Step> eventHandler : this.eventHandlers) {
+                        eventHandler.accept(step);
+                    }
+                    LOGGER.debug("CLICK DANS LA STEPVIEW : " + step.getDeliveryID());
+                }
+            });
+
 
         TableColumn<Step, Integer> deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
@@ -63,17 +82,6 @@ public class StepView extends Pane {
         });
 
 
-        /*
-        TableColumn<Step, Vertex> typeColumn = new TableColumn<>("Durée");
-        typeColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().FONCTION_GET_VERTEX.isPickUp()));
-        typeColumn.setCellFactory(col -> new TableCell<Step, Boolean>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Enlèvement" : "Livraison" );
-            }
-        });
-         */
         TableColumn<Step, Boolean> typeColumn = new TableColumn<>("Type");
         typeColumn.setCellValueFactory(
             cellData -> new SimpleBooleanProperty(cellData.getValue().isPickUp()));
@@ -107,33 +115,6 @@ public class StepView extends Pane {
         });
 
 
-
-        /*
-        TableColumn<Step, Vertex> durationColumn = new TableColumn<>("Durée");
-        durationColumn.setCellValueFactory(new PropertyValueFactory<>("NOM_VARIABLE_VERTEX"));
-        durationColumn.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Vertex item, boolean empty) {
-                super.updateItem(item, empty) ;
-                if(item==null)
-                {
-                    setText(null);
-                } else {
-                    int secondes_tot = item.getDuration();
-                    int secondes = secondes_tot % 60;
-                    int minutes = secondes_tot / 60;
-                    int heures = minutes / 60;
-                    minutes = minutes % 60;
-
-                    String secondes_str = secondes < 10 ? "0" + secondes : "" + secondes;
-                    String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
-                    String heures_str = heures < 10 ? "0" + heures : "" + heures;
-
-                    setText(heures_str + ":" + minutes_str + ":" + secondes_str);
-                }
-            }
-        });
-         */
         TableColumn<Step, Integer> durationColumn = new TableColumn<>("Durée");
         durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
         durationColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
@@ -205,4 +186,19 @@ public class StepView extends Pane {
             LOGGER.info("Steps printed");
         }
     }
+
+    public void addEventHandler(Consumer<Step> eventHandler) {
+        this.eventHandlers.add(eventHandler);
+    }
+
+
+   
+/*
+    public void onSelection(int deliveryID , boolean type){
+        this.stepTable.getSelectionModel().clearSelection();
+        this.stepTable.getSelectionModel().select(deliveryID);
+    }
+
+ */
+
 }
