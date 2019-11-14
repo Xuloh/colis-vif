@@ -39,6 +39,7 @@ public class ModifyOrderState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().enableButtons();
         controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
@@ -52,6 +53,7 @@ public class ModifyOrderState implements State {
                     commandList.doCommand(new CommandModifyOrder(controller.getRound(), stepToChange, null, controller.getCityMap()));
                 } else {
                     uiController.printError("Le changement demandé rentrerait en conflit avec la livraison (dépôt avant enlèvement)");
+                    controller.getUIController().enableButtons();
                 }
                 // Clic autre part
             } else {
@@ -83,6 +85,7 @@ public class ModifyOrderState implements State {
                     controller.setButtons();
                 } else {
                     uiController.printError("Le changement demandé rentrerait en conflit avec la livraison (dépôt avant enlèvement)");
+                    controller.getUIController().enableButtons();
                 }
             }
         } catch (Exception e) {

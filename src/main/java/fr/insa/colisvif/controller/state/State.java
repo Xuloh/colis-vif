@@ -178,7 +178,6 @@ public interface State {
      * @param controller
      */
     default void getBackToPreviousState(Controller controller) {
-        controller.getUIController().printStatus("Annulation de l'opération en cours.");
     }
 
     default void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {

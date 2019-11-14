@@ -55,6 +55,8 @@ public class DropOffNodeAddedState implements State {
             controller.setButtons();
             controller.setCurrentState(ItineraryCalculatedState.class);
         } catch (IllegalArgumentException e) {
+            controller.getUIController().enableButtons();
+            controller.getUIController().clearTimePicker();
             uiController.printError("L'étape d'arrivée sélectionnée est antérieure à celle de départ. Ajout annulé.");
             LOGGER.error(e.getMessage(), e);
             controller.setCurrentState(ItineraryCalculatedState.class);
@@ -66,6 +68,8 @@ public class DropOffNodeAddedState implements State {
 
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().enableButtons();
+        controller.getUIController().clearTimePicker();
         controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }

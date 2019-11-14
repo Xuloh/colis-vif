@@ -54,6 +54,8 @@ public class ModeAddState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().enableButtons();
+        controller.getUIController().clearTimePicker();
         pickUpVertex = null;
         dropOffVertex = null;
         pickUpNodeId = -1;

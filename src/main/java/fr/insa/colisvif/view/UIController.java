@@ -360,7 +360,7 @@ public class UIController {
 
     }
 
-    private void enableButtons() {
+    public void enableButtons() {
         this.openDeliveryMap.setDisable(false);
         this.exportRound.setDisable(false);
         this.computeRound.setDisable(false);
