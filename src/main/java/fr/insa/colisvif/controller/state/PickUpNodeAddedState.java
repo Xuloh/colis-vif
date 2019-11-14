@@ -3,6 +3,7 @@ package fr.insa.colisvif.controller.state;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
 
 /**
@@ -19,9 +20,21 @@ public class PickUpNodeAddedState implements State {
     private long pickUpNodeId;
 
     @Override
-    public void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
-        controller.getPUNASAState().entryToState(pickUpNodeId, step);
-        controller.setCurrentState(PickUpNodeAddedStepAddedState.class);
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+        Step stepOfVertex = null;
+        for (Step step : controller.getRound().getSteps()) {
+            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp()) {
+                stepOfVertex = step;
+            }
+        }
+        controller.getPUNASAState().entryToState(pickUpNodeId, stepOfVertex);
+        int pickUpDuration = uiController.getTimeFromPicker();
+        Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
+        uiController.clearTimePicker();
+        uiController.setShowCityMapNodesOnHover(true);
+        controller.getMADOState().entryToState(pickUpVertex, stepOfVertex);
+        uiController.addDropOff();
+        controller.setCurrentState(ModeAddDropOffState.class);
     }
 
     /**

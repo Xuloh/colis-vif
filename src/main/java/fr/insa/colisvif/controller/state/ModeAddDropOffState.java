@@ -18,11 +18,9 @@ public class ModeAddDropOffState implements State {
     }
 
     @Override
-    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
-        if (nodeId != null) {
-            long nodeIdSelected = nodeId;
-            controller.getDONAState().entryToState(pickUpVertex, stepBefore, nodeIdSelected);
-            controller.setCurrentState(PickUpNodeAddedState.class);
-        }
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+        controller.getDONAState().entryToState(pickUpVertex, stepBefore, nodeId);
+        uiController.setShowCityMapNodesOnHover(false);
+        controller.setCurrentState(DropOffNodeAddedState.class);
     }
 }

@@ -26,8 +26,5 @@ public class DropOffNodeAddedStepAdded implements State {
 
     @Override
     public void addDropOffNode(Controller controller, UIController uiController, CommandList commandList) {
-        int dropOffDuration = uiController.getTimeFromPicker();
-        Vertex dropOffVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-        commandList.doCommand(new CommandAdd(pickUpVertex, dropOffVertex, stepBefore, stepAfter, controller.getRound(), controller.getCityMap()));
     }
 }

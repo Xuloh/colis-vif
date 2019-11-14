@@ -289,7 +289,7 @@ public class Controller {
      * Switch to "add delivery" mode
      */
     public void addDelivery() {
-        this.currentState.switchToAddMode(this);
+        this.currentState.switchToAddMode(this, this.uiController);
     }
 
     /**

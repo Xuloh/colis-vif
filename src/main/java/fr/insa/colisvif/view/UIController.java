@@ -425,7 +425,7 @@ public class UIController {
         return this.timePicker.getTimeValue();
     }
 
-    private void clearTimePicker() {
+    public void clearTimePicker() {
         this.tilePane.getChildren().remove(this.timePicker);
     }
 
