@@ -324,4 +324,12 @@ public class Controller {
     public void setButtons() {
         this.uiController.setButtons();
     }
+
+    public void undo() {
+        this.currentState.undo(this, this.uiController, commandList);
+    }
+
+    public void redo() {
+        this.currentState.redo(this, this.uiController, commandList);
+    }
 }

@@ -111,6 +111,10 @@ public class Step {
         arrival.setDuration(duration);
     }
 
+    public void setDeliveryID(int deliveryID) {
+        this.deliveryID = deliveryID;
+    }
+
     /**
      * Returns the {@link LinkedList} of {@link Section} of the {@link Step}.
      *

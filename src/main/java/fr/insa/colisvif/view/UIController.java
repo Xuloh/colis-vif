@@ -192,12 +192,12 @@ public class UIController {
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.undo();
         });
         this.addDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
         this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.redo();
         });
         this.addDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));

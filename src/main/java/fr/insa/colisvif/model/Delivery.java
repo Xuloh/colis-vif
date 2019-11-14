@@ -92,6 +92,10 @@ public class Delivery {
         this.pickUp.setDuration(pickUpDuration);
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Returns the drop off {@link Node} id of the {@link Delivery}.
      *

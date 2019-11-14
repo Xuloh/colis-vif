@@ -203,4 +203,12 @@ public interface State {
     default void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
 
     }
+
+    default void undo(Controller controller, UIController uiController, CommandList commandList) {
+
+    }
+
+    default void redo(Controller controller, UIController uiController, CommandList commandList) {
+
+    }
 }
