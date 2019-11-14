@@ -32,10 +32,14 @@ public class CommandList {
      * @param command The command to execute
      */
     public void doCommand(Command command) {
-        LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
-        pastCommands.clear();
-        currentCommands.add(command);
-        command.doCommand();
+        try {
+            LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
+            pastCommands.clear();
+            currentCommands.add(command);
+            command.doCommand();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     /**
