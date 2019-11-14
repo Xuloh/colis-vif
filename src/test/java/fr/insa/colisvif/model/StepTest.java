@@ -226,6 +226,7 @@ public class StepTest {
                 + "sections=" + "[]"
                 + ", deliveryID=" + step.getDeliveryID()
                 + ", arrivalDate=" + step.getArrivalDate()
+                + ", initialArrivalDate=" + step.getInitialArrivalDate()
                 + ", arrival=" + step.getArrival().toString() + '}';
 
         assertEquals(expected, step.toString());
