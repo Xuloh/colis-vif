@@ -28,8 +28,7 @@ public class CommandModifyOrder implements Command {
         if (modifiedIndex != 0) {
             round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex - 1), cityMap);
         } else {
-            round.getSteps().remove(modifiedStep);
-            round.addStepInIthPlace(modifiedStep, 0, cityMap);
+            round.changeOrderStep(modifiedStep, null, cityMap);
         }
     }
 

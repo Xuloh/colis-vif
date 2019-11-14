@@ -171,10 +171,11 @@ public class Round {
      * @param pickUpNode  The pick up node
      * @param dropOffNode The drop off node
      */
-    public int addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
+    public Delivery addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
         map.dijkstra(pickUpNode);
         map.dijkstra(dropOffNode);
-        int deliveryId = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration).getId();
+        Delivery delivery = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration);
+        int deliveryId = delivery.getId();
         int time = steps.get(steps.size() - 1).getArrivalDate() + steps.get(steps.size() - 1).getDuration();
 
         double lengthToPickUp = map.getLength(steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode);
@@ -193,7 +194,7 @@ public class Round {
         dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
         addStep(pickUpStep);
         addStep(dropOffStep);
-        return deliveryId;
+        return delivery;
     }
 
     /**

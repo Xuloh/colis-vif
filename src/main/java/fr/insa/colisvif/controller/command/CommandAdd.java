@@ -48,7 +48,7 @@ public class CommandAdd implements Command {
             throw new IllegalArgumentException("L'étape choisie après la livraison est antérieure à celle avant la récupération.");
         } else {
             int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
-                    pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap);
+                    pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap).getId();
 
             // Searching Steps created
 
@@ -71,8 +71,6 @@ public class CommandAdd implements Command {
             } else {
                 round.changeOrderStep(dropOffStep, stepAfter, cityMap);
             }
-
-
         }
     }
 }

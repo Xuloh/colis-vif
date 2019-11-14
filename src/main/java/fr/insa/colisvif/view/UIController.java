@@ -178,10 +178,10 @@ public class UIController {
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.undo();
         });
         this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.redo();
         });
 
         this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
