@@ -22,7 +22,9 @@ public class Delivery {
      * @param pickUpDuration the pick up duration of the delivery.
      * @param dropOffDuration the drop off duration of the delivery
      */
-    public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
+    public Delivery(int id, long pickUpNodeId, long dropOffNodeId,
+                    int pickUpDuration, int dropOffDuration)
+            throws IllegalArgumentException {
         this.id = id;
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         pickUp.setDeliveryId(this.id);
@@ -88,7 +90,8 @@ public class Delivery {
      * @param pickUpDuration the time in seconds to perform the pick up.
      * @throws IllegalArgumentException if the pickUpDuration is not positive.
      */
-    public void setPickUpDuration(int pickUpDuration) throws IllegalArgumentException {
+    public void setPickUpDuration(int pickUpDuration)
+            throws IllegalArgumentException {
         this.pickUp.setDuration(pickUpDuration);
     }
 
@@ -111,7 +114,8 @@ public class Delivery {
      * @param dropOffDuration the time in seconds to perform the drop off.
      * @throws IllegalArgumentException if the deliveryDuration is not positive.
      */
-    public void setDropOffDuration(int dropOffDuration) throws IllegalArgumentException {
+    public void setDropOffDuration(int dropOffDuration)
+            throws IllegalArgumentException {
         this.dropOff.setDuration(dropOffDuration);
     }
 
@@ -126,8 +130,11 @@ public class Delivery {
      */
     @Override
     public String toString() {
-        return "id : " + id + " | pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
-                + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
+        return "id : " + id
+                + " | pickUpNodeId : " + pickUp.getNodeId()
+                + " | deliveryNodeId : " + dropOff.getNodeId()
+                + " | pickUpDuration : " + pickUp.getDuration()
+                + " | deliveryDuration : " + dropOff.getDuration() + "\n";
     }
 
     /**
