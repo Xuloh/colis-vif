@@ -216,8 +216,8 @@ public class Round {
                                          pickUpDuration);
         pickUpVertex.setDeliveryId(deliveryId);
         Step pickUpStep = new Step(pickUpVertex, deliveryId, time);
-        pickUpStep.setSections(map.getPath(steps.get(steps.size() - 1)
-                                                .getArrivalNodeId(), pickUpNode));
+        pickUpStep.setSections(map.getPath(
+                steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode));
         time += pickUpStep.getDuration();
 
         double lengthToDropOff = map.getLength(pickUpNode, dropOffNode);
