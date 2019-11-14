@@ -34,6 +34,7 @@ public class StepView extends Pane {
 
     private List<Consumer<Vertex>> eventHandlers;
 
+    private TableColumn<Step, Integer> deliveryIdColumn;
 
     /**
      * Creates a new {@link TableView} of {@link Vertex} with two {@link TableColumn}. The first
@@ -62,7 +63,7 @@ public class StepView extends Pane {
                 }
             });
 
-        TableColumn<Step, Integer> deliveryIdColumn = new TableColumn<>("N° livraison");
+        deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryID"));
         deliveryIdColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
             @Override
@@ -174,6 +175,22 @@ public class StepView extends Pane {
 
     public void clearSteps() {
         stepTable.getItems().clear();
+        deliveryIdColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (uiController.getColorMap() != null
+                        && uiController.getColorMap().get(item) != null) {
+
+                    Color color = uiController.getColorMap().get(item);
+                    String cssColor =
+                            "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
+                                    + "," + (255 * color.getBlue()) + ")";
+                    setStyle("-fx-background-color:" + cssColor);
+                    setText("" + item);
+                }
+            }
+        });
         LOGGER.info("Steps cleared");
     }
 
