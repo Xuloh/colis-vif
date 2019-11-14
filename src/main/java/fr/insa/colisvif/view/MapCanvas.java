@@ -207,11 +207,7 @@ public class MapCanvas extends BorderPane {
         this.deliveryCanvasNodes.clear();
 
         if (DELIVERY_MAP != null) {
-            ColorGenerator colorGenerator = new ColorGenerator(
-                DELIVERY_MAP.getSize(),
-                CanvasConstants.NODE_OPACITY,
-                2
-            );
+            Map<Integer, Color> colorMap = this.uiController.getColorMap();
 
             this.uiController
                 .getVertexList()
@@ -220,7 +216,7 @@ public class MapCanvas extends BorderPane {
                     vertex.getNodeId(),
                     vertex,
                     vertex.isPickUp() ? NodeType.DELIVERY_PICKUP : NodeType.DELIVERY_DROP_OFF,
-                    colorGenerator.next(),
+                    colorMap.get(vertex.getDeliveryId()),
                     CanvasConstants.DELIVERY_NODE_RADIUS
                 ))
                 .forEach(this.deliveryCanvasNodes::add);
