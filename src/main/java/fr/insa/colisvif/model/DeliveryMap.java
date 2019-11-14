@@ -62,6 +62,10 @@ public class DeliveryMap {
         return null;
     }
 
+    /**
+     * Removes the {@link Delivery} stored in {@link DeliveryMap} that has the id id.
+     * @param id the id to remove
+     */
     public void removeDeliveryById(int id) {
         Delivery delivery = getDeliveryPerId(id);
         deliveryRequests.remove(delivery);

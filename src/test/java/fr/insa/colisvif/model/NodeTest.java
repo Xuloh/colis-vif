@@ -121,4 +121,70 @@ public class NodeTest {
 
         assertNotEquals(node1, node2);
     }
+
+    @Test
+    public void setLongitudeGood() {
+        int expected = 20;
+        Node node = new Node(1, 10, 10);
+        node.setLongitude(expected);
+        assertEquals(expected, node.getLongitude(), 0.01);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void setLongitudeError1() {
+        Node node = new Node(1, 10, 10);
+        node.setLongitude(-181);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void setLongitudeError2() {
+        Node node = new Node(1, 10, 10);
+        node.setLongitude(181);
+    }
+
+    @Test
+    public void setLatitude() {
+        int expected = 20;
+        Node node = new Node(1, 10, 10);
+        node.setLatitude(expected);
+        assertEquals(expected, node.getLatitude(), 0.01);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void setLatitudeError1() {
+        Node node = new Node(1, 10, 10);
+        node.setLatitude(-91);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void setLatitudeError2() {
+        Node node = new Node(1, 10, 10);
+        node.setLatitude(91);
+    }
+
+    @Test
+    public void testEquals1() {
+        Node node2 = new Node(1, 1, 1);
+        Node node1 = new Node(1, 10, 10);
+        assertEquals(node2, node1);
+    }
+
+    @Test
+    public void testEquals2() {
+        Node node2 = new Node(1, 1, 1);
+        Node node1 = new Node(2, 10, 10);
+        assertNotEquals(node2, node1);
+    }
+
+    @Test
+    public void testEquals3() {
+        Node node2 = new Node(1, 1, 1);
+        assertEquals(node2, node2);
+    }
+
+    @Test
+    public void testEquals4() {
+        Node node2 = new Node(1, 1, 1);
+        assertNotEquals(node2, 1);
+    }
 }

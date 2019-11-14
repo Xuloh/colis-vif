@@ -89,11 +89,28 @@ public class Node {
         }
     }
 
+    /**
+     * Sets the longitude of the current {@link Node}.
+     * @param longitude the longitude to set.
+     * @throws IllegalArgumentException if the longitude is less or more than 180
+     */
     public void setLongitude(double longitude) {
+        if (longitude > 180 || longitude < -180) {
+            throw new IllegalArgumentException("The longitude must be between -180 and 180, got " + longitude);
+        }
         this.longitude = longitude;
     }
 
+
+    /**
+     * Sets the latitude of the current {@link Node}.
+     * @param latitude the latitude to set.
+     * @throws IllegalArgumentException if the latitude is less or more than 90
+     */
     public void setLatitude(double latitude) {
+        if (latitude < -90 || latitude > 90) {
+            throw new IllegalArgumentException("The latitude must be between -90 and 90, got " + latitude);
+        }
         this.latitude = latitude;
     }
 

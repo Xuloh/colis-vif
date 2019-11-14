@@ -95,7 +95,7 @@ public class VertexTest {
     @Test
     public void equals5() {
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
-        assertNotEquals(1, vertex);
+        assertNotEquals(null, vertex);
     }
 
     @Test
