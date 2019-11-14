@@ -115,6 +115,12 @@ public class UIController {
     @FXML
     private MenuItem zoomOutItem;
 
+    @FXML
+    private MenuItem undoItem;
+
+    @FXML
+    private MenuItem redoItem;
+
     private Stage stage;
 
     private Controller controller;
@@ -179,6 +185,18 @@ public class UIController {
 
         this.close.addEventHandler(ActionEvent.ACTION, event -> stage.close());
 
+        // Edit menu
+
+        this.undoItem.addEventHandler(ActionEvent.ACTION, event -> {
+            this.controller.undo();
+        });
+
+        this.redoItem.addEventHandler(ActionEvent.ACTION, event -> {
+            this.controller.redo();
+        });
+
+
+
         this.computeRound.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.computeRound();
         });
@@ -192,12 +210,12 @@ public class UIController {
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.undo();
+            this.controller.addDelivery();
         });
         this.addDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
         this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.redo();
+            this.controller.addDelivery();
         });
         this.addDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));

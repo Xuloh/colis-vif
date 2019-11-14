@@ -72,6 +72,7 @@ public class Controller {
         this.stateMap.put(DropOffNodeAddedState.class, new DropOffNodeAddedState());
         this.stateMap.put(ModeAddDropOffState.class, new ModeAddDropOffState());
 
+
         LOGGER.info("Initial Controller state : {}", this.currentState.getClass().getSimpleName());
     }
 
@@ -124,6 +125,9 @@ public class Controller {
      */
     public void setUIController(UIController uiController) {
         this.uiController = uiController;
+        uiController.getMapCanvas().addNodeMouseClickHandler((nodeId, vertex) -> {
+            this.currentState.leftClick(this, uiController, commandList, nodeId, vertex);
+        });
     }
 
 
@@ -273,6 +277,10 @@ public class Controller {
         return (DropOffNodeAddedStepAdded) stateMap.get(DropOffNodeAddedStepAdded.class);
     }
 
+    public ModifyStopLocationState getMSLSState() {
+        return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
+    }
+
     public void computeRound() {
         this.currentState.calculateItinerary(this, this.uiController);
     }
@@ -298,12 +306,6 @@ public class Controller {
         this.currentState.switchToOrderChangeMode();
     }
 
-    /**
-     * Switch to "change location" mode
-     */
-    public void editLocationDelivery(Step step) {
-        this.currentState.switchToLocationChange(this, this.uiController);
-    }
 
     public void createVertexList() {
         this.vertexList = FXCollections.observableArrayList();
@@ -331,5 +333,12 @@ public class Controller {
 
     public void redo() {
         this.currentState.redo(this, this.uiController, commandList);
+    }
+
+    /**
+     * Switch to "change location" mode
+     */
+    public void editLocationDelivery(Step step) {
+        this.currentState.switchToLocationChange(this, this.uiController, step);
     }
 }

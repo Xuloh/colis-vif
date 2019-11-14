@@ -85,16 +85,6 @@ public class ItineraryCalculatedState implements State {
         ev.exportRound(deliveryRound, file);
     }
 
-    /**
-     * Enters in suppression mode to enable actions like selecting a vertex to suppress
-     * the linked delivery.
-     *
-     * @see SuppressionModeState
-     */
-    @Override
-    public void switchToSuppressionMode(Controller controller) {
-        controller.setCurrentState(SuppressionModeState.class);
-    }
 
     /**
      * Enters the {@link fr.insa.colisvif.controller.state.ModeAddState}
@@ -125,12 +115,6 @@ public class ItineraryCalculatedState implements State {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
-
-    /**
-     * Enter in location change mode to enable new actions.
-     *
-     * @see ModifyStopLocationState}.
-     */
 
     @Override
     public void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
@@ -174,5 +158,12 @@ public class ItineraryCalculatedState implements State {
         uiController.updateRound();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
+    }
+
+    @Override
+    public void switchToLocationChange(Controller controller, UIController uiController, Step step) {
+        uiController.setShowCityMapNodesOnHover(true);
+        controller.getMSLState().entryToState(step);
+        controller.setCurrentState(ModifyStopLocationState.class);
     }
 }
