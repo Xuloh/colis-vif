@@ -124,7 +124,8 @@ public class CityMap {
             Optional
                 .ofNullable(this.mapNode.get(origin))
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "The origin of the Section does not match any Nodes in the map of Nodes")
+                    "The origin of the Section does not match"
+                        + " any Nodes in the map of Nodes")
                 )
                 .addToSuccessors(newSection);
         } catch (IdException e) {
@@ -291,7 +292,8 @@ public class CityMap {
             throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
             throw new IllegalArgumentException(
-                    "The stating node of Dijkstra's algorithm does not belong to the map");
+                    "The stating node of Dijkstra's "
+                            + "algorithm does not belong to the map");
         }
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
@@ -311,7 +313,8 @@ public class CityMap {
                 double destinationLength = pathsFromStart.getLength(next);
                 if (destinationLength == -1
                         || length + section.getLength() < destinationLength) {
-                    pathsFromStart.setLength(next, length + section.getLength());
+                    pathsFromStart.setLength(next,
+                            length + section.getLength());
                     pathsFromStart.setPrev(next, section);
                     priorityQueue.remove(next);
                     priorityQueue.add(next);
