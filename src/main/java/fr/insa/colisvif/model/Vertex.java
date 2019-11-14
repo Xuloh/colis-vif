@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Represent either a drop off or a pick up point. It is attached to a {@link Node} id and a duration (the time to do the drop off or the pick up.
  */
-public class Vertex implements Comparable<Vertex> {
+public class Vertex {
 
     public static final boolean DROP_OFF = true;
 
@@ -25,8 +25,8 @@ public class Vertex implements Comparable<Vertex> {
     /**
      * Constructor of Vertex.
      *
-     * @param nodeId the {@link Node} id corresponding.
-     * @param type the type, drop off or pick up.
+     * @param nodeId   the {@link Node} id corresponding.
+     * @param type     the type, drop off or pick up.
      * @param duration the time to do the drop off or the pick up.
      * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is less than 0.
      */
@@ -116,35 +116,12 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     /**
-     * Performs a comparison with the {@link Vertex} vertex.
-     * @param vertex the {@link Vertex} to compare to.
-     * @return 0 if they are the same, -1 if this < vertex, 1 if this > vertex.
-     */
-    @Override
-    public int compareTo(Vertex vertex) {
-        if (this.nodeId == vertex.nodeId) {
-            if (this.type == vertex.type) {
-                if (this.duration == vertex.duration) {
-                    return 0;
-                }
-                return this.duration - vertex.duration;
-            }
-            if (this.type) {
-                return 1;
-            }
-            return -1;
-        }
-        return (int) (this.nodeId.getValue() - vertex.nodeId.getValue());
-    }
-
-    /**
      * Determines if the given {@link Object} is "equal"
      * to this {@link Vertex}.
      * Only other {@link Vertex} are considered for comparison.
      * The method compares the {@link Node} id, the type and the duration.
      *
      * @param o the {@link Object} to compare this {@link Vertex} to
-     *
      * @return <code>true</code> if o is a {@link Vertex} whose values are
      * "equal" to those of this {@link Vertex}
      */
@@ -162,15 +139,6 @@ public class Vertex implements Comparable<Vertex> {
                 && duration == vertex.duration;
     }
 
-    /**
-     * Returns the hashCode of the current {@link Vertex}. It is based on the id and the type, not the duration.
-     *
-     * @return the hashCode of the current {@link Vertex}. It is based on the id and the type, not the duration.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(nodeId, type);
-    }
 
     /**
      * Returns a {@link String} representation of this {@link Vertex}.

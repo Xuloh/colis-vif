@@ -88,30 +88,30 @@ import java.util.*;
     /**
      * Calculates the key associated with a sub problem in the dynamic programming process
      * This key will be used in the map subResults to store the sub result of this sub problem
-     * A sub problem is a couple (v, S) where v is a vertex of G and S a subset of the vertices of G that does not contain v
-     * The goal is to find the shortest hamiltonian path of Su{v} whose first vertex is v
+     * A sub problem is a couple (d, E) where d is a vertex of G and E a subset of the vertices of G that does not contain d
+     * The goal is to find the shortest hamiltonian path of E u {k+1; k odd number in E} u {d} whose first vertex is d
      *
-     * @param start   the vertex v of the previous explanation
-     * @param setCode a number that represents S, more precisely the sum of all 2^k for k in S
-     * @return the key associated with (v, S)
+     * @param start   the vertex d of the previous explanation
+     * @param setCode a number that represents E, more precisely the sum of all 2^k for k in E
+     * @return the key associated with (d, E)
      */
     private Long subProblemKey(int start, long setCode) {
         return setCode + powerSetSize * start;
     }
 
     /**
-     * Returns the result of the sub problem (start, S) where S is the subset coded by setCode
+     * Returns the result of the sub problem (start, E) where S is the subset coded by setCode
      *
      * @param start   the starting vertex of our path
      * @param setCode the subSet that need to be explored
-     * @return the sub result of the sub problem (start, s)
+     * @return the sub result of the sub problem (start, E)
      */
     private SubResult resolveSubProblem(int start, long setCode) {
         long key = subProblemKey(start, setCode);
         if (subResults.containsKey(key)) { //this sub problem has been solved yet, we don't solve it again
             return subResults.get(key);
         }
-        if (setCode == 0) { //stop case, when S is the empty set
+        if (setCode == 0) { //stop case, when E is the empty set
             SubResult subResult = new SubResult(0, 0);
             //the first 0 can be replaced by lengths.get(start).get(0) if we want the cyclist to come back
             subResults.put(key, subResult);
@@ -121,7 +121,7 @@ import java.util.*;
         long nextKey = 0;
         int n = deliveries.getSize();
         long a = 2; //will be 2^k, used to add and remove elements from the set
-        long copy = setCode / 2; //will be setCode/2^k, used to get the elements of the set
+        long copy = setCode / 2; //will be setCode/2^k, used to know if k belongs to the set
         for (int k = 1; k < 2 * n + 1; ++k) {
             if ((copy & 1) == 1) { //k belongs to the set
                 if ((k & 1) == 1) { //k is a pick up
@@ -149,7 +149,6 @@ import java.util.*;
         }
         SubResult subResult = new SubResult(bestLength, nextKey);
         subResults.put(key, subResult);
-        //System.out.print("\r" + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576 + "  mo");
         return subResult;
     }
 
@@ -194,6 +193,7 @@ import java.util.*;
         }
         double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
+        step.setInitialArrivalDate();
         return step;
     }
 
@@ -225,13 +225,7 @@ import java.util.*;
      */
 
     /*package-private*/ Round shortestRound() {
-        var debut = System.nanoTime();
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
-        var fin = System.nanoTime();
-        System.out.print("TSP time : ");
-        System.out.println((fin - debut) * 0.000000001);
-        System.out.print("TSP length : ");
-        System.out.println(subResult.getLength());
         ArrayList<Integer> path = makePath(subResult);
         return makeRound(path);
     }

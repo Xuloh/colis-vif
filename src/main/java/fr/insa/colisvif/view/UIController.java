@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -99,9 +100,20 @@ public class UIController {
     @FXML
     private MenuItem computeRoundItem;
 
-
     @FXML
     private TilePane tilePane;
+
+    @FXML
+    private CheckMenuItem darkModeToggle;
+
+    @FXML
+    private MenuItem autoZoomItem;
+
+    @FXML
+    private MenuItem zoomInItem;
+
+    @FXML
+    private MenuItem zoomOutItem;
 
     private Stage stage;
 
@@ -130,7 +142,7 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas(this, true);
-        this.vertexView = new VertexView();
+        this.vertexView = new VertexView(this);
         this.stepView = new StepView(this);
         this.statusBar = new StatusBar();
         this.timePicker = new TimePicker();
@@ -180,12 +192,12 @@ public class UIController {
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.undo();
         });
         this.addDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
         this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
+            this.controller.redo();
         });
         this.addDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
                 printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
@@ -205,12 +217,14 @@ public class UIController {
         this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
         this.editSequenceItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité"));
 
-        this.mapCanvas.addNodeMouseClickHandler(vertex -> {
+        this.mapCanvas.addNodeMouseClickHandler((nodeId, vertex) -> {
             if (vertex != null) {
                 this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
+                this.vertexView.onSelection(vertex.getDeliveryId(), vertex.getType());
                 //LOGGER.debug("Delivery selected " + step.getDeliveryID());
             } else {
                 this.stepView.getStepTable().getSelectionModel().select(null);
+                this.vertexView.getVertexTable().getSelectionModel().select(null);
             }
         });
 
@@ -219,6 +233,26 @@ public class UIController {
                 this.mapCanvas.setSelectedVertex(vertex);
             }
         });
+
+        this.vertexView.addEventHandlerOnSelect(vertex -> {
+            if (vertex != null) {
+                this.mapCanvas.setSelectedVertex(vertex);
+            }
+        });
+
+        this.darkModeToggle.addEventHandler(ActionEvent.ACTION, event -> {
+            if (this.darkModeToggle.isSelected()) {
+                this.stage.getScene()
+                    .getStylesheets()
+                    .add(getClass().getResource("/dark-mode.css").toExternalForm());
+            } else {
+                this.stage.getScene().getStylesheets().clear();
+            }
+        });
+
+        this.autoZoomItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.autoZoom());
+        this.zoomInItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomIn());
+        this.zoomOutItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomOut());
 
         this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
@@ -289,6 +323,8 @@ public class UIController {
 
     public void updateDeliveryMap() {
         if (getDeliveryMap() != null) {
+            this.stepView.clearSteps();
+            this.vertexView.clearVertices();
             ColorGenerator colorGenerator = new ColorGenerator(
                 getDeliveryMap().getSize(),
                 CanvasConstants.NODE_OPACITY,

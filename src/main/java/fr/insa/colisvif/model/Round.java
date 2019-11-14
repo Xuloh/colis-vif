@@ -55,13 +55,13 @@ public class Round {
         return step1 != step2 && step1.getDeliveryID() == step2.getDeliveryID();
     }
 
-    private int associatedStepIndex(Step step) throws Exception {
+    private int associatedStepIndex(Step step) throws IllegalArgumentException {
         for (int i = 0; i < steps.size(); ++i) {
             if (areAssociated(step, steps.get(i))) {
                 return i;
             }
         }
-        throw new Exception("Associated step not found");
+        throw new IllegalArgumentException("Associated step not found");
     }
 
     private void removeFirstStep(CityMap map) {
@@ -171,10 +171,11 @@ public class Round {
      * @param pickUpNode  The pick up node
      * @param dropOffNode The drop off node
      */
-    public int addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
+    public Delivery addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
         map.dijkstra(pickUpNode);
         map.dijkstra(dropOffNode);
-        int deliveryId = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration).getId();
+        Delivery delivery = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration);
+        int deliveryId = delivery.getId();
         int time = steps.get(steps.size() - 1).getArrivalDate() + steps.get(steps.size() - 1).getDuration();
 
         double lengthToPickUp = map.getLength(steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode);
@@ -193,7 +194,7 @@ public class Round {
         dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
         addStep(pickUpStep);
         addStep(dropOffStep);
-        return deliveryId;
+        return delivery;
     }
 
     /**
@@ -215,6 +216,11 @@ public class Round {
     }
 
     public void changeLocationStep(Step stepToChange, long nodeId, CityMap map) {
+        if (stepToChange.isPickUp()) {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID()).getPickUp().setNodeId(nodeId);
+        } else {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID()).getDropOff().setNodeId(nodeId);
+        }
         int index = steps.indexOf(stepToChange);
         removeIthStep(index, map);
         stepToChange.setArrivalNodeId(nodeId);

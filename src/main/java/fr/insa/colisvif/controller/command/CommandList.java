@@ -65,9 +65,12 @@ public class CommandList {
         try {
             if (!pastCommands.isEmpty()) {
                 Command commandToRedo = pastCommands.pop();
-                LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());
+                LOGGER.info("Re"
+                        + "doing Command : {}", commandToRedo.getClass().getSimpleName());
                 commandToRedo.doCommand();
                 currentCommands.add(commandToRedo);
+            } else {
+                LOGGER.info("No Command to Redo");
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

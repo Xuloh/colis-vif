@@ -137,7 +137,6 @@ public class ItineraryCalculatedState implements State {
         if (controller.getDeliveryMap().getSize() == 1) {
             uiController.printError("Vous ne pouvez pas supprimer la dernière livraison.");
         } else {
-
             Step stepSelected = step;
             Step otherDeliveyStep = null;
             int deliveryId = stepSelected.getDeliveryID();
@@ -147,13 +146,33 @@ public class ItineraryCalculatedState implements State {
                     break;
                 }
             }
-            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap()));
+            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap(),
+                    controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep)));
             controller.createVertexList();
-            //uiController.updateCityMap();
             uiController.updateDeliveryMap();
             uiController.updateRound();
             uiController.getMapCanvas().redraw();
             controller.setButtons();
         }
+    }
+
+    @Override
+    public void undo(Controller controller, UIController uiController, CommandList commandList) {
+        commandList.undoCommand();
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
+    }
+
+    @Override
+    public void redo(Controller controller, UIController uiController, CommandList commandList) {
+        commandList.redoCommand();
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
     }
 }

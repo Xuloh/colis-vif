@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
@@ -65,9 +65,9 @@ public class MapCanvas extends BorderPane {
 
     private boolean showCityMapNodesOnHover;
 
-    private List<Consumer<Vertex>> nodeMouseHoverHandlers;
+    private List<BiConsumer<Long, Vertex>> nodeMouseHoverHandlers;
 
-    private List<Consumer<Vertex>> nodeMouseClickHandlers;
+    private List<BiConsumer<Long, Vertex>> nodeMouseClickHandlers;
 
     private Long selectedNodeId;
 
@@ -249,11 +249,11 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    public void addNodeMouseHoverHandler(Consumer<Vertex> eventHandler) {
+    public void addNodeMouseHoverHandler(BiConsumer<Long, Vertex> eventHandler) {
         this.nodeMouseHoverHandlers.add(eventHandler);
     }
 
-    public void addNodeMouseClickHandler(Consumer<Vertex> eventHandler) {
+    public void addNodeMouseClickHandler(BiConsumer<Long, Vertex> eventHandler) {
         this.nodeMouseClickHandlers.add(eventHandler);
     }
 
@@ -300,7 +300,7 @@ public class MapCanvas extends BorderPane {
                 selectedNode.selected = true;
                 this.canvas.setCursor(Cursor.HAND);
                 for (var handler : this.nodeMouseClickHandlers) {
-                    handler.accept(selectedNode.vertex);
+                    handler.accept(selectedNode.nodeId, selectedNode.vertex);
                 }
             } else {
                 this.canvas.setCursor(Cursor.DEFAULT);
@@ -334,7 +334,7 @@ public class MapCanvas extends BorderPane {
             selectedNode.selected = true;
             this.canvas.setCursor(Cursor.HAND);
             for (var handler : this.nodeMouseHoverHandlers) {
-                handler.accept(selectedNode.vertex);
+                handler.accept(selectedNode.nodeId, selectedNode.vertex);
             }
         } else {
             this.canvas.setCursor(Cursor.DEFAULT);
