@@ -50,9 +50,8 @@ public class ExportView  {
     }
 
     private String formatHour(int amountSecond) { // Format the hour given in second in hh:mm
-        int minutes = amountSecond / 60;
-        int heures = minutes / 60;
-        minutes = heures % 60;
+        int heures = amountSecond / 3600;
+        int minutes = amountSecond / 60 - heures * 60;
 
         String minutesStr = minutes < 10 ? "0" + minutes : "" + minutes;
         String heuresStr = heures < 10 ? "0" + heures : "" + heures;
@@ -65,27 +64,19 @@ public class ExportView  {
      * @param round the {@link Round to export}.
      */
     public void exportRound(Round round, File file) {
-        try {
-            if (!file.createNewFile()) {
-                this.uiController.printError("Le fichier existe déjà");
-            }
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
         if (!file.canWrite()) {
             this.uiController.printError("Impossible d'écrire dans le fichier");
         }
 
         try (PrintStream PRINT_STREAM = new PrintStream(file)) {
-            PRINT_STREAM.println("Début de la tournée (prévue à " + formatHour(round.getStartDate()) + ").");
+            PRINT_STREAM.println("Début de la tournée (prévue à " + formatHour(round.getStartDate()) + ").\n");
 
             round.getSteps().forEach(step -> this.exportStep(step, PRINT_STREAM));
 
             Step lastItem = round.getSteps().get(round.getSteps().size() - 1);
             int arrivalDate = lastItem.getArrivalDate() + lastItem.getDuration();
 
-            System.out.println("Fin de la tournée (prévue à " + formatHour(arrivalDate) + ").");
+            PRINT_STREAM.println("Fin de la tournée (prévue à " + formatHour(arrivalDate) + ").");
         } catch (FileNotFoundException e) {
             LOGGER.error(e.getMessage(), e);
         }
