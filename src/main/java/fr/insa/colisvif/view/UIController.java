@@ -331,12 +331,15 @@ public class UIController {
     public void setButtons() {
         this.disableButtons();
         if (this.controller.getDeliveryMap() == null) {
+            LOGGER.debug("DELIVERYMAP IS NULL");
             this.openDeliveryMap.setDisable(false);
         } else if (this.controller.getRound() == null) {
+            LOGGER.debug("ROUND IS NULL");
             this.openDeliveryMap.setDisable(false);
             this.computeRound.setDisable(false);
             this.computeRoundItem.setDisable(false);
         } else {
+            LOGGER.debug("NOTHING IS NULL");
             this.enableButtons();
             this.computeRound.setDisable(true);
             this.computeRoundItem.setDisable(true);
@@ -399,6 +402,12 @@ public class UIController {
     /*package-private*/ ObservableList<Vertex> getVertexList() {
         return this.controller.getVertexList();
     }
+
+    /*package-private*/ StepView getStepView() {
+        return this.stepView;
+    }
+
+
 
     public Map<Integer, Color> getColorMap() {
         return colorMap;

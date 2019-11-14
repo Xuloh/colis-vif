@@ -1,11 +1,5 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.exception.XMLException;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /*package-private*/ class VerticesGraph {
@@ -136,7 +130,7 @@ import java.util.*;
                     //setCode+a is in fact setCode-a+2a, i.e.setCode-2^k+2^(k+1)
                     //that means we remove int k from the set and add k+1 instead
                     double candidateLength = candidate.getLength() + lengths.get(start).get(k);
-                    if (bestLength == -1 || bestLength > candidateLength){
+                    if (bestLength == -1 || bestLength > candidateLength) {
                         bestLength = candidateLength;
                         nextKey = subProblemKey(k, setCode + a);
                     }
@@ -144,7 +138,7 @@ import java.util.*;
                     //we remove the drop off from the set
                     SubResult candidate = resolveSubProblem(k, setCode - a);
                     double candidateLength = candidate.getLength() + lengths.get(start).get(k);
-                    if (bestLength == -1 || bestLength > candidateLength){
+                    if (bestLength == -1 || bestLength > candidateLength) {
                         bestLength = candidateLength;
                         nextKey = subProblemKey(k, setCode - a);
                     }
@@ -187,6 +181,7 @@ import java.util.*;
         boolean arrivalType = arrivalIndex % 2 == 1 ? Vertex.PICK_UP : Vertex.DROP_OFF;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
+        arrival.setDeliveryId(this.deliveryIdFromIndex(arrivalIndex));
 
         Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex), time);
         if (departureId == arrivalId) {
@@ -213,13 +208,13 @@ import java.util.*;
         return round;
     }
 
-    private ArrayList<Integer> makePath(SubResult subResult){
+    private ArrayList<Integer> makePath(SubResult subResult) {
         int n = deliveries.getSize();
         ArrayList<Integer> path = new ArrayList<>(2 * n + 1);
         path.add(0);
         long key = subResult.getNextKey();
-        for(int i = 0; i < 2 * n; ++i){
-            path.add((int)(key / powerSetSize));
+        for (int i = 0; i < 2 * n; ++i) {
+            path.add((int) (key / powerSetSize));
             key = subResults.get(key).getNextKey();
         }
         return path;
@@ -284,7 +279,7 @@ import java.util.*;
 
         private long nextKey;
 
-        SubResult(double length, long nextKey){
+        SubResult(double length, long nextKey) {
             this.length = length;
             this.nextKey = nextKey;
         }

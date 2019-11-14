@@ -1,5 +1,6 @@
 package fr.insa.colisvif.controller;
 
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.state.*;
 import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
@@ -23,6 +24,8 @@ import java.util.Map;
 public class Controller {
 
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
+
+    private CommandList commandList = new CommandList();
 
     private Map<Class, State> stateMap = new HashMap<>();
 
@@ -285,7 +288,7 @@ public class Controller {
      * Switch to "delete delivery" mode
      */
     public void deleteDelivery(Step step) {
-        this.currentState.switchToSuppressionMode(this);
+        this.currentState.deleteDelivery(this, this.uiController, this.commandList, step);
     }
 
     /**
@@ -302,7 +305,7 @@ public class Controller {
         this.currentState.switchToLocationChange(this, this.uiController);
     }
 
-    private void createVertexList() {
+    public void createVertexList() {
         this.vertexList = FXCollections.observableArrayList();
 
         if (this.deliveryMap != null) {
@@ -316,5 +319,9 @@ public class Controller {
 
     public void saveRoadMap(File file) {
         this.currentState.saveRoadMap(this, file);
+    }
+
+    public void setButtons() {
+        this.uiController.setButtons();
     }
 }
