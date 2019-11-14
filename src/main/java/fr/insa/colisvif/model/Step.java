@@ -76,8 +76,7 @@ public class Step {
     }
 
     public void setArrivalNodeId(long nodeId) {
-        Vertex vertex = new Vertex(nodeId, arrival.getType(), arrival.getDuration());
-        arrival = vertex;
+        arrival.setNodeId(nodeId);
     }
 
     /**
