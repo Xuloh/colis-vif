@@ -4,16 +4,19 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 /**
- * Represents a {@link Step}: all the road before a {@link Vertex} (drop off or pick up) and the {@link Vertex}.
- * It is composed of a {@link LinkedList} of {@link Section}, a delivery ID, a type (pick up or drop off),
- * an arrival date (in seconds, from the start of the round, and a duration of the pick up or the drop off.
+ * Represents a {@link Step}: all the road before a {@link Vertex} (drop off or
+ * pick up) and the {@link Vertex}.It is composed of a {@link LinkedList} of
+ * {@link Section}, a delivery ID, a type (pick up or drop off), an arrival
+ * date (in seconds, from the start of the round, and a duration of the pick
+ * up or the drop off.
  */
 public class Step {
     private LinkedList<Section> sections;
 
     private int deliveryID;
 
-    private int arrivalDate; //the date when the delivery man will get to delivery point
+    //the date when the delivery man will get to delivery point
+    private int arrivalDate;
 
     private int initialArrivalDate;
 
@@ -22,16 +25,19 @@ public class Step {
 
     //TODO - @Sophie et @Guilhem virer ces deux trucs
     @Deprecated
-    private boolean type; //false if it is a pick up and true if it is a drop off
+    //false if it is a pick up and true if it is a drop off
+    private boolean type;
 
     @Deprecated
-    private int duration; //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
+    //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
+    private int duration;
 
     /**
      * The constructor of Step.
      *
      * @param vertex     the {@link Vertex} (pick up or drop off).
-     * @param deliveryID the deliveryID corresponding to the {@link Delivery} of the {@link Vertex}.
+     * @param deliveryID the deliveryID corresponding to the {@link Delivery}
+     *                   of the {@link Vertex}.
      */
     public Step(Vertex vertex, int deliveryID, int arrivalDate) {
         sections = new LinkedList<>();
@@ -67,9 +73,11 @@ public class Step {
      * @param arrivalDate the arrival date (in seconds) of the {@link Step}.
      * @throws IllegalArgumentException if the arrival date is under 0 second.
      */
-    public void setArrivalDate(int arrivalDate) throws IllegalArgumentException {
+    public void setArrivalDate(int arrivalDate)
+            throws IllegalArgumentException {
         if (arrivalDate < 0) {
-            throw new IllegalArgumentException("The arrival date must be equal or over 0 second, got " + arrivalDate);
+            throw new IllegalArgumentException("The arrival date must be"
+                    + " equal or over 0 second, got " + arrivalDate);
         }
         this.arrivalDate = arrivalDate;
     }
