@@ -61,7 +61,7 @@ public class CommandList {
      * It can be undone again by calling {@link #undoCommand()}.
      * If no {@link Command} was previously undone, nothing happens.
      */
-    public void redoCommand() {
+    public void redoCommand() throws Exception {
         if (!pastCommands.isEmpty()) {
             Command commandToRedo = pastCommands.pop();
             LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());

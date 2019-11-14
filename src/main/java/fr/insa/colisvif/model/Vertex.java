@@ -170,7 +170,7 @@ public class Vertex implements Comparable<Vertex> {
     @Override
     public String toString() {
         return "Vertex{"
-                + "id=" + nodeId
+                + "id=" + nodeId.getValue()
                 + ", type=" + type
                 + ", durationInSeconds=" + duration
                 + '}';
