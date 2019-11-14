@@ -46,6 +46,8 @@ public class PickUpNodeAddedState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().enableButtons();
+        controller.getUIController().clearTimePicker();
         controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
