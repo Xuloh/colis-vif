@@ -32,7 +32,7 @@ public class StepView extends Pane {
 
     private UIController uiController;
 
-    private List<Consumer<Step>> eventHandlers;
+    private List<Consumer<Vertex>> eventHandlers;
 
 
     /**
@@ -55,8 +55,8 @@ public class StepView extends Pane {
             .addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     Step step = this.stepTable.getSelectionModel().getSelectedItem();
-                    for (Consumer<Step> eventHandler : this.eventHandlers) {
-                        eventHandler.accept(step);
+                    for (Consumer<Vertex> eventHandler : this.eventHandlers) {
+                        eventHandler.accept(step.getArrival());
                     }
                     //LOGGER.debug("CLICK DANS LA STEPVIEW : " + step.getDeliveryID());
                 }
@@ -185,18 +185,24 @@ public class StepView extends Pane {
         }
     }
 
-    public void addEventHandlerCustom(Consumer<Step> eventHandler) {
+    public void addEventHandlerOnSelect(Consumer<Vertex> eventHandler) {
         this.eventHandlers.add(eventHandler);
     }
 
 
-
-/*
-    public void onSelection(int deliveryID , boolean type){
+    public void onSelection(int deliveryID, boolean type) {
         this.stepTable.getSelectionModel().clearSelection();
-        this.stepTable.getSelectionModel().select(deliveryID);
-    }
+        int indice_to_select = 0;
+        ObservableList<Step> items = this.stepTable.getItems();
+        for (Step item : items) {
+            if (item.getType() == type && item.getDeliveryID() == deliveryID) {
+                break;
+            }
+            indice_to_select++;
 
- */
+        }
+        this.stepTable.getSelectionModel().select(indice_to_select);
+        LOGGER.debug("Row selected " + indice_to_select);
+    }
 
 }

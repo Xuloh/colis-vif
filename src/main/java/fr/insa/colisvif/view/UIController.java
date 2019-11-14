@@ -217,9 +217,10 @@ public class UIController {
             }
         });
 
-        this.stepView.addEventHandlerCustom(step -> {
-            if (step != null) {
-                LOGGER.debug("Delivery selected " + step.getDeliveryID());
+        this.stepView.addEventHandlerOnSelect(vertex -> {
+            if (vertex != null) {
+                this.stepView.onSelection(vertex.getDeliveryId(),vertex.getType());
+                //LOGGER.debug("Delivery selected " + step.getDeliveryID());
             }
         });
 
