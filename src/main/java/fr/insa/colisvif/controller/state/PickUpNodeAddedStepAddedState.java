@@ -3,6 +3,7 @@ package fr.insa.colisvif.controller.state;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.view.UIController;
 
 public class PickUpNodeAddedStepAddedState implements State {
 
@@ -16,9 +17,8 @@ public class PickUpNodeAddedStepAddedState implements State {
     }
 
     @Override
-    public void addPickUpNode(Controller controller) {
-        //int pickUpDuration = uiController.getSpinnerValue(); METHODE SOPHIE
-        int pickUpDuration = 10;
+    public void addPickUpNode(Controller controller, UIController uiController) {
+        int pickUpDuration = uiController.getTimeFromPicker();
         Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
         controller.getMADOState().entryToState(pickUpVertex, stepBefore);
     }

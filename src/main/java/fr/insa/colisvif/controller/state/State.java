@@ -192,12 +192,15 @@ public interface State {
 
     }
 
-    default void addPickUpNode(Controller controller) {
+    default void addPickUpNode(Controller controller, UIController uiController) {
 
     }
 
-    default void addDropOffNode(Controller controller, CommandList commandList) {
+    default void addDropOffNode(Controller controller, UIController uiController, CommandList commandList) {
 
     }
 
+    default void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
+
+    }
 }
