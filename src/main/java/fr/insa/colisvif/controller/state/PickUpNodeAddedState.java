@@ -28,7 +28,7 @@ public class PickUpNodeAddedState implements State {
             }
         }
         controller.getPUNASAState().entryToState(pickUpNodeId, stepOfVertex);
-        int pickUpDuration = uiController.getTimeFromPicker();
+        int pickUpDuration = uiController.getTimeFromPicker() * 60;
         Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
         uiController.clearTimePicker();
         uiController.setShowCityMapNodesOnHover(true);

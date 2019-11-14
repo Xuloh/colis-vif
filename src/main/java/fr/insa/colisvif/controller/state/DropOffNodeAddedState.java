@@ -44,7 +44,7 @@ public class DropOffNodeAddedState implements State {
             }
             LOGGER.debug("ID : " + stepOfVertex.getDeliveryID());
             LOGGER.debug("ID SB : " + stepBefore.getDeliveryID());
-            int dropOffDuration = uiController.getTimeFromPicker();
+            int dropOffDuration = uiController.getTimeFromPicker() * 60;
             Vertex dropOffVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
             uiController.clearTimePicker();
             commandList.doCommand(new CommandAdd(pickUpVertex, dropOffVertex, stepBefore, stepOfVertex, controller.getRound(), controller.getCityMap()));
