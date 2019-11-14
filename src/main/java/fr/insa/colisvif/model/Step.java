@@ -15,6 +15,8 @@ public class Step {
 
     private int arrivalDate; //the date when the delivery man will get to delivery point
 
+    private int initialArrivalDate;
+
     private Vertex arrival;
 
 
@@ -38,6 +40,7 @@ public class Step {
         this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
         this.arrivalDate = arrivalDate;
+        this.initialArrivalDate = arrivalDate;
     }
 
     /**
@@ -69,6 +72,14 @@ public class Step {
             throw new IllegalArgumentException("The arrival date must be equal or over 0 second, got " + arrivalDate);
         }
         this.arrivalDate = arrivalDate;
+    }
+
+    public int getInitialArrivalDate() {
+        return initialArrivalDate;
+    }
+
+    public void setInitialArrivalDate() {
+        this.initialArrivalDate = this.arrivalDate;
     }
 
     public long getArrivalNodeId() {
