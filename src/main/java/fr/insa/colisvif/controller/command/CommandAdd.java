@@ -67,6 +67,7 @@ public class CommandAdd implements Command {
             LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
             LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(pickUpStep));
             round.changeOrderStep(pickUpStep, stepBefore, cityMap);
+            pickUpStep.setInitialArrivalDate();
             LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
             LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(pickUpStep));
 
@@ -74,12 +75,14 @@ public class CommandAdd implements Command {
                 LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
                 LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
                 round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
+                dropOffStep.setInitialArrivalDate();
                 LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
                 LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
             } else {
                 LOGGER.debug("INDEX STEP AFTER : " + round.getSteps().indexOf(stepAfter));
                 LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
                 round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().indexOf(stepAfter) - 1), cityMap);
+                dropOffStep.setInitialArrivalDate();
                 LOGGER.debug("INDEX STEP AFTER NOW : " + round.getSteps().indexOf(stepAfter));
                 LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
 

@@ -218,6 +218,7 @@ public class Step {
                 + "sections=" + sections
                 + ", deliveryID=" + deliveryID
                 + ", arrivalDate=" + arrivalDate
+                + ", initialArrivalDate=" + initialArrivalDate
                 + ", arrival=" + arrival + '}';
     }
 }
