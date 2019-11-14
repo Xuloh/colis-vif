@@ -1,6 +1,7 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.Command;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.command.CommandRemove;
 import fr.insa.colisvif.exception.XMLException;
@@ -144,22 +145,54 @@ public class ItineraryCalculatedState implements State {
 
     @Override
     public void undo(Controller controller, UIController uiController, CommandList commandList) {
+        LOGGER.debug("Pile Current Commands");
+        for (Command c: commandList.getCurrentCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
+        LOGGER.debug("Pile Past Commands");
+        for (Command c: commandList.getPastCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
         commandList.undoCommand();
         controller.createVertexList();
         uiController.updateDeliveryMap();
         uiController.updateRound();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
+        LOGGER.debug("Pile Current Commands");
+        for (Command c: commandList.getCurrentCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
+        LOGGER.debug("Pile Past Commands");
+        for (Command c: commandList.getPastCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
     }
 
     @Override
     public void redo(Controller controller, UIController uiController, CommandList commandList) {
+        LOGGER.debug("Pile Current Commands");
+        for (Command c: commandList.getCurrentCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
+        LOGGER.debug("Pile Past Commands");
+        for (Command c: commandList.getPastCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
         commandList.redoCommand();
         controller.createVertexList();
         uiController.updateDeliveryMap();
         uiController.updateRound();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
+        LOGGER.debug("Pile Current Commands");
+        for (Command c: commandList.getCurrentCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
+        LOGGER.debug("Pile Past Commands");
+        for (Command c: commandList.getPastCommands()) {
+            LOGGER.debug(c.getClass().getSimpleName());
+        }
     }
 
     @Override
