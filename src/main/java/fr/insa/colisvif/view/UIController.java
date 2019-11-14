@@ -217,7 +217,7 @@ public class UIController {
         this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
         this.editSequenceItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité"));
 
-        this.mapCanvas.addNodeMouseClickHandler(vertex -> {
+        this.mapCanvas.addNodeMouseClickHandler((nodeId, vertex) -> {
             if (vertex != null) {
                 this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
                 this.vertexView.onSelection(vertex.getDeliveryId(), vertex.getType());
