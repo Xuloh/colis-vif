@@ -1,14 +1,19 @@
 package fr.insa.colisvif.model;
 
+import fr.insa.colisvif.view.StepView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents the round to do all the deliveries that needs to be made, as a {@link List} of {@link Step}.
  */
 public class Round {
+
+    private static final Logger LOGGER = LogManager.getLogger(Round.class);
 
     private ObservableList<Step> steps;
 
@@ -127,6 +132,7 @@ public class Round {
         double length = map.getLength(node1, node2);
         int time = lastStep.getArrivalDate() + lastStep.getDuration();
         step.setDuration(time + (int) (length / ModelConstants.CYCLIST_SPEED));
+        LOGGER.fatal("In addStepAtLast , duration set is " + step.getDuration());
         steps.add(step);
     }
 
