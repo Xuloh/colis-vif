@@ -146,7 +146,11 @@ public class Round {
             steps.get(i).setSections(map.getPath(node2, node3));
 
             int time = steps.get(i - 1).getArrivalDate() + steps.get(i - 1).getDuration();
-            double length = map.getLength(node1, node2) + map.getLength(node2, node3);
+            double length = map.getLength(node1, node2);
+            time += (int) (length / ModelConstants.CYCLIST_SPEED);
+            step.setArrivalDate(time);
+            time += step.getDuration();
+            length = map.getLength(node2, node3);
             time += (int) (length / ModelConstants.CYCLIST_SPEED);
             int deltaTime = time - steps.get(i).getArrivalDate();
             for (int j = i; j < steps.size(); ++j) {
