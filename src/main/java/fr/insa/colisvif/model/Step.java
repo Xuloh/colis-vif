@@ -143,6 +143,15 @@ public class Step {
     }
 
     /**
+     *
+     *
+     * @return
+     */
+    public Vertex getArrival() {
+        return arrival;
+    }
+
+    /**
      * Add a section to the front of the {@link LinkedList} of {@link Section} of the {@link Step}.
      *
      * @param section the {@link Section} to add.
