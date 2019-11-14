@@ -270,10 +270,10 @@ public class MapCanvas extends BorderPane {
     }
 
     public void autoZoom() {
+        this.scale.set(1d);
         this.originX = 0;
         this.originY = 0;
-        this.scale.set(1d);
-        //this.redraw();
+        this.redraw();
     }
 
     public void setSelectedVertex(Vertex vertex) {
@@ -463,7 +463,12 @@ public class MapCanvas extends BorderPane {
         this.setRight(toolsPane);
 
         this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
-        this.scale.addListener((observable, oldValue, newValue) -> this.redraw());
+        this.scale.addListener((observable, oldValue, newValue) -> {
+            var a = newValue.doubleValue() / oldValue.doubleValue();
+            this.originX -= (a - 1) * (this.canvas.getWidth() * .5 - this.originX);
+            this.originY -= (a - 1) * (this.canvas.getHeight() * .5 - this.originY);
+            this.redraw();
+        });
 
         toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> this.autoZoom());
 
