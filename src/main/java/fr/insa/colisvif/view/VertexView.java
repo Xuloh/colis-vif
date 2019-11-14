@@ -30,7 +30,12 @@ public class VertexView extends Pane {
 
     private TableView<Vertex> vertexTable;
 
+    private UIController uiController;
+
     private List<Consumer<Vertex>> eventHandlers;
+
+    private TableColumn<Vertex, Integer> deliveryIdColumn;
+
 
 
     /**
@@ -42,7 +47,7 @@ public class VertexView extends Pane {
      */
     public VertexView(UIController uiController) {
         super();
-
+        this.uiController = uiController;
         this.vertexTable = new TableView<>();
         this.getChildren().add(this.vertexTable);
 
@@ -62,7 +67,7 @@ public class VertexView extends Pane {
                 }
             });
 
-        TableColumn<Vertex, Integer> deliveryIdColumn = new TableColumn<>("N° livraison");
+        deliveryIdColumn = new TableColumn<>("N° livraison");
         deliveryIdColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryId"));
         deliveryIdColumn.setCellFactory(col -> new TableCell<Vertex, Integer>() {
             @Override
@@ -142,6 +147,22 @@ public class VertexView extends Pane {
 
     public void clearVertices() {
         vertexTable.getItems().clear();
+        deliveryIdColumn.setCellFactory(col -> new TableCell<Vertex, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (uiController.getColorMap() != null
+                    && uiController.getColorMap().get(item) != null) {
+
+                    Color color = uiController.getColorMap().get(item);
+                    String cssColor =
+                        "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
+                            + "," + (255 * color.getBlue()) + ")";
+                    setStyle("-fx-background-color:" + cssColor);
+                    setText("" + item);
+                }
+            }
+        });
         LOGGER.info("Vertices cleared");
     }
 
@@ -164,4 +185,27 @@ public class VertexView extends Pane {
         this.vertexTable.getSelectionModel().select(indiceToSelect);
         this.vertexTable.scrollTo(indiceToSelect);
     }
+
+    /*
+    public void clearSteps() {
+        stepTable.getItems().clear();
+        deliveryIdColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (uiController.getColorMap() != null
+                        && uiController.getColorMap().get(item) != null) {
+
+                    Color color = uiController.getColorMap().get(item);
+                    String cssColor =
+                            "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
+                                    + "," + (255 * color.getBlue()) + ")";
+                    setStyle("-fx-background-color:" + cssColor);
+                    setText("" + item);
+                }
+            }
+        });
+        LOGGER.info("Steps cleared");
+    }
+     */
 }
