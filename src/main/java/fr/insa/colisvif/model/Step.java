@@ -112,11 +112,13 @@ public class Step {
      * Sets the duration in seconds of the {@link Step}.
      *
      * @param duration the duration in seconds of the {@link Step}.
-     * @throws IllegalArgumentException if the duration in seconds is under 0 seconds.
+     * @throws IllegalArgumentException if the duration in seconds is under
+     * 0 seconds.
      */
     public void setDuration(int duration) throws IllegalArgumentException {
         if (duration < 0) {
-            throw new IllegalArgumentException("The duration in seconds must be equal or over 0 second, got " + duration);
+            throw new IllegalArgumentException("The duration in seconds must "
+                    + "be equal or over 0 second, got " + duration);
         }
         this.duration = duration;
         arrival.setDuration(duration);
@@ -167,15 +169,23 @@ public class Step {
     }
 
     /**
-     * Add a section to the front of the {@link LinkedList} of {@link Section} of the {@link Step}.
+     * Add a section to the front of the {@link LinkedList} of {@link Section}
+     * of the {@link Step}.
      *
      * @param section the {@link Section} to add.
-     * @throws IllegalArgumentException if the new {@link Section}'s origin {@link Node} id does not correspond to the lastly added {@link Section}'s destination {@link Node} id.
+     * @throws IllegalArgumentException if the new {@link Section}'s origin
+     * {@link Node} id does not correspond to the lastly added {@link Section}'s
+     * destination {@link Node} id.
      */
     public void addSection(Section section) throws IllegalArgumentException {
-        if (sections.size() > 0 && sections.getFirst().getOrigin() != section.getDestination()) {
-            throw new IllegalArgumentException("The origin of the new Section does not correspond to the last Section in the list. Got "
-                    + section.getOrigin() + " instead of " + sections.getFirst().getDestination());
+        if (sections.size() > 0
+                && sections.getFirst().getOrigin()
+                    != section.getDestination()) {
+            throw new IllegalArgumentException("The origin of the new "
+                    + "Section does not correspond to the last Section in "
+                    + "the list. Got "
+                    + section.getOrigin() + " instead of "
+                    + sections.getFirst().getDestination());
         }
         sections.addFirst(section);
     }
@@ -184,7 +194,8 @@ public class Step {
      * Determines if the given {@link Object} is "equal"
      * to this {@link Step}.
      * Only other {@link Step} are considered for comparison.
-     * The method compares the deliveryID, the type, the arrivalDate, the duration and the {@link LinkedList} of {@link Section}.
+     * The method compares the deliveryID, the type, the arrivalDate, the
+     * duration and the {@link LinkedList} of {@link Section}.
      *
      * @param o the {@link Object} to compare this {@link Step} to
      * @return <code>true</code> if o is a {@link Step} whose values are
