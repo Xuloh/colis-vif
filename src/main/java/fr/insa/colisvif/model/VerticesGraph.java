@@ -5,34 +5,41 @@ import java.util.*;
 /*package-private*/ class VerticesGraph {
 
     /** The speed of the cyclist in meters per second */
-    private static final int CYCLIST_SPEED = (int) (15. / 3.6); // TODO @Felix: mettre ces constantes dans la classes contenant toutes les constantes
+    private static final int CYCLIST_SPEED = (int) (15. / 3.6);
+    // TODO @Felix: mettre ces constantes dans la classes contenant
+    //  toutes les constantes
 
-    /** 2^(2n+1) where n is the number of deliveries, N is the number of subsets of the vertices */
+    // 2^(2n+1) where n is the number of deliveries, N is the number of
+    //subsets of the vertices
     private long powerSetSize;
 
-    /** The deliveries that the cyclist need to deliver */
+    // The deliveries that the cyclist need to deliver
     private DeliveryMap deliveries;
 
-    /** The results from the Dijkstra's algorithms */
+    // The results from the Dijkstra's algorithms
     private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
-    /** The results from the Dijkstra's algorithms */
+    // The results from the Dijkstra's algorithms
     private ArrayList<ArrayList<Double>> lengths;
 
-    /** We will use dynamic programing, this is where we store the sub results */
+    // We will use dynamic programing, this is where we store the sub results
     private HashMap<Long, SubResult> subResults;
 
     /**
      * Let n be the number of deliveries we want to process
-     * Creates a graph G with 2n+1 vertices : one for the warehouse and two for each delivery (the pick up and the drop off)
+     * Creates a graph G with 2n+1 vertices : one for the warehouse and two for
+     * each delivery (the pick up and the drop off)
      * The vertices are indexed from 0 to 2n : the warehouse is associated to 0
      * the pick up of the i-th delivery is associated to 2i+1
      * the drop off of this same delivery is associated to 2i+2
      *
      * @param deliveries        a delivery map we want to process
-     * @param pathsFromVertices the results of Dijkstra's algorithms from all nodes in deliveries
+     * @param pathsFromVertices the results of Dijkstra's algorithms from all
+     *                          nodes in deliveries
      */
-    /*package-private*/ VerticesGraph(DeliveryMap deliveries, HashMap<Long, PathsFromVertex> pathsFromVertices) {
+    /*package-private*/
+    VerticesGraph(DeliveryMap deliveries,
+                  HashMap<Long, PathsFromVertex> pathsFromVertices) {
         int n = deliveries.getSize();
         powerSetSize = 0b1 << (2 * n + 1); //makes 2^(2n+1), thanks Pacôme
         this.deliveries = deliveries;
@@ -86,13 +93,17 @@ import java.util.*;
     }
 
     /**
-     * Calculates the key associated with a sub problem in the dynamic programming process
-     * This key will be used in the map subResults to store the sub result of this sub problem
-     * A sub problem is a couple (d, E) where d is a vertex of G and E a subset of the vertices of G that does not contain d
-     * The goal is to find the shortest hamiltonian path of E u {k+1; k odd number in E} u {d} whose first vertex is d
+     * Calculates the key associated with a sub problem in the dynamic
+     * programming process.This key will be used in the map subResults to
+     * store the sub result of this sub problem
+     * A sub problem is a couple (d, E) where d is a vertex of G and E a subset
+     * of the vertices of G that does not contain d. The goal is to find the
+     * shortest hamiltonian path of E u {k+1; k odd number in E} u {d} whose
+     * first vertex is d
      *
      * @param start   the vertex d of the previous explanation
-     * @param setCode a number that represents E, more precisely the sum of all 2^k for k in E
+     * @param setCode a number that represents E, more precisely the sum of
+     *                all 2^k for k in E
      * @return the key associated with (d, E)
      */
     private Long subProblemKey(int start, long setCode) {
@@ -100,7 +111,8 @@ import java.util.*;
     }
 
     /**
-     * Returns the result of the sub problem (start, E) where S is the subset coded by setCode
+     * Returns the result of the sub problem (start, E) where S is the
+     * subset coded by setCode
      *
      * @param start   the starting vertex of our path
      * @param setCode the subSet that need to be explored
@@ -108,12 +120,14 @@ import java.util.*;
      */
     private SubResult resolveSubProblem(int start, long setCode) {
         long key = subProblemKey(start, setCode);
-        if (subResults.containsKey(key)) { //this sub problem has been solved yet, we don't solve it again
+        //this sub problem has been solved yet, we don't solve it again
+        if (subResults.containsKey(key)) {
             return subResults.get(key);
         }
         if (setCode == 0) { //stop case, when E is the empty set
             SubResult subResult = new SubResult(0, 0);
-            //the first 0 can be replaced by lengths.get(start).get(0) if we want the cyclist to come back
+            //the first 0 can be replaced by lengths.get(start).get(0) if we
+            // want the cyclist to come back
             subResults.put(key, subResult);
             return subResult;
         }
@@ -121,23 +135,31 @@ import java.util.*;
         long nextKey = 0;
         int n = deliveries.getSize();
         long a = 2; //will be 2^k, used to add and remove elements from the set
-        long copy = setCode / 2; //will be setCode/2^k, used to know if k belongs to the set
+        long copy = setCode / 2; //will be setCode/2^k, used to know if k
+        // belongs to the set
         for (int k = 1; k < 2 * n + 1; ++k) {
             if ((copy & 1) == 1) { //k belongs to the set
                 if ((k & 1) == 1) { //k is a pick up
-                    //we remove the pick up from the set and add his associated drop off instead
-                    SubResult candidate = resolveSubProblem(k, setCode + a);
-                    //setCode+a is in fact setCode-a+2a, i.e.setCode-2^k+2^(k+1)
-                    //that means we remove int k from the set and add k+1 instead
-                    double candidateLength = candidate.getLength() + lengths.get(start).get(k);
+                    //we remove the pick up from the set and add his associated
+                    // drop off instead
+                    SubResult candidate =
+                            resolveSubProblem(k, setCode + a);
+                    //setCode+a is in fact setCode-a+2a,
+                    // i.e.setCode-2^k+2^(k+1)
+                    //that means we remove int k from the set and add k+1
+                    // instead
+                    double candidateLength =
+                            candidate.getLength() + lengths.get(start).get(k);
                     if (bestLength == -1 || bestLength > candidateLength) {
                         bestLength = candidateLength;
                         nextKey = subProblemKey(k, setCode + a);
                     }
                 } else { //k is a drop off
                     //we remove the drop off from the set
-                    SubResult candidate = resolveSubProblem(k, setCode - a);
-                    double candidateLength = candidate.getLength() + lengths.get(start).get(k);
+                    SubResult candidate =
+                            resolveSubProblem(k, setCode - a);
+                    double candidateLength =
+                            candidate.getLength() + lengths.get(start).get(k);
                     if (bestLength == -1 || bestLength > candidateLength) {
                         bestLength = candidateLength;
                         nextKey = subProblemKey(k, setCode - a);
@@ -167,7 +189,8 @@ import java.util.*;
     }
 
     /**
-     * Creates the step between two vertices, using the results of Dijkstra's algorithms stored in pathsFromVertices
+     * Creates the step between two vertices, using the results of Dijkstra's
+     * algorithms stored in pathsFromVertices
      *
      * @param departureIndex the departure of the step
      * @param arrivalIndex   the arrival of the step
@@ -177,7 +200,8 @@ import java.util.*;
     private Step makeStep(int departureIndex, int arrivalIndex, int time) {
         long departureId = idFromIndex(departureIndex);
         long arrivalId = idFromIndex(arrivalIndex);
-        boolean arrivalType = arrivalIndex % 2 == 1 ? Vertex.PICK_UP : Vertex.DROP_OFF;
+        boolean arrivalType =
+                arrivalIndex % 2 == 1 ? Vertex.PICK_UP : Vertex.DROP_OFF;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
         arrival.setDeliveryId(this.deliveryIdFromIndex(arrivalIndex));
@@ -186,12 +210,16 @@ import java.util.*;
         if (departureId == arrivalId) {
             return step;
         }
-        Section prevSection = pathsFromVertices.get(departureId).getPrevSection(arrivalId);
+        Section prevSection =
+                pathsFromVertices.get(departureId).getPrevSection(arrivalId);
         while (prevSection != null) {
             step.addSection(prevSection);
-            prevSection = pathsFromVertices.get(departureId).getPrevSection(prevSection.getOrigin());
+            prevSection = pathsFromVertices.get(departureId)
+                                           .getPrevSection(prevSection
+                                           .getOrigin());
         }
-        double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
+        double distance =
+                pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
         step.setInitialArrivalDate();
         return step;
