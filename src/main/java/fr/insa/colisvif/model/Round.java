@@ -131,12 +131,12 @@ public class Round {
     }
 
     public void addStepInIthPlace(Step step, int i, CityMap map) {
-        if (i < 0 || i >= steps.size()) {
+        if (i < 0 || i > steps.size()) {
             throw new IllegalArgumentException("Index " + i + " out of bounds (size : " + steps.size() + ")");
         }
         if (i == 0) {
             addStepAtFirst(step, map);
-        } else if (i == steps.size() - 1) {
+        } else if (i == steps.size()) {
             addStepAtLast(step, map);
         } else {
             long node1 = steps.get(i - 1).getArrivalNodeId();
@@ -245,6 +245,10 @@ public class Round {
      */
     public void addStep(Step step) {
         steps.add(step);
+    }
+
+    public DeliveryMap getDeliveryMap() {
+        return deliveryMap;
     }
 
 }

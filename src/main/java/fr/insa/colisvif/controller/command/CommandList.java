@@ -42,6 +42,7 @@ public class CommandList {
         }
     }
 
+
     /**
      * Undo the last executed {@link Command}.
      * It can be redone by calling {@link #redoCommand()}.
@@ -50,7 +51,7 @@ public class CommandList {
     public void undoCommand() {
         try {
             if (!currentCommands.isEmpty()) {
-                Command commandToUndo = currentCommands.pop();
+                Command commandToUndo = currentCommands.removeLast();
                 LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
                 commandToUndo.undoCommand();
                 pastCommands.add(commandToUndo);
@@ -68,7 +69,7 @@ public class CommandList {
     public void redoCommand() {
         try {
             if (!pastCommands.isEmpty()) {
-                Command commandToRedo = pastCommands.pop();
+                Command commandToRedo = pastCommands.removeLast();
                 LOGGER.info("Re"
                         + "doing Command : {}", commandToRedo.getClass().getSimpleName());
                 commandToRedo.doCommand();
@@ -89,5 +90,13 @@ public class CommandList {
         LOGGER.info("Clearing command history");
         currentCommands.clear();
         pastCommands.clear();
+    }
+
+    public LinkedList<Command> getPastCommands() {
+        return pastCommands;
+    }
+
+    public LinkedList<Command> getCurrentCommands() {
+        return currentCommands;
     }
 }
