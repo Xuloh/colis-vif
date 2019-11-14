@@ -202,7 +202,7 @@ public class StepView extends Pane {
 
         }
         this.stepTable.getSelectionModel().select(indice_to_select);
-        LOGGER.debug("Row selected " + indice_to_select);
+        this.stepTable.scrollTo(indice_to_select);
     }
 
 }
