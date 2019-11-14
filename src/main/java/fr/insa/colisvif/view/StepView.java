@@ -139,7 +139,7 @@ public class StepView extends Pane {
 
         //TODO : change with initialArrivalDate
         TableColumn<Step, Integer> timeIntervalColumn = new TableColumn<>("Intervalle d'arrivée");
-        timeIntervalColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
+        timeIntervalColumn.setCellValueFactory(new PropertyValueFactory<>("initialArrivalDate"));
         timeIntervalColumn.setCellFactory(col -> new TableCell<Step, Integer>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
