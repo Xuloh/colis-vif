@@ -55,13 +55,13 @@ public class Round {
         return step1 != step2 && step1.getDeliveryID() == step2.getDeliveryID();
     }
 
-    private int associatedStepIndex(Step step) throws Exception {
+    private int associatedStepIndex(Step step) throws IllegalArgumentException {
         for (int i = 0; i < steps.size(); ++i) {
             if (areAssociated(step, steps.get(i))) {
                 return i;
             }
         }
-        throw new Exception("Associated step not found");
+        throw new IllegalArgumentException("Associated step not found");
     }
 
     private void removeFirstStep(CityMap map) {
