@@ -297,6 +297,7 @@ public class UIController {
 
     public void updateDeliveryMap() {
         if (getDeliveryMap() != null) {
+            this.stepView.clearSteps();
             ColorGenerator colorGenerator = new ColorGenerator(
                 getDeliveryMap().getSize(),
                 CanvasConstants.NODE_OPACITY,
