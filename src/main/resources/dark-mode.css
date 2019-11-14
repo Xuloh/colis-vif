@@ -12,6 +12,10 @@
     -fx-text-fill: lightgray;
 }
 
+#label-error {
+    -fx-text-fill: pink;
+}
+
 .separator *.line {
     -fx-background-color: #3C3C3C;
     -fx-border-style: solid;
