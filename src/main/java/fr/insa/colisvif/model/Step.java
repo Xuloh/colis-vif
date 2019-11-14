@@ -20,7 +20,7 @@ public class Step {
 
     //TODO - @Sophie et @Guilhem virer ces deux trucs
     @Deprecated
-    private boolean type; //true if it is a pick up and false if it is a drop off
+    private boolean type; //false if it is a pick up and true if it is a drop off
 
     @Deprecated
     private int duration; //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
