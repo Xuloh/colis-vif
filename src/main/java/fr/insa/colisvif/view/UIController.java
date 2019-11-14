@@ -106,6 +106,15 @@ public class UIController {
     @FXML
     private CheckMenuItem darkModeToggle;
 
+    @FXML
+    private MenuItem autoZoomItem;
+
+    @FXML
+    private MenuItem zoomInItem;
+
+    @FXML
+    private MenuItem zoomOutItem;
+
     private Stage stage;
 
     private Controller controller;
@@ -240,6 +249,10 @@ public class UIController {
                 this.stage.getScene().getStylesheets().clear();
             }
         });
+
+        this.autoZoomItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.autoZoom());
+        this.zoomInItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomIn());
+        this.zoomOutItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomOut());
 
         this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
