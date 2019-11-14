@@ -59,12 +59,13 @@ public class ModifyOrderState implements State {
                 for (Step step : controller.getRound().getSteps()) {
                     if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() != vertex.getType()) {
                         stepBefore = step;
-                    } else if (step.getDeliveryID() == vertex.getDeliveryId() && step != stepToChange) {
+                    } else if (step.getDeliveryID() == stepToChange.getDeliveryID() && step != stepToChange) {
                         indexOfAssociatedStep = controller.getStepList().indexOf(step);
                     }
                 }
                 int indexOfStepChanged = controller.getStepList().indexOf(stepToChange);
                 int indexOfTarget = controller.getStepList().indexOf(stepBefore);
+                LOGGER.error(indexOfStepChanged + " " + indexOfAssociatedStep + " " + indexOfTarget);
                 if (indexOfAssociatedStep > indexOfStepChanged && indexOfTarget < indexOfAssociatedStep) {
                     commandList.doCommand(new CommandModifyOrder(controller.getRound(), stepToChange, stepBefore, controller.getCityMap()));
                     controller.createVertexList();
@@ -80,7 +81,6 @@ public class ModifyOrderState implements State {
                     uiController.getMapCanvas().redraw();
                     controller.setButtons();
                 } else {
-                    LOGGER.error(indexOfStepChanged + " " + indexOfAssociatedStep + " " + indexOfTarget);
                     uiController.printError("Le changement demandé rentrerait en conflit avec la livraison (dépôt avant enlèvement)");
                 }
             }

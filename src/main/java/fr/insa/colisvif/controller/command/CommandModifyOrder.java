@@ -3,8 +3,12 @@ package fr.insa.colisvif.controller.command;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CommandModifyOrder implements Command {
+
+    private static final Logger LOGGER = LogManager.getLogger(CommandRemove.class);
 
     private Round round;
 
@@ -25,8 +29,9 @@ public class CommandModifyOrder implements Command {
 
     @Override
     public void undoCommand() {
+        LOGGER.debug(modifiedIndex + " " + round.getSteps().indexOf(modifiedStep));
         if (modifiedIndex != 0) {
-            round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex - 1), cityMap);
+            round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex), cityMap);
         } else {
             round.changeOrderStep(modifiedStep, null, cityMap);
         }
