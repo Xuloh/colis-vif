@@ -19,6 +19,11 @@
                     <MenuItem fx:id="close" mnemonicParsing="false" text="Fermer"/>
                 </Menu>
 
+                <Menu mnemonicParsing="false" text="Édition">
+                    <MenuItem fx:id="undoItem" mnemonicParsing="false" text="Annuler"/>
+                    <MenuItem fx:id="redoItem" mnemonicParsing="false" text="Rétablir"/>
+                </Menu>
+
                 <Menu text="Affichage">
                     <MenuItem fx:id="autoZoomItem" text="Auto zoom"/>
                     <MenuItem fx:id="zoomInItem" text="Zoomer"/>

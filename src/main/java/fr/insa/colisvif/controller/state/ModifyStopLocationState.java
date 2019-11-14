@@ -4,6 +4,7 @@ import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.command.CommandModifyLocation;
 import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
 
 /**
@@ -42,5 +43,18 @@ public class ModifyStopLocationState implements State {
 
     protected void entryToState(Step stepToModify) {
         this.stepToChange = stepToModify;
+    }
+
+    @Override
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+        commandList.doCommand(new CommandModifyLocation(stepToChange, nodeId, controller.getRound(), controller.getCityMap()));
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
+        uiController.setShowCityMapNodesOnHover(false);
+        controller.setCurrentState(ItineraryCalculatedState.class);
+
     }
 }

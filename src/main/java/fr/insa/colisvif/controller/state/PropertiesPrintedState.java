@@ -10,14 +10,4 @@ package fr.insa.colisvif.controller.state;
  * @see <a href="https://en.wikipedia.org/wiki/State_pattern">State pattern</a>
  */
 public class PropertiesPrintedState implements State {
-
-    /**
-     * Enter in order change mode to enable new actions.
-     *
-     * @see ModifyOrderState
-     */
-    @Override
-    public void switchToOrderChangeMode() {
-
-    }
 }
