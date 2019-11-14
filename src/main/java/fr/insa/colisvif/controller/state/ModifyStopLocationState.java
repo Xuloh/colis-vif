@@ -38,6 +38,8 @@ public class ModifyStopLocationState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().setShowCityMapNodesOnHover(false);
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 

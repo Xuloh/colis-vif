@@ -178,7 +178,7 @@ public interface State {
      * @param controller
      */
     default void getBackToPreviousState(Controller controller) {
-
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
     }
 
     default void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
@@ -214,6 +214,10 @@ public interface State {
     }
 
     default void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+
+    }
+
+    default void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
 
     }
 }

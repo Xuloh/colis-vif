@@ -58,6 +58,20 @@ public class DropOffNodeAddedState implements State {
             uiController.printError("L'étape d'arrivée sélectionnée est antérieure à celle de départ. Ajout annulé.");
             LOGGER.error(e.getMessage(), e);
             controller.setCurrentState(ItineraryCalculatedState.class);
+        } catch (NullPointerException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("L'entrepôt n'est pas sélectionnable.");
         }
+    }
+
+    @Override
+    public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.setCurrentState(ItineraryCalculatedState.class);
+    }
+
+    @Override
+    public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
+        this.leftClick(controller, uiController, commandList, 0, vertex);
     }
 }
