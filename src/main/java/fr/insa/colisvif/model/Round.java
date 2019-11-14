@@ -1,14 +1,11 @@
 package fr.insa.colisvif.model;
 
-import fr.insa.colisvif.view.StepView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Represents the round to do all the deliveries that needs to be made, as a
