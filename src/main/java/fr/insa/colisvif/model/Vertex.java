@@ -20,6 +20,8 @@ public class Vertex implements Comparable<Vertex> {
 
     private int duration;
 
+    private int deliveryId;
+
     /**
      * Constructor of Vertex.
      *
@@ -72,6 +74,14 @@ public class Vertex implements Comparable<Vertex> {
 
     public void setNodeId(long nodeId) {
         this.nodeId.set(nodeId);
+    }
+
+    public int getDelivery() {
+        return this.deliveryId;
+    }
+
+    public void setDeliveryId(int deliveryId) {
+        this.deliveryId = deliveryId;
     }
 
     public ReadOnlyLongProperty nodeIdProperty() {

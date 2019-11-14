@@ -382,6 +382,12 @@ public class UIController {
         return this.controller.getVertexList();
     }
 
+    /*package-private*/ StepView getStepView() {
+        return this.stepView;
+    }
+
+
+
     public Map<Integer, Color> getColorMap() {
         return colorMap;
     }

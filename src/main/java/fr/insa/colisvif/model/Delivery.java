@@ -25,7 +25,9 @@ public class Delivery {
     public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
 
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
+        pickUp.setDeliveryId(this.id);
         dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
+        dropOff.setDeliveryId(this.id);
         this.id = id;
     }
 
