@@ -76,7 +76,7 @@ public class Vertex implements Comparable<Vertex> {
         this.nodeId.set(nodeId);
     }
 
-    public int getDelivery() {
+    public int getDeliveryId() {
         return this.deliveryId;
     }
 
