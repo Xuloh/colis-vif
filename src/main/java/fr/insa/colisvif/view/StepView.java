@@ -1,5 +1,7 @@
 package fr.insa.colisvif.view;
 
+import static java.lang.Math.abs;
+
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import java.util.ArrayList;
@@ -144,9 +146,16 @@ public class StepView extends Pane {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null) {
                     setText(null);
                 } else {
+                    Step step = getTableView().getItems().get(getIndex());
+                    if(abs(item - step.getArrivalDate()) > 3600) {
+                        setStyle("-fx-background-color: " + " red");
+                    } else {
+                        setStyle("-fx-background-color: " + " paleGreen");
+                    }
                     int minutes = item / 60;
                     int heures = minutes / 60;
                     minutes = minutes % 60;
