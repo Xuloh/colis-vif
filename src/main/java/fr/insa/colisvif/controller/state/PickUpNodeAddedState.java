@@ -34,6 +34,7 @@ public class PickUpNodeAddedState implements State {
         uiController.setShowCityMapNodesOnHover(true);
         controller.getMADOState().entryToState(pickUpVertex, stepOfVertex);
         uiController.addDropOff();
+        uiController.printStatus("Sélection la position du noeud de dépôt.");
         controller.setCurrentState(ModeAddDropOffState.class);
     }
 
@@ -45,11 +46,17 @@ public class PickUpNodeAddedState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
     protected void entryToState(long nodeId) {
         this.pickUpNodeId = nodeId;
+    }
+
+    @Override
+    public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
+        this.leftClick(controller, uiController, commandList, 0, vertex);
     }
 
 }

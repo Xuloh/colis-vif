@@ -39,7 +39,8 @@ public class ModifyOrderState implements State {
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
-        controller.setCurrentState(PropertiesPrintedState.class);
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
     @Override
@@ -89,8 +90,13 @@ public class ModifyOrderState implements State {
         }
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
-
+    
     protected void entryToState(Step step) {
         stepToChange = step;
+    }
+
+    @Override
+    public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList,  Vertex vertex) {
+        this.leftClick(controller, uiController, commandList, 0, vertex);
     }
 }

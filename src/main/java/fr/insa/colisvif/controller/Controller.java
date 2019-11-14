@@ -6,6 +6,7 @@ import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseButton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -126,7 +127,13 @@ public class Controller {
     public void setUIController(UIController uiController) {
         this.uiController = uiController;
         uiController.getMapCanvas().addNodeMouseClickHandler((nodeId, vertex) -> {
+            LOGGER.debug(vertex);
             this.currentState.leftClick(this, uiController, commandList, nodeId, vertex);
+        });
+        this.uiController.addMouseClickEventHandler(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                this.currentState.getBackToPreviousState(this);
+            }
         });
     }
 
@@ -344,5 +351,9 @@ public class Controller {
      */
     public void editLocationDelivery(Step step) {
         this.currentState.switchToLocationChange(this, this.uiController, step);
+    }
+
+    public void inputSelectedVertex(Vertex vertex) {
+        this.currentState.selectedStepFromStepView(this, this.uiController, commandList, vertex);
     }
 }

@@ -10,6 +10,7 @@ import fr.insa.colisvif.model.Vertex;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -249,6 +250,7 @@ public class UIController {
         this.stepView.addEventHandlerOnSelect(vertex -> {
             if (vertex != null) {
                 this.mapCanvas.setSelectedVertex(vertex);
+                this.controller.inputSelectedVertex(vertex);
             }
         });
 
@@ -467,6 +469,9 @@ public class UIController {
         return this.stepView;
     }
 
+    public void addMouseClickEventHandler(EventHandler<MouseEvent> eventHandler) {
+        this.stage.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+    }
 
 
     public Map<Integer, Color> getColorMap() {

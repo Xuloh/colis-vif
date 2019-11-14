@@ -96,6 +96,7 @@ public class ItineraryCalculatedState implements State {
         uiController.setShowCityMapNodesOnHover(true);
         controller.setCurrentState(ModeAddState.class);
         uiController.disableButtons();
+        uiController.printStatus("Sélection la position du noeud d'enlèvement.");
         uiController.addPickUp();
     }
 
