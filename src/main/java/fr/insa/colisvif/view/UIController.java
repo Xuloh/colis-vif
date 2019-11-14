@@ -130,7 +130,7 @@ public class UIController {
         this.stage = stage;
         this.controller = controller;
         this.mapCanvas = new MapCanvas(this, true);
-        this.vertexView = new VertexView();
+        this.vertexView = new VertexView(this);
         this.stepView = new StepView(this);
         this.statusBar = new StatusBar();
         this.timePicker = new TimePicker();
@@ -208,13 +208,21 @@ public class UIController {
         this.mapCanvas.addNodeMouseClickHandler(vertex -> {
             if (vertex != null) {
                 this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
+                this.vertexView.onSelection(vertex.getDeliveryId(), vertex.getType());
                 //LOGGER.debug("Delivery selected " + step.getDeliveryID());
             } else {
                 this.stepView.getStepTable().getSelectionModel().select(null);
+                this.vertexView.getVertexTable().getSelectionModel().select(null);
             }
         });
 
         this.stepView.addEventHandlerOnSelect(vertex -> {
+            if (vertex != null) {
+                this.mapCanvas.setSelectedVertex(vertex);
+            }
+        });
+
+        this.vertexView.addEventHandlerOnSelect(vertex -> {
             if (vertex != null) {
                 this.mapCanvas.setSelectedVertex(vertex);
             }
