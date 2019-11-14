@@ -30,14 +30,6 @@
                         <MenuItem fx:id="editSequenceItem" mnemonicParsing="false" text="Modifier ordre" />
                     </items>
                 </Menu>
-
-                <Menu mnemonicParsing="false" text="Affichage">
-                    <items>
-                        <MenuItem fx:id="zoomAuto" mnemonicParsing="false" text="Zoom automatique" />
-                        <MenuItem fx:id="zoomIn" mnemonicParsing="false" text="Dézoomer" />
-                        <MenuItem fx:id="zoomOut" mnemonicParsing="false" text="Zoomer" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
     </top>
