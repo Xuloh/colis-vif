@@ -32,7 +32,7 @@ public class StepView extends Pane {
 
     private UIController uiController;
 
-    private List<Consumer<Step>> eventHandlers;
+    private List<Consumer<Vertex>> eventHandlers;
 
 
     /**
@@ -55,8 +55,8 @@ public class StepView extends Pane {
             .addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     Step step = this.stepTable.getSelectionModel().getSelectedItem();
-                    for (Consumer<Step> eventHandler : this.eventHandlers) {
-                        eventHandler.accept(step);
+                    for (Consumer<Vertex> eventHandler : this.eventHandlers) {
+                        eventHandler.accept(step.getArrival());
                     }
                     //LOGGER.debug("CLICK DANS LA STEPVIEW : " + step.getDeliveryID());
                 }
@@ -72,10 +72,10 @@ public class StepView extends Pane {
                     && uiController.getColorMap().get(item) != null) {
 
                     Color color = uiController.getColorMap().get(item);
-                    String css_color =
+                    String cssColor =
                         "rgb(" + (255 * color.getRed()) + "," + (255 * color.getGreen())
                             + "," + (255 * color.getBlue()) + ")";
-                    setStyle("-fx-background-color:" + css_color);
+                    setStyle("-fx-background-color:" + cssColor);
                     setText("" + item);
                 }
             }
@@ -105,10 +105,10 @@ public class StepView extends Pane {
                     int heures = minutes / 60;
                     minutes = minutes % 60;
 
-                    String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
-                    String heures_str = heures < 10 ? "0" + heures : "" + heures;
+                    String minutesStr = minutes < 10 ? "0" + minutes : "" + minutes;
+                    String heuresStr = heures < 10 ? "0" + heures : "" + heures;
 
-                    setText(heures_str + ":" + minutes_str);
+                    setText(heuresStr + ":" + minutesStr);
                 }
             }
         });
@@ -127,11 +127,11 @@ public class StepView extends Pane {
                     int heures = minutes / 60;
                     minutes = minutes % 60;
 
-                    String secondes_str = secondes < 10 ? "0" + secondes : "" + secondes;
-                    String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
-                    String heures_str = heures < 10 ? "0" + heures : "" + heures;
+                    String secondesStr = secondes < 10 ? "0" + secondes : "" + secondes;
+                    String minutesStr = minutes < 10 ? "0" + minutes : "" + minutes;
+                    String heuresStr = heures < 10 ? "0" + heures : "" + heures;
 
-                    setText(heures_str + ":" + minutes_str + ":" + secondes_str);
+                    setText(heuresStr + ":" + minutesStr + ":" + secondesStr);
                 }
             }
         });
@@ -149,14 +149,14 @@ public class StepView extends Pane {
                     int minutes = item / 60;
                     int heures = minutes / 60;
                     minutes = minutes % 60;
-                    String minutes_str = minutes < 10 ? "0" + minutes : "" + minutes;
-                    String heures_str_inf =
+                    String minutesStr = minutes < 10 ? "0" + minutes : "" + minutes;
+                    String heuresStrInf =
                         (heures - 1) < 10 ? "0" + (heures - 1) : "" + (heures - 1);
-                    String heures_str_sup =
+                    String heuresStrSup =
                         (heures + 1) < 10 ? "0" + (heures + 1) : "" + (heures + 1);
 
-                    setText("[" + heures_str_inf + ":" + minutes_str + " - " + heures_str_sup + ":"
-                        + minutes_str + "]");
+                    setText("[" + heuresStrInf + ":" + minutesStr + " - " + heuresStrSup + ":"
+                        + minutesStr + "]");
                 }
             }
         });
@@ -185,18 +185,24 @@ public class StepView extends Pane {
         }
     }
 
-    public void addEventHandlerCustom(Consumer<Step> eventHandler) {
+    public void addEventHandlerOnSelect(Consumer<Vertex> eventHandler) {
         this.eventHandlers.add(eventHandler);
     }
 
 
-
-/*
-    public void onSelection(int deliveryID , boolean type){
+    public void onSelection(int deliveryID, boolean type) {
         this.stepTable.getSelectionModel().clearSelection();
-        this.stepTable.getSelectionModel().select(deliveryID);
-    }
+        int indiceToSelect = 0;
+        ObservableList<Step> items = this.stepTable.getItems();
+        for (Step item : items) {
+            if (item.getType() == type && item.getDeliveryID() == deliveryID) {
+                break;
+            }
+            indiceToSelect++;
 
- */
+        }
+        this.stepTable.getSelectionModel().select(indiceToSelect);
+        this.stepTable.scrollTo(indiceToSelect);
+    }
 
 }

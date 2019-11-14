@@ -5,7 +5,7 @@ import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Section;
-import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -66,9 +65,11 @@ public class MapCanvas extends BorderPane {
 
     private boolean showCityMapNodesOnHover;
 
-    private List<BiConsumer<Long, Step>> nodeMouseHoverHandlers;
+    private List<Consumer<Vertex>> nodeMouseHoverHandlers;
 
-    private List<BiConsumer<Long, Step>> nodeMouseClickHandlers;
+    private List<Consumer<Vertex>> nodeMouseClickHandlers;
+
+    private Long selectedNodeId;
 
     /**
      * Creates a new {@link MapCanvas}.
@@ -94,6 +95,7 @@ public class MapCanvas extends BorderPane {
         this.mapSections = new ArrayList<>();
         this.roundSections = new ArrayList<>();
         this.showCityMapNodesOnHover = false;
+        this.selectedNodeId = null;
 
         // wrap canvas in a pane to handle resize
         Pane canvasContainer = new Pane();
@@ -183,6 +185,7 @@ public class MapCanvas extends BorderPane {
                 .stream()
                 .map(node -> new CanvasNode(
                     node.getId(),
+                    null,
                     NodeType.CITY_MAP_NODE,
                     CanvasConstants.CITY_MAP_NODE_COLOR,
                     CanvasConstants.CITY_MAP_NODE_RADIUS
@@ -205,32 +208,27 @@ public class MapCanvas extends BorderPane {
         this.deliveryCanvasNodes.clear();
 
         if (DELIVERY_MAP != null) {
-            LOGGER.debug("Taille de la DeliveryMap : " + DELIVERY_MAP.getSize());
-            ColorGenerator colorGenerator = new ColorGenerator(
-                DELIVERY_MAP.getSize(),
-                CanvasConstants.NODE_OPACITY,
-                2
-            );
+            Map<Integer, Color> colorMap = this.uiController.getColorMap();
 
             this.uiController
                 .getVertexList()
                 .stream()
                 .map(vertex -> new CanvasNode(
                     vertex.getNodeId(),
+                    vertex,
                     vertex.isPickUp() ? NodeType.DELIVERY_PICKUP : NodeType.DELIVERY_DROP_OFF,
-                    colorGenerator.next(),
+                    colorMap.get(vertex.getDeliveryId()),
                     CanvasConstants.DELIVERY_NODE_RADIUS
                 ))
                 .forEach(this.deliveryCanvasNodes::add);
 
             this.deliveryCanvasNodes.add(new CanvasNode(
                 DELIVERY_MAP.getWarehouseNodeId(),
+                null,
                 NodeType.DELIVERY_WAREHOUSE,
                 CanvasConstants.WAREHOUSE_COLOR,
                 CanvasConstants.DELIVERY_NODE_RADIUS
             ));
-        } else {
-            LOGGER.debug("DELIVERYMAP IS NULL IN UPDATE");
         }
     }
 
@@ -251,11 +249,11 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    public void addNodeMouseHoverHandler(BiConsumer<Long, Step> eventHandler) {
+    public void addNodeMouseHoverHandler(Consumer<Vertex> eventHandler) {
         this.nodeMouseHoverHandlers.add(eventHandler);
     }
 
-    public void addNodeMouseClickHandler(BiConsumer<Long, Step> eventHandler) {
+    public void addNodeMouseClickHandler(Consumer<Vertex> eventHandler) {
         this.nodeMouseClickHandlers.add(eventHandler);
     }
 
@@ -278,6 +276,11 @@ public class MapCanvas extends BorderPane {
         //this.redraw();
     }
 
+    public void setSelectedVertex(Vertex vertex) {
+        this.selectedNodeId = vertex.getNodeId();
+        this.redraw();
+    }
+
     private void canvasOnMouseExited(MouseEvent event) {
         this.cityMapCanvasNodes.forEach(node -> node.selected = false);
         this.deliveryCanvasNodes.forEach(node -> node.selected = false);
@@ -297,7 +300,7 @@ public class MapCanvas extends BorderPane {
                 selectedNode.selected = true;
                 this.canvas.setCursor(Cursor.HAND);
                 for (var handler : this.nodeMouseClickHandlers) {
-                    handler.accept(selectedNode.nodeId, null);
+                    handler.accept(selectedNode.vertex);
                 }
             } else {
                 this.canvas.setCursor(Cursor.DEFAULT);
@@ -331,7 +334,7 @@ public class MapCanvas extends BorderPane {
             selectedNode.selected = true;
             this.canvas.setCursor(Cursor.HAND);
             for (var handler : this.nodeMouseHoverHandlers) {
-                handler.accept(selectedNode.nodeId, null);
+                handler.accept(selectedNode.vertex);
             }
         } else {
             this.canvas.setCursor(Cursor.DEFAULT);
@@ -626,18 +629,21 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ boolean selected;
 
-        private long nodeId;
+        /*package-private*/ long nodeId;
 
-        private NodeType type;
+        /*package-private*/ Vertex vertex;
 
-        private Paint paint;
+        /*package-private*/ NodeType type;
 
-        private double radius;
+        /*package-private*/ Paint paint;
 
-        private double squaredRadius;
+        /*package-private*/ double radius;
 
-        /*package-private*/ CanvasNode(long nodeId, NodeType type, Paint paint, double radius) {
+        /*package-private*/ double squaredRadius;
+
+        /*package-private*/ CanvasNode(long nodeId, Vertex vertex, NodeType type, Paint paint, double radius) {
             this.nodeId = nodeId;
+            this.vertex = vertex;
             this.type = type;
             this.paint = paint;
             this.x = 0;
@@ -655,8 +661,8 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ void draw() {
             double radius = this.radius;
-
-            if (this.selected) {
+            boolean selected = this.selected || Long.valueOf(this.nodeId).equals(selectedNodeId);
+            if (selected) {
                 radius *= CanvasConstants.DELIVERY_NODE_SELECTED_RADIUS_SCALE;
             }
 

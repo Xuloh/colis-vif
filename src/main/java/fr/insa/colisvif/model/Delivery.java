@@ -23,12 +23,11 @@ public class Delivery {
      * @param dropOffDuration the drop off duration of the delivery
      */
     public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
-
+        this.id = id;
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         pickUp.setDeliveryId(this.id);
         dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
         dropOff.setDeliveryId(this.id);
-        this.id = id;
     }
 
     /**

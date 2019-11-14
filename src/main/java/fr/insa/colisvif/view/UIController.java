@@ -7,8 +7,6 @@ import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
-import java.util.HashMap;
-import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -208,9 +205,18 @@ public class UIController {
         this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
         this.editSequenceItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité"));
 
-        this.stepView.addEventHandlerCustom(step -> {
-            if (step != null) {
-                LOGGER.debug("Delivery selected " + step.getDeliveryID());
+        this.mapCanvas.addNodeMouseClickHandler(vertex -> {
+            if (vertex != null) {
+                this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
+                //LOGGER.debug("Delivery selected " + step.getDeliveryID());
+            } else {
+                this.stepView.getStepTable().getSelectionModel().select(null);
+            }
+        });
+
+        this.stepView.addEventHandlerOnSelect(vertex -> {
+            if (vertex != null) {
+                this.mapCanvas.setSelectedVertex(vertex);
             }
         });
 
