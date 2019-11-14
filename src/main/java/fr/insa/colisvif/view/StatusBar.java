@@ -12,33 +12,41 @@ public class StatusBar extends HBox {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusBar.class);
 
-    private Label message;
+    private Label messageStatus;
+
+    private Label messageError;
 
     private ScrollPane scrollPane;
 
+    private boolean isDarkMode;
+
     public StatusBar() {
         super();
-        this.message = new Label();
+        this.messageStatus = new Label();
+        this.messageError = new Label();
+        this.messageError.setTextFill(Color.rgb(255, 0, 0));
+        this.messageError.setId("label-error");
         this.scrollPane = new ScrollPane();
 
         this.getChildren().add(this.scrollPane);
-        this.scrollPane.setContent(this.message);
+        this.scrollPane.setContent(this.messageStatus);
 
-        this.message.setText("Bienvenue sur l'application ColisVIF");
+        this.messageStatus.setText("Bienvenue sur l'application ColisVIF");
         this.scrollPane.prefWidthProperty().bind(this.widthProperty());
         this.scrollPane.setMaxHeight(20);
+        this.isDarkMode = false;
     }
 
     public void setStatus(String text) {
-        this.message.setTextFill(Color.rgb(0, 0, 0));
-        this.message.setText(text);
+        this.messageStatus.setText(text);
+        this.scrollPane.setContent(this.messageStatus);
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
         LOGGER.debug("Status view message : {}\nCaller : {}.{}", text, caller.getClassName(), caller.getMethodName());
     }
 
     public void setError(String text) {
-        this.message.setTextFill(Color.rgb(255, 0, 0));
-        this.message.setText(text);
+        this.messageError.setText(text);
+        this.scrollPane.setContent(this.messageError);
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
         LOGGER.debug("Status view error : {}\nCaller : {}.{}", text, caller.getClassName(), caller.getMethodName());
     }
