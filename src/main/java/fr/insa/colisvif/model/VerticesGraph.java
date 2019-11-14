@@ -194,6 +194,7 @@ import java.util.*;
         }
         double distance = pathsFromVertices.get(departureId).getLength(arrivalId);
         step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
+        step.setInitialArrivalDate();
         return step;
     }
 
