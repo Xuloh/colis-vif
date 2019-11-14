@@ -21,9 +21,6 @@ public class Round {
 
     private DeliveryMap deliveryMap;
 
-    private static final Logger LOGGER = LogManager.getLogger(Round.class);
-
-
     /**
      * Constructor of Round.
      *
