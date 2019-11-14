@@ -54,6 +54,7 @@ public class DropOffNodeAddedState implements State {
             uiController.getMapCanvas().redraw();
             controller.setButtons();
             controller.setCurrentState(ItineraryCalculatedState.class);
+            uiController.printStatus("Livraison ajoutée.");
         } catch (IllegalArgumentException e) {
             controller.getUIController().enableButtons();
             controller.getUIController().clearTimePicker();
