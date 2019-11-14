@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -179,5 +180,55 @@ public class StepTest {
 
         assertNotEquals(Vertex.PICK_UP, step2.getType());
         assertNotEquals(Vertex.DROP_OFF, step1.getType());
+    }
+
+    @Test
+    public void getArrivalNodeId() {
+        int expected = 10;
+        Step step = new Step(new Vertex(expected, Vertex.PICK_UP, 10), 1, 0);
+        assertEquals(expected, step.getArrivalNodeId());
+    }
+
+    @Test
+    public void setArrivalNodeId() {
+        int expected = 10;
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1, 0);
+        step.setArrivalNodeId(10);
+        assertEquals(expected, step.getArrivalNodeId());
+    }
+
+    @Test
+    public void setSections() {
+        LinkedList<Section> expected = new LinkedList<>();
+        expected.add(new Section(1, "test", 1, 2));
+        expected.add(new Section(1, "test2", 2, 3));
+
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 1, 0);
+
+        assertNotEquals(expected, step);
+
+        step.setSections(expected);
+
+        assertEquals(expected, step.getSections());
+    }
+
+    @Test
+    public void getArrival() {
+        Vertex expected = new Vertex(1, Vertex.PICK_UP, 10);
+        Step step = new Step(expected, 1, 0);
+        assertEquals(expected, step.getArrival());
+    }
+
+    @Test
+    public void testToString() {
+        Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 2, 3);
+        String expected = "Step{"
+                + "sections=" + "[]"
+                + ", deliveryID=" + step.getDeliveryID()
+                + ", arrivalDate=" + step.getArrivalDate()
+                + ", arrival=" + step.getArrival().toString() + '}';
+
+        assertEquals(expected, step.toString());
+
     }
 }

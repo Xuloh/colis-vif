@@ -198,4 +198,40 @@ public class DeliveryMapTest {
                 + '}';
         assertEquals(expected, deliveryMap1.toString());
     }
+
+    @Test
+    public void getDeliveryPerId() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        Delivery delivery1 = deliveryMap.createDelivery(1, 2, 5, 5);
+        Delivery delivery2 = deliveryMap.createDelivery(1, 2, 5, 5);
+
+        assertEquals(delivery1, deliveryMap.getDelivery(delivery1.getId()));
+        assertEquals(delivery2, deliveryMap.getDelivery(delivery2.getId()));
+        assertNotEquals(delivery2, deliveryMap.getDelivery(delivery1.getId()));
+    }
+
+    @Test
+    public void removeDeliveryById() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        Delivery delivery1 = deliveryMap.createDelivery(1, 2, 5, 5);
+        Delivery delivery2 = deliveryMap.createDelivery(1, 2, 5, 5);
+
+        assertEquals(2, deliveryMap.getSize());
+        deliveryMap.removeDeliveryById(delivery1.getId());
+        assertEquals(1, deliveryMap.getSize());
+    }
+
+    @Test
+    public void removeDeliveryByIdWrong() {
+        DeliveryMap deliveryMap = new DeliveryMap();
+        Delivery delivery1 = deliveryMap.createDelivery(1, 2, 5, 5);
+        Delivery delivery2 = deliveryMap.createDelivery(1, 2, 5, 5);
+
+        assertEquals(2, deliveryMap.getSize());
+        deliveryMap.removeDeliveryById(delivery1.getId());
+        assertEquals(1, deliveryMap.getSize());
+
+        deliveryMap.removeDeliveryById(delivery1.getId());
+        assertEquals(1, deliveryMap.getSize());
+    }
 }

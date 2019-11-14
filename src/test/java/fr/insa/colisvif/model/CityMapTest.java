@@ -331,6 +331,20 @@ public class CityMapTest {
         assertNotEquals(testMap, cityMap.getMapSection());
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void getLength1() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.getLength(1, 2);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getLength2() {
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.getLength(2, 1);
+    }
+
     @Test
     public void getSection1() {
         Section expected = new Section(2, "Rue du test", 1, 2);
@@ -351,6 +365,65 @@ public class CityMapTest {
         cityMap.createNode(2, 10, 10);
         cityMap.createSection(2, "erzr", 1, 2);
         cityMap.getSection(1, 3);
+    }
+
+    @Test
+    public void getPath1() { // There are more detailed test of Dijkstra under the tests of getPath
+        List<Section> expected = new ArrayList();
+        expected.add(new Section(10, "Rue1.2", 1, 2));
+        expected.add(new Section(10, "Rue2.3", 2, 3));
+
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.createNode(2, 10, 10);
+        cityMap.createNode(3, 10, 10);
+        cityMap.createSection(10, "Rue1.2", 1, 2);
+        cityMap.createSection(10, "Rue2.3", 2, 3);
+
+
+        assertEquals(expected, cityMap.getPath(1, 3));
+    }
+
+    @Test
+    public void getPath2() { // There are more detailed test of Dijkstra under the tests of getPath
+        List<Section> expected = new ArrayList();
+        expected.add(new Section(10, "Rue1.2", 1, 2));
+        expected.add(new Section(10, "Rue2.4", 2, 4));
+        expected.add(new Section(10, "Rue4.5", 4, 5));
+
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.createNode(2, 10, 10);
+        cityMap.createNode(3, 10, 10);
+        cityMap.createNode(4, 10, 10);
+        cityMap.createNode(5, 10, 10);
+        cityMap.createSection(10, "Rue1.2", 1, 2);
+        cityMap.createSection(10, "Rue2.3", 2, 3);
+        cityMap.createSection(10, "Rue2.4", 2, 4);
+        cityMap.createSection(10, "Rue4.5", 4, 5);
+
+        assertEquals(expected, cityMap.getPath(1, 5));
+    }
+
+    @Test
+    public void getPath3() { // There are more detailed test of Dijkstra under the tests of getPath
+        List<Section> expected = new ArrayList();
+        expected.add(new Section(10, "Rue1.2", 1, 2));
+        expected.add(new Section(10, "Rue2.4", 2, 4));
+        expected.add(new Section(10, "Rue4.5", 4, 6));
+
+        CityMap cityMap = new CityMap();
+        cityMap.createNode(1, 10, 10);
+        cityMap.createNode(2, 10, 10);
+        cityMap.createNode(3, 10, 10);
+        cityMap.createNode(4, 10, 10);
+        cityMap.createNode(5, 10, 10);
+        cityMap.createSection(10, "Rue1.2", 1, 2);
+        cityMap.createSection(10, "Rue2.3", 2, 3);
+        cityMap.createSection(10, "Rue2.4", 2, 4);
+        cityMap.createSection(10, "Rue4.5", 4, 5);
+
+        assertNotEquals(expected, cityMap.getPath(1, 5));
     }
 
     @Test

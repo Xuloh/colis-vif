@@ -149,4 +149,18 @@ public class DeliveryTest {
         Delivery delivery = new Delivery(1, expected.getNodeId(), 10, expected.getDuration() + 1, 10);
         assertNotEquals(expected, delivery.getPickUp());
     }
+
+    @Test
+    public void getDropOff1() {
+        Vertex expected = new Vertex(10, Vertex.DROP_OFF, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId(), expected.getDuration() + 1, 10);
+        assertEquals(expected, delivery.getDropOff());
+    }
+
+    @Test
+    public void getDropOff2() {
+        Vertex expected = new Vertex(11, Vertex.DROP_OFF, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId() - 1, expected.getDuration() + 1, 10);
+        assertNotEquals(expected, delivery.getDropOff());
+    }
 }
