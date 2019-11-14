@@ -72,7 +72,8 @@ public class CityMap {
      * @throws IllegalArgumentException when the latitude or longitude
      *                                  is out of bounds.
      */
-    public void createNode(long id, double latitude, double longitude) throws IllegalArgumentException {
+    public void createNode(long id, double latitude, double longitude)
+            throws IllegalArgumentException {
 
         Node newNode = new Node(id, latitude, longitude);
 
@@ -96,8 +97,8 @@ public class CityMap {
     }
 
     /**
-     * Creates a {@link Section} and adds it to the successors of the {@link Node}
-     * that has the same origin.
+     * Creates a {@link Section} and adds it to the successors of the
+     * {@link Node} that has the same origin.
      *
      * @param length      the length of the section.
      * @param roadName    the road name of the section.
@@ -106,7 +107,9 @@ public class CityMap {
      * @throws IllegalArgumentException if the origin of the new {@link Section}
      *                                  does not match any {@link Node}
      */
-    public void createSection(double length, String roadName, long origin, long destination) throws IllegalArgumentException {
+    public void createSection(double length, String roadName,
+                              long origin, long destination)
+            throws IllegalArgumentException {
         Section newSection = new Section(length, roadName, origin, destination);
 
         if (this.mapSection.get(roadName) == null) {
@@ -119,9 +122,11 @@ public class CityMap {
 
         try {
             Optional
-                    .ofNullable(this.mapNode.get(origin))
-                    .orElseThrow(() -> new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes"))
-                    .addToSuccessors(newSection);
+                .ofNullable(this.mapNode.get(origin))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "The origin of the Section does not match any Nodes in the map of Nodes")
+                )
+                .addToSuccessors(newSection);
         } catch (IdException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
@@ -187,15 +192,21 @@ public class CityMap {
      * @param start  the starting point.
      * @param finish the ending point.
      * @return the minimum length between two coordinates.
-     * @throws IllegalArgumentException if the parameter start and / or finish does not exist in the map of {@link Node},
-     *                                  or if the shortestRound has not been performed yet.
+     * @throws IllegalArgumentException if the parameter start and / or finish
+     * does not exist in the map of {@link Node}, or if the shortestRound has
+     * not been performed yet.
      */
-    public double getLength(long start, long finish) throws IllegalArgumentException {
+    public double getLength(long start, long finish)
+            throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
-            throw new IllegalArgumentException("The Node " + start + " does not exist in the map of Nodes");
+            throw new IllegalArgumentException("The Node " + start
+                    + " does not exist in the map of Nodes"
+            );
         }
         if (!mapNode.containsKey(finish)) {
-            throw new IllegalArgumentException("The Node " + finish + " does not exist in the map of Nodes");
+            throw new IllegalArgumentException("The Node " + finish
+                    + " does not exist in the map of Nodes"
+            );
         }
         if (!pathsFromVertices.containsKey(start)) {
             dijkstra(start);
@@ -209,10 +220,12 @@ public class CityMap {
             dijkstra(start);
         }
         LinkedList<Section> path = new LinkedList<>();
-        Section prevSection = pathsFromVertices.get(start).getPrevSection(finish);
+        Section prevSection = pathsFromVertices.get(start)
+                .getPrevSection(finish);
         while (prevSection != null) {
             path.addFirst(prevSection);
-            prevSection = pathsFromVertices.get(start).getPrevSection(prevSection.getOrigin());
+            prevSection = pathsFromVertices.get(start)
+                    .getPrevSection(prevSection.getOrigin());
         }
         return path;
     }
@@ -227,7 +240,8 @@ public class CityMap {
      * @throws IllegalArgumentException when it does not find a {@link Section}
      *                                  between start and finish.
      */
-    public Section getSection(long start, long finish) throws IllegalArgumentException {
+    public Section getSection(long start, long finish)
+            throws IllegalArgumentException {
         for (Section section : getMapNode().get(start).getSuccessors()) {
             if (section.getDestination() == finish) {
                 return section;
@@ -269,19 +283,23 @@ public class CityMap {
      * the {@link Node} stored in the map of {@link Node}.
      *
      * @param start the coordinate of the starting point.
-     * @throws IllegalArgumentException if the paramater start does not exist in the map of {@link Node}.
+     * @throws IllegalArgumentException if the paramater start does not exist
+     * in the map of {@link Node}.
      */
 
-    /*package-private*/ void dijkstra(long start) throws IllegalArgumentException {
+    /*package-private*/ void dijkstra(long start)
+            throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
-            throw new IllegalArgumentException("The stating node of Dijkstra's algorithm does not belong to the map");
+            throw new IllegalArgumentException(
+                    "The stating node of Dijkstra's algorithm does not belong to the map");
         }
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);
         pathsFromStart.setPrev(start, null);
 
-        Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
+        Comparator<Long> cmp = Comparator
+                .comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> priorityQueue = new PriorityQueue<>(cmp);
         priorityQueue.add(start);
 
@@ -291,7 +309,8 @@ public class CityMap {
             for (Section section : getMapNode().get(node).getSuccessors()) {
                 long next = section.getDestination();
                 double destinationLength = pathsFromStart.getLength(next);
-                if (destinationLength == -1 || length + section.getLength() < destinationLength) {
+                if (destinationLength == -1
+                        || length + section.getLength() < destinationLength) {
                     pathsFromStart.setLength(next, length + section.getLength());
                     pathsFromStart.setPrev(next, section);
                     priorityQueue.remove(next);
@@ -304,10 +323,12 @@ public class CityMap {
 
     /**
      * Creates a {@link Round} object from a {@link DeliveryMap} that contains
-     * the best path to take from the warehouse going though all the pickup and dropoff
-     * {@link Node} respecting the order (pick up node x is always before drop off node x).
+     * the best path to take from the warehouse going though all the pickup and
+     * dropoff {@link Node} respecting the order (pick up node x is always
+     * before drop off node x).
      *
-     * @param deliveries a delivery object containing all the pickup and dropoff nodes and their information.
+     * @param deliveries a delivery object containing all the pickup and dropoff
+     * nodes and their information.
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
@@ -317,7 +338,8 @@ public class CityMap {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries,
+                pathsFromVertices);
         return verticesGraph.shortestRound();
     }
 
@@ -327,7 +349,8 @@ public class CityMap {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries,
+                pathsFromVertices);
         return verticesGraph.naiveRound();
     }
 
