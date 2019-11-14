@@ -20,7 +20,7 @@ public class Step {
 
     //TODO - @Sophie et @Guilhem virer ces deux trucs
     @Deprecated
-    private boolean type; //true if it is a pick up and false if it is a drop off
+    private boolean type; //false if it is a pick up and true if it is a drop off
 
     @Deprecated
     private int duration; //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
@@ -76,8 +76,7 @@ public class Step {
     }
 
     public void setArrivalNodeId(long nodeId) {
-        Vertex vertex = new Vertex(nodeId, arrival.getType(), arrival.getDuration());
-        arrival = vertex;
+        arrival.setNodeId(nodeId);
     }
 
     /**
@@ -112,6 +111,10 @@ public class Step {
         arrival.setDuration(duration);
     }
 
+    public void setDeliveryID(int deliveryID) {
+        this.deliveryID = deliveryID;
+    }
+
     /**
      * Returns the {@link LinkedList} of {@link Section} of the {@link Step}.
      *
@@ -141,6 +144,15 @@ public class Step {
      */
     public boolean isDropOff() {
         return arrival.isDropOff();
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public Vertex getArrival() {
+        return arrival;
     }
 
     /**

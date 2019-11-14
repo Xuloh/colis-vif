@@ -1,9 +1,12 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.controller.command.CommandRemove;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Round;
+import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.view.ExportView;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
@@ -40,8 +43,12 @@ public class ItineraryCalculatedState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
     }
 
@@ -59,8 +66,12 @@ public class ItineraryCalculatedState implements State {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
             controller.setCurrentState(DeliveryMapLoadedState.class);
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
     }
 
@@ -120,9 +131,48 @@ public class ItineraryCalculatedState implements State {
      *
      * @see ModifyStopLocationState}.
      */
+
     @Override
-    public void switchToLocationChange(Controller controller, UIController uiController) {
-        // Récupérer Step / nodeId (voir avec les gens)
-        //controller.getMSLState().entryToState();
+    public void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
+        if (controller.getDeliveryMap().getSize() == 1) {
+            uiController.printError("Vous ne pouvez pas supprimer la dernière livraison.");
+        } else {
+            Step stepSelected = step;
+            Step otherDeliveyStep = null;
+            int deliveryId = stepSelected.getDeliveryID();
+            for (Step step1 : controller.getStepList()) {
+                if (step1.getDeliveryID() == deliveryId && step != step1) {
+                    otherDeliveyStep = step1;
+                    break;
+                }
+            }
+            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap(),
+                    controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep)));
+            controller.createVertexList();
+            uiController.updateDeliveryMap();
+            uiController.updateRound();
+            uiController.getMapCanvas().redraw();
+            controller.setButtons();
+        }
+    }
+
+    @Override
+    public void undo(Controller controller, UIController uiController, CommandList commandList) {
+        commandList.undoCommand();
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
+    }
+
+    @Override
+    public void redo(Controller controller, UIController uiController, CommandList commandList) {
+        commandList.redoCommand();
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
     }
 }

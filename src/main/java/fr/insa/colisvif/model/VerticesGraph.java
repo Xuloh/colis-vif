@@ -180,6 +180,7 @@ import java.util.*;
         boolean arrivalType = arrivalIndex % 2 == 1 ? Vertex.PICK_UP : Vertex.DROP_OFF;
         int arrivalDuration = durationFromIndex(arrivalIndex);
         Vertex arrival = new Vertex(arrivalId, arrivalType, arrivalDuration);
+        arrival.setDeliveryId(this.deliveryIdFromIndex(arrivalIndex));
 
         Step step = new Step(arrival, deliveryIdFromIndex(arrivalIndex), time);
         if (departureId == arrivalId) {

@@ -171,15 +171,17 @@ public class Round {
      * @param pickUpNode  The pick up node
      * @param dropOffNode The drop off node
      */
-    public int addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
+    public Delivery addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
         map.dijkstra(pickUpNode);
         map.dijkstra(dropOffNode);
-        int deliveryId = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration).getId();
+        Delivery delivery = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration);
+        int deliveryId = delivery.getId();
         int time = steps.get(steps.size() - 1).getArrivalDate() + steps.get(steps.size() - 1).getDuration();
 
         double lengthToPickUp = map.getLength(steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode);
         time += (int) (lengthToPickUp / ModelConstants.CYCLIST_SPEED);
         Vertex pickUpVertex = new Vertex(pickUpNode, Vertex.PICK_UP, pickUpDuration);
+        pickUpVertex.setDeliveryId(deliveryId);
         Step pickUpStep = new Step(pickUpVertex, deliveryId, time);
         pickUpStep.setSections(map.getPath(steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode));
         time += pickUpStep.getDuration();
@@ -187,11 +189,12 @@ public class Round {
         double lengthToDropOff = map.getLength(pickUpNode, dropOffNode);
         time += (int) (lengthToDropOff / ModelConstants.CYCLIST_SPEED);
         Vertex dropOffVertex = new Vertex(dropOffNode, Vertex.DROP_OFF, dropOffDuration);
+        dropOffVertex.setDeliveryId(deliveryId);
         Step dropOffStep = new Step(dropOffVertex, deliveryId, time);
         dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
         addStep(pickUpStep);
         addStep(dropOffStep);
-        return deliveryId;
+        return delivery;
     }
 
     /**

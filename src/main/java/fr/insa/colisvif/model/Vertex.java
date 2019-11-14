@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Represent either a drop off or a pick up point. It is attached to a {@link Node} id and a duration (the time to do the drop off or the pick up.
  */
-public class Vertex implements Comparable<Vertex> {
+public class Vertex {
 
     public static final boolean DROP_OFF = true;
 
@@ -19,6 +19,8 @@ public class Vertex implements Comparable<Vertex> {
     private boolean type; //false if it is a pick up and true if it is a drop off
 
     private int duration;
+
+    private int deliveryId;
 
     /**
      * Constructor of Vertex.
@@ -74,6 +76,14 @@ public class Vertex implements Comparable<Vertex> {
         this.nodeId.set(nodeId);
     }
 
+    public int getDeliveryId() {
+        return this.deliveryId;
+    }
+
+    public void setDeliveryId(int deliveryId) {
+        this.deliveryId = deliveryId;
+    }
+
     public ReadOnlyLongProperty nodeIdProperty() {
         return this.nodeId.getReadOnlyProperty();
     }
@@ -106,29 +116,6 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     /**
-     * Performs a comparison with the {@link Vertex} vertex.
-     *
-     * @param vertex the {@link Vertex} to compare to.
-     * @return 0 if they are the same, -1 if this < vertex, 1 if this > vertex.
-     */
-    @Override
-    public int compareTo(Vertex vertex) {
-        if (this.nodeId == vertex.nodeId) {
-            if (this.type == vertex.type) {
-                if (this.duration == vertex.duration) {
-                    return 0;
-                }
-                return this.duration - vertex.duration;
-            }
-            if (this.type) {
-                return 1;
-            }
-            return -1;
-        }
-        return (int) (this.nodeId.getValue() - vertex.nodeId.getValue());
-    }
-
-    /**
      * Determines if the given {@link Object} is "equal"
      * to this {@link Vertex}.
      * Only other {@link Vertex} are considered for comparison.
@@ -147,20 +134,11 @@ public class Vertex implements Comparable<Vertex> {
             return false;
         }
         Vertex vertex = (Vertex) o;
-        return nodeId == vertex.nodeId
+        return nodeId.getValue().equals(vertex.nodeId.getValue())
                 && type == vertex.type
                 && duration == vertex.duration;
     }
 
-    /**
-     * Returns the hashCode of the current {@link Vertex}. It is based on the id and the type, not the duration.
-     *
-     * @return the hashCode of the current {@link Vertex}. It is based on the id and the type, not the duration.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(nodeId, type);
-    }
 
     /**
      * Returns a {@link String} representation of this {@link Vertex}.
@@ -170,7 +148,7 @@ public class Vertex implements Comparable<Vertex> {
     @Override
     public String toString() {
         return "Vertex{"
-                + "id=" + nodeId
+                + "id=" + nodeId.getValue()
                 + ", type=" + type
                 + ", durationInSeconds=" + duration
                 + '}';

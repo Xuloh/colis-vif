@@ -37,6 +37,7 @@ public class InitialState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
+            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {

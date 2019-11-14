@@ -62,11 +62,17 @@ public class CommandList {
      * If no {@link Command} was previously undone, nothing happens.
      */
     public void redoCommand() {
-        if (!pastCommands.isEmpty()) {
-            Command commandToRedo = pastCommands.pop();
-            LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());
-            commandToRedo.doCommand();
-            currentCommands.add(commandToRedo);
+        try {
+            if (!pastCommands.isEmpty()) {
+                Command commandToRedo = pastCommands.pop();
+                LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());
+                commandToRedo.doCommand();
+                currentCommands.add(commandToRedo);
+            } else {
+                LOGGER.info("No Command to Redo");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

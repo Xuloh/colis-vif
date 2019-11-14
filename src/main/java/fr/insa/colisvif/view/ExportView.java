@@ -45,19 +45,18 @@ public class ExportView  {
         printStream.println("Prendre la rue " + roadName + " sur " + (int) length + "m.");
 
         String msg = step.getType() == Vertex.DROP_OFF ? "livrer le colis n°" : " récupérer le colis n°";
-        printStream.println("Arrivée prévu à " + formatHour(step.getArrivalDate()) + " pour " + msg + step.getDeliveryID() + ".\n");
-        printStream.println("Estimation du temps de passage : " + step.getDuration() + "mins.");
+        printStream.println("Arrivée prévu à " + formatHour(step.getArrivalDate()) + " pour " + msg + step.getDeliveryID() + ".");
+        printStream.println("Estimation du temps de passage : " + step.getDuration() / 60 + "mins.\n");
     }
 
     private String formatHour(int amountSecond) { // Format the hour given in second in hh:mm
-        int minutes = amountSecond / 60;
-        int heures = minutes / 60;
-        minutes = minutes % 60;
+        int heures = amountSecond / 3600;
+        int minutes = amountSecond / 60 - heures * 60;
 
         String minutesStr = minutes < 10 ? "0" + minutes : "" + minutes;
         String heuresStr = heures < 10 ? "0" + heures : "" + heures;
 
-        return minutesStr + ":" + heuresStr;
+        return  heuresStr + ":" + minutesStr;
     }
 
     /**
@@ -65,29 +64,26 @@ public class ExportView  {
      * @param round the {@link Round to export}.
      */
     public void exportRound(Round round, File file) {
-        try {
-            if (!file.createNewFile()) {
-                this.uiController.printError("Le fichier existe déjà");
-            }
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
         if (!file.canWrite()) {
-            this.uiController.printError("Peut pas écrire dans le fichier");
+            this.uiController.printError("Impossible d'écrire dans le fichier");
         }
 
         try (PrintStream PRINT_STREAM = new PrintStream(file)) {
-            PRINT_STREAM.println("Début de la tournée (prévue à " + formatHour(round.getStartDate()) + ").");
+            this.uiController.printStatus("Début de l'enregistrement de la carte dans le fichier " + file.getName() + "...");
+
+            PRINT_STREAM.println("Début de la tournée (prévue à " + formatHour(round.getStartDate()) + ").\n");
 
             round.getSteps().forEach(step -> this.exportStep(step, PRINT_STREAM));
 
             Step lastItem = round.getSteps().get(round.getSteps().size() - 1);
             int arrivalDate = lastItem.getArrivalDate() + lastItem.getDuration();
 
-            System.out.println("Fin de la tournée (prévue à " + formatHour(arrivalDate) + ").");
+            PRINT_STREAM.println("Fin de la tournée (prévue à " + formatHour(arrivalDate) + ").");
+            this.uiController.printStatus("Enregistrement de la carte terminée dans le fichier " + file.getName());
+
         } catch (FileNotFoundException e) {
             LOGGER.error(e.getMessage(), e);
+            this.uiController.printError("Impossible d'écrire dans le fichier " + file.getName());
         }
     }
 }

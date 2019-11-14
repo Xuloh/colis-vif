@@ -37,8 +37,12 @@ public class DeliveryMapLoadedState implements State {
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
     }
 
@@ -56,8 +60,12 @@ public class DeliveryMapLoadedState implements State {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
             controller.setCurrentState(DeliveryMapLoadedState.class);
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
     }
 
@@ -70,5 +78,6 @@ public class DeliveryMapLoadedState implements State {
     public void calculateItinerary(Controller controller, UIController uiController) {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
         controller.setCurrentState(ItineraryCalculatedState.class);
+        uiController.printStatus("L'itinéraire a bien été calculé.");
     }
 }
