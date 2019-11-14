@@ -40,6 +40,7 @@ public class ModeAddState implements State {
     public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
         controller.getPUNState().entryToState(nodeId);
         uiController.setShowCityMapNodesOnHover(false);
+        uiController.printStatus("Sélectionnez l'étape précédant l'enlèvement.");
         controller.setCurrentState(PickUpNodeAddedState.class);
     }
 
@@ -57,6 +58,8 @@ public class ModeAddState implements State {
         dropOffVertex = null;
         pickUpNodeId = -1;
         dropOffNodeId = -1;
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.getUIController().setShowCityMapNodesOnHover(false);
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
