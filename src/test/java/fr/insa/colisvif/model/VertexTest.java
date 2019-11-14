@@ -2,13 +2,9 @@ package fr.insa.colisvif.model;
 
 import org.junit.Test;
 
-import java.util.Objects;
-
 import static org.junit.Assert.*;
 
-public class
-
-VertexTest {
+public class VertexTest {
 
     @Test
     public void testNodeGood() {
