@@ -11,7 +11,9 @@ import static org.junit.Assert.assertNotEquals;
 
 
 public class DeliveryMapTest {
-    public static <T> Object getAttribute(Class<T> clazz, T targetObject, String attributeName) {
+
+    public static <T> Object getAttribute(Class<T> clazz, T targetObject,
+        String attributeName) {
         try {
             Field field = clazz.getDeclaredField(attributeName);
             field.setAccessible(true);
@@ -22,7 +24,8 @@ public class DeliveryMapTest {
         return null;
     }
 
-    public static <T> void setAttrbiute(Class<T> clazz, T targetObject, String attributeName, Object value) {
+    public static <T> void setAttrbiute(Class<T> clazz, T targetObject,
+        String attributeName, Object value) {
         try {
             Field field = clazz.getDeclaredField(attributeName);
             field.setAccessible(true);
@@ -70,9 +73,11 @@ public class DeliveryMapTest {
     public void getDeliveryList() {
         DeliveryMap deliveryMap = new DeliveryMap();
         deliveryMap.createDelivery(101, 100, 15, 10);
-        int cptId1 = (int) getAttribute(DeliveryMap.class, deliveryMap, "cptId");
+        int cptId1 = (int) getAttribute(DeliveryMap.class, deliveryMap,
+            "cptId");
         deliveryMap.createDelivery(105, 104, 10, 20);
-        int cptId2 = (int) getAttribute(DeliveryMap.class, deliveryMap, "cptId");
+        int cptId2 = (int) getAttribute(DeliveryMap.class, deliveryMap,
+            "cptId");
 
         List<Delivery> deliveries = new ArrayList<>();
 
@@ -113,8 +118,10 @@ public class DeliveryMapTest {
         DeliveryMap deliveryMap2 = new DeliveryMap();
         deliveryMap2.createWarehouse(1, 10);
         deliveryMap2.createDelivery(10, 11, 11, 10);
-        int cptId1 = (int) getAttribute(DeliveryMap.class, deliveryMap1, "cptId");
-        int cptId2 = (int) getAttribute(DeliveryMap.class, deliveryMap2, "cptId");
+        int cptId1 = (int) getAttribute(DeliveryMap.class, deliveryMap1,
+            "cptId");
+        int cptId2 = (int) getAttribute(DeliveryMap.class, deliveryMap2,
+            "cptId");
 
         assertEquals(cptId1, cptId2);
         assertEquals(deliveryMap1, deliveryMap2);
@@ -126,7 +133,8 @@ public class DeliveryMapTest {
         DeliveryMap deliveryMap1 = new DeliveryMap();
         deliveryMap1.createWarehouse(1, 10);
         deliveryMap1.createDelivery(1, 10, 11, 10);
-        int cpt = (int) getAttribute(DeliveryMap.class, deliveryMap1, "cptId"); // Equals to the first delivery id + 1
+        int cpt = (int) getAttribute(DeliveryMap.class, deliveryMap1,
+            "cptId"); // Equals to the first delivery id + 1
 
         DeliveryMap deliveryMap2 = new DeliveryMap();
         deliveryMap2.createWarehouse(1, 10);
@@ -159,13 +167,16 @@ public class DeliveryMapTest {
     public void getDelivery1() {
         Delivery expected = new Delivery(1, 10, 11, 10, 10);
         DeliveryMap deliveryMap1 = new DeliveryMap();
-        setAttrbiute(DeliveryMap.class, deliveryMap1, "cptId", expected.getId() - 1);
-        deliveryMap1.createDelivery(expected.getPickUpNodeId(), expected.getDropOffNodeId(), expected.getPickUpDuration(), expected.getDropOffDuration());
+        setAttrbiute(DeliveryMap.class, deliveryMap1, "cptId",
+            expected.getId() - 1);
+        deliveryMap1.createDelivery(expected.getPickUpNodeId(),
+            expected.getDropOffNodeId(), expected.getPickUpDuration(),
+            expected.getDropOffDuration());
         assertEquals(deliveryMap1.getDelivery(0), expected);
     }
 
 
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void getDelivery2() {
         DeliveryMap deliveryMap1 = new DeliveryMap();
         deliveryMap1.createDelivery(10, 11, 10, 10);
@@ -173,7 +184,7 @@ public class DeliveryMapTest {
     }
 
 
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void getDelivery3() {
         DeliveryMap deliveryMap1 = new DeliveryMap();
         deliveryMap1.createDelivery(10, 11, 10, 10);
@@ -188,14 +199,15 @@ public class DeliveryMapTest {
         int cpt = (int) getAttribute(DeliveryMap.class, deliveryMap1, "cptId");
 
         String expected = "DeliveryMap{"
-                + "deliveryRequests="
-                + "[id : " + cpt + " | pickUpNodeId : " + 4 + " | deliveryNodeId : " + 5 + " | pickUpDuration : "
-                + 6 + " | deliveryDuration : " + 7 + "\n]"
-                + ", warehouseNodeId="
-                + 1
-                + ", startDateInSeconds="
-                + 2
-                + '}';
+            + "deliveryRequests="
+            + "[id : " + cpt + " | pickUpNodeId : " + 4 + " | deliveryNodeId : "
+            + 5 + " | pickUpDuration : "
+            + 6 + " | deliveryDuration : " + 7 + "\n]"
+            + ", warehouseNodeId="
+            + 1
+            + ", startDateInSeconds="
+            + 2
+            + '}';
         assertEquals(expected, deliveryMap1.toString());
     }
 

@@ -53,7 +53,8 @@ public class NodeTest {
     public void testNodeToString() {
         Node testNode = new Node(1242021, 12.451, -21.7856);
         String expected = "ID : 1242021 | Latitude : 12.451 | Longitude : -21.7856\n";
-        assertEquals("Node.toString() is functionnal", expected, testNode.toString());
+        assertEquals("Node.toString() is functionnal", expected,
+            testNode.toString());
     }
 
     @Test
@@ -82,7 +83,6 @@ public class NodeTest {
         Node testNode = new Node(123456, 12.451, 24.64);
         Section section1 = new Section(12, "Truc1", 123456, 123456);
         Section section2 = new Section(12, "Truc2", 123456, 123456);
-
 
         testNode.addToSuccessors(section1);
         testNode.addToSuccessors(section2);
@@ -130,13 +130,13 @@ public class NodeTest {
         assertEquals(expected, node.getLongitude(), 0.01);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setLongitudeError1() {
         Node node = new Node(1, 10, 10);
         node.setLongitude(-181);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setLongitudeError2() {
         Node node = new Node(1, 10, 10);
         node.setLongitude(181);
@@ -150,13 +150,13 @@ public class NodeTest {
         assertEquals(expected, node.getLatitude(), 0.01);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setLatitudeError1() {
         Node node = new Node(1, 10, 10);
         node.setLatitude(-91);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setLatitudeError2() {
         Node node = new Node(1, 10, 10);
         node.setLatitude(91);

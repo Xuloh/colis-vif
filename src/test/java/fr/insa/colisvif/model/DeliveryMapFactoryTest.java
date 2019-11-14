@@ -23,13 +23,16 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testCreateDeliveryMapFromXML()
-            throws ParserConfigurationException, XMLException, SAXException, IOException, IdException, URISyntaxException {
-        File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
-        File deliveryFile = new File(getClass().getResource("/validDeliveryMatchingMap.xml").toURI());
+        throws ParserConfigurationException, XMLException, SAXException, IOException, IdException, URISyntaxException {
+        File cityFile = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
+        File deliveryFile = new File(
+            getClass().getResource("/validDeliveryMatchingMap.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();
         CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(cityFile);
         DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
-        DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(deliveryFile, cityMap);
+        DeliveryMap deliveryMap = deliveryMapFactory
+            .createDeliveryMapFromXML(deliveryFile, cityMap);
 
         DeliveryMap expectedResult = new DeliveryMap();
         expectedResult.createDelivery(2684668925L, 2509481775L, 420, 600);
@@ -41,26 +44,31 @@ public class DeliveryMapFactoryTest {
 
     @Test(expected = IdException.class)
     public void testCreateDeliveryMapFromXMLImpossibleDeliveries()
-            throws ParserConfigurationException, XMLException, SAXException, IOException, IdException, URISyntaxException {
-        File cityFile = new File(getClass().getResource("/validPlan_test.xml").toURI());
-        File deliveryFile = new File(getClass().getResource("/validDelivery.xml").toURI());
+        throws ParserConfigurationException, XMLException, SAXException, IOException, IdException, URISyntaxException {
+        File cityFile = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
+        File deliveryFile = new File(
+            getClass().getResource("/validDelivery.xml").toURI());
         CityMapFactory cityMapFactory = new CityMapFactory();
         CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(cityFile);
         DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
-        DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(deliveryFile, cityMap);
+        DeliveryMap deliveryMap = deliveryMapFactory
+            .createDeliveryMapFromXML(deliveryFile, cityMap);
         assertNull(deliveryMap);
     }
 
     @Test
-    public void testLoadFileGood() throws ParserConfigurationException, SAXException, IOException, URISyntaxException {
-        File file = new File(getClass().getResource("/validDelivery.xml").toURI());
+    public void testLoadFileGood()
+        throws ParserConfigurationException, SAXException, IOException, URISyntaxException {
+        File file = new File(
+            getClass().getResource("/validDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         factory.loadFile(file);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testLoadFileNonExistent()
-            throws ParserConfigurationException, SAXException, IOException {
+        throws ParserConfigurationException, SAXException, IOException {
         File file = new File("/notAtxtFile.txt");
         DeliveryMapFactory factory = new DeliveryMapFactory();
         factory.loadFile(file);
@@ -68,8 +76,9 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testReadDeliveryGoodFile()
-            throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
-        File file = new File(getClass().getResource("/validDelivery.xml").toURI());
+        throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
+        File file = new File(
+            getClass().getResource("/validDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         factory.readDelivery(root);
@@ -78,8 +87,9 @@ public class DeliveryMapFactoryTest {
 
     @Test(expected = XMLException.class)
     public void testReadDeliveryWrongFile()
-            throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
-        File file = new File(getClass().getResource("/InvalidDelivery.xml").toURI());
+        throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
+        File file = new File(
+            getClass().getResource("/InvalidDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         factory.readDelivery(root);
@@ -88,12 +98,13 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testReadDeliveryResult()
-            throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
-        File file = new File(getClass().getResource("/validDelivery.xml").toURI());
+        throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
+        File file = new File(
+            getClass().getResource("/validDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
-        List<Quadruplet<Long, Long, Integer, Integer>> result = factory.readDelivery(root);
-
+        List<Quadruplet<Long, Long, Integer, Integer>> result = factory
+            .readDelivery(root);
 
         List<Quadruplet<Long, Long, Integer, Integer>> expectedResult = new ArrayList<>();
         expectedResult.add(new Quadruplet<>(1679901320L, 208769457L, 420, 600));
@@ -105,9 +116,10 @@ public class DeliveryMapFactoryTest {
 
     @Test
     public void testReadWarehouse()
-            throws XMLException, ParserConfigurationException, SAXException, IOException, URISyntaxException {
+        throws XMLException, ParserConfigurationException, SAXException, IOException, URISyntaxException {
 
-        File file = new File(getClass().getResource("/validDelivery.xml").toURI());
+        File file = new File(
+            getClass().getResource("/validDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         Pair<Long, Integer> warehouse = factory.readWarehouse(root);
@@ -119,8 +131,9 @@ public class DeliveryMapFactoryTest {
 
     @Test(expected = XMLException.class)
     public void testReadWarehouseWrongFile()
-            throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
-        File file = new File(getClass().getResource("/InvalidDelivery.xml").toURI());
+        throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
+        File file = new File(
+            getClass().getResource("/InvalidDelivery.xml").toURI());
         DeliveryMapFactory factory = new DeliveryMapFactory();
         Element root = factory.loadFile(file);
         factory.readWarehouse(root);

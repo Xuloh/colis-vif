@@ -26,11 +26,11 @@ public class SectionTest {
     public void testSectionToString() {
         Section section = new Section(20, "Rue de la Paix", 101, 100);
         String expected = "Section{"
-                + "length=" + 20.0
-                + ", roadName='" + "Rue de la Paix" + '\''
-                + ", origin=" + 101
-                + ", destination=" + 100
-                + '}';
+            + "length=" + 20.0
+            + ", roadName='" + "Rue de la Paix" + '\''
+            + ", origin=" + 101
+            + ", destination=" + 100
+            + '}';
 
         assertEquals(expected, section.toString());
     }

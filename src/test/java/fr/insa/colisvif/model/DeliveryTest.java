@@ -101,7 +101,9 @@ public class DeliveryTest {
     @Test
     public void testToString() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 1 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected =
+            "id : " + 1 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : "
+                + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
         assertEquals(exptected, delivery.toString());
     }
@@ -109,7 +111,9 @@ public class DeliveryTest {
     @Test
     public void testToStringWrong() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 2 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected =
+            "id : " + 2 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : "
+                + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
         assertNotEquals(exptected, delivery.toString());
     }
@@ -139,28 +143,32 @@ public class DeliveryTest {
     @Test
     public void getPickUp() {
         Vertex expected = new Vertex(100, Vertex.PICK_UP, 10);
-        Delivery delivery = new Delivery(1, expected.getNodeId(), 10, expected.getDuration(), 10);
+        Delivery delivery = new Delivery(1, expected.getNodeId(), 10,
+            expected.getDuration(), 10);
         assertEquals(expected, delivery.getPickUp());
     }
 
     @Test
     public void getPickUpWrong() {
         Vertex expected = new Vertex(100, Vertex.PICK_UP, 10);
-        Delivery delivery = new Delivery(1, expected.getNodeId(), 10, expected.getDuration() + 1, 10);
+        Delivery delivery = new Delivery(1, expected.getNodeId(), 10,
+            expected.getDuration() + 1, 10);
         assertNotEquals(expected, delivery.getPickUp());
     }
 
     @Test
     public void getDropOff1() {
         Vertex expected = new Vertex(10, Vertex.DROP_OFF, 10);
-        Delivery delivery = new Delivery(1, 1, expected.getNodeId(), expected.getDuration() + 1, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId(),
+            expected.getDuration() + 1, 10);
         assertEquals(expected, delivery.getDropOff());
     }
 
     @Test
     public void getDropOff2() {
         Vertex expected = new Vertex(11, Vertex.DROP_OFF, 10);
-        Delivery delivery = new Delivery(1, 1, expected.getNodeId() - 1, expected.getDuration() + 1, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId() - 1,
+            expected.getDuration() + 1, 10);
         assertNotEquals(expected, delivery.getDropOff());
     }
 }

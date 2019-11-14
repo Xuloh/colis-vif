@@ -9,6 +9,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class StepTest {
+
     @Test
     public void testStepGood() {
         new Step(new Vertex(1, Vertex.PICK_UP, 10), 1, 0);
@@ -39,7 +40,7 @@ public class StepTest {
         assertNotEquals(sections3, step.getSections());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getSections2() {
         LinkedList<Section> sections = new LinkedList<>();
         sections.add(new Section(20, "Rue de la Paix", 100, 101));
@@ -111,13 +112,17 @@ public class StepTest {
     @Test
     public void getDeliveryID1() {
         int expected = 1;
-        assertEquals(expected, new Step(new Vertex(1, Vertex.PICK_UP, 10), expected, 0).getDeliveryID());
+        assertEquals(expected,
+            new Step(new Vertex(1, Vertex.PICK_UP, 10), expected, 0)
+                .getDeliveryID());
     }
 
     @Test
     public void getDeliveryID2() {
         int expected = 1;
-        assertNotEquals(expected, new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1, 0).getDeliveryID());
+        assertNotEquals(expected,
+            new Step(new Vertex(1, Vertex.PICK_UP, 10), expected + 1, 0)
+                .getDeliveryID());
     }
 
     @Test
@@ -223,10 +228,10 @@ public class StepTest {
     public void testToString() {
         Step step = new Step(new Vertex(1, Vertex.PICK_UP, 10), 2, 3);
         String expected = "Step{"
-                + "sections=" + "[]"
-                + ", deliveryID=" + step.getDeliveryID()
-                + ", arrivalDate=" + step.getArrivalDate()
-                + ", arrival=" + step.getArrival().toString() + '}';
+            + "sections=" + "[]"
+            + ", deliveryID=" + step.getDeliveryID()
+            + ", arrivalDate=" + step.getArrivalDate()
+            + ", arrival=" + step.getArrival().toString() + '}';
 
         assertEquals(expected, step.toString());
 

@@ -6,14 +6,16 @@ import java.util.Objects;
 
 import static org.junit.Assert.*;
 
-public class VertexTest {
+public class
+
+VertexTest {
 
     @Test
     public void testNodeGood() {
         new Vertex(1, Vertex.PICK_UP, 10);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testNodeWrong() {
         new Vertex(1, Vertex.PICK_UP, -1);
     }
@@ -21,7 +23,8 @@ public class VertexTest {
     @Test
     public void getDuration() {
         int expected = 10;
-        assertEquals(expected, new Vertex(1, Vertex.PICK_UP, expected).getDuration());
+        assertEquals(expected,
+            new Vertex(1, Vertex.PICK_UP, expected).getDuration());
     }
 
     @Test
@@ -40,7 +43,7 @@ public class VertexTest {
         assertNotEquals(expected, vertex.getDuration());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setDurationIllegal() {
         int expected = -1;
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
@@ -50,7 +53,8 @@ public class VertexTest {
     @Test
     public void getNodeId() {
         int expected = 10;
-        assertEquals(expected, new Vertex(expected, Vertex.PICK_UP, 10).getNodeId());
+        assertEquals(expected,
+            new Vertex(expected, Vertex.PICK_UP, 10).getNodeId());
     }
 
     @Test
@@ -102,10 +106,10 @@ public class VertexTest {
     public void toString1() {
         Vertex vertex = new Vertex(1, Vertex.PICK_UP, 10);
         String expected = "Vertex{"
-                + "id=" + 1
-                + ", type=" + Vertex.PICK_UP
-                + ", durationInSeconds=" + 10
-                + '}';
+            + "id=" + 1
+            + ", type=" + Vertex.PICK_UP
+            + ", durationInSeconds=" + 10
+            + '}';
         assertEquals(expected, vertex.toString());
     }
 

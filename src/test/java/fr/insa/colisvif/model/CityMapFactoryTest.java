@@ -22,15 +22,18 @@ import static org.junit.Assert.assertEquals;
 public class CityMapFactoryTest {
 
     @Test(expected = FileNotFoundException.class)
-    public void testLoadFileNotExist() throws IOException, ParserConfigurationException, SAXException {
+    public void testLoadFileNotExist()
+        throws IOException, ParserConfigurationException, SAXException {
         File file = new File("/nonexistant");
         CityMapFactory cityMapParser = new CityMapFactory();
         cityMapParser.loadFile(file);
     }
 
-    @Test (expected = InvalidFilePermissionException.class)
-    public void testInvalidPermissionLoadFile() throws IOException, URISyntaxException, ParserConfigurationException, SAXException {
-        File file = new File(getClass().getResource("/notReadable.txt").toURI());
+    @Test(expected = InvalidFilePermissionException.class)
+    public void testInvalidPermissionLoadFile()
+        throws IOException, URISyntaxException, ParserConfigurationException, SAXException {
+        File file = new File(
+            getClass().getResource("/notReadable.txt").toURI());
 
         boolean permissionStatus = file.setReadable(false);
 
@@ -44,8 +47,10 @@ public class CityMapFactoryTest {
     }
 
     @Test
-    public void testValidLoadFile() throws IOException, URISyntaxException, ParserConfigurationException, SAXException {
-        File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+    public void testValidLoadFile()
+        throws IOException, URISyntaxException, ParserConfigurationException, SAXException {
+        File file = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         cityMapParser.loadFile(file);
     }
@@ -53,11 +58,13 @@ public class CityMapFactoryTest {
     @Test
     public void testReadNodes()
         throws URISyntaxException, IOException, ParserConfigurationException, SAXException, XMLException {
-        File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+        File file = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         Element root = cityMapParser.loadFile(file);
 
-        List<Triplet<Long, Double, Double>> readNodes = cityMapParser.readNodes(root);
+        List<Triplet<Long, Double, Double>> readNodes = cityMapParser
+            .readNodes(root);
         List<Triplet<Long, Double, Double>> expectedNodes = new ArrayList<>();
         expectedNodes.add(new Triplet<>(2684668925L, 45.775486d, 4.888253d));
         expectedNodes.add(new Triplet<>(2509481775L, 45.775345d, 4.8870163d));
@@ -67,25 +74,32 @@ public class CityMapFactoryTest {
     @Test
     public void testReadSections()
         throws URISyntaxException, ParserConfigurationException, SAXException, IOException, XMLException {
-        File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+        File file = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         Element root = cityMapParser.loadFile(file);
 
-        List<Quadruplet<Double, String, Long, Long>> readSections = cityMapParser.readSections(root);
+        List<Quadruplet<Double, String, Long, Long>> readSections = cityMapParser
+            .readSections(root);
         List<Quadruplet<Double, String, Long, Long>> expectedSections = new ArrayList<>();
-        expectedSections.add(new Quadruplet<>(97.249695d, "Rue Château-Gaillard", 2509481775L, 2684668925L));
+        expectedSections.add(
+            new Quadruplet<>(97.249695d, "Rue Château-Gaillard", 2509481775L,
+                2684668925L));
         assertEquals(expectedSections, readSections);
     }
 
     @Test
-    public void testCreateCityMapFromXML() throws XMLException, IOException, SAXException, ParserConfigurationException, IdException, URISyntaxException {
-        File file = new File(getClass().getResource("/validPlan_test.xml").toURI());
+    public void testCreateCityMapFromXML()
+        throws XMLException, IOException, SAXException, ParserConfigurationException, IdException, URISyntaxException {
+        File file = new File(
+            getClass().getResource("/validPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile(file);
         CityMap citymap = new CityMap();
         citymap.createNode(2684668925L, 45.775486, 4.888253);
         citymap.createNode(2509481775L, 45.775345, 4.8870163);
-        citymap.createSection(97.249695, "Rue Château-Gaillard", 2684668925L, 2509481775L);
+        citymap.createSection(97.249695, "Rue Château-Gaillard", 2684668925L,
+            2509481775L);
 
         assertEquals(cityMapFromFile, citymap);
 
@@ -94,7 +108,8 @@ public class CityMapFactoryTest {
     @Test(expected = XMLException.class)
     public void testReadNodesFromInvalidXML()
         throws IOException, SAXException, ParserConfigurationException, URISyntaxException, XMLException {
-        File file = new File(getClass().getResource("/InvalidPlan_test.xml").toURI());
+        File file = new File(
+            getClass().getResource("/InvalidPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         Element root = cityMapParser.loadFile(file);
         cityMapParser.readNodes(root);
@@ -103,15 +118,18 @@ public class CityMapFactoryTest {
     @Test(expected = XMLException.class)
     public void testReadSectionsFromInvalidXML()
         throws IOException, SAXException, ParserConfigurationException, URISyntaxException, XMLException {
-        File file = new File(getClass().getResource("/InvalidPlan_test.xml").toURI());
+        File file = new File(
+            getClass().getResource("/InvalidPlan_test.xml").toURI());
         CityMapFactory cityMapParser = new CityMapFactory();
         Element root = cityMapParser.loadFile(file);
         cityMapParser.readSections(root);
     }
 
-    @Test (expected = XMLException.class)
-    public void testCreateCityMapFromInvalidXML() throws IOException, SAXException, ParserConfigurationException, URISyntaxException, XMLException {
-        File file = new File(getClass().getResource("/InvalidPlan_test.xml").toURI());
+    @Test(expected = XMLException.class)
+    public void testCreateCityMapFromInvalidXML()
+        throws IOException, SAXException, ParserConfigurationException, URISyntaxException, XMLException {
+        File file = new File(
+            getClass().getResource("/InvalidPlan_test.xml").toURI());
 
         CityMapFactory cityMapParser = new CityMapFactory();
         CityMap cityMapFromFile = cityMapParser.createCityMapFromXMLFile(file);
