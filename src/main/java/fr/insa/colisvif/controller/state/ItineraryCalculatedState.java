@@ -91,8 +91,10 @@ public class ItineraryCalculatedState implements State {
      * to allow the user to add more deliveries
      */
     @Override
-    public void switchToAddMode(Controller controller) {
+    public void switchToAddMode(Controller controller, UIController uiController) {
+        uiController.setShowCityMapNodesOnHover(true);
         controller.setCurrentState(ModeAddState.class);
+        uiController.addPickUp();
     }
 
     /**

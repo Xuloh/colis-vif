@@ -18,8 +18,5 @@ public class PickUpNodeAddedStepAddedState implements State {
 
     @Override
     public void addPickUpNode(Controller controller, UIController uiController) {
-        int pickUpDuration = uiController.getTimeFromPicker();
-        Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
-        controller.getMADOState().entryToState(pickUpVertex, stepBefore);
     }
 }

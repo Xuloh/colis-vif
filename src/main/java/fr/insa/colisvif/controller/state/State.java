@@ -90,7 +90,7 @@ public interface State {
      *
      * @see ModeAddState
      */
-    default void switchToAddMode(Controller controller) {
+    default void switchToAddMode(Controller controller, UIController uiController) {
 
     }
 
