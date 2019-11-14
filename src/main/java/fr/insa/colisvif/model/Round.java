@@ -208,8 +208,15 @@ public class Round {
      * @param stepJustBefore the step that will follow stepChangeOrder,
      *                       null if we want to place stepChageOrder at the beginning of the round.
      */
-    public void changeOrderStep(Step stepToChange, Step stepJustBefore, CityMap map) {
+    public void changeOrderStep(Step stepToChange, Step stepJustBefore, CityMap map) throws IllegalArgumentException {
+        if (stepJustBefore == null && stepToChange.isDropOff()) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt avant son enlèvement");
+        }
         int i = steps.indexOf(stepToChange);
+        int j = associatedStepIndex(stepToChange);
+        if ((stepToChange.isDropOff() && i < j) || (stepToChange.isPickUp() && i > j)) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt avant son enlèvement");
+        }
         removeIthStep(i, map);
         if (stepJustBefore == null) {
             addStepAtFirst(stepToChange, map);
