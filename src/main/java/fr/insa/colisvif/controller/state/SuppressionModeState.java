@@ -1,6 +1,8 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.controller.command.CommandRemove;
 import fr.insa.colisvif.model.Delivery;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
@@ -36,17 +38,22 @@ public class SuppressionModeState implements State {
     }
 
     @Override
-    public void leftClick(Controller controller, UIController uiController) {
-        /*Step stepToSuppress = uiController.getMapCanvas().getStepFromCoordinates(); n'existe pas, sera
-         suivi de tests pour savoir si on a bien un bon vertex de cliqué*/
-        Step stepToSuppress = null; // pour pas casser le build
-        Step otherStep;
-        Delivery deliveryToSuppress = controller.getDeliveryMap().getDeliveryPerId(stepToSuppress.getDeliveryID());
-        if (stepToSuppress.isPickUp()) {
-            //otherStep = new Step(deliveryToSuppress.getDropOff(), deliveryToSuppress.getId());
-        } else {
-            //otherStep = new Step(deliveryToSuppress.getPickUp(), deliveryToSuppress.getId());
+    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
+        if (nodeId != null) {
+            long nodeSelectedId = nodeId;
+            for (Step step : controller.getStepList()) {
+                if (step.getArrivalNodeId() == nodeSelectedId) {
+                    Step stepSelected = step;
+                    int deliveryId = stepSelected.getDeliveryID();
+                    for (Step step1 : controller.getStepList()) {
+                        if (step1.getDeliveryID() == deliveryId && step != step1) {
+                            Step otherDeliveyStep = step1;
+                            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap()));
+                        }
+                    }
+                }
+            }
         }
-        //controller.getRound().removeDelivery(stepToSuppress, otherStep);
+
     }
 }

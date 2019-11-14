@@ -130,7 +130,7 @@ public class Round {
         steps.add(step);
     }
 
-    private void addStepInIthPlace(Step step, int i, CityMap map) {
+    public void addStepInIthPlace(Step step, int i, CityMap map) {
         if (i < 0 || i >= steps.size()) {
             throw new IllegalArgumentException("Index " + i + " out of bounds (size : " + steps.size() + ")");
         }
@@ -171,7 +171,7 @@ public class Round {
      * @param pickUpNode  The pick up node
      * @param dropOffNode The drop off node
      */
-    public void addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
+    public int addDelivery(long pickUpNode, long dropOffNode, int pickUpDuration, int dropOffDuration, CityMap map) {
         map.dijkstra(pickUpNode);
         map.dijkstra(dropOffNode);
         int deliveryId = deliveryMap.createDelivery(pickUpNode, dropOffNode, pickUpDuration, dropOffDuration).getId();
@@ -191,6 +191,7 @@ public class Round {
         dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
         addStep(pickUpStep);
         addStep(dropOffStep);
+        return deliveryId;
     }
 
     /**

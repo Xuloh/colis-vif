@@ -20,6 +20,16 @@
                         <MenuItem fx:id="close" mnemonicParsing="false" text="Fermer" />
                     </items>
                 </Menu>
+
+                <Menu mnemonicParsing="false" text="Outils">
+                    <items>
+                        <MenuItem fx:id="computeRoundItem" text="Calculer l'itinéraire" />
+                        <MenuItem fx:id="addDeliveryItem" mnemonicParsing="false" text="Ajouter une livraison" />
+                        <MenuItem fx:id="deleteDeliveryItem" mnemonicParsing="false" text="Supprimer une livraison" />
+                        <MenuItem fx:id="editLocationItem" mnemonicParsing="false" text="Modifier lieu" />
+                        <MenuItem fx:id="editSequenceItem" mnemonicParsing="false" text="Modifier ordre" />
+                    </items>
+                </Menu>
             </menus>
         </MenuBar>
     </top>

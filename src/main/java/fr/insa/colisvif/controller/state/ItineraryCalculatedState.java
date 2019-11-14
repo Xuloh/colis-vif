@@ -114,4 +114,15 @@ public class ItineraryCalculatedState implements State {
         controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
+
+    /**
+     * Enter in location change mode to enable new actions.
+     *
+     * @see ModifyStopLocationState}.
+     */
+    @Override
+    public void switchToLocationChange(Controller controller, UIController uiController) {
+        // Récupérer Step / nodeId (voir avec les gens)
+        //controller.getMSLState().entryToState();
+    }
 }

@@ -22,5 +22,5 @@ public interface Command {
      *
      * @see #doCommand()
      */
-    void doCommand();
+    void doCommand() throws Exception;
 }

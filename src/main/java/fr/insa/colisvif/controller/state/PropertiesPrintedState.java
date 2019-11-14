@@ -20,14 +20,4 @@ public class PropertiesPrintedState implements State {
     public void switchToOrderChangeMode() {
 
     }
-
-    /**
-     * Enter in location change mode to enable new actions.
-     *
-     * @see ModifyStopLocationState}.
-     */
-    @Override
-    public void switchToLocationChange() {
-
-    }
 }
