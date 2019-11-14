@@ -168,4 +168,10 @@ public class ItineraryCalculatedState implements State {
         controller.getMSLState().entryToState(step);
         controller.setCurrentState(ModifyStopLocationState.class);
     }
+
+    @Override
+    public void switchToOrderChangeMode(Controller controller, UIController uiController, Step step) {
+        controller.getMOState().entryToState(step);
+        controller.setCurrentState(ModifyOrderState.class);
+    }
 }

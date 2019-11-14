@@ -277,6 +277,10 @@ public class Controller {
         return (DropOffNodeAddedStepAdded) stateMap.get(DropOffNodeAddedStepAdded.class);
     }
 
+    public ModifyOrderState getMOState() {
+        return (ModifyOrderState) stateMap.get(ModifyOrderState.class);
+    }
+
     public ModifyStopLocationState getMSLSState() {
         return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
     }
@@ -303,7 +307,7 @@ public class Controller {
      * Switch to "change delivery order" mode
      */
     public void editSequenceDelivery(Step step) {
-        this.currentState.switchToOrderChangeMode();
+        this.currentState.switchToOrderChangeMode(this, this.uiController, step);
     }
 
 

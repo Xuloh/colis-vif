@@ -48,11 +48,15 @@ public class CommandList {
      * If no {@link Command} was previously called, nothing happens.
      */
     public void undoCommand() {
-        if (!currentCommands.isEmpty()) {
-            Command commandToUndo = currentCommands.pop();
-            LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
-            commandToUndo.undoCommand();
-            pastCommands.add(commandToUndo);
+        try {
+            if (!currentCommands.isEmpty()) {
+                Command commandToUndo = currentCommands.pop();
+                LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
+                commandToUndo.undoCommand();
+                pastCommands.add(commandToUndo);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
