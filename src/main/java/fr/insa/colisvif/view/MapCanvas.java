@@ -5,7 +5,6 @@ import fr.insa.colisvif.model.DeliveryMap;
 import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Section;
-import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -71,6 +69,8 @@ public class MapCanvas extends BorderPane {
 
     private List<Consumer<Vertex>> nodeMouseClickHandlers;
 
+    private Long selectedNodeId;
+
     /**
      * Creates a new {@link MapCanvas}.
      * Optionaly adds a {@link ToolsPane} depending on the value of
@@ -95,6 +95,7 @@ public class MapCanvas extends BorderPane {
         this.mapSections = new ArrayList<>();
         this.roundSections = new ArrayList<>();
         this.showCityMapNodesOnHover = false;
+        this.selectedNodeId = null;
 
         // wrap canvas in a pane to handle resize
         Pane canvasContainer = new Pane();
@@ -273,6 +274,11 @@ public class MapCanvas extends BorderPane {
         this.originY = 0;
         this.scale.set(1d);
         //this.redraw();
+    }
+
+    public void setSelectedVertex(Vertex vertex) {
+        this.selectedNodeId = vertex.getNodeId();
+        this.redraw();
     }
 
     private void canvasOnMouseExited(MouseEvent event) {
@@ -655,8 +661,8 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ void draw() {
             double radius = this.radius;
-
-            if (this.selected) {
+            boolean selected = this.selected || Long.valueOf(this.nodeId).equals(selectedNodeId);
+            if (selected) {
                 radius *= CanvasConstants.DELIVERY_NODE_SELECTED_RADIUS_SCALE;
             }
 
