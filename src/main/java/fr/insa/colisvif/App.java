@@ -42,9 +42,6 @@ public class App extends Application {
         // load scene
         Scene scene = new Scene(loader.load());
 
-        // apply css
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-
         // init and show stage
         stage.setTitle("Colis Vif");
         stage.setScene(scene);
