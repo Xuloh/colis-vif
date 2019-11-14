@@ -217,7 +217,7 @@ public class UIController {
             }
         });
 
-        this.stepView.addEventHandlerOnSelect(vertex -> {
+        this.mapCanvas.addNodeMouseClickHandler(vertex -> {
             if (vertex != null) {
                 this.stepView.onSelection(vertex.getDeliveryId(),vertex.getType());
                 //LOGGER.debug("Delivery selected " + step.getDeliveryID());
