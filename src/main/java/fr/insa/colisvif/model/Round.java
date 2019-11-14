@@ -146,7 +146,11 @@ public class Round {
             steps.get(i).setSections(map.getPath(node2, node3));
 
             int time = steps.get(i - 1).getArrivalDate() + steps.get(i - 1).getDuration();
-            double length = map.getLength(node1, node2) + map.getLength(node2, node3);
+            double length = map.getLength(node1, node2);
+            time += (int) (length / ModelConstants.CYCLIST_SPEED);
+            step.setArrivalDate(time);
+            time += step.getDuration();
+            length = map.getLength(node2, node3);
             time += (int) (length / ModelConstants.CYCLIST_SPEED);
             int deltaTime = time - steps.get(i).getArrivalDate();
             for (int j = i; j < steps.size(); ++j) {
@@ -204,8 +208,15 @@ public class Round {
      * @param stepJustBefore the step that will follow stepChangeOrder,
      *                       null if we want to place stepChageOrder at the beginning of the round.
      */
-    public void changeOrderStep(Step stepToChange, Step stepJustBefore, CityMap map) {
+    public void changeOrderStep(Step stepToChange, Step stepJustBefore, CityMap map) throws IllegalArgumentException {
+        if (stepJustBefore == null && stepToChange.isDropOff()) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt avant son enlèvement");
+        }
         int i = steps.indexOf(stepToChange);
+        int j = associatedStepIndex(stepToChange);
+        if ((stepToChange.isDropOff() && i < j) || (stepToChange.isPickUp() && i > j)) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt avant son enlèvement");
+        }
         removeIthStep(i, map);
         if (stepJustBefore == null) {
             addStepAtFirst(stepToChange, map);
