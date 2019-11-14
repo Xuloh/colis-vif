@@ -56,46 +56,6 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addStepInIthPlacePickUpAfter() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
-        String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
-        String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
-
-        CityMapFactory cityMapFactory = new CityMapFactory();
-        CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
-
-        DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
-        DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
-
-        Round round = cityMap.shortestRound(deliveryMap);
-
-        Step step1 = new Step(new Vertex(2, Vertex.PICK_UP, 5), 3, 280);
-        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 5), 3, 280);
-
-        round.addStepInIthPlace(step2, 0, cityMap);
-        round.addStepInIthPlace(step1, 1, cityMap);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void addStepInIthPlaceDropOffBefore() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
-        String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
-        String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
-
-        CityMapFactory cityMapFactory = new CityMapFactory();
-        CityMap cityMap = cityMapFactory.createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
-
-        DeliveryMapFactory deliveryMapFactory = new DeliveryMapFactory();
-        DeliveryMap deliveryMap = deliveryMapFactory.createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
-
-        Round round = cityMap.shortestRound(deliveryMap);
-
-        Step step1 = new Step(new Vertex(2, Vertex.PICK_UP, 5), 3, 280);
-        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 5), 3, 280);
-
-        round.addStepInIthPlace(step1, 1, cityMap);
-        round.addStepInIthPlace(step2, 0, cityMap);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
     public void addStepInIthPlaceWrongIndex1() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
