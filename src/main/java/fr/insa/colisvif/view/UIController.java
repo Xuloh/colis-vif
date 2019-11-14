@@ -12,6 +12,7 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -172,50 +173,40 @@ public class UIController {
         this.computeRound.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.computeRound();
         });
+        this.computeRound.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
+                printStatus("Calcule le trajet optimal du cycliste pour récupérer tous les colis et les livrer."));
         this.computeRoundItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.computeRound();
         });
+        this.computeRoundItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
+                printStatus("Calcule le trajet optimal du cycliste pour récupérer tous les colis et les livrer."));
 
         // Edit buttons
         this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.addDelivery();
         });
+        this.addDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
+                printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
         this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.addDelivery();
         });
+        this.addDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
+                printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
 
-        this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.deleteDelivery();
-        });
-        this.deleteDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.deleteDelivery();
-        });
+        this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> deleteDelivery());
+        this.deleteDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Supprime la livraison associée à l'arrêt sélectionné."));
+        this.deleteDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> deleteDelivery());
+        this.deleteDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Supprime la livraison associée à l'arrêt sélectionné."));
 
-        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
-            if (step != null) {
-                this.controller.editSequenceDelivery(step);
-            }
-        });
-        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
-            if (step != null) {
-                this.controller.editSequenceDelivery(step);
-            }
-        });
+        this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> editLocationDelivery());
+        this.editLocation.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie la localisation d'un arrêt, en choisissant sur la carte le nouveau noeud d'intérêt."));
+        this.editLocationItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editLocationDelivery());
+        this.editLocationItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie la localisation d'un arrêt, en choisissant sur la carte le nouveau noeud d'intérêt."));
 
-        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
-            if (step != null) {
-                this.controller.editSequenceDelivery(step);
-            }
-        });
-        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
-            if (step != null) {
-                this.controller.editSequenceDelivery(step);
-            }
-        });
+        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
+        this.editSequence.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité."));
+        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
+        this.editSequenceItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité"));
 
         this.stepView.addEventHandlerCustom(step -> {
             if (step != null) {
@@ -230,6 +221,33 @@ public class UIController {
         this.disableButtons();
 
         LOGGER.info("UI successfully initialized");
+    }
+
+    private void editSequenceDelivery() {
+        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        if (step != null) {
+            this.controller.editSequenceDelivery(step);
+        } else {
+            printError("Choisissez d'abord un arrêt à modifier.");
+        }
+    }
+
+    private void editLocationDelivery() {
+        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        if (step != null) {
+            this.controller.editLocationDelivery(step);
+        } else {
+            printError("Choisissez d'abord un arrêt à modifier.");
+        }
+    }
+
+    private void deleteDelivery() {
+        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        if (step != null) {
+            this.controller.deleteDelivery(step);
+        } else {
+            printError("Choisissez d'abord un arrêt à supprimer.");
+        }
     }
 
     /**
