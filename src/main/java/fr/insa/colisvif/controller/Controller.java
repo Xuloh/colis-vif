@@ -65,6 +65,9 @@ public class Controller {
         this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
         this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
+        this.stateMap.put(PickUpNodeAddedStepAddedState.class, new PickUpNodeAddedStepAddedState());
+        this.stateMap.put(DropOffNodeAddedState.class, new DropOffNodeAddedState());
+        this.stateMap.put(ModeAddDropOffState.class, new ModeAddDropOffState());
 
         LOGGER.info("Initial Controller state : {}", this.currentState.getClass().getSimpleName());
     }
@@ -243,6 +246,30 @@ public class Controller {
         }
     }
 
+    public PickUpNodeAddedState getPUNState() {
+        return (PickUpNodeAddedState) stateMap.get(PickUpNodeAddedState.class);
+    }
+
+    public PickUpNodeAddedStepAddedState getPUNASAState() {
+        return (PickUpNodeAddedStepAddedState) stateMap.get(PickUpNodeAddedStepAddedState.class);
+    }
+
+    public ModifyStopLocationState getMSLState() {
+        return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
+    }
+
+    public ModeAddDropOffState getMADOState() {
+        return (ModeAddDropOffState) stateMap.get(ModeAddDropOffState.class);
+    }
+
+    public DropOffNodeAddedState getDONAState() {
+        return (DropOffNodeAddedState) stateMap.get(DropOffNodeAddedState.class);
+    }
+
+    public DropOffNodeAddedStepAdded getDONASAState() {
+        return (DropOffNodeAddedStepAdded) stateMap.get(DropOffNodeAddedStepAdded.class);
+    }
+
     public void computeRound() {
         this.currentState.calculateItinerary(this, this.uiController);
     }
@@ -272,7 +299,7 @@ public class Controller {
      * Switch to "change location" mode
      */
     public void editLocationDelivery(Step step) {
-        this.currentState.switchToLocationChange();
+        this.currentState.switchToLocationChange(this, this.uiController);
     }
 
     private void createVertexList() {

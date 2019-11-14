@@ -1,8 +1,11 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.Command;
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Node;
+import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.view.UIController;
 
 import java.io.File;
@@ -121,7 +124,7 @@ public interface State {
     /**
      * Enter in location change mode to allow the user to change the position of a vertex
      */
-    default void switchToLocationChange() {
+    default void switchToLocationChange(Controller controller, UIController uiController) {
 
     }
 
@@ -177,11 +180,23 @@ public interface State {
 
     }
 
-    default void leftClick(Controller controller, UIController uiController) {
+    default void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
+
+    }
+
+    default void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
 
     }
 
     default void setDuration(Controller controller, UIController uiController) {
+
+    }
+
+    default void addPickUpNode(Controller controller) {
+
+    }
+
+    default void addDropOffNode(Controller controller, CommandList commandList) {
 
     }
 

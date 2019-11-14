@@ -1,36 +1,37 @@
 package fr.insa.colisvif.controller.command;
 
+import fr.insa.colisvif.model.CityMap;
 import fr.insa.colisvif.model.Node;
+import fr.insa.colisvif.model.Round;
+import fr.insa.colisvif.model.Step;
 
 public class CommandModifyLocation implements Command {
 
-    private double oldLatitude;
+    private Step modifiedStep;
 
-    private double oldLongitude;
+    private long oldNodeId;
 
-    private double newLatitude;
+    private long newNodeId;
 
-    private double newLongitude;
+    private Round round;
 
-    private Node nodeModified;
+    private CityMap cityMap;
 
-    public CommandModifyLocation(Node nodeModified, double newLatitude, double newLongitude) {
-        this.nodeModified = nodeModified;
-        this.oldLatitude = nodeModified.getLatitude();
-        this.oldLongitude = nodeModified.getLongitude();
-        this.newLatitude = newLatitude;
-        this.newLongitude = newLongitude;
+    public CommandModifyLocation(Step modifiedStep, long newNodeId, Round round, CityMap cityMap) {
+        this.modifiedStep = modifiedStep;
+        this.newNodeId = newNodeId;
+        this.round = round;
+        this.cityMap = cityMap;
     }
 
     @Override
     public void undoCommand() {
-        this.nodeModified.setLatitude(oldLatitude);
-        this.nodeModified.setLongitude(newLongitude);
+        round.changeLocationStep(modifiedStep, oldNodeId, cityMap);
     }
 
     @Override
     public void doCommand() {
-        this.nodeModified.setLatitude(newLatitude);
-        this.nodeModified.setLongitude(newLongitude);
+        oldNodeId = modifiedStep.getArrivalNodeId();
+        round.changeLocationStep(modifiedStep, newNodeId, cityMap);
     }
 }
