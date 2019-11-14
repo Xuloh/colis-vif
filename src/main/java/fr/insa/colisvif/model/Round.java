@@ -2,6 +2,8 @@ package fr.insa.colisvif.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -13,6 +15,9 @@ public class Round {
     private ObservableList<Step> steps;
 
     private DeliveryMap deliveryMap;
+
+    private static final Logger LOGGER = LogManager.getLogger(Round.class);
+
 
     /**
      * Constructor of Round.
