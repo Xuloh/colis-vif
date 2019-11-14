@@ -44,7 +44,7 @@ public class CommandAdd implements Command {
 
     @Override
     public void doCommand() {
-        if (round.getSteps().indexOf(stepAfter) > round.getSteps().indexOf(stepBefore)) {
+        if (round.getSteps().indexOf(stepBefore) > round.getSteps().indexOf(stepAfter)) {
             throw new IllegalArgumentException("L'étape choisie après la livraison est antérieure à celle avant la récupération.");
         } else {
             int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
@@ -64,12 +64,25 @@ public class CommandAdd implements Command {
 
             // Modifying Positions
 
+            LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
+            LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(pickUpStep));
             round.changeOrderStep(pickUpStep, stepBefore, cityMap);
+            LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
+            LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(pickUpStep));
 
             if (stepAfter == null) {
+                LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
                 round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
+                LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
             } else {
-                round.changeOrderStep(dropOffStep, stepAfter, cityMap);
+                LOGGER.debug("INDEX STEP AFTER : " + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
+                round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().indexOf(stepAfter) - 1), cityMap);
+                LOGGER.debug("INDEX STEP AFTER NOW : " + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
+
             }
         }
     }

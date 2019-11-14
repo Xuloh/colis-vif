@@ -27,26 +27,37 @@ public class DropOffNodeAddedState implements State {
 
     @Override
     public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
-        Step stepOfVertex = null;
-        LOGGER.debug("Vertex id : " + vertex.getDeliveryId());
-        for (Step step : controller.getRound().getSteps()) {
-            LOGGER.debug("Step id : " + step.getDeliveryID());
-            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() == vertex.getType()) {
-                LOGGER.debug("On passe bien là");
-                stepOfVertex = step;
+        try {
+            Step stepOfVertex = null;
+            LOGGER.debug("Vertex id : " + vertex.getDeliveryId());
+            LOGGER.debug("Vertex Type : " + vertex.getType());
+            for (Step step : controller.getRound().getSteps()) {
+                LOGGER.debug("Step id : " + step.getDeliveryID());
+                if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() != vertex.getType()) {
+                    LOGGER.debug("On passe bien là");
+                    stepOfVertex = step;
+                }
             }
+
+            if (controller.getRound().getSteps().indexOf(stepBefore) > controller.getRound().getSteps().indexOf(stepOfVertex)) {
+                throw new IllegalArgumentException("L'étape choisie après la livraison est antérieure à celle avant la récupération.");
+            }
+            LOGGER.debug("ID : " + stepOfVertex.getDeliveryID());
+            LOGGER.debug("ID SB : " + stepBefore.getDeliveryID());
+            int dropOffDuration = uiController.getTimeFromPicker();
+            Vertex dropOffVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
+            uiController.clearTimePicker();
+            commandList.doCommand(new CommandAdd(pickUpVertex, dropOffVertex, stepBefore, stepOfVertex, controller.getRound(), controller.getCityMap()));
+            controller.createVertexList();
+            uiController.updateDeliveryMap();
+            uiController.updateRound();
+            uiController.getMapCanvas().redraw();
+            controller.setButtons();
+            controller.setCurrentState(ItineraryCalculatedState.class);
+        } catch (IllegalArgumentException e) {
+            uiController.printError("L'étape d'arrivée sélectionnée est antérieure à celle de départ. Ajout annulé.");
+            LOGGER.error(e.getMessage(), e);
+            controller.setCurrentState(ItineraryCalculatedState.class);
         }
-        LOGGER.debug("ID : " + stepOfVertex.getDeliveryID());
-        LOGGER.debug("ID SB : " + stepBefore.getDeliveryID());
-        int dropOffDuration = uiController.getTimeFromPicker();
-        Vertex dropOffVertex = new Vertex(dropOffNodeId, false, dropOffDuration);
-        uiController.clearTimePicker();
-        commandList.doCommand(new CommandAdd(pickUpVertex, dropOffVertex, stepBefore, stepOfVertex, controller.getRound(), controller.getCityMap()));
-        controller.createVertexList();
-        uiController.updateDeliveryMap();
-        uiController.updateRound();
-        uiController.getMapCanvas().redraw();
-        controller.setButtons();
-        controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }

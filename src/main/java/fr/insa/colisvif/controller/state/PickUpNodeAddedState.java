@@ -23,7 +23,7 @@ public class PickUpNodeAddedState implements State {
     public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
         Step stepOfVertex = null;
         for (Step step : controller.getRound().getSteps()) {
-            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp()) {
+            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() != vertex.getType()) {
                 stepOfVertex = step;
             }
         }
