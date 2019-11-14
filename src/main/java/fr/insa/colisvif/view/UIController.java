@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -99,9 +100,11 @@ public class UIController {
     @FXML
     private MenuItem computeRoundItem;
 
-
     @FXML
     private TilePane tilePane;
+
+    @FXML
+    private CheckMenuItem darkModeToggle;
 
     private Stage stage;
 
@@ -225,6 +228,16 @@ public class UIController {
         this.vertexView.addEventHandlerOnSelect(vertex -> {
             if (vertex != null) {
                 this.mapCanvas.setSelectedVertex(vertex);
+            }
+        });
+
+        this.darkModeToggle.addEventHandler(ActionEvent.ACTION, event -> {
+            if (this.darkModeToggle.isSelected()) {
+                this.stage.getScene()
+                    .getStylesheets()
+                    .add(getClass().getResource("/dark-mode.css").toExternalForm());
+            } else {
+                this.stage.getScene().getStylesheets().clear();
             }
         });
 
