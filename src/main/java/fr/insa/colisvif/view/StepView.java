@@ -154,7 +154,7 @@ public class StepView extends Pane {
                     if(abs(item - step.getArrivalDate()) > 3600) {
                         setStyle("-fx-background-color: " + " red");
                     } else {
-                        setStyle("-fx-background-color: " + " paleGreen");
+                        setStyle("-fx-background-color: " + " mediumseagreen");
                     }
                     int minutes = item / 60;
                     int heures = minutes / 60;

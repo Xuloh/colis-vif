@@ -373,7 +373,7 @@ public class UIController {
         this.editLocationItem.setDisable(false);
     }
 
-    private void disableButtons() {
+    public void disableButtons() {
         this.openDeliveryMap.setDisable(true);
         this.exportRound.setDisable(true);
         this.computeRound.setDisable(true);

@@ -95,6 +95,7 @@ public class ItineraryCalculatedState implements State {
     public void switchToAddMode(Controller controller, UIController uiController) {
         uiController.setShowCityMapNodesOnHover(true);
         controller.setCurrentState(ModeAddState.class);
+        uiController.disableButtons();
         uiController.addPickUp();
     }
 
@@ -198,12 +199,14 @@ public class ItineraryCalculatedState implements State {
     @Override
     public void switchToLocationChange(Controller controller, UIController uiController, Step step) {
         uiController.setShowCityMapNodesOnHover(true);
+        uiController.disableButtons();
         controller.getMSLState().entryToState(step);
         controller.setCurrentState(ModifyStopLocationState.class);
     }
 
     @Override
     public void switchToOrderChangeMode(Controller controller, UIController uiController, Step step) {
+        uiController.disableButtons();
         controller.getMOState().entryToState(step);
         controller.setCurrentState(ModifyOrderState.class);
     }
