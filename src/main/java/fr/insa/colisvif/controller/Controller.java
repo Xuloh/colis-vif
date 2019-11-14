@@ -284,7 +284,7 @@ public class Controller {
     /**
      * Switch to "delete delivery" mode
      */
-    public void deleteDelivery() {
+    public void deleteDelivery(Step step) {
         this.currentState.switchToSuppressionMode(this);
     }
 
