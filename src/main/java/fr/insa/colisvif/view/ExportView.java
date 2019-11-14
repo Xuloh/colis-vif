@@ -69,6 +69,8 @@ public class ExportView  {
         }
 
         try (PrintStream PRINT_STREAM = new PrintStream(file)) {
+            this.uiController.printStatus("Début de l'enregistrement de la carte dans le fichier " + file.getName() + "...");
+
             PRINT_STREAM.println("Début de la tournée (prévue à " + formatHour(round.getStartDate()) + ").\n");
 
             round.getSteps().forEach(step -> this.exportStep(step, PRINT_STREAM));
@@ -77,8 +79,11 @@ public class ExportView  {
             int arrivalDate = lastItem.getArrivalDate() + lastItem.getDuration();
 
             PRINT_STREAM.println("Fin de la tournée (prévue à " + formatHour(arrivalDate) + ").");
+            this.uiController.printStatus("Enregistrement de la carte terminée dans le fichier " + file.getName());
+
         } catch (FileNotFoundException e) {
             LOGGER.error(e.getMessage(), e);
+            this.uiController.printError("Impossible d'écrire dans le fichier " + file.getName());
         }
     }
 }
