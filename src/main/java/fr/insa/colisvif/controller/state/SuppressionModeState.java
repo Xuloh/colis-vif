@@ -36,24 +36,4 @@ public class SuppressionModeState implements State {
     public void getBackToPreviousState(Controller controller) {
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
-
-    @Override
-    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
-        if (nodeId != null) {
-            long nodeSelectedId = nodeId;
-            for (Step step : controller.getStepList()) {
-                if (step.getArrivalNodeId() == nodeSelectedId) {
-                    Step stepSelected = step;
-                    int deliveryId = stepSelected.getDeliveryID();
-                    for (Step step1 : controller.getStepList()) {
-                        if (step1.getDeliveryID() == deliveryId && step != step1) {
-                            Step otherDeliveyStep = step1;
-                            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap()));
-                        }
-                    }
-                }
-            }
-        }
-
-    }
 }

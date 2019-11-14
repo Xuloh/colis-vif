@@ -157,7 +157,7 @@ public class Vertex implements Comparable<Vertex> {
             return false;
         }
         Vertex vertex = (Vertex) o;
-        return nodeId == vertex.nodeId
+        return nodeId.getValue().equals(vertex.nodeId.getValue())
                 && type == vertex.type
                 && duration == vertex.duration;
     }
@@ -180,7 +180,7 @@ public class Vertex implements Comparable<Vertex> {
     @Override
     public String toString() {
         return "Vertex{"
-                + "id=" + nodeId
+                + "id=" + nodeId.getValue()
                 + ", type=" + type
                 + ", durationInSeconds=" + duration
                 + '}';

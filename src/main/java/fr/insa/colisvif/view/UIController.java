@@ -185,10 +185,16 @@ public class UIController {
         });
 
         this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.deleteDelivery();
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.deleteDelivery(step);
+            }
         });
         this.deleteDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.deleteDelivery();
+            Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+            if (step != null) {
+                this.controller.deleteDelivery(step);
+            }
         });
 
         this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> {
@@ -313,12 +319,15 @@ public class UIController {
     public void setButtons() {
         this.disableButtons();
         if (this.controller.getDeliveryMap() == null) {
+            LOGGER.debug("DELIVERYMAP IS NULL");
             this.openDeliveryMap.setDisable(false);
         } else if (this.controller.getRound() == null) {
+            LOGGER.debug("ROUND IS NULL");
             this.openDeliveryMap.setDisable(false);
             this.computeRound.setDisable(false);
             this.computeRoundItem.setDisable(false);
         } else {
+            LOGGER.debug("NOTHING IS NULL");
             this.enableButtons();
             this.computeRound.setDisable(true);
             this.computeRoundItem.setDisable(true);

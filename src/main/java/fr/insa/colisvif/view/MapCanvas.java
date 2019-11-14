@@ -205,6 +205,7 @@ public class MapCanvas extends BorderPane {
         this.deliveryCanvasNodes.clear();
 
         if (DELIVERY_MAP != null) {
+            LOGGER.debug("Taille de la DeliveryMap : " + DELIVERY_MAP.getSize());
             ColorGenerator colorGenerator = new ColorGenerator(
                 DELIVERY_MAP.getSize(),
                 CanvasConstants.NODE_OPACITY,
@@ -228,6 +229,8 @@ public class MapCanvas extends BorderPane {
                 CanvasConstants.WAREHOUSE_COLOR,
                 CanvasConstants.DELIVERY_NODE_RADIUS
             ));
+        } else {
+            LOGGER.debug("DELIVERYMAP IS NULL IN UPDATE");
         }
     }
 

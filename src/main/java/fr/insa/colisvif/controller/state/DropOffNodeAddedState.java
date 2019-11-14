@@ -22,7 +22,7 @@ public class DropOffNodeAddedState implements State {
 
     @Override
     public void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
-        controller.getDONASAState().entryToState(dropOffNodeId, pickUpVertex, step);
+        controller.getDONASAState().entryToState(dropOffNodeId, pickUpVertex, stepBefore, step);
         controller.setCurrentState(PickUpNodeAddedStepAddedState.class);
     }
 }
