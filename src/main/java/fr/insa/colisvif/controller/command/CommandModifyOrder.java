@@ -31,7 +31,11 @@ public class CommandModifyOrder implements Command {
     public void undoCommand() {
         LOGGER.debug(modifiedIndex + " " + round.getSteps().indexOf(modifiedStep));
         if (modifiedIndex != 0) {
-            round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex), cityMap);
+            if (modifiedStep.isPickUp()) {
+                round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex), cityMap);
+            } else {
+                round.changeOrderStep(modifiedStep, round.getSteps().get(modifiedIndex - 1), cityMap);
+            }
         } else {
             round.changeOrderStep(modifiedStep, null, cityMap);
         }
