@@ -6,7 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 public class CommandAdd implements Command {
 
-    private static final Logger LOGGER = LogManager.getLogger(CommandRemove.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(CommandRemove.class);
 
     private Vertex pickUpVertex;
 
@@ -24,7 +25,9 @@ public class CommandAdd implements Command {
 
     private Step dropOffStep;
 
-    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex, Step stepBefore, Step stepAfter, Round round, CityMap cityMap) {
+    public CommandAdd(Vertex pickUpVertex, Vertex dropOffVertex,
+                      Step stepBefore, Step stepAfter, Round round,
+                      CityMap cityMap) {
         this.pickUpVertex = pickUpVertex;
         this.dropOffVertex = dropOffVertex;
         this.stepBefore = stepBefore;
@@ -44,11 +47,15 @@ public class CommandAdd implements Command {
 
     @Override
     public void doCommand() {
-        if (round.getSteps().indexOf(stepBefore) > round.getSteps().indexOf(stepAfter)) {
-            throw new IllegalArgumentException("L'étape choisie après la livraison est antérieure à celle avant la récupération.");
+        if (round.getSteps().indexOf(stepBefore)
+                > round.getSteps().indexOf(stepAfter)) {
+            throw new IllegalArgumentException("L'étape choisie après la "
+                    + "livraison est antérieure à celle avant la"
+                    + " récupération.");
         } else {
-            int deliveryId = round.addDelivery(pickUpVertex.getNodeId(), dropOffVertex.getNodeId(),
-                    pickUpVertex.getDuration(), dropOffVertex.getDuration(), cityMap).getId();
+            int deliveryId = round.addDelivery(pickUpVertex.getNodeId(),
+                    dropOffVertex.getNodeId(), pickUpVertex.getDuration(),
+                    dropOffVertex.getDuration(), cityMap).getId();
 
             // Searching Steps created
 
@@ -64,27 +71,44 @@ public class CommandAdd implements Command {
 
             // Modifying Positions
 
-            LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
-            LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(pickUpStep));
+            LOGGER.debug("INDEX STEP BEFORE  : "
+                    + round.getSteps().indexOf(stepAfter));
+            LOGGER.debug("INDEX STEP : "
+                    + round.getSteps().indexOf(pickUpStep));
             round.changeOrderStep(pickUpStep, stepBefore, cityMap);
             pickUpStep.setInitialArrivalDate();
-            LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
-            LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(pickUpStep));
+            LOGGER.debug("INDEX STEP BEFORE NOW : "
+                    + round.getSteps().indexOf(stepAfter));
+            LOGGER.debug("INDEX STEP NOW : "
+                    + round.getSteps().indexOf(pickUpStep));
 
             if (stepAfter == null) {
-                LOGGER.debug("INDEX STEP BEFORE  : " + round.getSteps().indexOf(stepAfter));
-                LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
-                round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
+                LOGGER.debug("INDEX STEP BEFORE  : "
+                        + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP : "
+                        + round.getSteps().indexOf(dropOffStep));
+                round.changeOrderStep(dropOffStep,
+                        round.getSteps().get(round.getSteps().size() - 1),
+                        cityMap);
                 dropOffStep.setInitialArrivalDate();
-                LOGGER.debug("INDEX STEP BEFORE NOW : " + round.getSteps().indexOf(stepAfter));
-                LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
+                LOGGER.debug("INDEX STEP BEFORE NOW : "
+                        + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP NOW : "
+                        + round.getSteps().indexOf(dropOffStep));
             } else {
-                LOGGER.debug("INDEX STEP AFTER : " + round.getSteps().indexOf(stepAfter));
-                LOGGER.debug("INDEX STEP : " + round.getSteps().indexOf(dropOffStep));
-                round.changeOrderStep(dropOffStep, round.getSteps().get(round.getSteps().indexOf(stepAfter) - 1), cityMap);
+                LOGGER.debug("INDEX STEP AFTER : "
+                        + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP : "
+                        + round.getSteps().indexOf(dropOffStep));
+                round.changeOrderStep(dropOffStep,
+                        round.getSteps()
+                             .get(round.getSteps().indexOf(stepAfter) - 1),
+                        cityMap);
                 dropOffStep.setInitialArrivalDate();
-                LOGGER.debug("INDEX STEP AFTER NOW : " + round.getSteps().indexOf(stepAfter));
-                LOGGER.debug("INDEX STEP NOW : " + round.getSteps().indexOf(dropOffStep));
+                LOGGER.debug("INDEX STEP AFTER NOW : "
+                        + round.getSteps().indexOf(stepAfter));
+                LOGGER.debug("INDEX STEP NOW : "
+                        + round.getSteps().indexOf(dropOffStep));
 
             }
         }
