@@ -17,7 +17,8 @@ public class CommandModifyLocation implements Command {
 
     private CityMap cityMap;
 
-    public CommandModifyLocation(Step modifiedStep, long newNodeId, Round round, CityMap cityMap) {
+    public CommandModifyLocation(Step modifiedStep, long newNodeId, Round round,
+                                 CityMap cityMap) {
         this.modifiedStep = modifiedStep;
         this.newNodeId = newNodeId;
         this.round = round;

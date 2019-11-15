@@ -109,7 +109,6 @@ public class CommandAdd implements Command {
                         + round.getSteps().indexOf(stepAfter));
                 LOGGER.debug("INDEX STEP NOW : "
                         + round.getSteps().indexOf(dropOffStep));
-
             }
         }
     }
