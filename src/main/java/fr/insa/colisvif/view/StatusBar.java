@@ -48,7 +48,7 @@ public class StatusBar extends HBox {
     /**
      * Print the status of the application.
      *
-     * @param text
+     * @param text to print
      */
     public void setStatus(String text) {
         this.messageStatus.setText(text);
@@ -61,7 +61,7 @@ public class StatusBar extends HBox {
     /**
      * Print the errors due to mishandling.
      *
-     * @param text
+     * @param text to print
      */
     public void setError(String text) {
         this.messageError.setText(text);

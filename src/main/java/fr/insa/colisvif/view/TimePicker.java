@@ -48,7 +48,7 @@ public class TimePicker extends TilePane {
     /**
      * Reset the initial value of the {@link Spinner}
      *
-     * @param labelText
+     * @param labelText to print next to the {@link Spinner}
      */
     public void resetTimePicker(String labelText) {
         this.label.setText(labelText);
