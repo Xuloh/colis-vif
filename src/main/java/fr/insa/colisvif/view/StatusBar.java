@@ -60,7 +60,7 @@ public class StatusBar extends HBox {
 
     /**
      * Print the errors due to mishandling.
-     * 
+     *
      * @param text
      */
     public void setError(String text) {
