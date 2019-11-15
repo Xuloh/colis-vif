@@ -28,6 +28,9 @@ public final class CanvasConstants {
      */
     public static final double DELIVERY_NODE_RADIUS = 7d;
 
+    /**
+     * Scale used to change delivery node size when selected
+     */
     public static final double DELIVERY_NODE_SELECTED_RADIUS_SCALE = 1.5d;
 
     /**
@@ -60,10 +63,19 @@ public final class CanvasConstants {
      */
     public static final Color CITY_MAP_NODE_COLOR = Color.DARKORANGE;
 
+    /**
+     * Color used to render round sections (itinerary)
+     */
     public static final Color ROUND_SECTION_COLOR = Color.LIME;
 
+    /**
+     * Width used when rendering round sections (itinerary)
+     */
     public static final double ROUND_SECTION_WIDTH = 2d;
 
+    /**
+     * Size of the arrow at the tip of round sections
+     */
     public static final double ARROW_SIZE = 6d;
 
     private CanvasConstants() {

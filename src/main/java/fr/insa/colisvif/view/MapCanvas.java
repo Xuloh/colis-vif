@@ -74,9 +74,11 @@ public class MapCanvas extends BorderPane {
 
     /**
      * Creates a new {@link MapCanvas}.
-     * Optionaly adds a {@link ToolsPane} depending on the value of
+     * Optionally adds a {@link ToolsPane} depending on the value of
      * <code>useTools</code>.
      *
+     * @param uiController the UIController this {@link MapCanvas}
+     * should be bound to
      * @param useTools if <code>true</code>, adds a {@link ToolsPane} to
      * the {@link MapCanvas}
      *
@@ -132,11 +134,6 @@ public class MapCanvas extends BorderPane {
 
     /**
      * Clears the canvas and redraws everything
-     *
-     * @see #clearCanvas()
-     * @see #drawCityMap()
-     * @see #drawDeliveryMap()
-     * @see #drawCityMapNodesOverlay()
      */
     public void redraw() {
         LOGGER.info("Rendering canvas");
@@ -159,11 +156,13 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
-     * Assigns the given {@link CityMap} to this {@link MapCanvas}.
-     * If <code>null</code> is passed, the {@link MapCanvas}
+     * Updates the {@link CityMap} render data.
+     * The {@link CityMap} is taken from {@link UIController#getCityMap()}.
+     * If it is <code>null</code>, the {@link MapCanvas}
      * will stop rendering a {@link CityMap}.
+     *
+     * @see UIController#getCityMap()
      */
-    //TODO javadoc
     public void updateCityMap() {
         LOGGER.debug("Updating CityMap data");
 
@@ -196,11 +195,14 @@ public class MapCanvas extends BorderPane {
     }
 
     /**
-     * Updates the given {@link DeliveryMap} to this {@link MapCanvas}.
-     * If <code>null</code> is passed, the {@link MapCanvas}
+     * Updates the {@link DeliveryMap} render data.
+     * The {@link DeliveryMap} is taken from
+     * {@link UIController#getDeliveryMap()}.
+     * If it is <code>null</code>, the {@link MapCanvas}
      * will stop rendering a {@link DeliveryMap}.
+     *
+     * @see UIController#getDeliveryMap()
      */
-    //TODO javadoc
     public void updateDeliveryMap() {
         LOGGER.debug("Updating DeliveryMap data");
 
@@ -215,13 +217,16 @@ public class MapCanvas extends BorderPane {
                 .getDeliveryMap()
                 .getDeliveryList()
                 .stream()
-                .flatMap(delivery -> {
-                    return Stream.of(delivery.getPickUp(), delivery.getDropOff());
-                })
+                .flatMap(delivery -> Stream.of(
+                    delivery.getPickUp(),
+                    delivery.getDropOff()
+                ))
                 .map(vertex -> new CanvasNode(
                     vertex.getNodeId(),
                     vertex,
-                    vertex.isPickUp() ? NodeType.DELIVERY_PICKUP : NodeType.DELIVERY_DROP_OFF,
+                    vertex.isPickUp()
+                        ? NodeType.DELIVERY_PICKUP
+                        : NodeType.DELIVERY_DROP_OFF,
                     colorMap.get(vertex.getDeliveryId()),
                     CanvasConstants.DELIVERY_NODE_RADIUS
                 ))
@@ -237,8 +242,14 @@ public class MapCanvas extends BorderPane {
         }
     }
 
-    //TODO javadoc
-
+    /**
+     * Updates the {@link Round} render data.
+     * The {@link Round} is taken from {@link UIController#getRound()}.
+     * If it is <code>null</code>, the {@link MapCanvas}
+     * will stop rendering a {@link Round}.
+     *
+     * @see UIController#getRound()
+     */
     public void updateRound() {
         LOGGER.debug("Updating Round data");
 
@@ -254,26 +265,71 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    /**
+     * Adds an event handler that will be called everytime a node is hovered on
+     * the canvas.
+     * Depending on the selection mode, either delivery nodes or city map nodes
+     * will trigger the event.
+     * The event handler will be passed the ID of the {@link Node} that
+     * was clicked and the associated {@link Vertex} (or null if no
+     * {@link Vertex} is associated to this {@link Node}.
+     *
+     * @param eventHandler the event handler to trigger on node hover
+     *
+     * @see #setShowCityMapNodesOnHover(boolean)
+     * @see Node
+     * @see Vertex
+     */
     public void addNodeMouseHoverHandler(BiConsumer<Long, Vertex> eventHandler) {
         this.nodeMouseHoverHandlers.add(eventHandler);
     }
 
+    /**
+     * Adds an event handler that will be called everytime a node is clicked on
+     * the canvas.
+     * Depending on the selection mode, either delivery nodes or city map nodes
+     * will trigger the event.
+     * The event handler will be passed the ID of the {@link Node} that
+     * was clicked and the associated {@link Vertex} (or null if no
+     * {@link Vertex} is associated to this {@link Node}.
+     *
+     * @param eventHandler the event handler to trigger on node hover
+     *
+     * @see #setShowCityMapNodesOnHover(boolean)
+     * @see Node
+     * @see Vertex
+     */
     public void addNodeMouseClickHandler(BiConsumer<Long, Vertex> eventHandler) {
         this.nodeMouseClickHandlers.add(eventHandler);
     }
 
+    /**
+     * Zooms in on the map. If already at max zoom level, nothing happens.
+     */
     public void zoomIn() {
         double scale = this.scale.get();
-        scale = Math.min(scale + CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MAX_ZOOM_SCALE);
+        scale = Math.min(
+            scale + CanvasConstants.DELTA_ZOOM_SCALE,
+            CanvasConstants.MAX_ZOOM_SCALE
+        );
         this.scale.set(scale);
     }
 
+    /**
+     * Zooms out from the map. If already at min zoom level, nothing happens.
+     */
     public void zoomOut() {
         double scale = this.scale.get();
-        scale = Math.max(scale - CanvasConstants.DELTA_ZOOM_SCALE, CanvasConstants.MIN_ZOOM_SCALE);
+        scale = Math.max(
+            scale - CanvasConstants.DELTA_ZOOM_SCALE,
+            CanvasConstants.MIN_ZOOM_SCALE
+        );
         this.scale.set(scale);
     }
 
+    /**
+     * Resets the scale and position of the map to fit in the canvas.
+     */
     public void autoZoom() {
         this.scale.set(1d);
         this.originX = 0;
@@ -281,17 +337,24 @@ public class MapCanvas extends BorderPane {
         this.redraw();
     }
 
+    /**
+     * Selects the given {@link Vertex} on the map. The {@link Vertex} is
+     * rendered differently.
+     * @param vertex the {@link Vertex} to select
+     */
     public void setSelectedVertex(Vertex vertex) {
         this.selectedNodeId = vertex.getNodeId();
         this.redraw();
     }
 
+    // reset node select state when mouse exits canvas
     private void canvasOnMouseExited(MouseEvent event) {
         this.cityMapCanvasNodes.forEach(node -> node.selected = false);
         this.deliveryCanvasNodes.forEach(node -> node.selected = false);
         this.redraw();
     }
 
+    // move the map with middle click, select nodes with left click
     private void canvasOnMousePressed(MouseEvent event) {
         if (event.getButton() == MouseButton.MIDDLE) {
             this.canvas.setCursor(Cursor.CLOSED_HAND);
@@ -299,7 +362,10 @@ public class MapCanvas extends BorderPane {
             this.dragOriginY = this.originY - event.getY();
         } else if (event.getButton() == MouseButton.PRIMARY) {
 
-            CanvasNode selectedNode = this.getNodeFromCoords(event.getX(), event.getY());
+            CanvasNode selectedNode = this.getNodeFromCoords(
+                event.getX(),
+                event.getY()
+            );
 
             if (selectedNode != null) {
                 selectedNode.selected = true;
@@ -315,6 +381,7 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    // move the map around
     private void canvasOnMouseDragged(MouseEvent event) {
         if (event.getButton() == MouseButton.MIDDLE) {
             this.originX = event.getX() + this.dragOriginX;
@@ -323,17 +390,22 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    // reset mouse cursor on mouse released
     private void canvasOnMouseReleased(MouseEvent event) {
         if (event.getButton() == MouseButton.MIDDLE) {
             this.canvas.setCursor(Cursor.DEFAULT);
         }
     }
 
+    // hover over nodes
     private void canvasOnMouseMoved(MouseEvent event) {
         LOGGER.trace("Updating hovered nodes");
         long start = System.nanoTime();
 
-        CanvasNode selectedNode = this.getNodeFromCoords(event.getX(), event.getY());
+        CanvasNode selectedNode = this.getNodeFromCoords(
+            event.getX(),
+            event.getY()
+        );
 
         if (selectedNode != null) {
             selectedNode.selected = true;
@@ -348,9 +420,14 @@ public class MapCanvas extends BorderPane {
         this.redraw();
 
         long computeTimeMillis = (System.nanoTime() - start) / 1_000_000;
-        LOGGER.trace("Updated hovered nodes in {} ms", computeTimeMillis);
+        LOGGER.trace(
+            "Updated hovered nodes in {} ms",
+            computeTimeMillis
+        );
     }
 
+    // returns the canvas node closer to the given coordinates
+    // the node must intersect with the given coordinates
     private CanvasNode getNodeFromCoords(double x, double y) {
         boolean foundIntersect = false;
 
@@ -452,11 +529,13 @@ public class MapCanvas extends BorderPane {
         for (Section section : this.roundSections) {
             Node origin = nodes.get(section.getOrigin());
             Node destination = nodes.get(section.getDestination());
+
             double originX = this.lngToPx(origin.getLongitude());
             double originY = this.latToPx(origin.getLatitude());
             double destinationX = this.lngToPx(destination.getLongitude());
             double destinationY = this.latToPx(destination.getLatitude());
 
+            // draw the section
             this.drawLine(
                 originX,
                 originY,
@@ -466,6 +545,7 @@ public class MapCanvas extends BorderPane {
                 CanvasConstants.ROUND_SECTION_WIDTH
             );
 
+            // draw an arrow at the tip of the section
             double norm = this.norm(
                 originX,
                 originY,
@@ -473,8 +553,10 @@ public class MapCanvas extends BorderPane {
                 destinationY
             );
 
-            double aX = destinationX + CanvasConstants.ARROW_SIZE * (originX - destinationX) / norm;
-            double aY = destinationY + CanvasConstants.ARROW_SIZE * (originY - destinationY) / norm;
+            double aX = destinationX + CanvasConstants.ARROW_SIZE
+                                       * (originX - destinationX) / norm;
+            double aY = destinationY + CanvasConstants.ARROW_SIZE
+                                       * (originY - destinationY) / norm;
 
             norm = this.norm(
                 aX,
@@ -483,7 +565,8 @@ public class MapCanvas extends BorderPane {
                 destinationY
             );
 
-            double alpha = CanvasConstants.ARROW_SIZE * Math.sqrt(3) / 3d / norm;
+            double alpha = CanvasConstants.ARROW_SIZE
+                           * Math.sqrt(3) / 3d / norm;
 
             double bX = -1 * alpha * (destinationY - aY);
             double bY = alpha * (destinationX - aX);
@@ -503,16 +586,21 @@ public class MapCanvas extends BorderPane {
         this.scale.bindBidirectional(toolsPane.getZoomSlider().valueProperty());
         this.scale.addListener((observable, oldValue, newValue) -> {
             var a = newValue.doubleValue() / oldValue.doubleValue();
-            this.originX -= (a - 1) * (this.canvas.getWidth() * .5 - this.originX);
-            this.originY -= (a - 1) * (this.canvas.getHeight() * .5 - this.originY);
+            this.originX -= (a - 1)
+                            * (this.canvas.getWidth() * .5 - this.originX);
+            this.originY -= (a - 1)
+                            * (this.canvas.getHeight() * .5 - this.originY);
             this.redraw();
         });
 
-        toolsPane.getAutoZoomButton().addEventHandler(ActionEvent.ACTION, event -> this.autoZoom());
+        toolsPane.getAutoZoomButton()
+                 .addEventHandler(ActionEvent.ACTION, event -> this.autoZoom());
 
-        toolsPane.getZoomInButton().addEventHandler(ActionEvent.ACTION, event -> this.zoomIn());
+        toolsPane.getZoomInButton()
+                 .addEventHandler(ActionEvent.ACTION, event -> this.zoomIn());
 
-        toolsPane.getZoomOutButton().addEventHandler(ActionEvent.ACTION, event -> this.zoomOut());
+        toolsPane.getZoomOutButton()
+                 .addEventHandler(ActionEvent.ACTION, event -> this.zoomOut());
     }
 
     private void computeBaseZoom() {
@@ -521,8 +609,10 @@ public class MapCanvas extends BorderPane {
         if (CITY_MAP == null) {
             this.baseZoom = 1d;
         } else {
-            final double MAP_WIDTH = CITY_MAP.getLngMax() - CITY_MAP.getLngMin();
-            final double MAP_HEIGHT = CITY_MAP.getLatMax() - CITY_MAP.getLatMin();
+            final double MAP_WIDTH = CITY_MAP.getLngMax()
+                                     - CITY_MAP.getLngMin();
+            final double MAP_HEIGHT = CITY_MAP.getLatMax()
+                                      - CITY_MAP.getLatMin();
             final double CANVAS_WIDTH = this.canvas.getWidth();
             final double CANVAS_HEIGHT = this.canvas.getHeight();
 
@@ -536,7 +626,8 @@ public class MapCanvas extends BorderPane {
             }
 
             LOGGER.trace(
-                "Computed base zoom : {}\nmap width, map_height : {}, {}\ncanvas_width, canvas_height : {}, {}",
+                "Computed base zoom : {}\nmap width, map_height : "
+                + "{}, {}\ncanvas_width, canvas_height : {}, {}",
                 this.baseZoom,
                 MAP_WIDTH,
                 MAP_HEIGHT,
@@ -546,13 +637,15 @@ public class MapCanvas extends BorderPane {
         }
     }
 
+    // rescale and redraw the map when the canvas is resized
     private void onResize() {
         LOGGER.debug("Resizing map");
         this.computeBaseZoom();
         this.redraw();
     }
 
-    private void drawCircleLatLng(double lat, double lng, Paint paint, double radius) {
+    private void drawCircleLatLng(double lat, double lng,
+                                  Paint paint, double radius) {
         this.drawCircle(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
@@ -578,19 +671,41 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
-    private void drawLineLatLng(double lat1, double lng1, double lat2, double lng2, Paint paint) {
-        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint, 1.0);
+    private void drawLineLatLng(double lat1, double lng1,
+                                double lat2, double lng2,
+                                Paint paint) {
+        this.drawLine(
+            this.lngToPx(lng1),
+            this.latToPx(lat1),
+            this.lngToPx(lng2),
+            this.latToPx(lat2),
+            paint,
+            1.0
+        );
     }
 
-    private void drawLineLatLng(double lat1, double lng1, double lat2, double lng2, Paint paint, double lineWidth) {
-        this.drawLine(this.lngToPx(lng1), this.latToPx(lat1), this.lngToPx(lng2), this.latToPx(lat2), paint, lineWidth);
+    private void drawLineLatLng(double lat1, double lng1,
+                                double lat2, double lng2,
+                                Paint paint, double lineWidth) {
+        this.drawLine(
+            this.lngToPx(lng1),
+            this.latToPx(lat1),
+            this.lngToPx(lng2),
+            this.latToPx(lat2),
+            paint,
+            lineWidth
+        );
     }
 
-    private void drawLine(double x1, double y1, double x2, double y2, Paint paint) {
+    private void drawLine(double x1, double y1,
+                          double x2, double y2,
+                          Paint paint) {
         this.drawLine(x1, y1, x2, y2, paint, 1.0);
     }
 
-    private void drawLine(double x1, double y1, double x2, double y2, Paint paint, double lineWidth) {
+    private void drawLine(double x1, double y1,
+                          double x2, double y2,
+                          Paint paint, double lineWidth) {
         Paint prevStroke = this.context.getStroke();
         double prevLineWidth = this.context.getLineWidth();
         this.context.setStroke(paint);
@@ -600,17 +715,21 @@ public class MapCanvas extends BorderPane {
         this.context.setLineWidth(prevLineWidth);
     }
 
-    private void drawTriangleLatLng(double lat, double lng, Paint paint, double radius) {
+    private void drawTriangleLatLng(double lat, double lng,
+                                    Paint paint, double radius) {
         this.drawTriangle(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawTriangle(double centerX, double centerY, Paint paint, double radius) {
+    private void drawTriangle(double centerX, double centerY,
+                              Paint paint, double radius) {
         double[] x = new double[3];
         double[] y = new double[3];
 
         for (int k = 0; k < 3; k++) {
-            x[k] = radius * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2) + centerX;
-            y[k] = radius * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2) + centerY;
+            x[k] = radius * Math.cos(2 * k * Math.PI / 3 - Math.PI / 2)
+                   + centerX;
+            y[k] = radius * Math.sin(2 * k * Math.PI / 3 - Math.PI / 2)
+                   + centerY;
         }
 
         Paint prevFill = this.context.getFill();
@@ -631,11 +750,13 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevFill);
     }
 
-    private void drawSquareLatLng(double lat, double lng, Paint paint, double radius) {
+    private void drawSquareLatLng(double lat, double lng,
+                                  Paint paint, double radius) {
         this.drawSquare(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
 
-    private void drawSquare(double centerX, double centerY, Paint paint, double radius) {
+    private void drawSquare(double centerX, double centerY,
+                            Paint paint, double radius) {
         double[] x = {
             centerX - radius,
             centerX + radius,
@@ -663,12 +784,14 @@ public class MapCanvas extends BorderPane {
 
     private double latToPx(double lat) {
         final CityMap CITY_MAP = this.uiController.getCityMap();
-        return (CITY_MAP.getLatMax() - lat) * this.scale.get() * this.baseZoom + this.originY;
+        return (CITY_MAP.getLatMax() - lat) * this.scale.get()
+               * this.baseZoom + this.originY;
     }
 
     private double lngToPx(double lng) {
         final CityMap CITY_MAP = this.uiController.getCityMap();
-        return (lng - CITY_MAP.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
+        return (lng - CITY_MAP.getLngMin()) * this.scale.get()
+               * this.baseZoom + this.originX;
     }
 
     private double norm(double x1, double y1, double x2, double y2) {
@@ -677,6 +800,7 @@ public class MapCanvas extends BorderPane {
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
+    // inner class to store render data for each node
     private class CanvasNode {
 
         /*package-private*/ double x;
@@ -697,7 +821,9 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ double squaredRadius;
 
-        /*package-private*/ CanvasNode(long nodeId, Vertex vertex, NodeType type, Paint paint, double radius) {
+        /*package-private*/ CanvasNode(long nodeId, Vertex vertex,
+                                       NodeType type, Paint paint,
+                                       double radius) {
             this.nodeId = nodeId;
             this.vertex = vertex;
             this.type = type;
@@ -717,7 +843,9 @@ public class MapCanvas extends BorderPane {
 
         /*package-private*/ void draw() {
             double radius = this.radius;
-            boolean selected = this.selected || Long.valueOf(this.nodeId).equals(selectedNodeId);
+            boolean selected = this.selected
+                               || Long.valueOf(this.nodeId)
+                                      .equals(selectedNodeId);
             if (selected) {
                 radius *= CanvasConstants.DELIVERY_NODE_SELECTED_RADIUS_SCALE;
             }
@@ -777,7 +905,13 @@ public class MapCanvas extends BorderPane {
 
         @Override
         public String toString() {
-            return "CanvasNode{" + "x=" + x + ", y=" + y + ", selected=" + selected + ", nodeId=" + nodeId + ", type=" + type + '}';
+            return "CanvasNode{"
+                   + "x=" + x
+                   + ", y=" + y
+                   + ", selected=" + selected
+                   + ", nodeId=" + nodeId
+                   + ", type=" + type
+                   + '}';
         }
     }
 }

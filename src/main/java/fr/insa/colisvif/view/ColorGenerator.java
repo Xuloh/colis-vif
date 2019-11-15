@@ -26,7 +26,8 @@ public class ColorGenerator implements Iterator<Color> {
     private double brightness;
 
     /**
-     * Creates a new {@link ColorGenerator} to generate the given number of colors
+     * Creates a new {@link ColorGenerator}
+     * to generate the given number of colors
      * @param count the number of colors to generate
      */
     public ColorGenerator(int count) {
@@ -34,7 +35,8 @@ public class ColorGenerator implements Iterator<Color> {
     }
 
     /**
-     * Creates a new {@link ColorGenerator} to generate the given number of colors
+     * Creates a new {@link ColorGenerator}
+     * to generate the given number of colors
      * and applying the given opacity.
      * @param count the number of colors to generate
      * @param opacity the opacity to apply to the colors
@@ -44,7 +46,8 @@ public class ColorGenerator implements Iterator<Color> {
     }
 
     /**
-     * Creates a new {@link ColorGenerator} to generate the given number of colors
+     * Creates a new {@link ColorGenerator}
+     * to generate the given number of colors
      * and applying the given opacity. Each color will be returned in sequence
      * as much time as the value of <code>duplicate</code>.
      * @param count the number of colors to generate
@@ -76,6 +79,11 @@ public class ColorGenerator implements Iterator<Color> {
         }
 
         this.current++;
-        return Color.hsb(this.hue, this.saturation, this.brightness, this.opacity);
+        return Color.hsb(
+            this.hue,
+            this.saturation,
+            this.brightness,
+            this.opacity
+        );
     }
 }

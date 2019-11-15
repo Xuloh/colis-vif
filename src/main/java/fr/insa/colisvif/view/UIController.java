@@ -17,7 +17,6 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -39,7 +38,8 @@ import java.util.ResourceBundle;
  */
 public class UIController {
 
-    private static final Logger LOGGER = LogManager.getLogger(UIController.class);
+    private static final Logger LOGGER = LogManager
+        .getLogger(UIController.class);
 
     private Map<Integer, Color> colorMap;
 
@@ -157,7 +157,12 @@ public class UIController {
         this.timePicker = new TimePicker();
         this.exportView = new ExportView(this);
         this.colorMap = new HashMap<>();
-        this.stage.getIcons().add(new Image(UIController.class.getResourceAsStream("/icon.png")));
+        this.stage.getIcons().add(
+            new Image(
+                UIController.class
+                    .getResourceAsStream("/icon.png")
+            )
+        );
     }
 
     /**
@@ -204,50 +209,89 @@ public class UIController {
         this.computeRound.addEventHandler(ActionEvent.ACTION, actionEvent -> {
             this.controller.computeRound();
         });
-        this.computeRound.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
-                printStatus("Calcule le trajet optimal du cycliste pour récupérer tous les colis et les livrer."));
-        this.computeRoundItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.computeRound();
-        });
-        this.computeRoundItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
-                printStatus("Calcule le trajet optimal du cycliste pour récupérer tous les colis et les livrer."));
+        this.computeRound.addEventHandler(
+            MouseEvent.MOUSE_ENTERED,
+            e -> printStatus("Calcule le trajet optimal du cycliste "
+                             + "pour récupérer tous les colis et les livrer.")
+        );
+        this.computeRoundItem.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> this.controller.computeRound()
+        );
+        this.computeRoundItem.addEventHandler(
+            MouseEvent.MOUSE_ENTERED,
+            e -> printStatus("Calcule le trajet optimal du cycliste "
+                             + "pour récupérer tous les colis et les livrer.")
+        );
 
         // Edit buttons
-        this.addDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
-        });
-        this.addDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
-                printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
-        this.addDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> {
-            this.controller.addDelivery();
-        });
-        this.addDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e ->
-                printStatus("Ajoute une livraison en deux étapes : définition de l'arrêt de récupération du colis, et définition de l'arrêt de livraison."));
+        this.addDelivery.addEventHandler(
+            ActionEvent.ACTION, actionEvent -> this.controller.addDelivery()
+        );
+        this.addDelivery.addEventHandler(
+            MouseEvent.MOUSE_ENTERED,
+            e -> printStatus("Ajoute une livraison en deux étapes : "
+                             + "définition de l'arrêt de récupération du colis"
+                             + ", et définition de l'arrêt de livraison.")
+        );
+        this.addDeliveryItem.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> this.controller.addDelivery()
+        );
+        this.addDeliveryItem.addEventHandler(
+            MouseEvent.MOUSE_ENTERED,
+            e -> printStatus("Ajoute une livraison en deux étapes :"
+                             + " définition de l'arrêt de récupération du colis"
+                             + ", et définition de l'arrêt de livraison.")
+        );
 
-        this.deleteDelivery.addEventHandler(ActionEvent.ACTION, actionEvent -> deleteDelivery());
-        this.deleteDelivery.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Supprime la livraison associée à l'arrêt sélectionné."));
-        this.deleteDeliveryItem.addEventHandler(ActionEvent.ACTION, actionEvent -> deleteDelivery());
-        this.deleteDeliveryItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Supprime la livraison associée à l'arrêt sélectionné."));
+        this.deleteDelivery.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> deleteDelivery()
+        );
 
-        this.editLocation.addEventHandler(ActionEvent.ACTION, actionEvent -> editLocationDelivery());
-        this.editLocation.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie la localisation d'un arrêt, en choisissant sur la carte le nouveau noeud d'intérêt."));
-        this.editLocationItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editLocationDelivery());
-        this.editLocationItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie la localisation d'un arrêt, en choisissant sur la carte le nouveau noeud d'intérêt."));
+        this.deleteDeliveryItem.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> deleteDelivery()
+        );
 
-        this.editSequence.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
-        this.editSequence.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité."));
-        this.editSequenceItem.addEventHandler(ActionEvent.ACTION, actionEvent -> editSequenceDelivery());
-        this.editSequenceItem.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> printStatus("Modifie l'ordre de prélèvement d'un arrêt, en choisissant un arrêt après lequel l'arrêt sera visité"));
+        this.editLocation.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> editLocationDelivery()
+        );
+
+        this.editLocationItem.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> editLocationDelivery()
+        );
+
+        this.editSequence.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> editSequenceDelivery()
+        );
+
+        this.editSequenceItem.addEventHandler(
+            ActionEvent.ACTION,
+            actionEvent -> editSequenceDelivery()
+        );
 
         this.mapCanvas.addNodeMouseClickHandler((nodeId, vertex) -> {
             if (vertex != null) {
-                this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
-                this.vertexView.onSelection(vertex.getDeliveryId(), vertex.getType());
+                this.stepView.onSelection(
+                    vertex.getDeliveryId(),
+                    vertex.getType()
+                );
+                this.vertexView.onSelection(
+                    vertex.getDeliveryId(),
+                    vertex.getType()
+                );
                 LOGGER.debug("Delivery selected " + vertex.getDeliveryId());
                 LOGGER.debug("Type " + vertex.getType());
             } else {
-                this.stepView.getStepTable().getSelectionModel().select(null);
-                this.vertexView.getVertexTable().getSelectionModel().select(null);
+                this.stepView.getStepTable()
+                             .getSelectionModel().select(null);
+                this.vertexView.getVertexTable()
+                               .getSelectionModel().select(null);
             }
         });
 
@@ -268,15 +312,30 @@ public class UIController {
             if (this.darkModeToggle.isSelected()) {
                 this.stage.getScene()
                     .getStylesheets()
-                    .add(getClass().getResource("/dark-mode.css").toExternalForm());
+                    .add(
+                        getClass()
+                            .getResource("/dark-mode.css")
+                            .toExternalForm()
+                    );
             } else {
                 this.stage.getScene().getStylesheets().clear();
             }
         });
 
-        this.autoZoomItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.autoZoom());
-        this.zoomInItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomIn());
-        this.zoomOutItem.addEventHandler(ActionEvent.ACTION, event -> this.mapCanvas.zoomOut());
+        this.autoZoomItem.addEventHandler(
+            ActionEvent.ACTION,
+            event -> this.mapCanvas.autoZoom()
+        );
+
+        this.zoomInItem.addEventHandler(
+            ActionEvent.ACTION,
+            event -> this.mapCanvas.zoomIn()
+        );
+
+        this.zoomOutItem.addEventHandler(
+            ActionEvent.ACTION,
+            event -> this.mapCanvas.zoomOut()
+        );
 
         this.rightPane.setCenter(this.vertexView);
         this.mainPane.setCenter(this.mapCanvas);
@@ -288,7 +347,10 @@ public class UIController {
     }
 
     private void editSequenceDelivery() {
-        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        Step step = this.stepView
+            .getStepTable()
+            .getSelectionModel()
+            .getSelectedItem();
         if (step != null) {
             this.controller.editSequenceDelivery(step);
         } else {
@@ -297,7 +359,10 @@ public class UIController {
     }
 
     private void editLocationDelivery() {
-        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        Step step = this.stepView
+            .getStepTable()
+            .getSelectionModel()
+            .getSelectedItem();
         if (step != null) {
             this.controller.editLocationDelivery(step);
         } else {
@@ -306,7 +371,10 @@ public class UIController {
     }
 
     private void deleteDelivery() {
-        Step step = this.stepView.getStepTable().getSelectionModel().getSelectedItem();
+        Step step = this.stepView
+            .getStepTable()
+            .getSelectionModel()
+            .getSelectedItem();
         if (step != null) {
             this.controller.deleteDelivery(step);
         } else {
@@ -330,14 +398,25 @@ public class UIController {
         return this.vertexView;
     }
 
-    public void printStatus(String text) {
-        this.statusBar.setStatus(text);
+    /**
+     * Displays a status message in the {@link StatusBar}
+     * @param message the message to print
+     */
+    public void printStatus(String message) {
+        this.statusBar.setStatus(message);
     }
 
-    public void printError(String text) {
-        this.statusBar.setError(text);
+    /**
+     * Displays an error message in the {@link StatusBar}
+     * @param error the error message to print
+     */
+    public void printError(String error) {
+        this.statusBar.setError(error);
     }
 
+    /**
+     * Updates the {@link CityMap} on the UI
+     */
     public void updateCityMap() {
         this.mapCanvas.updateCityMap();
 
@@ -345,6 +424,9 @@ public class UIController {
         this.openDeliveryMap.setDisable(false);
     }
 
+    /**
+     * Updates the {@link DeliveryMap} on the UI
+     */
     public void updateDeliveryMap() {
         if (getDeliveryMap() != null) {
             this.stepView.clearSteps();
@@ -364,6 +446,9 @@ public class UIController {
 
     }
 
+    /**
+     * Enables all the buttons on the UI
+     */
     public void enableButtons() {
         this.openDeliveryMap.setDisable(false);
         this.exportRound.setDisable(false);
@@ -379,6 +464,9 @@ public class UIController {
         this.editLocationItem.setDisable(false);
     }
 
+    /**
+     * Disables all the buttons on the UI
+     */
     public void disableButtons() {
         this.openDeliveryMap.setDisable(true);
         this.exportRound.setDisable(true);
@@ -394,6 +482,9 @@ public class UIController {
         this.editLocationItem.setDisable(true);
     }
 
+    /**
+     * Enables or disables the buttons on the UI depending on the current state
+     */
     public void setButtons() {
         this.disableButtons();
         if (this.controller.getDeliveryMap() == null) {
@@ -412,6 +503,9 @@ public class UIController {
         }
     }
 
+    /**
+     * Displays the time picker when adding a pick up node
+     */
     public void addPickUp() {
         this.timePicker.resetTimePicker("Durée d'enlèvement : ");
         if (!this.tilePane.getChildren().contains(this.timePicker)) {
@@ -419,6 +513,9 @@ public class UIController {
         }
     }
 
+    /**
+     * Displays the time picker when adding a drop off node
+     */
     public void addDropOff() {
         this.timePicker.resetTimePicker("Durée du dépôt : ");
         if (!this.tilePane.getChildren().contains(this.timePicker)) {
@@ -426,15 +523,25 @@ public class UIController {
         }
     }
 
+    /**
+     * Returns the time input from the time picker
+     * @return the time input from the time picker
+     */
     public int getTimeFromPicker() {
         LOGGER.info(this.timePicker.getTimeValue());
         return this.timePicker.getTimeValue();
     }
 
+    /**
+     * Clears the time picker
+     */
     public void clearTimePicker() {
         this.tilePane.getChildren().remove(this.timePicker);
     }
 
+    /**
+     * Updates the {@link Round} on the UI
+     */
     public void updateRound() {
         if (this.controller.getRound() == null) {
             this.stepView.clearSteps();
@@ -442,13 +549,22 @@ public class UIController {
             this.rightPane.setCenter(this.vertexView);
         } else {
             this.vertexView.clearVertices();
-            this.stepView.printSteps(FXCollections.observableArrayList(controller.getStepList()));
+            this.stepView.printSteps(
+                FXCollections.observableArrayList(controller.getStepList())
+            );
             this.rightPane.setCenter(this.stepView);
         }
         this.mapCanvas.updateRound();
         this.mapCanvas.redraw();
     }
 
+    /**
+     * Toggles the nodes displayed on the {@link MapCanvas}
+     * @param enable if <code>true</code>, displays {@link CityMap} nodes. If
+     * false, displays {@link Delivery} nodes
+     *
+     * @see MapCanvas#setShowCityMapNodesOnHover(boolean)
+     */
     public void setShowCityMapNodesOnHover(boolean enable) {
         this.mapCanvas.setShowCityMapNodesOnHover(enable);
     }
@@ -473,11 +589,19 @@ public class UIController {
         return this.stepView;
     }
 
+    /**
+     * Adds a global mouse click event handler
+     * @param eventHandler the handler that will receive mouse click events
+     * @see MouseEvent#MOUSE_CLICKED
+     */
     public void addMouseClickEventHandler(EventHandler<MouseEvent> eventHandler) {
         this.stage.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
     }
 
-
+    /**
+     * Returns a {@link Map} that maps {@link Delivery} ID to {@link Color}
+     * @return a {@link Map} that maps {@link Delivery} ID to {@link Color}
+     */
     public Map<Integer, Color> getColorMap() {
         return colorMap;
     }
