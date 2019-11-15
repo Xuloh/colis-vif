@@ -1,10 +1,8 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.controller.command.Command;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Step;
 import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
