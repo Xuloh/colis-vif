@@ -54,13 +54,6 @@ public class CommandRemove implements Command {
             */
             oldDelivery = round.getDeliveryMap().createDelivery(stepToRemove.getArrivalNodeId(), otherDeliveryStep.getArrivalNodeId(),
                     stepToRemove.getDuration(), otherDeliveryStep.getDuration());
-            oldDelivery.setId(oldDeliveryId);
-            oldDelivery.getPickUp().setDeliveryId(oldDeliveryId);
-            oldDelivery.getDropOff().setDeliveryId(oldDeliveryId);
-            stepToRemove.setDeliveryID(oldDeliveryId);
-            otherDeliveryStep.setDeliveryID(oldDeliveryId);
-            round.addStepInIthPlace(stepToRemove, indexPickUp, cityMap);
-            round.addStepInIthPlace(otherDeliveryStep, indexDropOff, cityMap);
 
             /*
             newDeliveryId = oldDelivery.getId();
@@ -103,12 +96,6 @@ public class CommandRemove implements Command {
             oldDelivery = round.getDeliveryMap().createDelivery(otherDeliveryStep.getArrivalNodeId(), stepToRemove.getArrivalNodeId(),
                     otherDeliveryStep.getDuration(), stepToRemove.getDuration());
 
-            oldDelivery.setId(oldDeliveryId);
-            stepToRemove.setDeliveryID(oldDeliveryId);
-            otherDeliveryStep.setDeliveryID(oldDeliveryId);
-            round.addStepInIthPlace(otherDeliveryStep, indexPickUp, cityMap);
-            round.addStepInIthPlace(stepToRemove, indexDropOff, cityMap);
-
             /*
             newDeliveryId = oldDelivery.getId();
             LOGGER.debug("Pick Up : " + indexPickUp);
@@ -148,12 +135,12 @@ public class CommandRemove implements Command {
 
              */
         }
-        LOGGER.error("the id " + oldDelivery.getId());
-        LOGGER.error("the id s1 " + stepToRemove.getDeliveryID());
-        LOGGER.error("the id s2" + otherDeliveryStep.getDeliveryID());
-        for (Step step : round.getSteps()) {
-            LOGGER.error(step.getDeliveryID());
-        }
+
+        oldDelivery.setId(oldDeliveryId);
+        stepToRemove.setDeliveryID(oldDeliveryId);
+        otherDeliveryStep.setDeliveryID(oldDeliveryId);
+        round.addStepInIthPlace(otherDeliveryStep, indexPickUp, cityMap);
+        round.addStepInIthPlace(stepToRemove, indexDropOff, cityMap);
     }
 
     @Override

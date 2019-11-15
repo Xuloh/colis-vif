@@ -97,6 +97,8 @@ public class Delivery {
 
     public void setId(int id) {
         this.id = id;
+        this.pickUp.setDeliveryId(id);
+        this.dropOff.setDeliveryId(id);
     }
 
     /**
