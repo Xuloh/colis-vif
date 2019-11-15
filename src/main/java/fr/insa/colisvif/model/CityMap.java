@@ -6,11 +6,11 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 /**
- * Contains the representation of the city, with min max latitude and
- * a map of {@link Node} and {@link Section}. It has a method to calculate
- * all the shortest paths between a {@link Node} and every other {@link Node}
- * CityMap also contains shortestRound that calculates the shortest round
- * from a {@link DeliveryMap} on the CityMap.
+ * Contains the representation of the city, with min max latitude and a map of
+ * {@link Node} and {@link Section}. It has a method to calculate all the
+ * shortest paths between a {@link Node} and every other {@link Node} CityMap
+ * also contains shortestRound that calculates the shortest round from a {@link
+ * DeliveryMap} on the CityMap.
  */
 public class CityMap {
 
@@ -42,8 +42,7 @@ public class CityMap {
 
     /**
      * Constructor of CityMap. Initialize the min/max latitudes and min/max
-     * longitudes.
-     * It also initialises the map of {@link Node}, {@link Section}
+     * longitudes. It also initialises the map of {@link Node}, {@link Section}
      * and {@link PathsFromVertex}.
      */
     public CityMap() {
@@ -57,17 +56,17 @@ public class CityMap {
     }
 
     /**
-     * Creates a Node from an id, a latitude and longitude and ads it
-     * to the map of {@link Node}.
+     * Creates a Node from an id, a latitude and longitude and ads it to the map
+     * of {@link Node}.
      *
      * @param id        the id of the Node.
      * @param latitude  the latitude of the Node.
      * @param longitude the longitude of the Node.
-     * @throws IllegalArgumentException when the latitude or longitude
-     *                                  is out of bounds.
+     * @throws IllegalArgumentException when the latitude or longitude is out of
+     *                                  bounds.
      */
     public void createNode(long id, double latitude, double longitude)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
 
         Node newNode = new Node(id, latitude, longitude);
 
@@ -91,8 +90,8 @@ public class CityMap {
     }
 
     /**
-     * Creates a {@link Section} and adds it to the successors of the
-     * {@link Node} that has the same origin.
+     * Creates a {@link Section} and adds it to the successors of the {@link
+     * Node} that has the same origin.
      *
      * @param length      the length of the section.
      * @param roadName    the road name of the section.
@@ -102,8 +101,8 @@ public class CityMap {
      *                                  does not match any {@link Node}
      */
     public void createSection(double length, String roadName,
-                              long origin, long destination)
-            throws IllegalArgumentException {
+        long origin, long destination)
+        throws IllegalArgumentException {
         Section newSection = new Section(length, roadName, origin, destination);
 
         if (this.mapSection.get(roadName) == null) {
@@ -188,19 +187,20 @@ public class CityMap {
      * @param finish the ending point.
      * @return the minimum length between two coordinates.
      * @throws IllegalArgumentException if the parameter start and / or finish
-     * does not exist in the map of {@link Node}, or if the shortestRound has
-     * not been performed yet.
+     *                                  does not exist in the map of {@link
+     *                                  Node}, or if the shortestRound has not
+     *                                  been performed yet.
      */
     public double getLength(long start, long finish)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
             throw new IllegalArgumentException("The Node " + start
-                    + " does not exist in the map of Nodes"
+                + " does not exist in the map of Nodes"
             );
         }
         if (!mapNode.containsKey(finish)) {
             throw new IllegalArgumentException("The Node " + finish
-                    + " does not exist in the map of Nodes"
+                + " does not exist in the map of Nodes"
             );
         }
         if (!pathsFromVertices.containsKey(start)) {
@@ -216,11 +216,11 @@ public class CityMap {
         }
         LinkedList<Section> path = new LinkedList<>();
         Section prevSection = pathsFromVertices.get(start)
-                .getPrevSection(finish);
+            .getPrevSection(finish);
         while (prevSection != null) {
             path.addFirst(prevSection);
             prevSection = pathsFromVertices.get(start)
-                    .getPrevSection(prevSection.getOrigin());
+                .getPrevSection(prevSection.getOrigin());
         }
         return path;
     }
@@ -236,7 +236,7 @@ public class CityMap {
      *                                  between start and finish.
      */
     public Section getSection(long start, long finish)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         for (Section section : getMapNode().get(start).getSuccessors()) {
             if (section.getDestination() == finish) {
                 return section;
@@ -274,20 +274,20 @@ public class CityMap {
     }
 
     /**
-     * Perform a dijkstra between the point at coordinate start and all
-     * the {@link Node} stored in the map of {@link Node}.
+     * Perform a dijkstra between the point at coordinate start and all the
+     * {@link Node} stored in the map of {@link Node}.
      *
      * @param start the coordinate of the starting point.
-     * @throws IllegalArgumentException if the paramater start does not exist
-     * in the map of {@link Node}.
+     * @throws IllegalArgumentException if the paramater start does not exist in
+     *                                  the map of {@link Node}.
      */
 
     /*package-private*/ void dijkstra(long start)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         if (!mapNode.containsKey(start)) {
             throw new IllegalArgumentException(
-                    "The stating node of Dijkstra's "
-                            + "algorithm does not belong to the map");
+                "The stating node of Dijkstra's "
+                    + "algorithm does not belong to the map");
         }
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
@@ -295,7 +295,7 @@ public class CityMap {
         pathsFromStart.setPrev(start, null);
 
         Comparator<Long> cmp = Comparator
-                .comparingDouble(pathsFromStart::getLength);
+            .comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> priorityQueue = new PriorityQueue<>(cmp);
         priorityQueue.add(start);
 
@@ -306,9 +306,9 @@ public class CityMap {
                 long next = section.getDestination();
                 double destinationLength = pathsFromStart.getLength(next);
                 if (destinationLength == -1
-                        || length + section.getLength() < destinationLength) {
+                    || length + section.getLength() < destinationLength) {
                     pathsFromStart.setLength(next,
-                            length + section.getLength());
+                        length + section.getLength());
                     pathsFromStart.setPrev(next, section);
                     priorityQueue.remove(next);
                     priorityQueue.add(next);
@@ -325,18 +325,19 @@ public class CityMap {
      * before drop off node x).
      *
      * @param deliveries a delivery object containing all the pickup and dropoff
-     * nodes and their information.
+     *                   nodes and their information.
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries) throws InterruptedException {
+    public Round shortestRound(DeliveryMap deliveries)
+        throws InterruptedException {
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
         VerticesGraph verticesGraph = new VerticesGraph(deliveries,
-                pathsFromVertices);
+            pathsFromVertices);
         return verticesGraph.shortestRound();
     }
 
@@ -347,16 +348,15 @@ public class CityMap {
             dijkstra(delivery.getDropOffNodeId());
         }
         VerticesGraph verticesGraph = new VerticesGraph(deliveries,
-                pathsFromVertices);
+            pathsFromVertices);
         return verticesGraph.naiveRound();
     }
 
     /**
-     * Determines if the given {@link Object} is "equal"
-     * to this {@link CityMap}.
-     * Only other {@link CityMap} are considered for comparison.
-     * The method compares the min/max latitude and longitude, the
-     * map of {@link Node} and the map of {@link Section}
+     * Determines if the given {@link Object} is "equal" to this {@link
+     * CityMap}. Only other {@link CityMap} are considered for comparison. The
+     * method compares the min/max latitude and longitude, the map of {@link
+     * Node} and the map of {@link Section}
      *
      * @param o the {@link Object} to compare this {@link CityMap} to
      * @return <code>true</code> if o is a {@link CityMap} whose values are
@@ -372,11 +372,11 @@ public class CityMap {
         }
         CityMap cityMap = (CityMap) o;
         return Double.compare(cityMap.lngMin, lngMin) == 0
-                && Double.compare(cityMap.lngMax, lngMax) == 0
-                && Double.compare(cityMap.latMin, latMin) == 0
-                && Double.compare(cityMap.latMax, latMax) == 0
-                && Objects.equals(mapNode, cityMap.mapNode)
-                && Objects.equals(mapSection, cityMap.mapSection);
+            && Double.compare(cityMap.lngMax, lngMax) == 0
+            && Double.compare(cityMap.latMin, latMin) == 0
+            && Double.compare(cityMap.latMax, latMax) == 0
+            && Objects.equals(mapNode, cityMap.mapNode)
+            && Objects.equals(mapSection, cityMap.mapSection);
     }
 
 }
