@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -156,6 +157,7 @@ public class UIController {
         this.timePicker = new TimePicker();
         this.exportView = new ExportView(this);
         this.colorMap = new HashMap<>();
+        this.stage.getIcons().add(new Image(UIController.class.getResourceAsStream("/icon.png")));
     }
 
     /**
