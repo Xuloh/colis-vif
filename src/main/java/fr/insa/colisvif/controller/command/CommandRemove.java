@@ -6,7 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 public class CommandRemove implements Command {
 
-    private static final Logger LOGGER = LogManager.getLogger(CommandRemove.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(CommandRemove.class);
 
     private Round round;
 
@@ -20,13 +21,11 @@ public class CommandRemove implements Command {
 
     private int indexDropOff;
 
-    private int newDeliveryId;
-
     private int oldDeliveryId;
-
-    private Round oldRound;
-
-    public CommandRemove(Step stepToRemove, Step otherDeliveryStep, Round round, CityMap cityMap, int indexFirst, int indexSecond, int deliveryId) {
+    
+    public CommandRemove(Step stepToRemove, Step otherDeliveryStep,
+                         Round round, CityMap cityMap, int indexFirst,
+                         int indexSecond, int deliveryId) {
         this.round = round;
         this.cityMap = cityMap;
         this.stepToRemove = stepToRemove;
@@ -46,94 +45,21 @@ public class CommandRemove implements Command {
     @Override
     public void undoCommand() {
         Delivery oldDelivery;
-        LOGGER.debug(otherDeliveryStep.getArrivalDate() + " / " + stepToRemove.getArrivalDate());
+        LOGGER.debug(otherDeliveryStep.getArrivalDate() + " / "
+                    + stepToRemove.getArrivalDate());
         if (stepToRemove.isPickUp()) {
-            /*
-            oldDelivery = round.addDelivery(stepToRemove.getArrivalNodeId(), otherDeliveryStep.getArrivalNodeId(),
-                    stepToRemove.getDuration(), otherDeliveryStep.getDuration(), cityMap);
-            */
-            oldDelivery = round.getDeliveryMap().createDelivery(stepToRemove.getArrivalNodeId(), otherDeliveryStep.getArrivalNodeId(),
-                    stepToRemove.getDuration(), otherDeliveryStep.getDuration());
-
-            /*
-            newDeliveryId = oldDelivery.getId();
-            LOGGER.debug("Pick Up : " + indexPickUp);
-            LOGGER.debug("Drop Off : " + indexDropOff);
-            for (Step step : round.getSteps()) {
-                if (step.getDeliveryID() == newDeliveryId) {
-                    if (step.isPickUp() == stepToRemove.isPickUp()) {
-                        stepToRemove = step;
-                    } else {
-                        otherDeliveryStep = step;
-                    }
-                }
-            }
-            LOGGER.error("index pickup - " + indexPickUp);
-            LOGGER.error("index dropoff - " + indexDropOff);
-            if (indexPickUp == 0) {
-                round.changeOrderStep(stepToRemove, null, cityMap);
-            } else if (indexPickUp > round.getSteps().size()) {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(round.getSteps().size() - 1), cityMap);
-            } else {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(indexPickUp - 1), cityMap);
-            }
-
-            if (indexDropOff > round.getSteps().size()) {
-                round.changeOrderStep(otherDeliveryStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
-            } else {
-                round.changeOrderStep(otherDeliveryStep, round.getSteps().get(indexDropOff - 1), cityMap);
-            }
-            */
-
-
-
+            oldDelivery =
+                    round.getDeliveryMap()
+                         .createDelivery(stepToRemove.getArrivalNodeId(),
+                                 otherDeliveryStep.getArrivalNodeId(),
+                    stepToRemove.getDuration(),
+                                 otherDeliveryStep.getDuration());
         } else {
-            /*
-            oldDelivery = round.addDelivery(otherDeliveryStep.getArrivalNodeId(), stepToRemove.getArrivalNodeId(),
-                    otherDeliveryStep.getDuration(), stepToRemove.getDuration(), cityMap);
-            */
-
-            oldDelivery = round.getDeliveryMap().createDelivery(otherDeliveryStep.getArrivalNodeId(), stepToRemove.getArrivalNodeId(),
-                    otherDeliveryStep.getDuration(), stepToRemove.getDuration());
-
-            /*
-            newDeliveryId = oldDelivery.getId();
-            LOGGER.debug("Pick Up : " + indexPickUp);
-            LOGGER.debug("Drop Off : " + indexDropOff);
-
-            if (indexDropOff > round.getSteps().size()) {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(round.getSteps().size() - 1), cityMap);
-            } else {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(indexDropOff - 1), cityMap);
-            }
-
-            if (indexPickUp == 0) {
-                round.changeOrderStep(otherDeliveryStep, null, cityMap);
-            } else if (indexPickUp > round.getSteps().size()) {
-                round.changeOrderStep(otherDeliveryStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
-            } else {
-                round.changeOrderStep(otherDeliveryStep, round.getSteps().get(indexPickUp - 1), cityMap);
-            }
-
-
-        }
-        stepToRemove.setInitialArrivalDate();
-        otherDeliveryStep.setInitialArrivalDate();
-
-        for (Step step : round.getSteps()) {
-            if (step.getDeliveryID() == newDeliveryId && stepToRemove.isPickUp() == step.isPickUp()) {
-                stepToRemove = step;
-                break;
-            }
-            if (step.getDeliveryID() == newDeliveryId && stepToRemove.isPickUp() != step.isPickUp()) {
-                otherDeliveryStep = step;
-                break;
-            }
-        }
-        stepToRemove.setInitialArrivalDate();
-        otherDeliveryStep.setInitialArrivalDate();
-
-             */
+            oldDelivery = round.getDeliveryMap().createDelivery(
+                    otherDeliveryStep.getArrivalNodeId(),
+                    stepToRemove.getArrivalNodeId(),
+                    otherDeliveryStep.getDuration(),
+                    stepToRemove.getDuration());
         }
 
         oldDelivery.setId(oldDeliveryId);
