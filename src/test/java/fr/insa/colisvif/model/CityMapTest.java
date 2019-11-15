@@ -556,7 +556,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest1()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test1Algo_plan.xml";
         String urlDelivery = "/testAlgo/test1Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -591,7 +591,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest2()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test2Algo_plan.xml";
         String urlDelivery = "/testAlgo/test2Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -626,7 +626,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest3()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test3Algo_plan.xml";
         String urlDelivery = "/testAlgo/test3Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -660,7 +660,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest4()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test4Algo_plan.xml";
         String urlDelivery = "/testAlgo/test4Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -705,7 +705,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest5()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test5Algo_plan.xml";
         String urlDelivery = "/testAlgo/test5Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -751,7 +751,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest6()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test6Algo_plan.xml";
         String urlDelivery = "/testAlgo/test6Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -797,7 +797,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest7()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test7Algo_plan.xml";
         String urlDelivery = "/testAlgo/test7Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -855,7 +855,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest8()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test8Algo_plan.xml";
         String urlDelivery = "/testAlgo/test8Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -914,7 +914,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest9()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test9Algo_plan.xml";
         String urlDelivery = "/testAlgo/test9Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -947,7 +947,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest10()
-        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testAlgo/test10Algo_plan.xml";
         String urlDelivery = "/testAlgo/test10Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();

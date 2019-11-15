@@ -65,7 +65,7 @@ public interface State {
      * Calculate a {@link fr.insa.colisvif.model.Round}
      * when a {@link CityMap} and a {@link fr.insa.colisvif.model.DeliveryMap} are loaded.
      */
-    default void calculateItinerary(Controller controller, UIController uiController) {
+    default void calculateItinerary(Controller controller, UIController uiController, boolean naive) {
 
     }
 

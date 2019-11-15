@@ -79,64 +79,71 @@ public class DeliveryMapLoadedState implements State {
     // todo : prendre en compte les 30 secondes, pour le moment osef on n'a pas de demandes si longues à calculer
     // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
     @Override
-    public void calculateItinerary(Controller controller, UIController uiController) {
-        Service<Round> itineraryComputation = new Service<>() {
-            @Override
-            protected Task<Round> createTask() {
-                return new Task<>() {
-                    @Override
-                    protected Round call() throws Exception {
-                        LOGGER.debug("Started worker thread");
-                        try {
-                            return controller.getCityMap().shortestRound(controller.getDeliveryMap());
-                        } catch (InterruptedException e) {
-                            LOGGER.warn("Interrupted shortest path computation", e);
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-
-        Service<Void> timeout = new Service<>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        LOGGER.debug("Started interrupt thread");
-                        try {
-                            Thread.sleep(15000);
-                        } catch (InterruptedException ignored) {
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-
-        itineraryComputation.setOnSucceeded(event -> {
-            Round round = itineraryComputation.getValue();
+    public void calculateItinerary(Controller controller, UIController uiController, boolean naive) {
+        if (naive) {
+            Round round = controller.getCityMap().naiveRound(controller.getDeliveryMap());
             controller.setRound(round);
             controller.setCurrentState(ItineraryCalculatedState.class);
-            uiController.printStatus("L'itinéraire a bien été calculé.");
-            timeout.cancel();
-        });
+            uiController.printError("Mémoire insuffisante, itinéraire non optimal calculé.");
+        } else {
+            Service<Round> itineraryComputation = new Service<>() {
+                @Override
+                protected Task<Round> createTask() {
+                    return new Task<>() {
+                        @Override
+                        protected Round call() throws Exception {
+                            LOGGER.debug("Started worker thread");
+                            try {
+                                return controller.getCityMap().shortestRound(controller.getDeliveryMap());
+                            } catch (InterruptedException e) {
+                                LOGGER.warn("Interrupted shortest path computation", e);
+                            }
+                            return null;
+                        }
+                    };
+                }
+            };
 
-        timeout.setOnSucceeded(event -> {
-            if (itineraryComputation.cancel()) {
-                LOGGER.warn("Interrupted itinerary calculation");
-                LOGGER.info("Calculates approximate itinerary instead");
-                Round round = controller.getCityMap().naiveRound(controller.getDeliveryMap());
+            Service<Void> timeout = new Service<>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            LOGGER.debug("Started interrupt thread");
+                            try {
+                                Thread.sleep(15000);
+                            } catch (InterruptedException ignored) {
+                            }
+                            return null;
+                        }
+                    };
+                }
+            };
+
+            itineraryComputation.setOnSucceeded(event -> {
+                Round round = itineraryComputation.getValue();
                 controller.setRound(round);
                 controller.setCurrentState(ItineraryCalculatedState.class);
                 uiController.printStatus("L'itinéraire a bien été calculé.");
-            } else {
-                LOGGER.warn("Could not interrupt itinerary calculation");
-            }
-        });
+                timeout.cancel();
+            });
 
-        itineraryComputation.start();
-        timeout.start();
+            timeout.setOnSucceeded(event -> {
+                if (itineraryComputation.cancel()) {
+                    LOGGER.warn("Interrupted itinerary calculation");
+                    LOGGER.info("Calculates approximate itinerary instead");
+                    Round round = controller.getCityMap().naiveRound(controller.getDeliveryMap());
+                    controller.setRound(round);
+                    controller.setCurrentState(ItineraryCalculatedState.class);
+                    uiController.printStatus("L'itinéraire a bien été calculé.");
+                } else {
+                    LOGGER.warn("Could not interrupt itinerary calculation");
+                }
+            });
+
+            itineraryComputation.start();
+            timeout.start();
+        }
     }
 }

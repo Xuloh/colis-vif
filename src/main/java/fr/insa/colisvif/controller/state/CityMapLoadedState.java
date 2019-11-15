@@ -70,7 +70,7 @@ public class CityMapLoadedState implements State {
     }
 
     @Override
-    public void calculateItinerary(Controller controller, UIController uiController) {
+    public void calculateItinerary(Controller controller, UIController uiController, boolean naive) {
         uiController.printError("Ouvrez d'abord un plan de livraison !");
     }
 
