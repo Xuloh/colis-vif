@@ -143,6 +143,7 @@ public class Controller {
      * to the given one.
      *
      * @param stateName The type of {@link State} to switch to
+     * @param <T> the class type of the state we want to switch to
      */
     public <T extends State> void setCurrentState(Class<T> stateName) {
         if (this.stateMap.containsKey(stateName)) {
@@ -342,6 +343,7 @@ public class Controller {
 
     /**
      * Deletes the delivery where step is one of the two steps.
+     * @param step the {@link Step} in the delivery we want to delete.
      */
     public void deleteDelivery(Step step) {
         this.currentState.deleteDelivery(this, this.uiController, this.commandList, step);
@@ -349,6 +351,7 @@ public class Controller {
 
     /**
      * Switch to "change delivery order" mode for the selected step
+     * @param step the step the user wants to modify.
      */
     public void editSequenceDelivery(Step step) {
         this.currentState.switchToOrderChangeMode(this, this.uiController, step);
