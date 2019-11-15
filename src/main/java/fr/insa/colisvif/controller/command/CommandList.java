@@ -12,7 +12,8 @@ import java.util.LinkedList;
  */
 public class CommandList {
 
-    private static final Logger LOGGER = LogManager.getLogger(CommandList.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(CommandList.class);
 
     private LinkedList<Command> pastCommands;
 
@@ -27,13 +28,15 @@ public class CommandList {
     }
 
     /**
-     * Adds the given {@link Command} to the current commands stack and execute it.
-     * This will clear any previously undone command, making it impossible to redo them.
+     * Adds the given {@link Command} to the current commands stack and execute
+     * it. This will clear any previously undone command, making it
+     * impossible to redo them.
      * @param command The command to execute
      */
     public void doCommand(Command command) {
         try {
-            LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
+            LOGGER.info("Performing Command : {}",
+                    command.getClass().getSimpleName());
             pastCommands.clear();
             currentCommands.add(command);
             command.doCommand();
@@ -52,7 +55,8 @@ public class CommandList {
         try {
             if (!currentCommands.isEmpty()) {
                 Command commandToUndo = currentCommands.removeLast();
-                LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
+                LOGGER.info("Undoing Command : {}",
+                        commandToUndo.getClass().getSimpleName());
                 commandToUndo.undoCommand();
                 pastCommands.add(commandToUndo);
             }
@@ -71,7 +75,8 @@ public class CommandList {
             if (!pastCommands.isEmpty()) {
                 Command commandToRedo = pastCommands.removeLast();
                 LOGGER.info("Re"
-                        + "doing Command : {}", commandToRedo.getClass().getSimpleName());
+                        + "doing Command : {}",
+                        commandToRedo.getClass().getSimpleName());
                 commandToRedo.doCommand();
                 currentCommands.add(commandToRedo);
             } else {
