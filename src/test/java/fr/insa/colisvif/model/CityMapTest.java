@@ -18,10 +18,13 @@ import static org.junit.Assert.*;
 
 public class CityMapTest {
 
-    public static <T> Object invokeMethod(Class<T> clazz, T targetObject, String methodName,
-                                          Class<?>[] parametersTypes, Object[] parametersValues) throws InvocationTargetException {
+    public static <T> Object invokeMethod(Class<T> clazz, T targetObject,
+        String methodName,
+        Class<?>[] parametersTypes, Object[] parametersValues)
+        throws InvocationTargetException {
         try {
-            Method method = clazz.getDeclaredMethod(methodName, parametersTypes);
+            Method method = clazz
+                .getDeclaredMethod(methodName, parametersTypes);
             method.setAccessible(true);
             return method.invoke(targetObject, parametersValues);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -30,7 +33,8 @@ public class CityMapTest {
         return null;
     }
 
-    private void callDijkstra(CityMap cityMap, int start) throws InvocationTargetException {
+    private void callDijkstra(CityMap cityMap, int start)
+        throws InvocationTargetException {
         Class[] paramType = new Class[1];
         paramType[0] = long.class;
         Integer[] param = new Integer[1];
@@ -47,7 +51,8 @@ public class CityMapTest {
         CityMap cityMap = new CityMap();
         final double LNG_MIN = cityMap.getLngMin();
         cityMap.createNode(2405632, -60, 180);
-        assertTrue(-60 == cityMap.getLatMax() && cityMap.getLngMin() == LNG_MIN);
+        assertTrue(
+            -60 == cityMap.getLatMax() && cityMap.getLngMin() == LNG_MIN);
     }
 
     @Test
@@ -55,7 +60,8 @@ public class CityMapTest {
         CityMap cityMap = new CityMap();
         final double LAT_MAX = cityMap.getLatMax();
         cityMap.createNode(2405632, -90, 120);
-        assertTrue(120 == cityMap.getLngMin() && cityMap.getLatMax() == LAT_MAX);
+        assertTrue(
+            120 == cityMap.getLngMin() && cityMap.getLatMax() == LAT_MAX);
     }
 
     @Test
@@ -73,12 +79,13 @@ public class CityMapTest {
         cityMap.createSection(10, "Rue de St-Germain", 100, 101);
         assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
         String expected = "[Section{"
-                + "length=" + 10.0
-                + ", roadName='" + "Rue de St-Germain" + '\''
-                + ", origin=" + 100
-                + ", destination=" + 101
-                + "}]";
-        assertEquals(expected, cityMap.getMapSection().get("Rue de St-Germain").toString());
+            + "length=" + 10.0
+            + ", roadName='" + "Rue de St-Germain" + '\''
+            + ", origin=" + 100
+            + ", destination=" + 101
+            + "}]";
+        assertEquals(expected,
+            cityMap.getMapSection().get("Rue de St-Germain").toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -98,20 +105,20 @@ public class CityMapTest {
         cityMap.createSection(10, "Rue de St-Germain", 99, 100);
 
         String expected = "[Section{"
-                + "length=" + 10.0
-                + ", roadName='" + "Rue de St-Germain" + '\''
-                + ", origin=" + 100
-                + ", destination=" + 101
-                + "}, Section{"
-                + "length=" + 10.0
-                + ", roadName='" + "Rue de St-Germain" + '\''
-                + ", origin=" + 99
-                + ", destination=" + 100
-                + "}]";
+            + "length=" + 10.0
+            + ", roadName='" + "Rue de St-Germain" + '\''
+            + ", origin=" + 100
+            + ", destination=" + 101
+            + "}, Section{"
+            + "length=" + 10.0
+            + ", roadName='" + "Rue de St-Germain" + '\''
+            + ", origin=" + 99
+            + ", destination=" + 100
+            + "}]";
 
         assertNotNull(cityMap.getMapSection().get("Rue de St-Germain"));
         assertEquals(expected,
-                cityMap.getMapSection().get("Rue de St-Germain").toString());
+            cityMap.getMapSection().get("Rue de St-Germain").toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -136,21 +143,21 @@ public class CityMapTest {
         cityMap.createSection(100, "Rue Antoine Tout Court", 2, 3);
 
         String expected = "Nodes : \n"
-                + "ID : 1 | Latitude : 0.0 | Longitude : 0.0\n"
-                + "ID : 2 | Latitude : 1.0 | Longitude : 1.0\n"
-                + "ID : 3 | Latitude : 2.0 | Longitude : 2.0\n\n"
-                + "Sections : \n"
-                + "Section{"
-                + "length=" + 200.0
-                + ", roadName='" + "Rue Antoine Tout Court" + '\''
-                + ", origin=" + 1
-                + ", destination=" + 2
-                + "}Section{"
-                + "length=" + 100.0
-                + ", roadName='" + "Rue Antoine Tout Court" + '\''
-                + ", origin=" + 2
-                + ", destination=" + 3
-                + "}";
+            + "ID : 1 | Latitude : 0.0 | Longitude : 0.0\n"
+            + "ID : 2 | Latitude : 1.0 | Longitude : 1.0\n"
+            + "ID : 3 | Latitude : 2.0 | Longitude : 2.0\n\n"
+            + "Sections : \n"
+            + "Section{"
+            + "length=" + 200.0
+            + ", roadName='" + "Rue Antoine Tout Court" + '\''
+            + ", origin=" + 1
+            + ", destination=" + 2
+            + "}Section{"
+            + "length=" + 100.0
+            + ", roadName='" + "Rue Antoine Tout Court" + '\''
+            + ", origin=" + 2
+            + ", destination=" + 3
+            + "}";
         assertEquals(expected, cityMap.toString());
     }
 
@@ -331,14 +338,14 @@ public class CityMapTest {
         assertNotEquals(testMap, cityMap.getMapSection());
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getLength1() {
         CityMap cityMap = new CityMap();
         cityMap.createNode(1, 10, 10);
         cityMap.getLength(1, 2);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getLength2() {
         CityMap cityMap = new CityMap();
         cityMap.createNode(1, 10, 10);
@@ -352,10 +359,13 @@ public class CityMapTest {
         cityMap.createNode(1, 10, 10);
         cityMap.createNode(2, 10, 10);
 
-        cityMap.createSection(expected.getLength(), expected.getRoadName(), expected.getOrigin(),
-                expected.getDestination());
+        cityMap.createSection(expected.getLength(), expected.getRoadName(),
+            expected.getOrigin(),
+            expected.getDestination());
 
-        assertEquals(cityMap.getSection(expected.getOrigin(), expected.getDestination()), expected);
+        assertEquals(
+            cityMap.getSection(expected.getOrigin(), expected.getDestination()),
+            expected);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -379,7 +389,6 @@ public class CityMapTest {
         cityMap.createNode(3, 10, 10);
         cityMap.createSection(10, "Rue1.2", 1, 2);
         cityMap.createSection(10, "Rue2.3", 2, 3);
-
 
         assertEquals(expected, cityMap.getPath(1, 3));
     }
@@ -447,7 +456,8 @@ public class CityMapTest {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        assertEquals(cityMap.getLength(1, 3), lengthSection1 + lengthSection2, 0.1);
+        assertEquals(cityMap.getLength(1, 3), lengthSection1 + lengthSection2,
+            0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
     }
 
@@ -508,7 +518,8 @@ public class CityMapTest {
         assertEquals(cityMap.getLength(1, 1), 0, 0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
         assertEquals(cityMap.getLength(1, 3), lengthSection4, 0.1);
-        assertEquals(cityMap.getLength(1, 4), lengthSection4 + lengthSection3, 0.1);
+        assertEquals(cityMap.getLength(1, 4), lengthSection4 + lengthSection3,
+            0.1);
     }
 
     @Test
@@ -535,14 +546,17 @@ public class CityMapTest {
         }
         assertEquals(cityMap.getLength(1, 1), 0, 0.1);
         assertEquals(cityMap.getLength(1, 2), lengthSection1, 0.1);
-        assertEquals(cityMap.getLength(1, 3), lengthSection1 + lengthSection2, 0.1);
-        assertEquals(cityMap.getLength(1, 4), lengthSection1 + lengthSection3, 0.1);
-        assertEquals(cityMap.getLength(1, 5), lengthSection1 + lengthSection3 + lengthSection4, 0.1);
+        assertEquals(cityMap.getLength(1, 3), lengthSection1 + lengthSection2,
+            0.1);
+        assertEquals(cityMap.getLength(1, 4), lengthSection1 + lengthSection3,
+            0.1);
+        assertEquals(cityMap.getLength(1, 5),
+            lengthSection1 + lengthSection3 + lengthSection4, 0.1);
     }
 
     @Test
     public void shortestRoundSmallTest1()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test1Algo_plan.xml";
         String urlDelivery = "/testAlgo/test1Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -551,19 +565,23 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
+        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
         step2.addSection(new Section(250, "Rue 1.2", 1, 2));
 
         expected.add(step1);
         expected.add(step2);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
 
@@ -573,7 +591,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest2()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test2Algo_plan.xml";
         String urlDelivery = "/testAlgo/test2Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -582,10 +600,12 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(500));
+        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(500));
         step2.addSection(new Section(250, "Rue 3.2", 3, 2));
         step2.addSection(new Section(250, "Rue 1.3", 1, 3));
 
@@ -593,9 +613,11 @@ public class CityMapTest {
         expected.add(step2);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -604,7 +626,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest3()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test3Algo_plan.xml";
         String urlDelivery = "/testAlgo/test3Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -613,19 +635,23 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(500));
+        Step step2 = new Step(new Vertex(2, Vertex.DROP_OFF, 2), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(500));
         step2.addSection(new Section(500, "Rue 1.2", 1, 2));
 
         expected.add(step1);
         expected.add(step2);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -634,7 +660,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest4()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test4Algo_plan.xml";
         String urlDelivery = "/testAlgo/test4Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -643,16 +669,20 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(3, Vertex.DROP_OFF, 1), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
+        Step step2 = new Step(new Vertex(3, Vertex.DROP_OFF, 1), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
         step2.addSection(new Section(250, "Rue 1.3", 1, 3));
 
-        Step step3 = new Step(new Vertex(2, Vertex.PICK_UP, 1), 1, step2.getArrivalDate() + step2.getDuration() + timeTravel(250));
+        Step step3 = new Step(new Vertex(2, Vertex.PICK_UP, 1), 1,
+            step2.getArrivalDate() + step2.getDuration() + timeTravel(250));
         step3.addSection(new Section(250, "Rue 3.2", 3, 2));
 
-        Step step4 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 1, step3.getArrivalDate() + step3.getDuration() + timeTravel(500));
+        Step step4 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 1,
+            step3.getArrivalDate() + step3.getDuration() + timeTravel(500));
         step4.addSection(new Section(250, "Rue 3.4", 3, 4));
         step4.addSection(new Section(250, "Rue 2.3", 2, 3));
 
@@ -662,9 +692,11 @@ public class CityMapTest {
         expected.add(step4);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -673,7 +705,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest5()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test5Algo_plan.xml";
         String urlDelivery = "/testAlgo/test5Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -682,17 +714,21 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(2500));
+        Step step2 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(2500));
         step2.addSection(new Section(1250, "Rue 6.4", 6, 4));
         step2.addSection(new Section(1250, "Rue 1.6", 1, 6));
 
-        Step step3 = new Step(new Vertex(3, Vertex.PICK_UP, 250), 1, step2.getArrivalDate() + step2.getDuration() + timeTravel(250));
+        Step step3 = new Step(new Vertex(3, Vertex.PICK_UP, 250), 1,
+            step2.getArrivalDate() + step2.getDuration() + timeTravel(250));
         step3.addSection(new Section(250, "Rue 4.3", 4, 3));
 
-        Step step4 = new Step(new Vertex(5, Vertex.DROP_OFF, 1), 1, step3.getArrivalDate() + step3.getDuration() + timeTravel(500));
+        Step step4 = new Step(new Vertex(5, Vertex.DROP_OFF, 1), 1,
+            step3.getArrivalDate() + step3.getDuration() + timeTravel(500));
         step4.addSection(new Section(250, "Rue 4.5", 4, 5));
         step4.addSection(new Section(250, "Rue 3.4", 3, 4));
 
@@ -702,9 +738,11 @@ public class CityMapTest {
         expected.add(step4);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -713,7 +751,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest6()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test6Algo_plan.xml";
         String urlDelivery = "/testAlgo/test6Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -722,18 +760,22 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step2 = new Step(new Vertex(6, Vertex.PICK_UP, 1), 1, step1.getArrivalDate() + step1.getDuration() + timeTravel(750));
+        Step step2 = new Step(new Vertex(6, Vertex.PICK_UP, 1), 1,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(750));
         step2.addSection(new Section(500, "Rue 7.6", 7, 6));
         step2.addSection(new Section(250, "Rue 1.7", 1, 7));
 
-        Step step3 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 1, step2.getArrivalDate() + step2.getDuration() + timeTravel(500));
+        Step step3 = new Step(new Vertex(4, Vertex.DROP_OFF, 1), 1,
+            step2.getArrivalDate() + step2.getDuration() + timeTravel(500));
         step3.addSection(new Section(250, "Rue 5.4", 5, 4));
         step3.addSection(new Section(250, "Rue 6.5", 6, 5));
 
-        Step step4 = new Step(new Vertex(3, Vertex.DROP_OFF, 2), 0, step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
+        Step step4 = new Step(new Vertex(3, Vertex.DROP_OFF, 2), 0,
+            step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
         step4.addSection(new Section(250, "Rue 4.3", 4, 3));
 
         expected.add(step1);
@@ -742,9 +784,11 @@ public class CityMapTest {
         expected.add(step4);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -753,7 +797,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest7()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test7Algo_plan.xml";
         String urlDelivery = "/testAlgo/test7Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -764,22 +808,29 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0, 8 * 3600);
 
-        Step step2 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 2, step1.getArrivalDate() + step1.getDuration());
+        Step step2 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 2,
+            step1.getArrivalDate() + step1.getDuration());
 
-        Step step3 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 3, step2.getArrivalDate() + step2.getDuration());
+        Step step3 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 3,
+            step2.getArrivalDate() + step2.getDuration());
 
-        Step step4 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 2, step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
+        Step step4 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 2,
+            step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
         step4.addSection(new Section(250, "Rue 0.2", 0, 2));
 
-        Step step5 = new Step(new Vertex(3, Vertex.PICK_UP, 1), 1, step4.getArrivalDate() + step4.getDuration() + timeTravel(250));
+        Step step5 = new Step(new Vertex(3, Vertex.PICK_UP, 1), 1,
+            step4.getArrivalDate() + step4.getDuration() + timeTravel(250));
         step5.addSection(new Section(250, "Rue 2.3", 2, 3));
 
-        Step step6 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0, step5.getArrivalDate() + step5.getDuration() + timeTravel(250));
+        Step step6 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0,
+            step5.getArrivalDate() + step5.getDuration() + timeTravel(250));
         step6.addSection(new Section(250, "Rue 3.1", 3, 1));
 
-        Step step7 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 1, step6.getArrivalDate() + step6.getDuration());
+        Step step7 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 1,
+            step6.getArrivalDate() + step6.getDuration());
 
-        Step step8 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 3, step7.getArrivalDate() + step7.getDuration());
+        Step step8 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 3,
+            step7.getArrivalDate() + step7.getDuration());
 
         expected.add(step1);
         expected.add(step2);
@@ -791,9 +842,11 @@ public class CityMapTest {
         expected.add(step8);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -802,7 +855,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest8()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test8Algo_plan.xml";
         String urlDelivery = "/testAlgo/test8Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -813,23 +866,30 @@ public class CityMapTest {
 
         Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0, 8 * 3600);
 
-        Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
+        Step step2 = new Step(new Vertex(1, Vertex.DROP_OFF, 1), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
         step2.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step3 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 1, step2.getArrivalDate() + step2.getDuration());
+        Step step3 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 1,
+            step2.getArrivalDate() + step2.getDuration());
 
-        Step step4 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 1, step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
+        Step step4 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 1,
+            step3.getArrivalDate() + step3.getDuration() + timeTravel(250));
         step4.addSection(new Section(250, "Rue 1.0", 1, 0));
 
-        Step step5 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 2, step4.getArrivalDate() + step4.getDuration() + timeTravel(250));
+        Step step5 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 2,
+            step4.getArrivalDate() + step4.getDuration() + timeTravel(250));
         step5.addSection(new Section(250, "Rue 0.1", 0, 1));
 
-        Step step6 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 3, step5.getArrivalDate() + step5.getDuration());
+        Step step6 = new Step(new Vertex(1, Vertex.PICK_UP, 1), 3,
+            step5.getArrivalDate() + step5.getDuration());
 
-        Step step7 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 2, step6.getArrivalDate() + step6.getDuration() + timeTravel(500));
+        Step step7 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 2,
+            step6.getArrivalDate() + step6.getDuration() + timeTravel(500));
         step7.addSection(new Section(500, "Rue 1.2", 1, 2));
 
-        Step step8 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 3, step7.getArrivalDate() + step7.getDuration());
+        Step step8 = new Step(new Vertex(2, Vertex.DROP_OFF, 1), 3,
+            step7.getArrivalDate() + step7.getDuration());
 
         expected.add(step1);
         expected.add(step2);
@@ -841,9 +901,11 @@ public class CityMapTest {
         expected.add(step8);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -852,7 +914,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest9()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test9Algo_plan.xml";
         String urlDelivery = "/testAlgo/test9Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -861,18 +923,22 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(0, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 1.0", 1, 0));
 
-        Step step2 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(0));
+        Step step2 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(0));
 
         expected.add(step1);
         expected.add(step2);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
         assertEquals(expected, round.getSteps());
@@ -881,7 +947,7 @@ public class CityMapTest {
 
     @Test
     public void shortestRoundSmallTest10()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+        throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
         String urlCityMap = "/testAlgo/test10Algo_plan.xml";
         String urlDelivery = "/testAlgo/test10Algo_demande.xml";
         CityMapFactory cf = new CityMapFactory();
@@ -890,19 +956,23 @@ public class CityMapTest {
 
         List<Step> expected = new ArrayList<>();
 
-        Step step1 = new Step(new Vertex(2, Vertex.PICK_UP, 1), 0, 8 * 3600 + timeTravel(250));
+        Step step1 = new Step(new Vertex(2, Vertex.PICK_UP, 1), 0,
+            8 * 3600 + timeTravel(250));
         step1.addSection(new Section(250, "Rue 1.2", 1, 2));
 
-        Step step2 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 0, step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
+        Step step2 = new Step(new Vertex(0, Vertex.DROP_OFF, 1), 0,
+            step1.getArrivalDate() + step1.getDuration() + timeTravel(250));
         step2.addSection(new Section(250, "Rue 2.0", 2, 0));
 
         expected.add(step1);
         expected.add(step2);
 
         CityMap cityMap = cf
-                .createCityMapFromXMLFile(new File(getClass().getResource(urlCityMap).toURI()));
+            .createCityMapFromXMLFile(
+                new File(getClass().getResource(urlCityMap).toURI()));
         DeliveryMap deliveryMap = df
-                .createDeliveryMapFromXML(new File(getClass().getResource(urlDelivery).toURI()), cityMap);
+            .createDeliveryMapFromXML(
+                new File(getClass().getResource(urlDelivery).toURI()), cityMap);
 
         round = cityMap.shortestRound(deliveryMap);
 
