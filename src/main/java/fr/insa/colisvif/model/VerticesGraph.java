@@ -20,8 +20,6 @@ import java.util.*;
     // We will use dynamic programing, this is where we store the sub results
     private HashMap<Long, SubResult> subResults;
 
-    private boolean kill;
-
     /**
      * Let n be the number of deliveries we want to process
      * Creates a graph G with 2n+1 vertices : one for the warehouse and two for
