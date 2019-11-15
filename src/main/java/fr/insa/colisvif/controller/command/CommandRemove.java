@@ -26,13 +26,14 @@ public class CommandRemove implements Command {
 
     private Round oldRound;
 
-    public CommandRemove(Step stepToRemove, Step otherDeliveryStep, Round round, CityMap cityMap, int indexFirst, int indexSecond) {
+    public CommandRemove(Step stepToRemove, Step otherDeliveryStep, Round round, CityMap cityMap, int indexFirst, int indexSecond, int deliveryId) {
         this.round = round;
-        this.oldRound = round;
         this.cityMap = cityMap;
         this.stepToRemove = stepToRemove;
         this.otherDeliveryStep = otherDeliveryStep;
-
+        LOGGER.error("delivery id : " + deliveryId);
+        this.oldDeliveryId = deliveryId;
+        LOGGER.error("old delivery id : " + oldDeliveryId);
         if (stepToRemove.isPickUp()) {
             indexPickUp = indexFirst;
             indexDropOff = indexSecond;
@@ -47,12 +48,20 @@ public class CommandRemove implements Command {
         Delivery oldDelivery;
         LOGGER.debug(otherDeliveryStep.getArrivalDate() + " / " + stepToRemove.getArrivalDate());
         if (stepToRemove.isPickUp()) {
-
+            /*
+            oldDelivery = round.addDelivery(stepToRemove.getArrivalNodeId(), otherDeliveryStep.getArrivalNodeId(),
+                    stepToRemove.getDuration(), otherDeliveryStep.getDuration(), cityMap);
+            */
             oldDelivery = round.getDeliveryMap().createDelivery(stepToRemove.getArrivalNodeId(), otherDeliveryStep.getArrivalNodeId(),
                     stepToRemove.getDuration(), otherDeliveryStep.getDuration());
             oldDelivery.setId(oldDeliveryId);
+            oldDelivery.getPickUp().setDeliveryId(oldDeliveryId);
+            oldDelivery.getDropOff().setDeliveryId(oldDeliveryId);
+            stepToRemove.setDeliveryID(oldDeliveryId);
+            otherDeliveryStep.setDeliveryID(oldDeliveryId);
             round.addStepInIthPlace(stepToRemove, indexPickUp, cityMap);
             round.addStepInIthPlace(otherDeliveryStep, indexDropOff, cityMap);
+
             /*
             newDeliveryId = oldDelivery.getId();
             LOGGER.debug("Pick Up : " + indexPickUp);
@@ -76,28 +85,41 @@ public class CommandRemove implements Command {
                 round.changeOrderStep(stepToRemove, round.getSteps().get(indexPickUp - 1), cityMap);
             }
 
-            if (indexDropOff >= round.getSteps().size()) {
+            if (indexDropOff > round.getSteps().size()) {
                 round.changeOrderStep(otherDeliveryStep, round.getSteps().get(round.getSteps().size() - 1), cityMap);
             } else {
                 round.changeOrderStep(otherDeliveryStep, round.getSteps().get(indexDropOff - 1), cityMap);
             }
+            */
 
-             */
+
 
         } else {
             /*
             oldDelivery = round.addDelivery(otherDeliveryStep.getArrivalNodeId(), stepToRemove.getArrivalNodeId(),
                     otherDeliveryStep.getDuration(), stepToRemove.getDuration(), cityMap);
             */
+
             oldDelivery = round.getDeliveryMap().createDelivery(otherDeliveryStep.getArrivalNodeId(), stepToRemove.getArrivalNodeId(),
                     otherDeliveryStep.getDuration(), stepToRemove.getDuration());
+
             oldDelivery.setId(oldDeliveryId);
+            stepToRemove.setDeliveryID(oldDeliveryId);
+            otherDeliveryStep.setDeliveryID(oldDeliveryId);
             round.addStepInIthPlace(otherDeliveryStep, indexPickUp, cityMap);
             round.addStepInIthPlace(stepToRemove, indexDropOff, cityMap);
+
             /*
             newDeliveryId = oldDelivery.getId();
             LOGGER.debug("Pick Up : " + indexPickUp);
             LOGGER.debug("Drop Off : " + indexDropOff);
+
+            if (indexDropOff > round.getSteps().size()) {
+                round.changeOrderStep(stepToRemove, round.getSteps().get(round.getSteps().size() - 1), cityMap);
+            } else {
+                round.changeOrderStep(stepToRemove, round.getSteps().get(indexDropOff - 1), cityMap);
+            }
+
             if (indexPickUp == 0) {
                 round.changeOrderStep(otherDeliveryStep, null, cityMap);
             } else if (indexPickUp > round.getSteps().size()) {
@@ -106,28 +128,37 @@ public class CommandRemove implements Command {
                 round.changeOrderStep(otherDeliveryStep, round.getSteps().get(indexPickUp - 1), cityMap);
             }
 
-            if (indexDropOff >= round.getSteps().size()) {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(round.getSteps().size() - 1), cityMap);
-            } else {
-                round.changeOrderStep(stepToRemove, round.getSteps().get(indexDropOff - 1), cityMap);
-            }
-
 
         }
+        stepToRemove.setInitialArrivalDate();
+        otherDeliveryStep.setInitialArrivalDate();
+
         for (Step step : round.getSteps()) {
-            if (step.getDeliveryID() == newDeliveryId) {
+            if (step.getDeliveryID() == newDeliveryId && stepToRemove.isPickUp() == step.isPickUp()) {
                 stepToRemove = step;
                 break;
             }
+            if (step.getDeliveryID() == newDeliveryId && stepToRemove.isPickUp() != step.isPickUp()) {
+                otherDeliveryStep = step;
+                break;
+            }
         }
-        */
+        stepToRemove.setInitialArrivalDate();
+        otherDeliveryStep.setInitialArrivalDate();
+
+             */
+        }
+        LOGGER.error("the id " + oldDelivery.getId());
+        LOGGER.error("the id s1 " + stepToRemove.getDeliveryID());
+        LOGGER.error("the id s2" + otherDeliveryStep.getDeliveryID());
+        for (Step step : round.getSteps()) {
+            LOGGER.error(step.getDeliveryID());
         }
     }
 
     @Override
     public void doCommand() {
         try {
-            oldDeliveryId = stepToRemove.getDeliveryID();
             round.removeDelivery(stepToRemove, cityMap);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

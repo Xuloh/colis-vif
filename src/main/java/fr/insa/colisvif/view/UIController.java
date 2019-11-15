@@ -246,7 +246,8 @@ public class UIController {
             if (vertex != null) {
                 this.stepView.onSelection(vertex.getDeliveryId(), vertex.getType());
                 this.vertexView.onSelection(vertex.getDeliveryId(), vertex.getType());
-                //LOGGER.debug("Delivery selected " + step.getDeliveryID());
+                LOGGER.debug("Delivery selected " + vertex.getDeliveryId());
+                LOGGER.debug("Type " + vertex.getType());
             } else {
                 this.stepView.getStepTable().getSelectionModel().select(null);
                 this.vertexView.getVertexTable().getSelectionModel().select(null);

@@ -254,6 +254,9 @@ public class Controller {
      */
     public List<Step> getStepList() {
         if (round != null) {
+            for (Step step : this.getRound().getSteps()) {
+                LOGGER.error(step);
+            }
             return this.round.getSteps();
         } else {
             return new ArrayList<>();

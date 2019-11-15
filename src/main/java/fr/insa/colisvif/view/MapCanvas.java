@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 /**
  * A custom {@link BorderPane} that wraps and handles a {@link Canvas}
@@ -211,8 +212,12 @@ public class MapCanvas extends BorderPane {
             Map<Integer, Color> colorMap = this.uiController.getColorMap();
 
             this.uiController
-                .getVertexList()
+                .getDeliveryMap()
+                .getDeliveryList()
                 .stream()
+                .flatMap(delivery -> {
+                    return Stream.of(delivery.getPickUp(), delivery.getDropOff());
+                })
                 .map(vertex -> new CanvasNode(
                     vertex.getNodeId(),
                     vertex,
