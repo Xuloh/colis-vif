@@ -27,45 +27,48 @@ import java.util.List;
 public class DeliveryMapFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(
-            DeliveryMapFactory.class);
+        DeliveryMapFactory.class);
 
     private File xmlFile;
 
     /**
      * Reads and build a {@link DeliveryMap} from a XML File.
      *
-     * @param file the file to read, must be XML.
-     * @param cityMap the {@link CityMap} corresponding to the
-     * {@link DeliveryMap} to check that the {@link Node} id of the Delivery
-     *                correspond to an existing {@link Node}.
+     * @param file    the file to read, must be XML.
+     * @param cityMap the {@link CityMap} corresponding to the {@link
+     *                DeliveryMap} to check that the {@link Node} id of the
+     *                Delivery correspond to an existing {@link Node}.
      * @return a {@link DeliveryMap}.
-     * @throws IOException if the file does not exists or is not readable
-     * (permissions) or any IO errors occur.
-     * @throws SAXException if the XML file is not well formed.
-     * @throws ParserConfigurationException if a DocumentBuilder
-     * cannot be created which satisfies the configuration requested.
-     * @throws IdException if the delivery id does not correspond to any
-     * existing {@link Node} id.
-     * @throws XMLException if the XML file is not valid.
+     * @throws IOException                  if the file does not exists or is
+     *                                      not readable (permissions) or any IO
+     *                                      errors occur.
+     * @throws SAXException                 if the XML file is not well formed.
+     * @throws ParserConfigurationException if a DocumentBuilder cannot be
+     *                                      created which satisfies the
+     *                                      configuration requested.
+     * @throws IdException                  if the delivery id does not
+     *                                      correspond to any existing {@link
+     *                                      Node} id.
+     * @throws XMLException                 if the XML file is not valid.
      */
     public DeliveryMap createDeliveryMapFromXML(File file, CityMap cityMap)
-            throws XMLException, IdException, ParserConfigurationException,
-            SAXException, IOException {
+        throws XMLException, IdException, ParserConfigurationException,
+        SAXException, IOException {
         Element root = loadFile(file);
         DeliveryMap deliveryMap = new DeliveryMap();
         List<Quadruplet<Long, Long, Integer, Integer>> deliveryList =
-                readDelivery(root);
+            readDelivery(root);
         Pair<Long, Integer> warehouse = readWarehouse(root);
         for (Quadruplet<Long, Long, Integer, Integer> delivery : deliveryList) {
             if (cityMap.getMapNode().containsKey(delivery.getFirst())
-                    && cityMap.getMapNode().containsKey(delivery.getSecond())) {
+                && cityMap.getMapNode().containsKey(delivery.getSecond())) {
                 deliveryMap.createDelivery(delivery.getFirst(),
-                                            delivery.getSecond(),
-                                            delivery.getThird(),
-                                            delivery.getFourth());
+                    delivery.getSecond(),
+                    delivery.getThird(),
+                    delivery.getFourth());
             } else {
                 throw new IdException(file.getAbsolutePath()
-                        + " refers to nodes outside the current city map");
+                    + " refers to nodes outside the current city map");
             }
         }
         deliveryMap.createWarehouse(warehouse.getKey(), warehouse.getValue());
@@ -77,70 +80,69 @@ public class DeliveryMapFactory {
      *
      * @param file the file to read
      * @return an {@link Element} corresponding to the root of the XML file.
-     * @throws IOException if the file does not exists or is not readable
-     * (permissions)
-     * or any IO errors occur.
-     * @throws ParserConfigurationException if a DocumentBuilder
-     * cannot be created which satisfies the configuration requested.
-     * @throws SAXException If any parse errors occur.
+     * @throws IOException                  if the file does not exists or is
+     *                                      not readable (permissions) or any IO
+     *                                      errors occur.
+     * @throws ParserConfigurationException if a DocumentBuilder cannot be
+     *                                      created which satisfies the
+     *                                      configuration requested.
+     * @throws SAXException                 If any parse errors occur.
      */
     public Element loadFile(File file)
-            throws IOException, ParserConfigurationException, SAXException  {
+        throws IOException, ParserConfigurationException, SAXException {
         this.xmlFile = file;
 
         if (!file.exists()) {
             throw new FileNotFoundException(file.getAbsolutePath()
-                    + " not found.");
+                + " not found.");
         }
 
         if (!file.canRead()) {
             throw new InvalidFilePermissionException(file.getAbsolutePath()
-                    + " : file not readable");
+                + " : file not readable");
         }
 
         DocumentBuilder docBuilder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(this.xmlFile);
         return document.getDocumentElement();
     }
 
     /**
      * Read all the {@link Delivery} out of an {@link Element} that corresponds
-     * to the
-     * root of a XML document.
+     * to the root of a XML document.
      *
      * @param root the root of the XML document.
      * @return a {@link List} of {@link Quadruplet} of long, long, integer,
-     * integer,
-     * the four arguments of a {@link Delivery} (pickUpNodeId, dropOffNodeId,
-     * pickUpDuration, dropOffDuration).
+     * integer, the four arguments of a {@link Delivery} (pickUpNodeId,
+     * dropOffNodeId, pickUpDuration, dropOffDuration).
      * @throws XMLException if the XML document is not well formed.
      */
     public List<Quadruplet<Long, Long, Integer, Integer>>
-        readDelivery(Element root)
-            throws XMLException {
+    readDelivery(Element root)
+        throws XMLException {
         List<Quadruplet<Long, Long, Integer, Integer>> result =
-                new ArrayList<>();
+            new ArrayList<>();
 
         if (root.getNodeName().equals("demandeDeLivraisons")) {
             NodeList deliveryList = root.getElementsByTagName("livraison");
             for (int i = 0; i < deliveryList.getLength(); i++) {
                 Element delivery = (Element) deliveryList.item(i);
                 long pickUpNodeId =
-                        Long.parseLong(delivery
-                                .getAttribute("adresseEnlevement"));
+                    Long.parseLong(delivery
+                        .getAttribute("adresseEnlevement"));
                 long deliveryNodeId =
-                        Long.parseLong(delivery
-                                .getAttribute("adresseLivraison"));
+                    Long.parseLong(delivery
+                        .getAttribute("adresseLivraison"));
                 int pickUpDuration =
-                        Integer.parseInt(delivery
-                                .getAttribute("dureeEnlevement"));
+                    Integer.parseInt(delivery
+                        .getAttribute("dureeEnlevement"));
                 int deliveryDuration =
-                        Integer.parseInt(delivery
-                                .getAttribute("dureeLivraison"));
+                    Integer.parseInt(delivery
+                        .getAttribute("dureeLivraison"));
                 Quadruplet<Long, Long, Integer, Integer> newDelivery =
-                        new Quadruplet<>(pickUpNodeId, deliveryNodeId,
-                                         pickUpDuration, deliveryDuration);
+                    new Quadruplet<>(pickUpNodeId, deliveryNodeId,
+                        pickUpDuration, deliveryDuration);
                 result.add(newDelivery);
             }
         } else {
@@ -152,6 +154,7 @@ public class DeliveryMapFactory {
 
     /**
      * Reads the warehouse that corresponds to the root of a XML document.
+     *
      * @param root the root of the XML document.
      * @return a {@link Pair} of long, integer, the two attributes of a
      * warehouse ({@link Node} id, start date in seconds).
@@ -162,9 +165,9 @@ public class DeliveryMapFactory {
             NodeList warehouseList = root.getElementsByTagName("entrepot");
             Element warehouse = (Element) warehouseList.item(0);
             long positionId =
-                    Long.parseLong(warehouse.getAttribute("adresse"));
+                Long.parseLong(warehouse.getAttribute("adresse"));
             String startDateString =
-                    warehouse.getAttribute("heureDepart");
+                warehouse.getAttribute("heureDepart");
             int startDate = transformStartDateToSeconds(startDateString);
             return new Pair<>(positionId, startDate);
         } else {
@@ -174,6 +177,7 @@ public class DeliveryMapFactory {
 
     /**
      * Transform a date in the format "hh:mm:ss' into seconds.
+     *
      * @param startDate the date to convert.
      * @return the conversion of the date in seconds.
      */
@@ -181,7 +185,7 @@ public class DeliveryMapFactory {
         // TODO: tester que startDate est bien formé avec regex
         String[] timeComponents = startDate.split(":");
         return Integer.parseInt(timeComponents[0]) * 3600
-                             + Integer.parseInt(timeComponents[1]) * 60
-                             + Integer.parseInt(timeComponents[2]);
+            + Integer.parseInt(timeComponents[1]) * 60
+            + Integer.parseInt(timeComponents[2]);
     }
 }

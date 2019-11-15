@@ -6,8 +6,8 @@ import javafx.beans.property.ReadOnlyLongWrapper;
 import java.util.Objects;
 
 /**
- * Represent either a drop off or a pick up point. It is attached to a
- * {@link Node} id and a duration (the time to do the drop off or the pick up.
+ * Represent either a drop off or a pick up point. It is attached to a {@link
+ * Node} id and a duration (the time to do the drop off or the pick up.
  */
 public class Vertex {
 
@@ -30,17 +30,17 @@ public class Vertex {
      * @param nodeId   the {@link Node} id corresponding.
      * @param type     the type, drop off or pick up.
      * @param duration the time to do the drop off or the pick up.
-     * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration
-     * is less than 0.
+     * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is
+     *                                  less than 0.
      */
     public Vertex(long nodeId, boolean type, int duration)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         if (duration < 0) {
             throw new IllegalArgumentException("The duration must be more or "
-                    + "equal than 0 seconds, got " + duration);
+                + "equal than 0 seconds, got " + duration);
         }
         this.nodeId =
-                new ReadOnlyLongWrapper(this, "nodeId", nodeId);
+            new ReadOnlyLongWrapper(this, "nodeId", nodeId);
         this.type = type;
         this.duration = duration;
     }
@@ -57,16 +57,16 @@ public class Vertex {
     /**
      * Sets the duration of the {@link Vertex}.
      *
-     * @param durationInSeconds the duration in second, must be more or equal
-     *                          to 0.
+     * @param durationInSeconds the duration in second, must be more or equal to
+     *                          0.
      * @throws IllegalArgumentException if the duration is less than 0 seconds.
      */
     public void setDuration(int durationInSeconds)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         // Todo @Mathieu : needs test (new exception)
         if (durationInSeconds < 0) {
             throw new IllegalArgumentException("The duration in second needs "
-                    + "to be more or equal than 0, got " + durationInSeconds);
+                + "to be more or equal than 0, got " + durationInSeconds);
         }
 
         this.duration = durationInSeconds;
@@ -85,6 +85,11 @@ public class Vertex {
         this.nodeId.set(nodeId);
     }
 
+    /**
+     * Returns the {@link Delivery} id corresponding to the {@link Vertex}.
+     *
+     * @return the {@link Delivery} id corresponding to the {@link Vertex}
+     */
     public int getDeliveryId() {
         return this.deliveryId;
     }
@@ -129,10 +134,9 @@ public class Vertex {
     }
 
     /**
-     * Determines if the given {@link Object} is "equal"
-     * to this {@link Vertex}.
-     * Only other {@link Vertex} are considered for comparison.
-     * The method compares the {@link Node} id, the type and the duration.
+     * Determines if the given {@link Object} is "equal" to this {@link Vertex}.
+     * Only other {@link Vertex} are considered for comparison. The method
+     * compares the {@link Node} id, the type and the duration.
      *
      * @param o the {@link Object} to compare this {@link Vertex} to
      * @return <code>true</code> if o is a {@link Vertex} whose values are
@@ -148,8 +152,8 @@ public class Vertex {
         }
         Vertex vertex = (Vertex) o;
         return nodeId.getValue().equals(vertex.nodeId.getValue())
-                && type == vertex.type
-                && duration == vertex.duration;
+            && type == vertex.type
+            && duration == vertex.duration;
     }
 
 
@@ -161,9 +165,9 @@ public class Vertex {
     @Override
     public String toString() {
         return "Vertex{"
-                + "id=" + nodeId.getValue()
-                + ", type=" + type
-                + ", durationInSeconds=" + duration
-                + '}';
+            + "id=" + nodeId.getValue()
+            + ", type=" + type
+            + ", durationInSeconds=" + duration
+            + '}';
     }
 }

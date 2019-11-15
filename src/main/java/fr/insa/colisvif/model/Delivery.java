@@ -16,15 +16,15 @@ public class Delivery {
     /**
      * Creates a {@link Delivery}.
      *
-     * @param id the id of the delivery.
-     * @param pickUpNodeId the pick up {@link Node} id of the delivery.
-     * @param dropOffNodeId the drop off {@link Node} id of the delivery.
-     * @param pickUpDuration the pick up duration of the delivery.
+     * @param id              the id of the delivery.
+     * @param pickUpNodeId    the pick up {@link Node} id of the delivery.
+     * @param dropOffNodeId   the drop off {@link Node} id of the delivery.
+     * @param pickUpDuration  the pick up duration of the delivery.
      * @param dropOffDuration the drop off duration of the delivery
      */
     public Delivery(int id, long pickUpNodeId, long dropOffNodeId,
-                    int pickUpDuration, int dropOffDuration)
-            throws IllegalArgumentException {
+        int pickUpDuration, int dropOffDuration)
+        throws IllegalArgumentException {
         this.id = id;
         pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
         pickUp.setDeliveryId(this.id);
@@ -43,6 +43,7 @@ public class Delivery {
 
     /**
      * Returns the pick up {@link Vertex} of this {@link Delivery}
+     *
      * @return the pick up {@link Vertex} of this {@link Delivery}
      */
     public Vertex getPickUp() {
@@ -51,6 +52,7 @@ public class Delivery {
 
     /**
      * Returns the drop off {@link Vertex} of this {@link Delivery}
+     *
      * @return the drop off {@link Vertex} of this {@link Delivery}
      */
     public Vertex getDropOff() {
@@ -91,7 +93,7 @@ public class Delivery {
      * @throws IllegalArgumentException if the pickUpDuration is not positive.
      */
     public void setPickUpDuration(int pickUpDuration)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         this.pickUp.setDuration(pickUpDuration);
     }
 
@@ -114,10 +116,11 @@ public class Delivery {
      * Sets the drop off duration in seconds of the {@link Delivery}.
      *
      * @param dropOffDuration the time in seconds to perform the drop off.
-     * @throws IllegalArgumentException if the deliveryDuration is not positive.
+     * @throws IllegalArgumentException if the deliveryDuration is not
+     *                                  positive.
      */
     public void setDropOffDuration(int dropOffDuration)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         this.dropOff.setDuration(dropOffDuration);
     }
 
@@ -128,25 +131,24 @@ public class Delivery {
 
     /**
      * Returns a {@link String} representation of this {@link Delivery}.
+     *
      * @return a {@link String} representation of this {@link Delivery}.
      */
     @Override
     public String toString() {
         return "id : " + id
-                + " | pickUpNodeId : " + pickUp.getNodeId()
-                + " | deliveryNodeId : " + dropOff.getNodeId()
-                + " | pickUpDuration : " + pickUp.getDuration()
-                + " | deliveryDuration : " + dropOff.getDuration() + "\n";
+            + " | pickUpNodeId : " + pickUp.getNodeId()
+            + " | deliveryNodeId : " + dropOff.getNodeId()
+            + " | pickUpDuration : " + pickUp.getDuration()
+            + " | deliveryDuration : " + dropOff.getDuration() + "\n";
     }
 
     /**
-     * Determines if the given {@link Object} is "equal"
-     * to this {@link Delivery}.
-     * Only other {@link Delivery} are considered for comparison.
-     * The method compares the ids of the two {@link Delivery}.
+     * Determines if the given {@link Object} is "equal" to this {@link
+     * Delivery}. Only other {@link Delivery} are considered for comparison. The
+     * method compares the ids of the two {@link Delivery}.
      *
      * @param o the {@link Object} to compare this {@link Delivery} to
-     *
      * @return <code>true</code> if o is a {@link Delivery} whose values are
      * "equal" to those of this {@link Delivery}
      */
@@ -159,6 +161,6 @@ public class Delivery {
             return false;
         }
         Delivery delivery = (Delivery) o;
-        return  this.id == delivery.id;
+        return this.id == delivery.id;
     }
 }
