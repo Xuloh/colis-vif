@@ -4,11 +4,6 @@ import java.util.*;
 
 /*package-private*/ class VerticesGraph {
 
-    /** The speed of the cyclist in meters per second */
-    private static final int CYCLIST_SPEED = (int) (15. / 3.6);
-    // TODO @Felix: mettre ces constantes dans la classes contenant
-    //  toutes les constantes
-
     // 2^(2n+1) where n is the number of deliveries, N is the number of
     //subsets of the vertices
     private long powerSetSize;
@@ -43,10 +38,11 @@ import java.util.*;
     VerticesGraph(DeliveryMap deliveries,
                   HashMap<Long, PathsFromVertex> pathsFromVertices) {
         int n = deliveries.getSize();
-        powerSetSize = 0b1 << (2 * n + 1); //makes 2^(2n+1), thanks Pacôme
+        powerSetSize = 0b1 << (2 * n + 1); //makes 2^(2n+1)
         this.deliveries = deliveries;
         this.pathsFromVertices = pathsFromVertices;
 
+        //Computation of the edges's weights
         lengths = new ArrayList<>(2 * n + 1);
         lengths.add(new ArrayList<>(2 * n + 1));
         for (int i = 0; i < 2 * n + 1; ++i) {
@@ -67,10 +63,6 @@ import java.util.*;
         return delivery.getId();
     }
 
-    /**
-     * @param index a vertex in G
-     * @return the id of the associated map node
-     */
     private long idFromIndex(int index) {
         if (index == 0) {
             return deliveries.getWarehouseNodeId();
@@ -82,10 +74,6 @@ import java.util.*;
         return delivery.getDropOffNodeId();
     }
 
-    /**
-     * @param index a vertex in G
-     * @return the duration of the associated vertex
-     */
     private int durationFromIndex(int index) {
         Delivery delivery = deliveries.getDelivery((index - 1) / 2);
         if (index % 2 == 1) {
@@ -129,7 +117,7 @@ import java.util.*;
         if (setCode == 0) { //stop case, when E is the empty set
             SubResult subResult = new SubResult(0, 0);
             //the first 0 can be replaced by lengths.get(start).get(0) if we
-            // want the cyclist to come back
+            //want the cyclist to come back
             subResults.put(key, subResult);
             return subResult;
         }
@@ -149,10 +137,10 @@ import java.util.*;
                     // drop off instead
                     SubResult candidate =
                             resolveSubProblem(k, setCode + a);
-                    //setCode+a is in fact setCode-a+2a,
-                    // i.e.setCode-2^k+2^(k+1)
-                    //that means we remove int k from the set and add k+1
-                    // instead
+                    //setCode + a is in fact setCode - a + 2a,
+                    // i.e.setCode - 2^k + 2^(k+1)
+                    //that means we remove int k from the set
+                    // and add k+1 instead
                     double candidateLength =
                             candidate.getLength() + lengths.get(start).get(k);
                     if (bestLength == -1 || bestLength > candidateLength) {
@@ -193,15 +181,6 @@ import java.util.*;
         return code * 2;
     }
 
-    /**
-     * Creates the step between two vertices, using the results of Dijkstra's
-     * algorithms stored in pathsFromVertices
-     *
-     * @param departureIndex the departure of the step
-     * @param arrivalIndex   the arrival of the step
-     * @param time           the time when the step begin
-     * @return the step
-     */
     private Step makeStep(int departureIndex, int arrivalIndex, int time) {
         long departureId = idFromIndex(departureIndex);
         long arrivalId = idFromIndex(arrivalIndex);
@@ -225,7 +204,8 @@ import java.util.*;
         }
         double distance =
                 pathsFromVertices.get(departureId).getLength(arrivalId);
-        step.setArrivalDate(time + (int) (distance / CYCLIST_SPEED));
+        time += (int) (distance / ModelConstants.CYCLIST_SPEED);
+        step.setArrivalDate(time);
         step.setInitialArrivalDate();
         return step;
     }
@@ -256,7 +236,6 @@ import java.util.*;
     /**
      * @return a round that minimize the total length
      */
-
     /*package-private*/ Round shortestRound() throws InterruptedException {
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
         ArrayList<Integer> path = makePath(subResult);
@@ -272,6 +251,11 @@ import java.util.*;
         return pickUps;
     }
 
+
+    /**
+     * @return a round where the cyclist always goes to the nearest step
+     * among the ones he is allowed to go to
+     * */
     /*package-private*/ Round naiveRound() {
         int n = deliveries.getSize();
         ArrayList<Integer> path = new ArrayList<>(2 * n + 1);
@@ -302,7 +286,6 @@ import java.util.*;
      */
     private static class SubResult {
         private double length;
-        /** The length of the path */
 
         private long nextKey;
 
@@ -311,22 +294,12 @@ import java.util.*;
             this.nextKey = nextKey;
         }
 
-        /** The indexes of the nodes of the path */
-
         /*package-private*/ double getLength() {
             return length;
         }
 
         /*package-private*/ long getNextKey() {
             return nextKey;
-        }
-
-        /*package-private*/ void setLength(double length) {
-            this.length = length;
-        }
-
-        /*package-private*/ void setNextKey(long nextKey) {
-            this.nextKey = nextKey;
         }
     }
 }
