@@ -43,6 +43,8 @@ public class VertexView extends Pane {
      * to the type of the stop of the vertex and the last one corresponds to the
      * duration.
      *
+     * @param uiController bound to the {@link VertexView}
+     *
      * @see TableView
      */
     public VertexView(UIController uiController) {
@@ -197,7 +199,7 @@ public class VertexView extends Pane {
     /**
      * Add an event to the rows of the {@link TableView}
      *
-     * @param eventHandler
+     * @param eventHandler bound the row
      */
     public void addEventHandlerOnSelect(Consumer<Vertex> eventHandler) {
         this.eventHandlers.add(eventHandler);
@@ -207,8 +209,8 @@ public class VertexView extends Pane {
      * Compare the {@link Vertex} of the {@link TableView}
      * to the given deliveryID and type to highlight the rows
      *
-     * @param deliveryID
-     * @param type
+     * @param deliveryID the id of the selected Vertex on the map
+     * @param type the type of the selected Vertex on the map
      */
     public void onSelection(int deliveryID, boolean type) {
         this.vertexTable.getSelectionModel().clearSelection();

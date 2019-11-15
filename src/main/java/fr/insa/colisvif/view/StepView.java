@@ -46,6 +46,8 @@ public class StepView extends Pane {
      * TableColumn} corresponds to the time interval. Also links {@link
      * javafx.event.EventHandler} to the TableView
      *
+     * @param uiController bound to the {@link StepView}
+     *
      * @see TableView
      */
 
@@ -199,6 +201,8 @@ public class StepView extends Pane {
 
     /**
      * Gets the {@link TableView} associated to this StepView
+     *
+     * @return the {@link TableView} of {@link Step}
      */
     public TableView<Step> getStepTable() {
         return this.stepTable;
