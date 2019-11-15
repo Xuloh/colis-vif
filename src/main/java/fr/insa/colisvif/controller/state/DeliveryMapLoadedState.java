@@ -1,9 +1,13 @@
 package fr.insa.colisvif.controller.state;
 
+import fr.insa.colisvif.App;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.view.UIController;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -26,10 +30,10 @@ public class DeliveryMapLoadedState implements State {
 
     /**
      * Creates a {@link CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
-     * @param file an xml file that contains the map to load
      *
+     * @param controller   controller of the application
+     * @param uiController controller of the user interface
+     * @param file         an xml file that contains the map to load
      * @see Controller
      */
     @Override
@@ -48,11 +52,11 @@ public class DeliveryMapLoadedState implements State {
 
     /**
      * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be stocked in the <code>controller</code> from a {@link File}.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
-     * @param file an xml file that contains the deliveries to load
-     * @param cityMap the map of the city
      *
+     * @param controller   controller of the application
+     * @param uiController controller of the user interface
+     * @param file         an xml file that contains the deliveries to load
+     * @param cityMap      the map of the city
      * @see Controller
      */
     @Override
@@ -76,8 +80,63 @@ public class DeliveryMapLoadedState implements State {
     // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
     @Override
     public void calculateItinerary(Controller controller, UIController uiController) {
-        controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
-        controller.setCurrentState(ItineraryCalculatedState.class);
-        uiController.printStatus("L'itinéraire a bien été calculé.");
+        Service<Round> itineraryComputation = new Service<>() {
+            @Override
+            protected Task<Round> createTask() {
+                return new Task<>() {
+                    @Override
+                    protected Round call() throws Exception {
+                        LOGGER.debug("Started worker thread");
+                        try {
+                            return controller.getCityMap().shortestRound(controller.getDeliveryMap());
+                        } catch (InterruptedException e) {
+                            LOGGER.warn("Interrupted shortest path computation", e);
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+
+        Service<Void> timeout = new Service<>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        LOGGER.debug("Started interrupt thread");
+                        try {
+                            Thread.sleep(15000);
+                        } catch (InterruptedException ignored) {
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+
+        itineraryComputation.setOnSucceeded(event -> {
+            Round round = itineraryComputation.getValue();
+            controller.setRound(round);
+            controller.setCurrentState(ItineraryCalculatedState.class);
+            uiController.printStatus("L'itinéraire a bien été calculé.");
+            timeout.cancel();
+        });
+
+        timeout.setOnSucceeded(event -> {
+            if (itineraryComputation.cancel()) {
+                LOGGER.warn("Interrupted itinerary calculation");
+                LOGGER.info("Calculates approximate itinerary instead");
+                Round round = controller.getCityMap().naiveRound(controller.getDeliveryMap());
+                controller.setRound(round);
+                controller.setCurrentState(ItineraryCalculatedState.class);
+                uiController.printStatus("L'itinéraire a bien été calculé.");
+            } else {
+                LOGGER.warn("Could not interrupt itinerary calculation");
+            }
+        });
+
+        itineraryComputation.start();
+        timeout.start();
     }
 }
