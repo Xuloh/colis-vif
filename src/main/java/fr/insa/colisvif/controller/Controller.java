@@ -296,7 +296,13 @@ public class Controller {
     }
 
     public void computeRound() {
-        this.currentState.calculateItinerary(this, this.uiController);
+        long freeMemory = Runtime.getRuntime().freeMemory();
+        int n = deliveryMap.getSize();
+        if (freeMemory < n * Math.pow(3, n) * 0.0001 * 1024 * 1024) {
+            this.currentState.calculateItinerary(this, this.uiController, true);
+        } else {
+            this.currentState.calculateItinerary(this, this.uiController, false);
+        }
     }
 
     /**
