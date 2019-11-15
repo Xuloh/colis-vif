@@ -43,7 +43,7 @@ public class ModifyOrderState implements State {
      * @param controller {@link Controller} of the application
      * @param uiController {@link UIController} of the application
      * @param commandList {@link CommandList} of the controller
-     * @param nodeId
+     * @param nodeId not used here
      * @param vertex the step right where the user wants to place
      *               the selected {@link Step}
      */

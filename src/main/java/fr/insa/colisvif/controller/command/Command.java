@@ -20,6 +20,9 @@ public interface Command {
      * The {@link Command} should only perform actions
      * that can be canceled by calling {@link #undoCommand()}.
      *
+     * @throws Exception exception that can be thrown through some
+     * {@link fr.insa.colisvif.model.Round} method
+     *
      * @see #doCommand()
      */
     void doCommand() throws Exception;
