@@ -22,10 +22,12 @@ import java.io.IOException;
  */
 public class CityMapLoadedState implements State {
 
-    private static final Logger LOGGER = LogManager.getLogger(CityMapLoadedState.class);
+    private static final Logger LOGGER = LogManager
+            .getLogger(CityMapLoadedState.class);
 
     /**
-     * Creates a {@link CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link CityMap} that will be stocked in the
+     * <code>controller</code> from a {@link File}.
      * @param controller controller of the application
      * @param uiController controller of the user interface
      * @param file an xml file that contains the map to load
@@ -33,21 +35,26 @@ public class CityMapLoadedState implements State {
      * @see Controller
      */
     @Override
-    public void loadCityMap(Controller controller, UIController uiController, File file) {
+    public void loadCityMap(Controller controller,
+                            UIController uiController, File file) {
         try {
-            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            controller.setCityMap(controller.getCityMapFactory()
+                    .createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+            uiController.printStatus("La carte a bien été chargée.\n"
+                    + "Vous pouvez désormais charger un plan de livraison.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé n'est "
+                    + "pas un fichier correct.");
         }
     }
 
     /**
-     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will
+     * be stocked in the <code>controller</code> from a {@link File}.
      * @param controller controller of the application
      * @param uiController controller of the user interface
      * @param file an xml file that contains the deliveries to load
@@ -56,22 +63,21 @@ public class CityMapLoadedState implements State {
      * @see Controller
      */
     @Override
-    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
+    public void loadDeliveryMap(Controller controller,
+                                UIController uiController,
+                                File file, CityMap cityMap) {
         try {
-            controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setDeliveryMap(controller.getDeliveryMapFactory()
+                    .createDeliveryMapFromXML(file, cityMap));
             controller.setCurrentState(DeliveryMapLoadedState.class);
-            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+            uiController.printStatus("Le plan de livraison a bien été"
+                    + " chargé.\nVous pouvez désormais calculer un itinéraire.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé n'est "
+                    + "pas un fichier correct.");
         }
     }
-
-    @Override
-    public void calculateItinerary(Controller controller, UIController uiController, boolean naive) {
-        uiController.printError("Ouvrez d'abord un plan de livraison !");
-    }
-
 }

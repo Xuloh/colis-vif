@@ -45,9 +45,4 @@ public class InitialState implements State {
             uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
     }
-
-    @Override
-    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
-        uiController.printError("Chargez un plan de la ville avant de charger un plan de livraison !");
-    }
 }
