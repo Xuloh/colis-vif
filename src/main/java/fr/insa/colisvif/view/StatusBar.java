@@ -7,7 +7,13 @@ import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * A status view used to print message to help the user, or to print error
+ * due to mishandling.
+ *
+ * @see ScrollPane
+ * @see Label
+ */
 public class StatusBar extends HBox {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusBar.class);
@@ -18,8 +24,11 @@ public class StatusBar extends HBox {
 
     private ScrollPane scrollPane;
 
-    private boolean isDarkMode;
-
+    /**
+     *Initialise two {@link Label} as the content of a {@link ScrollPane}
+     *
+     * Initialise the css id of the {@link Label} to handle the darkMode
+     */
     public StatusBar() {
         super();
         this.messageStatus = new Label();
@@ -34,20 +43,31 @@ public class StatusBar extends HBox {
         this.messageStatus.setText("Bienvenue sur l'application ColisVIF");
         this.scrollPane.prefWidthProperty().bind(this.widthProperty());
         this.scrollPane.setMaxHeight(20);
-        this.isDarkMode = false;
     }
 
+    /**
+     * Print the status of the application.
+     *
+     * @param text
+     */
     public void setStatus(String text) {
         this.messageStatus.setText(text);
         this.scrollPane.setContent(this.messageStatus);
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
-        LOGGER.debug("Status view message : {}\nCaller : {}.{}", text, caller.getClassName(), caller.getMethodName());
+        LOGGER.debug("Status view message : {}\nCaller : {}.{}", text,
+                caller.getClassName(), caller.getMethodName());
     }
 
+    /**
+     * Print the errors due to mishandling.
+     * 
+     * @param text
+     */
     public void setError(String text) {
         this.messageError.setText(text);
         this.scrollPane.setContent(this.messageError);
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
-        LOGGER.debug("Status view error : {}\nCaller : {}.{}", text, caller.getClassName(), caller.getMethodName());
+        LOGGER.debug("Status view error : {}\nCaller : {}.{}", text,
+                caller.getClassName(), caller.getMethodName());
     }
 }
