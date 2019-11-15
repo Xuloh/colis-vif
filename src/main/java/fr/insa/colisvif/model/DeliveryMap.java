@@ -30,7 +30,9 @@ public class DeliveryMap {
     }
 
     /**
-     * Create a {@link Delivery} out of a pick up {@link Node} id, a delivery {
+     * Create a {@link Delivery} out of a pick up {@link Node} id, a delivery
+     * {@link Node} id, a pick up duration and a delivery duration (in seconds).
+     * It also attaches an id to the {@link Delivery}.
      *
      * @param pickUpNodeId    the {@link Node} id of the pick up.
      * @param deliveryNodeId  the {@link Node} id of the drop off.
@@ -41,8 +43,6 @@ public class DeliveryMap {
      *                                  is less or equal to 0 seconds or the
      *                                  pickUpNodeId is equal to the
      *                                  deliveryNodeId.
-     * @link Node} id, a pick up duration and a delivery duration (in seconds).
-     * It also attaches an id to the {@link Delivery}.
      */
     public Delivery createDelivery(long pickUpNodeId, long deliveryNodeId,
         int pickUpDuration, int dropOffDuration)
@@ -58,9 +58,11 @@ public class DeliveryMap {
     /**
      * Search all Deliveries and returns the one with the given id if it exists
      *
-     * @param id the id of the searched delivey
-     * @return <li>the Delivery found if it exists</li>
+     * @param id the id of the searched delivery
+     * @return <ul>
+     * <li>the Delivery found if it exists</li>
      * <li>null if it doesn't</li>
+     * </ul>
      */
     public Delivery getDeliveryPerId(int id) {
         for (Delivery delivery : deliveryRequests) {

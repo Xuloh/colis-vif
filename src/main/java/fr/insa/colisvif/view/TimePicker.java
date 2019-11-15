@@ -9,8 +9,6 @@ import javafx.scene.layout.TilePane;
 /**
  * A custom {@link TilePane} that wraps and handles a {@link Spinner} and
  * a {@link Label}.
- *
- * @see
  */
 public class TimePicker extends TilePane {
 

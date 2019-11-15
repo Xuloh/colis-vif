@@ -328,6 +328,7 @@ public class CityMap {
      *                   nodes and their information.
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
+     * @throws InterruptedException if the computation was interrupted
      */
     public Round shortestRound(DeliveryMap deliveries)
         throws InterruptedException {
