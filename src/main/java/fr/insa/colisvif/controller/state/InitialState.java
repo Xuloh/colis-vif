@@ -22,10 +22,12 @@ import java.io.IOException;
  */
 public class InitialState implements State {
 
-    private static final Logger LOGGER = LogManager.getLogger(InitialState.class);
+    private static final Logger LOGGER = LogManager
+            .getLogger(InitialState.class);
 
     /**
-     * Creates a {@link fr.insa.colisvif.model.CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link fr.insa.colisvif.model.CityMap} that will
+     * be stocked in the <code>controller</code> from a {@link File}.
      * @param controller controller of the application
      * @param uiController controller of the user interface
      * @param file an xml file that contains the map to load
@@ -33,21 +35,20 @@ public class InitialState implements State {
      * @see Controller
      */
     @Override
-    public void loadCityMap(Controller controller, UIController uiController, File file) {
+    public void loadCityMap(Controller controller,
+                            UIController uiController, File file) {
         try {
-            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            controller.setCityMap(controller.getCityMapFactory()
+                    .createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+            uiController.printStatus("La carte a bien été chargée.\n"
+                    + "Vous pouvez désormais charger un plan de livraison.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé n'est "
+                    + "pas un fichier correct.");
         }
-    }
-
-    @Override
-    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
-        uiController.printError("Chargez un plan de la ville avant de charger un plan de livraison !");
     }
 }

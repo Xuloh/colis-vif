@@ -36,6 +36,10 @@ public class CommandAdd implements Command {
         this.cityMap = cityMap;
     }
 
+    /**
+     * Undoes the last done or redone {@link CommandAdd} by removing the
+     * corresponding delivery
+     */
     @Override
     public void undoCommand() {
         try {
@@ -45,6 +49,10 @@ public class CommandAdd implements Command {
         }
     }
 
+    /**
+     * Does or redoes a {@link CommandAdd} by creating a new {@link Delivery}
+     * and changing the order of the steps with the client's request
+     */
     @Override
     public void doCommand() {
         if (round.getSteps().indexOf(stepBefore)

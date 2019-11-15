@@ -1,6 +1,5 @@
 package fr.insa.colisvif.controller.state;
 
-import fr.insa.colisvif.App;
 import fr.insa.colisvif.controller.Controller;
 import fr.insa.colisvif.exception.XMLException;
 import fr.insa.colisvif.model.CityMap;
@@ -18,7 +17,8 @@ import java.io.IOException;
 
 /**
  * Class that implements State interface.
- * This class represents the state when the {@link fr.insa.colisvif.model.DeliveryMap} is loaded.
+ * This class represents the state when the
+ * {@link fr.insa.colisvif.model.DeliveryMap} is loaded.
  * It overrides all the actions that can be done during this state.
  *
  * @see State
@@ -26,10 +26,12 @@ import java.io.IOException;
  */
 public class DeliveryMapLoadedState implements State {
 
-    private static final Logger LOGGER = LogManager.getLogger(DeliveryMapLoadedState.class);
+    private static final Logger LOGGER = LogManager
+            .getLogger(DeliveryMapLoadedState.class);
 
     /**
-     * Creates a {@link CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link CityMap} that will be stocked in the
+     * <code>controller</code> from a {@link File}.
      *
      * @param controller   controller of the application
      * @param uiController controller of the user interface
@@ -37,16 +39,21 @@ public class DeliveryMapLoadedState implements State {
      * @see Controller
      */
     @Override
-    public void loadCityMap(Controller controller, UIController uiController, File file) {
+    public void loadCityMap(Controller controller,
+                            UIController uiController,
+                            File file) {
         try {
-            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            controller.setCityMap(controller.getCityMapFactory()
+                    .createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+            uiController.printStatus("La carte a bien été chargée.\n"
+                    + "Vous pouvez désormais charger un plan de livraison.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé "
+                    + "n'est pas un fichier correct.");
         }
     }
 
@@ -76,8 +83,6 @@ public class DeliveryMapLoadedState implements State {
     /**
      * Calculates a {@link fr.insa.colisvif.model.Round}.
      */
-    // todo : prendre en compte les 30 secondes, pour le moment osef on n'a pas de demandes si longues à calculer
-    // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
     @Override
     public void calculateItinerary(Controller controller, UIController uiController, boolean naive) {
         if (naive) {

@@ -20,7 +20,8 @@ public class PickUpNodeAddedState implements State {
     private long pickUpNodeId;
 
     /**
-     * Selects the step that will happen after adding the pick-up node added previously.
+     * Selects the step that will happen after adding the pick-up node added
+     * previously.
      * @param controller controller of the application
      * @param uiController UIController of the application
      * @param commandList command list of the controller
@@ -28,20 +29,24 @@ public class PickUpNodeAddedState implements State {
      * @param vertex Vertex clicked
      */
     @Override
-    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+    public void leftClick(Controller controller, UIController uiController,
+                          CommandList commandList, long nodeId, Vertex vertex) {
         Step stepOfVertex = null;
         for (Step step : controller.getRound().getSteps()) {
-            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() != vertex.getType()) {
+            if (step.getDeliveryID() == vertex.getDeliveryId()
+                    && step.isPickUp() != vertex.getType()) {
                 stepOfVertex = step;
             }
         }
         int pickUpDuration = uiController.getTimeFromPicker() * 60;
-        Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
+        Vertex pickUpVertex = new Vertex(pickUpNodeId, true,
+                pickUpDuration);
         uiController.clearTimePicker();
         uiController.setShowCityMapNodesOnHover(true);
         controller.getMADOState().entryToState(pickUpVertex, stepOfVertex);
         uiController.addDropOff();
-        uiController.printStatus("Sélection la position du noeud de dépôt.");
+        uiController.printStatus("Sélection la position du noeud de "
+                                    + "dépôt.");
         controller.setCurrentState(ModeAddDropOffState.class);
     }
 
@@ -55,7 +60,8 @@ public class PickUpNodeAddedState implements State {
     public void getBackToPreviousState(Controller controller) {
         controller.getUIController().enableButtons();
         controller.getUIController().clearTimePicker();
-        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.getUIController().printStatus("Annulation de "
+                + "l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
@@ -68,14 +74,19 @@ public class PickUpNodeAddedState implements State {
     }
 
     /**
-     * Calls the leftClick action (click on the canvas) from a click on the  textual View
+     * Calls the leftClick action (click on the canvas) from a click on the
+     * textual View
+     * {@link fr.insa.colisvif.view.StepView}
      * @param controller controller of the application
      * @param uiController UIController of the application
      * @param commandList command list of the controller
      * @param vertex vertex selected from the stepView
      */
     @Override
-    public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
+    public void selectedStepFromStepView(Controller controller,
+                                         UIController uiController,
+                                         CommandList commandList,
+                                         Vertex vertex) {
         this.leftClick(controller, uiController, commandList, 0, vertex);
     }
 
