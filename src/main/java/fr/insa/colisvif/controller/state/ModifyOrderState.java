@@ -33,7 +33,7 @@ public class ModifyOrderState implements State {
 
     /**
      * Used when the user want to switch back to the
-     * {@link fr.insa.colisvif.controller.state.PropertiesPrintedState}
+     * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
      * @param controller
      */
@@ -98,6 +98,13 @@ public class ModifyOrderState implements State {
         stepToChange = step;
     }
 
+    /**
+     * Calls the leftClick action (click on the canvas) from a click on the  textual View
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     * @param vertex vertex selected from the stepView
+     */
     @Override
     public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList,  Vertex vertex) {
         this.leftClick(controller, uiController, commandList, 0, vertex);

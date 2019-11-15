@@ -21,13 +21,10 @@ import java.io.File;
  *     <li>{@link CityMapLoadedState}</li>
  *     <li>{@link DeliveryMapLoadedState}</li>
  *     <li>{@link ItineraryCalculatedState}</li>
- *     <li>{@link LocalItineraryModificationState}</li>
  *     <li>{@link ModifyOrderState}</li>
  *     <li>{@link ModifyStopLocationState}</li>
- *     <li>{@link NonOptimizedItineraryState}</li>
  *     <li>{@link ModeAddState}</li>
- *     <li>{@link PropertiesPrintedState}</li>
- *     <li>{@link SuppressionModeState}</li>
+ *     <li>{@link ItineraryCalculatedState}</li>
  *     <li>{@link PickUpNodeAddedState}</li>
  * </ul>
  *
@@ -76,14 +73,6 @@ public interface State {
 
     }
 
-    /**
-     * Enter in suppression mode to allow the user to delete a delivery
-     *
-     * @see SuppressionModeState
-     */
-    default void switchToSuppressionMode(Controller controller) {
-
-    }
 
     /**
      * Enter in add mode to allow the user to ad a new delivery to the map
@@ -178,25 +167,6 @@ public interface State {
      * @param controller
      */
     default void getBackToPreviousState(Controller controller) {
-    }
-
-    default void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
-
-    }
-
-    default void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
-
-    }
-
-    default void setDuration(Controller controller, UIController uiController) {
-
-    }
-
-    default void addPickUpNode(Controller controller, UIController uiController) {
-
-    }
-
-    default void addDropOffNode(Controller controller, UIController uiController, CommandList commandList) {
 
     }
 

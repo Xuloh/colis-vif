@@ -27,7 +27,7 @@ public class RoundTest {
     }
 
     @Test
-    public void addStepInIthPlace() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+    public void addStepInIthPlace() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -56,7 +56,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addStepInIthPlaceWrongIndex1() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+    public void addStepInIthPlaceWrongIndex1() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -74,7 +74,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addStepInIthPlaceWrongIndex2() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+    public void addStepInIthPlaceWrongIndex2() throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -130,7 +130,7 @@ public class RoundTest {
     }
 
     @Test
-    public void addDelivery() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+    public void addDelivery() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -148,7 +148,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addDeliveryWrong1() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+    public void addDeliveryWrong1() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -166,7 +166,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addDeliveryWrong2() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+    public void addDeliveryWrong2() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -183,7 +183,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addDeliveryWrong3() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+    public void addDeliveryWrong3() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -200,7 +200,7 @@ public class RoundTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void addDeliveryWrong4() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+    public void addDeliveryWrong4() throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -218,7 +218,7 @@ public class RoundTest {
 
     @Test
     public void changeOrderStepSafeCall()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -241,7 +241,7 @@ public class RoundTest {
 
     @Test
     public void changeOrderStepChangeWithWarehouse()
-            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException {
+            throws URISyntaxException, SAXException, ParserConfigurationException, XMLException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -266,7 +266,7 @@ public class RoundTest {
 
     @Test
     public void changeLocationStepGood()
-            throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+            throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 
@@ -288,7 +288,7 @@ public class RoundTest {
 
     @Test(expected = NullPointerException.class)
     public void changeLocationStepNullStep()
-            throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException {
+            throws URISyntaxException, XMLException, ParserConfigurationException, SAXException, IOException, InterruptedException {
         String urlCityMap = "/testModifTrajet/test1Algo_plan.xml";
         String urlDelivery = "/testModifTrajet/test1Algo_demande.xml";
 

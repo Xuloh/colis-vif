@@ -84,7 +84,6 @@ public class ItineraryCalculatedState implements State {
         ev.exportRound(deliveryRound, file);
     }
 
-
     /**
      * Enters the {@link fr.insa.colisvif.controller.state.ModeAddState}
      * to allow the user to add more deliveries
@@ -98,16 +97,6 @@ public class ItineraryCalculatedState implements State {
         uiController.addPickUp();
     }
 
-    /**
-     * Show the properties of a node selected from the textual view or from the canvas.
-     */
-    // todo : dégager ça et déplacer les méthodes de PropertiesPrintedState dans cet état
-    // todo : utiliser les méthodes que Sophie filera
-    @Override
-    public void showNodeProperties() {
-
-    }
-
     @Override
     public void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
         if (controller.getDeliveryMap().getSize() == 1) {
@@ -116,14 +105,12 @@ public class ItineraryCalculatedState implements State {
             Step stepSelected = step;
             Step otherDeliveyStep = null;
             int deliveryId = stepSelected.getDeliveryID();
-            LOGGER.error("selected id " + deliveryId);
             for (Step step1 : controller.getStepList()) {
                 if (step1.getDeliveryID() == deliveryId && step != step1) {
                     otherDeliveyStep = step1;
                     break;
                 }
             }
-            LOGGER.error("selected id 2 " + deliveryId);
             commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap(),
                     controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep), deliveryId));
             controller.createVertexList();
@@ -136,9 +123,7 @@ public class ItineraryCalculatedState implements State {
 
     @Override
     public void undo(Controller controller, UIController uiController, CommandList commandList) {
-
         commandList.undoCommand();
-
         uiController.updateDeliveryMap();
         controller.createVertexList();
         uiController.updateDeliveryMap();
@@ -149,28 +134,12 @@ public class ItineraryCalculatedState implements State {
 
     @Override
     public void redo(Controller controller, UIController uiController, CommandList commandList) {
-        LOGGER.debug("Pile Current Commands");
-        for (Command c: commandList.getCurrentCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
-        LOGGER.debug("Pile Past Commands");
-        for (Command c: commandList.getPastCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
         commandList.redoCommand();
         uiController.updateDeliveryMap();
         uiController.updateRound();
         controller.createVertexList();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
-        LOGGER.debug("Pile Current Commands");
-        for (Command c: commandList.getCurrentCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
-        LOGGER.debug("Pile Past Commands");
-        for (Command c: commandList.getPastCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
     }
 
     @Override

@@ -19,6 +19,14 @@ public class PickUpNodeAddedState implements State {
 
     private long pickUpNodeId;
 
+    /**
+     * Selects the step that will happen after adding the pick-up node added previously.
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     * @param nodeId id of the node clicked
+     * @param vertex Vertex clicked
+     */
     @Override
     public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
         Step stepOfVertex = null;
@@ -27,7 +35,6 @@ public class PickUpNodeAddedState implements State {
                 stepOfVertex = step;
             }
         }
-        controller.getPUNASAState().entryToState(pickUpNodeId, stepOfVertex);
         int pickUpDuration = uiController.getTimeFromPicker() * 60;
         Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
         uiController.clearTimePicker();
@@ -52,10 +59,21 @@ public class PickUpNodeAddedState implements State {
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
+    /**
+     * Allows the setting of the attributes through another step
+     * @param nodeId the id of the pick-up node added
+     */
     protected void entryToState(long nodeId) {
         this.pickUpNodeId = nodeId;
     }
 
+    /**
+     * Calls the leftClick action (click on the canvas) from a click on the  textual View
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     * @param vertex vertex selected from the stepView
+     */
     @Override
     public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
         this.leftClick(controller, uiController, commandList, 0, vertex);

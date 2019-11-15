@@ -20,19 +20,8 @@ public class ModifyStopLocationState implements State {
     private Step stepToChange;
 
     /**
-     * When in location change mode, allow the user to edit the node location.
-     */
-    @Override
-    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
-        if (nodeId != null) {
-            long nodeIdSelected = nodeId;
-            commandList.doCommand(new CommandModifyLocation(stepToChange, nodeIdSelected, controller.getRound(), controller.getCityMap()));
-        }
-    }
-
-    /**
      * Used when the user want to switch back to the
-     * {@link fr.insa.colisvif.controller.state.PropertiesPrintedState}
+     * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
      * @param controller
      */

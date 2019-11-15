@@ -20,6 +20,7 @@ import java.util.Map;
  * The MVC controller used by the app.
  * It handles all the different actions the view can trigger
  * and when they can be triggered.
+ *
  * @see State
  */
 public class Controller {
@@ -61,15 +62,10 @@ public class Controller {
         this.stateMap.put(CityMapLoadedState.class, new CityMapLoadedState());
         this.stateMap.put(DeliveryMapLoadedState.class, new DeliveryMapLoadedState());
         this.stateMap.put(PickUpNodeAddedState.class, new PickUpNodeAddedState());
-        this.stateMap.put(LocalItineraryModificationState.class, new LocalItineraryModificationState());
         this.stateMap.put(ModifyStopLocationState.class, new ModifyStopLocationState());
         this.stateMap.put(ModifyOrderState.class, new ModifyOrderState());
         this.stateMap.put(ModeAddState.class, new ModeAddState());
-        this.stateMap.put(PropertiesPrintedState.class, new PropertiesPrintedState());
-        this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
-        this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
-        this.stateMap.put(PickUpNodeAddedStepAddedState.class, new PickUpNodeAddedStepAddedState());
         this.stateMap.put(DropOffNodeAddedState.class, new DropOffNodeAddedState());
         this.stateMap.put(ModeAddDropOffState.class, new ModeAddDropOffState());
 
@@ -151,16 +147,16 @@ public class Controller {
     public <T extends State> void setCurrentState(Class<T> stateName) {
         if (this.stateMap.containsKey(stateName)) {
             LOGGER.info(
-                "Switching Controller state from {} to {}",
-                this.currentState.getClass().getSimpleName(),
-                stateName.getSimpleName()
+                    "Switching Controller state from {} to {}",
+                    this.currentState.getClass().getSimpleName(),
+                    stateName.getSimpleName()
             );
             this.currentState = stateMap.get(stateName);
         } else {
             LOGGER.warn(
-                "Tried to switch Controller state from {} to invalid {}",
-                this.currentState.getClass().getSimpleName(),
-                stateName.getSimpleName()
+                    "Tried to switch Controller state from {} to invalid {}",
+                    this.currentState.getClass().getSimpleName(),
+                    stateName.getSimpleName()
             );
         }
     }
@@ -189,6 +185,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link Round}
+     *
      * @return the associated {@link Round}
      */
     public Round getRound() {
@@ -197,6 +194,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link CityMap}
+     *
      * @return the associated {@link CityMap}
      */
     public CityMap getCityMap() {
@@ -218,6 +216,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link DeliveryMap}
+     *
      * @return the associated {@link DeliveryMap}
      */
     public DeliveryMap getDeliveryMap() {
@@ -226,6 +225,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link CityMapFactory}
+     *
      * @return the associated {@link CityMapFactory}
      */
     public CityMapFactory getCityMapFactory() {
@@ -234,6 +234,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link DeliveryMapFactory}
+     *
      * @return the associated {@link DeliveryMapFactory}
      */
     public DeliveryMapFactory getDeliveryMapFactory() {
@@ -242,6 +243,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link Vertex} {@link List}
+     *
      * @return the associated {@link Vertex} {@link List}
      */
     public ObservableList<Vertex> getVertexList() {
@@ -250,6 +252,7 @@ public class Controller {
 
     /**
      * Returns the associated {@link Step} {@link List}
+     *
      * @return the associated {@link Step} {@link List}
      */
     public List<Step> getStepList() {
@@ -263,38 +266,63 @@ public class Controller {
         }
     }
 
+    /**
+     * Returns the PickUpNodeState instance
+     *
+     * @return the PickUpNodeState instance
+     */
     public PickUpNodeAddedState getPUNState() {
         return (PickUpNodeAddedState) stateMap.get(PickUpNodeAddedState.class);
     }
 
-    public PickUpNodeAddedStepAddedState getPUNASAState() {
-        return (PickUpNodeAddedStepAddedState) stateMap.get(PickUpNodeAddedStepAddedState.class);
-    }
-
+    /**
+     * Returns the ModifyStopLocationState instance
+     *
+     * @return the ModifyStopLocationState instance
+     */
     public ModifyStopLocationState getMSLState() {
         return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
     }
 
+    /**
+     * Returns the ModeAddDropOff instance
+     *
+     * @return the ModeAddDropOff instance
+     */
     public ModeAddDropOffState getMADOState() {
         return (ModeAddDropOffState) stateMap.get(ModeAddDropOffState.class);
     }
 
+    /**
+     * Returns the DropOffNodeAddedState instance
+     *
+     * @return the DropOffNodeAddedState instance
+     */
     public DropOffNodeAddedState getDONAState() {
         return (DropOffNodeAddedState) stateMap.get(DropOffNodeAddedState.class);
     }
 
-    public DropOffNodeAddedStepAdded getDONASAState() {
-        return (DropOffNodeAddedStepAdded) stateMap.get(DropOffNodeAddedStepAdded.class);
-    }
-
+    /**
+     * Returns the ModifyOrderState instance
+     *
+     * @return the ModifyOrderState instance
+     */
     public ModifyOrderState getMOState() {
         return (ModifyOrderState) stateMap.get(ModifyOrderState.class);
     }
 
+    /**
+     * Returns the ModifyStopLocationState instance
+     *
+     * @return the ModifyStopLocationState instance
+     */
     public ModifyStopLocationState getMSLSState() {
         return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
     }
 
+    /**
+     * Calculates the shortest path to deliver all packages
+     */
     public void computeRound() {
         long freeMemory = Runtime.getRuntime().freeMemory();
         int n = deliveryMap.getSize();
@@ -313,14 +341,14 @@ public class Controller {
     }
 
     /**
-     * Switch to "delete delivery" mode
+     * Deletes the delivery where step is one of the two steps.
      */
     public void deleteDelivery(Step step) {
         this.currentState.deleteDelivery(this, this.uiController, this.commandList, step);
     }
 
     /**
-     * Switch to "change delivery order" mode
+     * Switch to "change delivery order" mode for the selected step
      */
     public void editSequenceDelivery(Step step) {
         this.currentState.switchToOrderChangeMode(this, this.uiController, step);
@@ -347,21 +375,32 @@ public class Controller {
         this.uiController.setButtons();
     }
 
+    /**
+     * Undoes the last modification
+     */
     public void undo() {
         this.currentState.undo(this, this.uiController, commandList);
     }
 
+    /**
+     * Redoes the last modification
+     */
     public void redo() {
         this.currentState.redo(this, this.uiController, commandList);
     }
 
     /**
      * Switch to "change location" mode
+     * @param step The step to edit
      */
     public void editLocationDelivery(Step step) {
         this.currentState.switchToLocationChange(this, this.uiController, step);
     }
 
+    /**
+     * Simulates a left click on the map with a left click on the stepView
+     * @param vertex the vertex linked to the step we want to simulate
+     */
     public void inputSelectedVertex(Vertex vertex) {
         this.currentState.selectedStepFromStepView(this, this.uiController, commandList, vertex);
     }
