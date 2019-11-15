@@ -30,7 +30,7 @@ public class CityMapTest {
         return null;
     }
 
-    public void callDijkstra(CityMap cityMap, int start) throws InvocationTargetException {
+    private void callDijkstra(CityMap cityMap, int start) throws InvocationTargetException {
         Class[] paramType = new Class[1];
         paramType[0] = long.class;
         Integer[] param = new Integer[1];
@@ -38,7 +38,7 @@ public class CityMapTest {
         invokeMethod(CityMap.class, cityMap, "dijkstra", paramType, param);
     }
 
-    public int timeTravel(int distance) {
+    private int timeTravel(int distance) {
         return distance / (int) (15. / 3.6);
     }
 
@@ -369,7 +369,7 @@ public class CityMapTest {
 
     @Test
     public void getPath1() { // There are more detailed test of Dijkstra under the tests of getPath
-        List<Section> expected = new ArrayList();
+        List<Section> expected = new ArrayList<Section>();
         expected.add(new Section(10, "Rue1.2", 1, 2));
         expected.add(new Section(10, "Rue2.3", 2, 3));
 
@@ -386,7 +386,7 @@ public class CityMapTest {
 
     @Test
     public void getPath2() { // There are more detailed test of Dijkstra under the tests of getPath
-        List<Section> expected = new ArrayList();
+        List<Section> expected = new ArrayList<Section>();
         expected.add(new Section(10, "Rue1.2", 1, 2));
         expected.add(new Section(10, "Rue2.4", 2, 4));
         expected.add(new Section(10, "Rue4.5", 4, 5));
@@ -407,7 +407,7 @@ public class CityMapTest {
 
     @Test
     public void getPath3() { // There are more detailed test of Dijkstra under the tests of getPath
-        List<Section> expected = new ArrayList();
+        List<Section> expected = new ArrayList<Section>();
         expected.add(new Section(10, "Rue1.2", 1, 2));
         expected.add(new Section(10, "Rue2.4", 2, 4));
         expected.add(new Section(10, "Rue4.5", 4, 6));
