@@ -42,6 +42,11 @@ public class CommandRemove implements Command {
         }
     }
 
+    /**
+     * Undoes the last {@link CommandRemove} by adding a new delivery and
+     * setting it's id to the id of the {@link fr.insa.colisvif.model.Delivery}
+     * previously deleted
+     */
     @Override
     public void undoCommand() {
         Delivery oldDelivery;
@@ -69,6 +74,9 @@ public class CommandRemove implements Command {
         round.addStepInIthPlace(stepToRemove, indexDropOff, cityMap);
     }
 
+    /**
+     * Removes a delivery thanks to one of its step
+     */
     @Override
     public void doCommand() {
         try {

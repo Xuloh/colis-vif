@@ -29,6 +29,10 @@ public class CommandModifyOrder implements Command {
         this.cityMap = cityMap;
     }
 
+    /**
+     * Undoes the {@link CommandModifyOrder} by switching back the modified
+     * {@link fr.insa.colisvif.model.Step} to their old position.
+     */
     @Override
     public void undoCommand() {
         LOGGER.debug(modifiedIndex + " "
@@ -46,6 +50,11 @@ public class CommandModifyOrder implements Command {
         }
     }
 
+    /**
+     * Places the selected {@link fr.insa.colisvif.model.Step} in a given
+     * index and stores the old place of the
+     * {@link fr.insa.colisvif.model.Step}
+     */
     @Override
     public void doCommand() {
         modifiedIndex = round.getSteps().indexOf(modifiedStep);
