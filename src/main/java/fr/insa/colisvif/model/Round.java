@@ -210,8 +210,12 @@ public class Round {
      * Add a new delivery at the end of the round. Add two steps, one for the
      * pickup and one for the delivery.
      *
-     * @param pickUpNode  The pick up node
-     * @param dropOffNode The drop off node
+     * @param pickUpNode  the pick up node
+     * @param dropOffNode the drop off node
+     * @param pickUpDuration the duration of the pick up
+     * @param dropOffDuration the duration of the drop off
+     * @param map the associated map
+     * @return the added delivery
      */
     public Delivery addDelivery(long pickUpNode, long dropOffNode,
                                 int pickUpDuration,
@@ -254,6 +258,7 @@ public class Round {
      * @param stepJustBefore the step that will follow stepChangeOrder,
      *                       null if we want to place stepChageOrder at
      *                       the beginning of the round.
+     * @param map the associated map
      */
     public void changeOrderStep(Step stepToChange,
                                 Step stepJustBefore, CityMap map)

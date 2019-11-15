@@ -26,9 +26,10 @@ public class Step {
     /**
      * The constructor of Step.
      *
-     * @param vertex     the {@link Vertex} (pick up or drop off).
+     * @param vertex the {@link Vertex} (pick up or drop off).
      * @param deliveryID the deliveryID corresponding to the {@link Delivery}
      *                   of the {@link Vertex}.
+     * @param arrivalDate the date of the arrival of the cyclist at the vertex
      */
     public Step(Vertex vertex, int deliveryID, int arrivalDate) {
         sections = new LinkedList<>();
