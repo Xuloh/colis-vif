@@ -55,7 +55,7 @@ public class RoundTest {
             cityMap.getLength(node0, node1) + cityMap.getLength(node1, node2);
         int time = (int) (length / ModelConstants.CYCLIST_SPEED);
         time += round.getSteps().get(0).getDuration() + round.getSteps().get(1)
-            .getDuration() + round.getStartDate();
+            .getDuration() + round.getStartDate() - 1;
 
         assertEquals(step1, round.getSteps().get(1));
         assertEquals(time, round.getSteps().get(2).getArrivalDate());
