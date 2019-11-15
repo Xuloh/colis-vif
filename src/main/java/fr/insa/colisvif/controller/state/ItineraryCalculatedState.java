@@ -1,7 +1,6 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
-import fr.insa.colisvif.controller.command.Command;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.command.CommandRemove;
 import fr.insa.colisvif.exception.XMLException;
@@ -19,7 +18,8 @@ import java.io.IOException;
 //TODO : Ajouter Etat Cas ou trajet non optimal
 /**
  * Class that implements State interface.
- * This class represents the state when the {@link fr.insa.colisvif.model.Round} is calculated.
+ * This class represents the state when the {@link fr.insa.colisvif.model.Round}
+ * is calculated.
  * It overrides all the actions that can be done during this state.
  *
  * @see State
@@ -27,10 +27,12 @@ import java.io.IOException;
  */
 public class ItineraryCalculatedState implements State {
 
-    private static final Logger LOGGER = LogManager.getLogger(ItineraryCalculatedState.class);
+    private static final Logger LOGGER = LogManager
+            .getLogger(ItineraryCalculatedState.class);
 
     /**
-     * Creates a {@link CityMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link CityMap} that will be stocked in the
+     * <code>controller</code> from a {@link File}.
      * @param controller controller of the application
      * @param uiController controller of the user interface
      * @param file an xml file that contains the map to load
@@ -38,21 +40,26 @@ public class ItineraryCalculatedState implements State {
      * @see Controller
      */
     @Override
-    public void loadCityMap(Controller controller, UIController uiController, File file) {
+    public void loadCityMap(Controller controller, UIController uiController,
+                            File file) {
         try {
-            controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
+            controller.setCityMap(controller.getCityMapFactory()
+                    .createCityMapFromXMLFile(file));
             controller.setCurrentState(CityMapLoadedState.class);
-            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+            uiController.printStatus("La carte a bien été chargée.\n"
+                    + "Vous pouvez désormais charger un plan de livraison.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé "
+                    + "n'est pas un fichier correct.");
         }
     }
 
     /**
-     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be
+     * stocked in the <code>controller</code> from a {@link File}.
      * @param controller controller of the application
      * @param uiController controller of the user interface
      * @param file an xml file that contains the deliveries to load
@@ -61,21 +68,27 @@ public class ItineraryCalculatedState implements State {
      * @see Controller
      */
     @Override
-    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
+    public void loadDeliveryMap(Controller controller,
+                                UIController uiController,
+                                File file, CityMap cityMap) {
         try {
-            controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setDeliveryMap(controller.getDeliveryMapFactory()
+                    .createDeliveryMapFromXML(file, cityMap));
             controller.setCurrentState(DeliveryMapLoadedState.class);
-            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+            uiController.printStatus("Le plan de livraison a bien été "
+                    + "chargé.\nVous pouvez désormais calculer un itinéraire.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé n'est "
+                    + "pas un fichier correct.");
         }
     }
 
     /**
-     * Saves the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
+     * Saves the road map associated to a
+     * {@link fr.insa.colisvif.model.Round} in a text file.
      */
     @Override
     public void saveRoadMap(Controller controller, File file) {
@@ -87,20 +100,34 @@ public class ItineraryCalculatedState implements State {
     /**
      * Enters the {@link fr.insa.colisvif.controller.state.ModeAddState}
      * to allow the user to add more deliveries
+     * @param controller controller of the application
+     * @param uiController UIController of the application
      */
     @Override
-    public void switchToAddMode(Controller controller, UIController uiController) {
+    public void switchToAddMode(Controller controller,
+                                UIController uiController) {
         uiController.setShowCityMapNodesOnHover(true);
         controller.setCurrentState(ModeAddState.class);
         uiController.disableButtons();
-        uiController.printStatus("Sélection la position du noeud d'enlèvement.");
+        uiController.printStatus("Sélection la position "
+                + "du noeud d'enlèvement.");
         uiController.addPickUp();
     }
 
+    /**
+     * Deletes a selected delivery
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     * @param step the selected step that is in the delivery the user
+     *            wants to suppress
+     */
     @Override
-    public void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
+    public void deleteDelivery(Controller controller, UIController uiController,
+                               CommandList commandList, Step step) {
         if (controller.getDeliveryMap().getSize() == 1) {
-            uiController.printError("Vous ne pouvez pas supprimer la dernière livraison.");
+            uiController.printError("Vous ne pouvez pas supprimer la"
+                    + " dernière livraison.");
         } else {
             Step stepSelected = step;
             Step otherDeliveyStep = null;
@@ -111,8 +138,12 @@ public class ItineraryCalculatedState implements State {
                     break;
                 }
             }
-            commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap(),
-                    controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep), deliveryId));
+            commandList.doCommand(new CommandRemove(stepSelected,
+                    otherDeliveyStep, controller.getRound(),
+                    controller.getCityMap(),
+                    controller.getStepList().indexOf(step),
+                    controller.getStepList().indexOf(otherDeliveyStep),
+                    deliveryId));
             controller.createVertexList();
             uiController.updateDeliveryMap();
             uiController.updateRound();
@@ -121,8 +152,15 @@ public class ItineraryCalculatedState implements State {
         }
     }
 
+    /**
+     * Undoes the last modification
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     */
     @Override
-    public void undo(Controller controller, UIController uiController, CommandList commandList) {
+    public void undo(Controller controller, UIController uiController,
+                     CommandList commandList) {
         commandList.undoCommand();
         uiController.updateDeliveryMap();
         controller.createVertexList();
@@ -132,8 +170,15 @@ public class ItineraryCalculatedState implements State {
         controller.setButtons();
     }
 
+    /**
+     * Redoes the last modification
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param commandList command list of the controller
+     */
     @Override
-    public void redo(Controller controller, UIController uiController, CommandList commandList) {
+    public void redo(Controller controller, UIController uiController,
+                     CommandList commandList) {
         commandList.redoCommand();
         uiController.updateDeliveryMap();
         uiController.updateRound();
@@ -142,8 +187,16 @@ public class ItineraryCalculatedState implements State {
         controller.setButtons();
     }
 
+    /**
+     * Changes state of the controller and passes the selected step
+     * to allow the modification of the location
+     * @param controller controller of the application
+     * @param uiController UIController of the application
+     * @param step the step that the user wants to switch
+     */
     @Override
-    public void switchToLocationChange(Controller controller, UIController uiController, Step step) {
+    public void switchToLocationChange(Controller controller,
+                                       UIController uiController, Step step) {
         uiController.setShowCityMapNodesOnHover(true);
         uiController.disableButtons();
         controller.getMSLState().entryToState(step);
@@ -151,7 +204,8 @@ public class ItineraryCalculatedState implements State {
     }
 
     @Override
-    public void switchToOrderChangeMode(Controller controller, UIController uiController, Step step) {
+    public void switchToOrderChangeMode(Controller controller,
+                                        UIController uiController, Step step) {
         uiController.disableButtons();
         controller.getMOState().entryToState(step);
         controller.setCurrentState(ModifyOrderState.class);

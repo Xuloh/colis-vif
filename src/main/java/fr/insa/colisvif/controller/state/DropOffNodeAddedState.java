@@ -25,6 +25,15 @@ public class DropOffNodeAddedState implements State {
         this.dropOffNodeId = nodeId;
     }
 
+    /**
+     * Selects the {@link Step} that will happen right after the drop-off of the added delivery
+     *
+     * @param controller
+     * @param uiController
+     * @param commandList
+     * @param nodeId
+     * @param vertex
+     */
     @Override
     public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
         try {
@@ -71,6 +80,7 @@ public class DropOffNodeAddedState implements State {
      * Used when the user want to switch back to the
      * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
+     *
      * @param controller
      */
     @Override
@@ -83,10 +93,11 @@ public class DropOffNodeAddedState implements State {
 
     /**
      * Calls the leftClick action (click on the canvas) from a click on the  textual View
-     * @param controller controller of the application
+     *
+     * @param controller   controller of the application
      * @param uiController UIController of the application
-     * @param commandList command list of the controller
-     * @param vertex vertex selected from the stepView
+     * @param commandList  command list of the controller
+     * @param vertex       vertex selected from the stepView
      */
     @Override
     public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {

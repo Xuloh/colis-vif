@@ -68,7 +68,8 @@ public class PickUpNodeAddedState implements State {
     }
 
     /**
-     * Calls the leftClick action (click on the canvas) from a click on the  textual View
+     * Calls the leftClick action (click on the canvas) from a click on the textual View
+     * {@link fr.insa.colisvif.view.StepView}
      * @param controller controller of the application
      * @param uiController UIController of the application
      * @param commandList command list of the controller
