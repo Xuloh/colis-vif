@@ -22,7 +22,7 @@ public class CommandRemove implements Command {
     private int indexDropOff;
 
     private int oldDeliveryId;
-    
+
     public CommandRemove(Step stepToRemove, Step otherDeliveryStep,
                          Round round, CityMap cityMap, int indexFirst,
                          int indexSecond, int deliveryId) {
