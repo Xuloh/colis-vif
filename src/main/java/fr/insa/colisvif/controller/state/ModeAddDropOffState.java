@@ -26,10 +26,12 @@ public class ModeAddDropOffState implements State {
      * @param vertex
      */
     @Override
-    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+    public void leftClick(Controller controller, UIController uiController,
+                          CommandList commandList, long nodeId, Vertex vertex) {
         controller.getDONAState().entryToState(pickUpVertex, stepBefore, nodeId);
         uiController.setShowCityMapNodesOnHover(false);
-        uiController.printStatus("Sélectionnez l'étape suivant le noeud d'enlèvement.");
+        uiController.printStatus("Sélectionnez l'étape suivant "
+                + "le noeud d'enlèvement.");
         controller.setCurrentState(DropOffNodeAddedState.class);
     }
 
@@ -44,7 +46,8 @@ public class ModeAddDropOffState implements State {
         controller.getUIController().enableButtons();
         controller.getUIController().clearTimePicker();
         controller.getUIController().setShowCityMapNodesOnHover(false);
-        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.getUIController().printStatus("Annulation de "
+                + "l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 }
