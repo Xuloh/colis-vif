@@ -24,11 +24,20 @@ public class CommandModifyLocation implements Command {
         this.cityMap = cityMap;
     }
 
+    /**
+     * Undoes the last location modification thanks to the stored old position
+     * of the vertex
+     */
     @Override
     public void undoCommand() {
         round.changeLocationStep(modifiedStep, oldNodeId, cityMap);
     }
 
+    /**
+     * Changes the location of a {@link fr.insa.colisvif.model.Step} by
+     * changing the location of its {@link fr.insa.colisvif.model.Vertex} to
+     * another {@link fr.insa.colisvif.model.Node}
+     */
     @Override
     public void doCommand() {
         oldNodeId = modifiedStep.getArrivalNodeId();
