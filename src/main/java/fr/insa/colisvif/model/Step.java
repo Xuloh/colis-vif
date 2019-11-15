@@ -23,15 +23,6 @@ public class Step {
     private Vertex arrival;
 
 
-    //TODO - @Sophie et @Guilhem virer ces deux trucs
-    @Deprecated
-    //false if it is a pick up and true if it is a drop off
-    private boolean type;
-
-    @Deprecated
-    //the duration of the pick up or the drop off, NOT THE TRAVEL TIME
-    private int duration;
-
     /**
      * The constructor of Step.
      *
@@ -42,8 +33,6 @@ public class Step {
     public Step(Vertex vertex, int deliveryID, int arrivalDate) {
         sections = new LinkedList<>();
         arrival = vertex;
-        this.type = vertex.getType();
-        this.duration = vertex.getDuration();
         this.deliveryID = deliveryID;
         this.arrivalDate = arrivalDate;
         this.initialArrivalDate = arrivalDate;
@@ -55,7 +44,7 @@ public class Step {
      * @return the type of the Step.
      */
     public boolean getType() {
-        return this.type;
+        return arrival.getType();
     }
 
     /**
@@ -128,7 +117,6 @@ public class Step {
             throw new IllegalArgumentException("The duration in seconds must "
                     + "be equal or over 0 second, got " + duration);
         }
-        this.duration = duration;
         arrival.setDuration(duration);
     }
 
