@@ -171,21 +171,18 @@ public class UIController {
         // File menu
         this.openMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir une carte");
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home"), "fichiersXML2019"));
             File file = fileChooser.showOpenDialog(this.stage);
             this.controller.loadCityMap(file);
         });
 
         this.openDeliveryMap.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Ouvrir un plan de livraison");
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home"), "fichiersXML2019"));
             File file = fileChooser.showOpenDialog(this.stage);
             this.controller.loadDeliveryMap(file);
         });
 
         this.exportRound.addEventHandler(ActionEvent.ACTION, event -> {
             fileChooser.setTitle("Choisir un dossier de sauvegarde");
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home"), "fichiersXML2019"));
             File file = fileChooser.showSaveDialog(this.stage);
             this.controller.exportRound(file);
         });

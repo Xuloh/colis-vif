@@ -148,6 +148,14 @@ public class Round {
         steps.add(step);
     }
 
+    /**
+     * Adds a step at the i-th position in the round
+     * updates his section path and the arrival dates
+     *
+     * @param step the step we want to add in the round
+     * @param i the index where this step will be located
+     * @param map the map associated to the round
+     * */
     public void addStepInIthPlace(Step step, int i, CityMap map) {
         if (i < 0 || i > steps.size()) {
             throw new IllegalArgumentException("Index " + i
@@ -181,7 +189,14 @@ public class Round {
         }
     }
 
-    public void removeDelivery(Step step, CityMap map) throws Exception {
+    /**
+     * Removes the step from the round and updates the section paths and
+     * the arrival dates
+     *
+     * @param step the step we want to remove
+     * @param map the map associated to the round
+     * */
+    public void removeDelivery(Step step, CityMap map) {
         if (!steps.contains(step)) {
             throw new IllegalArgumentException("The step to remove "
                     + "does not belong to this round");
@@ -263,6 +278,14 @@ public class Round {
         }
     }
 
+    /**
+     * Changes the location of the step and updates the section paths and the
+     * arrival dates
+     *
+     * @param stepToChange the step whose location has to be changed
+     * @param nodeId the id of the new location
+     * @param map the map associated to the round
+     * */
     public void changeLocationStep(Step stepToChange,
                                    long nodeId, CityMap map) {
         if (stepToChange.isPickUp()) {
@@ -285,7 +308,7 @@ public class Round {
      *
      * @param step that needs to be added.
      */
-    public void addStep(Step step) {
+    /*package-private*/ void addStep(Step step) {
         steps.add(step);
     }
 
