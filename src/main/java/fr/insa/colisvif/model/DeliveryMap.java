@@ -8,8 +8,8 @@ import java.util.Objects;
 
 /**
  * Create and contains all the {@link Delivery} in a {@link List}, a counter to
- * knows what id to assign to a new {@link Delivery}, the warehouse {@link Node} id and
- * the starting date in seconds.
+ * knows what id to assign to a new {@link Delivery}, the warehouse {@link Node}
+ * id and the starting date in seconds.
  */
 public class DeliveryMap {
 
