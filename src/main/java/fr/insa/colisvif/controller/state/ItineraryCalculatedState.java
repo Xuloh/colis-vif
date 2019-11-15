@@ -5,9 +5,7 @@ import fr.insa.colisvif.controller.command.Command;
 import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.command.CommandRemove;
 import fr.insa.colisvif.exception.XMLException;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Round;
-import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.ExportView;
 import fr.insa.colisvif.view.UIController;
 import org.apache.logging.log4j.LogManager;
@@ -129,14 +127,16 @@ public class ItineraryCalculatedState implements State {
             Step stepSelected = step;
             Step otherDeliveyStep = null;
             int deliveryId = stepSelected.getDeliveryID();
+            LOGGER.error("selected id " + deliveryId);
             for (Step step1 : controller.getStepList()) {
                 if (step1.getDeliveryID() == deliveryId && step != step1) {
                     otherDeliveyStep = step1;
                     break;
                 }
             }
+            LOGGER.error("selected id 2 " + deliveryId);
             commandList.doCommand(new CommandRemove(stepSelected, otherDeliveyStep, controller.getRound(), controller.getCityMap(),
-                    controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep)));
+                    controller.getStepList().indexOf(step), controller.getStepList().indexOf(otherDeliveyStep), deliveryId));
             controller.createVertexList();
             uiController.updateDeliveryMap();
             uiController.updateRound();
@@ -147,28 +147,15 @@ public class ItineraryCalculatedState implements State {
 
     @Override
     public void undo(Controller controller, UIController uiController, CommandList commandList) {
-        LOGGER.debug("Pile Current Commands");
-        for (Command c: commandList.getCurrentCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
-        LOGGER.debug("Pile Past Commands");
-        for (Command c: commandList.getPastCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
+
         commandList.undoCommand();
+
+        uiController.updateDeliveryMap();
         controller.createVertexList();
         uiController.updateDeliveryMap();
         uiController.updateRound();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
-        LOGGER.debug("Pile Current Commands");
-        for (Command c: commandList.getCurrentCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
-        LOGGER.debug("Pile Past Commands");
-        for (Command c: commandList.getPastCommands()) {
-            LOGGER.debug(c.getClass().getSimpleName());
-        }
     }
 
     @Override
@@ -182,9 +169,9 @@ public class ItineraryCalculatedState implements State {
             LOGGER.debug(c.getClass().getSimpleName());
         }
         commandList.redoCommand();
-        controller.createVertexList();
         uiController.updateDeliveryMap();
         uiController.updateRound();
+        controller.createVertexList();
         uiController.getMapCanvas().redraw();
         controller.setButtons();
         LOGGER.debug("Pile Current Commands");
