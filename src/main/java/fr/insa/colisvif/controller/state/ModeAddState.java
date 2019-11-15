@@ -18,18 +18,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class ModeAddState implements State {
 
-    private Vertex pickUpVertex = null;
-
-    private long pickUpNodeId = -1;
-
-    private Vertex dropOffVertex = null;
-
-    private long dropOffNodeId = -1;
-
     /**
      * When in add mode, allows the user to select the position
      * of the pick-up and drop-off nodes
      * of the delivery the user wants to add.
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
+     * @param nodeId node where the pick up node will be placed
+     * @param vertex not used here
      */
     @Override
     public void leftClick(Controller controller, UIController uiController,
@@ -47,16 +44,12 @@ public class ModeAddState implements State {
      * where no modifications can be done.
      * <br><br>
      * Note that everything added will be lost.
-     * @param controller
+     * @param controller {@link Controller} of the application
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
         controller.getUIController().enableButtons();
         controller.getUIController().clearTimePicker();
-        pickUpVertex = null;
-        dropOffVertex = null;
-        pickUpNodeId = -1;
-        dropOffNodeId = -1;
         controller.getUIController().printStatus("Annulation de "
                 + "l'opération en cours.");
         controller.getUIController().setShowCityMapNodesOnHover(false);

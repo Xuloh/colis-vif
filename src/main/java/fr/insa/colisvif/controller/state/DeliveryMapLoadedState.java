@@ -33,8 +33,8 @@ public class DeliveryMapLoadedState implements State {
      * Creates a {@link CityMap} that will be stocked in the
      * <code>controller</code> from a {@link File}.
      *
-     * @param controller   controller of the application
-     * @param uiController controller of the user interface
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param file         an xml file that contains the map to load
      * @see Controller
      */
@@ -58,30 +58,40 @@ public class DeliveryMapLoadedState implements State {
     }
 
     /**
-     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be stocked in the <code>controller</code> from a {@link File}.
+     * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be
+     * stocked in the <code>controller</code> from a {@link File}.
      *
-     * @param controller   controller of the application
-     * @param uiController controller of the user interface
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param file         an xml file that contains the deliveries to load
      * @param cityMap      the map of the city
      * @see Controller
      */
     @Override
-    public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
+    public void loadDeliveryMap(Controller controller,
+                                UIController uiController,
+                                File file, CityMap cityMap) {
         try {
-            controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
+            controller.setDeliveryMap(controller.getDeliveryMapFactory()
+                    .createDeliveryMapFromXML(file, cityMap));
             controller.setCurrentState(DeliveryMapLoadedState.class);
-            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+            uiController.printStatus("Le plan de livraison a bien "
+                    + "été chargé.\nVous pouvez désormais "
+                    + "calculer un itinéraire.");
         } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (XMLException e) {
             LOGGER.error(e.getMessage(), e);
-            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
+            uiController.printError("Le fichier chargé"
+                    + " n'est pas un fichier correct.");
         }
     }
 
     /**
      * Calculates a {@link fr.insa.colisvif.model.Round}.
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param naive true if we want to use the naive algorithm to calculate
      */
     @Override
     public void calculateItinerary(Controller controller, UIController uiController, boolean naive) {

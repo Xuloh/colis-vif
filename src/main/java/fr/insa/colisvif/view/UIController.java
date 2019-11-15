@@ -145,7 +145,7 @@ public class UIController {
      * and the MVC {@link Controller}
      * of the app
      * @param stage the main {@link Stage} of the app
-     * @param controller the MVC {@link Controller} of the app
+     * @param controller {@link Controller} of the application the MVC {@link Controller} of the app
      */
     public UIController(Stage stage, Controller controller) {
         this.stage = stage;

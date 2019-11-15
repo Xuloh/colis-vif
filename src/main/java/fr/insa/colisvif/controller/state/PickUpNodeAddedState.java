@@ -22,10 +22,10 @@ public class PickUpNodeAddedState implements State {
     /**
      * Selects the step that will happen after adding the pick-up node added
      * previously.
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList command list of the controller
-     * @param nodeId id of the node clicked
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
+     * @param nodeId not used here
      * @param vertex Vertex clicked
      */
     @Override
@@ -54,7 +54,7 @@ public class PickUpNodeAddedState implements State {
      * Used when the user want to switch back to the
      * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
-     * @param controller
+     * @param controller {@link Controller} of the application
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
@@ -65,10 +65,6 @@ public class PickUpNodeAddedState implements State {
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
 
-    /**
-     * Allows the setting of the attributes through another step
-     * @param nodeId the id of the pick-up node added
-     */
     protected void entryToState(long nodeId) {
         this.pickUpNodeId = nodeId;
     }
@@ -77,9 +73,9 @@ public class PickUpNodeAddedState implements State {
      * Calls the leftClick action (click on the canvas) from a click on the
      * textual View
      * {@link fr.insa.colisvif.view.StepView}
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList command list of the controller
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
      * @param vertex vertex selected from the stepView
      */
     @Override

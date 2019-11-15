@@ -33,8 +33,8 @@ public class ItineraryCalculatedState implements State {
     /**
      * Creates a {@link CityMap} that will be stocked in the
      * <code>controller</code> from a {@link File}.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param file an xml file that contains the map to load
      *
      * @see Controller
@@ -60,8 +60,8 @@ public class ItineraryCalculatedState implements State {
     /**
      * Creates a {@link fr.insa.colisvif.model.DeliveryMap} that will be
      * stocked in the <code>controller</code> from a {@link File}.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param file an xml file that contains the deliveries to load
      * @param cityMap the map of the city
      *
@@ -100,8 +100,8 @@ public class ItineraryCalculatedState implements State {
     /**
      * Enters the {@link fr.insa.colisvif.controller.state.ModeAddState}
      * to allow the user to add more deliveries
-     * @param controller controller of the application
-     * @param uiController UIController of the application
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      */
     @Override
     public void switchToAddMode(Controller controller,
@@ -116,9 +116,9 @@ public class ItineraryCalculatedState implements State {
 
     /**
      * Deletes a selected delivery
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList command list of the controller
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
      * @param step the selected step that is in the delivery the user
      *            wants to suppress
      */
@@ -154,9 +154,9 @@ public class ItineraryCalculatedState implements State {
 
     /**
      * Undoes the last modification
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList command list of the controller
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
      */
     @Override
     public void undo(Controller controller, UIController uiController,
@@ -172,9 +172,9 @@ public class ItineraryCalculatedState implements State {
 
     /**
      * Redoes the last modification
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList command list of the controller
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
      */
     @Override
     public void redo(Controller controller, UIController uiController,
@@ -190,8 +190,8 @@ public class ItineraryCalculatedState implements State {
     /**
      * Changes state of the controller and passes the selected step
      * to allow the modification of the location
-     * @param controller controller of the application
-     * @param uiController UIController of the application
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param step the step that the user wants to switch
      */
     @Override
@@ -203,6 +203,12 @@ public class ItineraryCalculatedState implements State {
         controller.setCurrentState(ModifyStopLocationState.class);
     }
 
+    /**
+     *
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param step the step the user wants to modify
+     */
     @Override
     public void switchToOrderChangeMode(Controller controller,
                                         UIController uiController, Step step) {

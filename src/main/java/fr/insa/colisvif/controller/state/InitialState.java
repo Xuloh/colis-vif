@@ -28,8 +28,8 @@ public class InitialState implements State {
     /**
      * Creates a {@link fr.insa.colisvif.model.CityMap} that will
      * be stocked in the <code>controller</code> from a {@link File}.
-     * @param controller controller of the application
-     * @param uiController controller of the user interface
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
      * @param file an xml file that contains the map to load
      *
      * @see Controller

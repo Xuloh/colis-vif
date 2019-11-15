@@ -19,11 +19,11 @@ public class ModeAddDropOffState implements State {
 
     /**
      * Selects where to add the dropOff Node
-     * @param controller controller of the application
-     * @param uiController UIController of the application
-     * @param commandList commandList of the controller
-     * @param nodeId
-     * @param vertex
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
+     * @param nodeId the node where the drop off node will be located
+     * @param vertex not used here
      */
     @Override
     public void leftClick(Controller controller, UIController uiController,
@@ -39,7 +39,7 @@ public class ModeAddDropOffState implements State {
      * Used when the user want to switch back to the
      * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
-     * @param controller controller of the application
+     * @param controller {@link Controller} of the application
      */
     @Override
     public void getBackToPreviousState(Controller controller) {

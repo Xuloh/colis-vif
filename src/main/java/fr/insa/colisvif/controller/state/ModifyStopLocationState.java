@@ -23,7 +23,7 @@ public class ModifyStopLocationState implements State {
      * Used when the user want to switch back to the
      * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
      * where no modifications can be done.
-     * @param controller
+     * @param controller {@link Controller} of the application
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
@@ -38,6 +38,14 @@ public class ModifyStopLocationState implements State {
         this.stepToChange = stepToModify;
     }
 
+    /**
+     *
+     * @param controller {@link Controller} of the application
+     * @param uiController {@link UIController} of the application
+     * @param commandList {@link CommandList} of the controller
+     * @param nodeId node where the vertex will be after modification
+     * @param vertex not used here
+     */
     @Override
     public void leftClick(Controller controller, UIController uiController,
                           CommandList commandList, long nodeId, Vertex vertex) {
