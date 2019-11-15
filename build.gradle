@@ -35,6 +35,7 @@ dependencies {
 
 application {
     mainClassName = mainClassName
+    applicationDefaultJvmArgs = ["-Xms6g"]
 }
 
 run {

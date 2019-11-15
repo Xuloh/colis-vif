@@ -110,17 +110,6 @@ public class ItineraryCalculatedState implements State {
 
     }
 
-    /**
-     * Calculates a {@link fr.insa.colisvif.model.Round}.
-     */
-    // todo : prendre en compte les 30 secondes, pour le moment osef on n'a pas de demandes si longues à calculer
-    // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
-    @Override
-    public void calculateItinerary(Controller controller, UIController uiController) {
-        controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
-        controller.setCurrentState(ItineraryCalculatedState.class);
-    }
-
     @Override
     public void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
         if (controller.getDeliveryMap().getSize() == 1) {

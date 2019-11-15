@@ -25,6 +25,8 @@ import java.util.*;
     // We will use dynamic programing, this is where we store the sub results
     private HashMap<Long, SubResult> subResults;
 
+    private boolean kill;
+
     /**
      * Let n be the number of deliveries we want to process
      * Creates a graph G with 2n+1 vertices : one for the warehouse and two for
@@ -118,7 +120,7 @@ import java.util.*;
      * @param setCode the subSet that need to be explored
      * @return the sub result of the sub problem (start, E)
      */
-    private SubResult resolveSubProblem(int start, long setCode) {
+    private SubResult resolveSubProblem(int start, long setCode) throws InterruptedException {
         long key = subProblemKey(start, setCode);
         //this sub problem has been solved yet, we don't solve it again
         if (subResults.containsKey(key)) {
@@ -138,6 +140,9 @@ import java.util.*;
         long copy = setCode / 2; //will be setCode/2^k, used to know if k
         // belongs to the set
         for (int k = 1; k < 2 * n + 1; ++k) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException("computation interrupted");
+            }
             if ((copy & 1) == 1) { //k belongs to the set
                 if ((k & 1) == 1) { //k is a pick up
                     //we remove the pick up from the set and add his associated
@@ -252,7 +257,7 @@ import java.util.*;
      * @return a round that minimize the total length
      */
 
-    /*package-private*/ Round shortestRound() {
+    /*package-private*/ Round shortestRound() throws InterruptedException {
         SubResult subResult = resolveSubProblem(0, pickUpSetCode());
         ArrayList<Integer> path = makePath(subResult);
         return makeRound(path);

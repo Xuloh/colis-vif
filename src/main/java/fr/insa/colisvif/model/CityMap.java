@@ -329,7 +329,7 @@ public class CityMap {
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries) {
+    public Round shortestRound(DeliveryMap deliveries) throws InterruptedException {
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());

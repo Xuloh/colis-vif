@@ -22,8 +22,8 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="fr.insa.colisvif.view.MapCanvas" level="warn"></Logger>
-        <Root level="trace">
+        <Logger name="fr.insa.colisvif.view.MapCanvas" level="error"></Logger>
+        <Root level="debug">
             <AppenderRef ref="Errors"/>
             <AppenderRef ref="Info"/>
         </Root>
