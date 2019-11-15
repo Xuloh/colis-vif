@@ -1,6 +1,11 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.controller.command.CommandModifyLocation;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -12,20 +17,47 @@ import fr.insa.colisvif.controller.Controller;
  */
 public class ModifyStopLocationState implements State {
 
+    private Step stepToChange;
+
     /**
      * When in location change mode, allow the user to edit the node location.
      */
     @Override
-    public void changeNodeLocation() {
-
+    public void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
+        if (nodeId != null) {
+            long nodeIdSelected = nodeId;
+            commandList.doCommand(new CommandModifyLocation(stepToChange, nodeIdSelected, controller.getRound(), controller.getCityMap()));
+        }
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user want to switch back to the
+     * {@link fr.insa.colisvif.controller.state.PropertiesPrintedState}
+     * where no modifications can be done.
      * @param controller
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
-        controller.setCurrentState(PropertiesPrintedState.class);
+        controller.getUIController().enableButtons();
+        controller.getUIController().setShowCityMapNodesOnHover(false);
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
+        controller.setCurrentState(ItineraryCalculatedState.class);
+    }
+
+    protected void entryToState(Step stepToModify) {
+        this.stepToChange = stepToModify;
+    }
+
+    @Override
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+        commandList.doCommand(new CommandModifyLocation(stepToChange, nodeId, controller.getRound(), controller.getCityMap()));
+        controller.createVertexList();
+        uiController.updateDeliveryMap();
+        uiController.updateRound();
+        uiController.getMapCanvas().redraw();
+        controller.setButtons();
+        uiController.setShowCityMapNodesOnHover(false);
+        controller.setCurrentState(ItineraryCalculatedState.class);
+
     }
 }

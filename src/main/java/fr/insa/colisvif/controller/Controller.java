@@ -1,19 +1,17 @@
 package fr.insa.colisvif.controller;
 
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.controller.state.*;
-import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.CityMapFactory;
-import fr.insa.colisvif.model.Delivery;
-import fr.insa.colisvif.model.DeliveryMap;
-import fr.insa.colisvif.model.DeliveryMapFactory;
-import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.model.*;
 import fr.insa.colisvif.view.UIController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseButton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,8 @@ public class Controller {
 
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 
+    private CommandList commandList = new CommandList();
+
     private Map<Class, State> stateMap = new HashMap<>();
 
     private CityMap cityMap;
@@ -41,6 +41,8 @@ public class Controller {
     private State currentState;
 
     private DeliveryMap deliveryMap;
+
+    private Round round;
 
     private ObservableList<Vertex> vertexList;
 
@@ -67,6 +69,10 @@ public class Controller {
         this.stateMap.put(SuppressionModeState.class, new SuppressionModeState());
         this.stateMap.put(ItineraryCalculatedState.class, new ItineraryCalculatedState());
         this.stateMap.put(NonOptimizedItineraryState.class, new NonOptimizedItineraryState());
+        this.stateMap.put(PickUpNodeAddedStepAddedState.class, new PickUpNodeAddedStepAddedState());
+        this.stateMap.put(DropOffNodeAddedState.class, new DropOffNodeAddedState());
+        this.stateMap.put(ModeAddDropOffState.class, new ModeAddDropOffState());
+
 
         LOGGER.info("Initial Controller state : {}", this.currentState.getClass().getSimpleName());
     }
@@ -79,8 +85,12 @@ public class Controller {
      * @param file the {@link File} to load a {@link CityMap} from
      */
     public void loadCityMap(File file) {
-        LOGGER.info("Loading new CityMap from : " + file.getAbsolutePath());
-        this.currentState.loadCityMap(this, uiController, file);
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Loading new CityMap from : " + file.getAbsolutePath());
+            this.currentState.loadCityMap(this, uiController, file);
+        }
     }
 
     /**
@@ -91,8 +101,21 @@ public class Controller {
      * @param file the {@link File} to load a {@link DeliveryMap} from
      */
     public void loadDeliveryMap(File file) {
-        LOGGER.info("Loading new DeliveryMap from : " + file.getAbsolutePath());
-        this.currentState.loadDeliveryMap(this, uiController, file, this.cityMap);
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Loading new DeliveryMap from : " + file.getAbsolutePath());
+            this.currentState.loadDeliveryMap(this, uiController, file, this.cityMap);
+        }
+    }
+
+    public void exportRound(File file) {
+        if (file == null) {
+            LOGGER.info("Aucun fichier choisi");
+        } else {
+            LOGGER.info("Exportation du fichier à l'emplacement " + file.getAbsolutePath());
+            this.currentState.saveRoadMap(this, file);
+        }
     }
 
     /**
@@ -103,6 +126,20 @@ public class Controller {
      */
     public void setUIController(UIController uiController) {
         this.uiController = uiController;
+        uiController.getMapCanvas().addNodeMouseClickHandler((nodeId, vertex) -> {
+            LOGGER.debug(vertex);
+            this.currentState.leftClick(this, uiController, commandList, nodeId, vertex);
+        });
+        this.uiController.addMouseClickEventHandler(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                this.currentState.getBackToPreviousState(this);
+            }
+        });
+    }
+
+
+    public UIController getUIController() {
+        return this.uiController;
     }
 
     /**
@@ -135,6 +172,27 @@ public class Controller {
      */
     public void setCityMap(CityMap cityMap) {
         this.cityMap = cityMap;
+        this.uiController.updateCityMap();
+        this.setDeliveryMap(null);
+    }
+
+    /**
+     * Assigns the given {@link Round} to this {@link Controller}
+     *
+     * @param round the {@link Round} to assign to this {@link Controller}
+     */
+    public void setRound(Round round) {
+        this.round = round;
+        this.uiController.updateRound();
+        this.uiController.setButtons();
+    }
+
+    /**
+     * Returns the associated {@link Round}
+     * @return the associated {@link Round}
+     */
+    public Round getRound() {
+        return round;
     }
 
     /**
@@ -154,6 +212,8 @@ public class Controller {
     public void setDeliveryMap(DeliveryMap deliveryMap) {
         this.deliveryMap = deliveryMap;
         this.createVertexList();
+        this.uiController.updateDeliveryMap();
+        this.setRound(null);
     }
 
     /**
@@ -189,40 +249,111 @@ public class Controller {
     }
 
     /**
+     * Returns the associated {@link Step} {@link List}
+     * @return the associated {@link Step} {@link List}
+     */
+    public List<Step> getStepList() {
+        if (round != null) {
+            return this.round.getSteps();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public PickUpNodeAddedState getPUNState() {
+        return (PickUpNodeAddedState) stateMap.get(PickUpNodeAddedState.class);
+    }
+
+    public PickUpNodeAddedStepAddedState getPUNASAState() {
+        return (PickUpNodeAddedStepAddedState) stateMap.get(PickUpNodeAddedStepAddedState.class);
+    }
+
+    public ModifyStopLocationState getMSLState() {
+        return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
+    }
+
+    public ModeAddDropOffState getMADOState() {
+        return (ModeAddDropOffState) stateMap.get(ModeAddDropOffState.class);
+    }
+
+    public DropOffNodeAddedState getDONAState() {
+        return (DropOffNodeAddedState) stateMap.get(DropOffNodeAddedState.class);
+    }
+
+    public DropOffNodeAddedStepAdded getDONASAState() {
+        return (DropOffNodeAddedStepAdded) stateMap.get(DropOffNodeAddedStepAdded.class);
+    }
+
+    public ModifyOrderState getMOState() {
+        return (ModifyOrderState) stateMap.get(ModifyOrderState.class);
+    }
+
+    public ModifyStopLocationState getMSLSState() {
+        return (ModifyStopLocationState) stateMap.get(ModifyStopLocationState.class);
+    }
+
+    public void computeRound() {
+        this.currentState.calculateItinerary(this, this.uiController);
+    }
+
+    /**
      * Switch to "add delivery" mode
      */
     public void addDelivery() {
-        this.currentState.switchToAddMode();
+        this.currentState.switchToAddMode(this, this.uiController);
     }
 
     /**
      * Switch to "delete delivery" mode
      */
-    public void deleteDelivery() {
-        this.currentState.switchToSuppressionMode();
+    public void deleteDelivery(Step step) {
+        this.currentState.deleteDelivery(this, this.uiController, this.commandList, step);
     }
 
     /**
      * Switch to "change delivery order" mode
      */
-    public void editSequenceDelivery() {
-        this.currentState.switchToOrderChangeMode();
+    public void editSequenceDelivery(Step step) {
+        this.currentState.switchToOrderChangeMode(this, this.uiController, step);
+    }
+
+
+    public void createVertexList() {
+        this.vertexList = FXCollections.observableArrayList();
+
+        if (this.deliveryMap != null) {
+            LOGGER.trace("Creating vertex list : {}", this.deliveryMap.getDeliveryList());
+            for (Delivery d : this.deliveryMap.getDeliveryList()) {
+                vertexList.add(d.getPickUp());
+                vertexList.add(d.getDropOff());
+            }
+        }
+    }
+
+    public void saveRoadMap(File file) {
+        this.currentState.saveRoadMap(this, file);
+    }
+
+    public void setButtons() {
+        this.uiController.setButtons();
+    }
+
+    public void undo() {
+        this.currentState.undo(this, this.uiController, commandList);
+    }
+
+    public void redo() {
+        this.currentState.redo(this, this.uiController, commandList);
     }
 
     /**
      * Switch to "change location" mode
      */
-    public void editLocationDelivery() {
-        this.currentState.switchToLocationChange();
+    public void editLocationDelivery(Step step) {
+        this.currentState.switchToLocationChange(this, this.uiController, step);
     }
 
-    private void createVertexList() {
-        this.vertexList = FXCollections.observableArrayList();
-
-        for (Delivery d : this.deliveryMap.getDeliveryList()) {
-            vertexList.add(d.getPickUp());
-            vertexList.add(d.getDropOff());
-        }
+    public void inputSelectedVertex(Vertex vertex) {
+        this.currentState.selectedStepFromStepView(this, this.uiController, commandList, vertex);
     }
-
 }

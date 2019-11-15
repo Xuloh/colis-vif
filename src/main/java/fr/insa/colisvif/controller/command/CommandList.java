@@ -32,11 +32,16 @@ public class CommandList {
      * @param command The command to execute
      */
     public void doCommand(Command command) {
-        LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
-        pastCommands.clear();
-        currentCommands.add(command);
-        command.doCommand();
+        try {
+            LOGGER.info("Performing Command : {}", command.getClass().getSimpleName());
+            pastCommands.clear();
+            currentCommands.add(command);
+            command.doCommand();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
+
 
     /**
      * Undo the last executed {@link Command}.
@@ -44,11 +49,15 @@ public class CommandList {
      * If no {@link Command} was previously called, nothing happens.
      */
     public void undoCommand() {
-        if (!currentCommands.isEmpty()) {
-            Command commandToUndo = currentCommands.pop();
-            LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
-            commandToUndo.undoCommand();
-            pastCommands.add(commandToUndo);
+        try {
+            if (!currentCommands.isEmpty()) {
+                Command commandToUndo = currentCommands.removeLast();
+                LOGGER.info("Undoing Command : {}", commandToUndo.getClass().getSimpleName());
+                commandToUndo.undoCommand();
+                pastCommands.add(commandToUndo);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -58,11 +67,18 @@ public class CommandList {
      * If no {@link Command} was previously undone, nothing happens.
      */
     public void redoCommand() {
-        if (!pastCommands.isEmpty()) {
-            Command commandToRedo = pastCommands.pop();
-            LOGGER.info("Redoing Command : {}", commandToRedo.getClass().getSimpleName());
-            commandToRedo.doCommand();
-            currentCommands.add(commandToRedo);
+        try {
+            if (!pastCommands.isEmpty()) {
+                Command commandToRedo = pastCommands.removeLast();
+                LOGGER.info("Re"
+                        + "doing Command : {}", commandToRedo.getClass().getSimpleName());
+                commandToRedo.doCommand();
+                currentCommands.add(commandToRedo);
+            } else {
+                LOGGER.info("No Command to Redo");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -74,5 +90,13 @@ public class CommandList {
         LOGGER.info("Clearing command history");
         currentCommands.clear();
         pastCommands.clear();
+    }
+
+    public LinkedList<Command> getPastCommands() {
+        return pastCommands;
+    }
+
+    public LinkedList<Command> getCurrentCommands() {
+        return currentCommands;
     }
 }

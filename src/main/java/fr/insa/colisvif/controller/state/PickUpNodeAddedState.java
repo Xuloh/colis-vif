@@ -1,6 +1,10 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.CommandList;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
+import fr.insa.colisvif.view.UIController;
 
 /**
  * Class that implements State interface.
@@ -13,21 +17,48 @@ import fr.insa.colisvif.controller.Controller;
  */
 public class PickUpNodeAddedState implements State {
 
-    /**
-     * When in add mode, allow the user to add a drop off node.
-     */
-    @Override
-    public void addDropOffNode() {
+    private long pickUpNodeId;
 
+    @Override
+    public void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+        Step stepOfVertex = null;
+        for (Step step : controller.getRound().getSteps()) {
+            if (step.getDeliveryID() == vertex.getDeliveryId() && step.isPickUp() != vertex.getType()) {
+                stepOfVertex = step;
+            }
+        }
+        controller.getPUNASAState().entryToState(pickUpNodeId, stepOfVertex);
+        int pickUpDuration = uiController.getTimeFromPicker() * 60;
+        Vertex pickUpVertex = new Vertex(pickUpNodeId, true, pickUpDuration);
+        uiController.clearTimePicker();
+        uiController.setShowCityMapNodesOnHover(true);
+        controller.getMADOState().entryToState(pickUpVertex, stepOfVertex);
+        uiController.addDropOff();
+        uiController.printStatus("Sélection la position du noeud de dépôt.");
+        controller.setCurrentState(ModeAddDropOffState.class);
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user want to switch back to the
+     * {@link fr.insa.colisvif.controller.state.ItineraryCalculatedState}
+     * where no modifications can be done.
      * @param controller
      */
     @Override
     public void getBackToPreviousState(Controller controller) {
+        controller.getUIController().enableButtons();
+        controller.getUIController().clearTimePicker();
+        controller.getUIController().printStatus("Annulation de l'opération en cours.");
         controller.setCurrentState(ItineraryCalculatedState.class);
+    }
+
+    protected void entryToState(long nodeId) {
+        this.pickUpNodeId = nodeId;
+    }
+
+    @Override
+    public void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
+        this.leftClick(controller, uiController, commandList, 0, vertex);
     }
 
 }

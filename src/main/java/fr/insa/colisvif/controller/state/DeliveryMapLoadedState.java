@@ -34,17 +34,16 @@ public class DeliveryMapLoadedState implements State {
      */
     @Override
     public void loadCityMap(Controller controller, UIController uiController, File file) {
-        uiController.clearCanvas();
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            controller.setCurrentState(CityMapLoadedState.class);
+            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
-
-        uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawCanvas();
-        controller.setCurrentState(CityMapLoadedState.class);
     }
 
     /**
@@ -60,21 +59,25 @@ public class DeliveryMapLoadedState implements State {
     public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            //mc.writeDeliveries(c.getDeliveryMap());
-            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            controller.setCurrentState(DeliveryMapLoadedState.class);
+            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
-        uiController.clearCanvas();
-        uiController.drawCanvas();
-        controller.setCurrentState(DeliveryMapLoadedState.class);
     }
 
     /**
-     * Calculate a {@link fr.insa.colisvif.model.Round}.
+     * Calculates a {@link fr.insa.colisvif.model.Round}.
      */
+    // todo : prendre en compte les 30 secondes, pour le moment osef on n'a pas de demandes si longues à calculer
+    // todo : ajouter le calcul d'itinéraire quand il fera pas vomir la console
     @Override
-    public void calculateItinerary() {
-
+    public void calculateItinerary(Controller controller, UIController uiController) {
+        controller.setRound(controller.getCityMap().shortestRound(controller.getDeliveryMap()));
+        controller.setCurrentState(ItineraryCalculatedState.class);
+        uiController.printStatus("L'itinéraire a bien été calculé.");
     }
 }

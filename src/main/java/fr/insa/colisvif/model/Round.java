@@ -1,27 +1,38 @@
 package fr.insa.colisvif.model;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 /**
- * Represents the round to do all the deliveries that needs to be made, as a {@link List} of {@link Step}.
+ * Represents the round to do all the deliveries that needs to be made, as a
+ * {@link List} of {@link Step}.
  */
 public class Round {
-    private List<Step> steps;
+
+    private static final Logger LOGGER = LogManager.getLogger(Round.class);
+
+    private ObservableList<Step> steps;
 
     private DeliveryMap deliveryMap;
 
     /**
      * Constructor of Round.
-     * @param deliveries the deliveries that contains the {@link List} of {@link Delivery}.
+     *
+     * @param deliveries the deliveries that contains the {@link List} of
+     * {@link Delivery}.
      */
     public Round(DeliveryMap deliveries) {
-        steps = new ArrayList<>();
+        steps = FXCollections.observableArrayList();
         this.deliveryMap = deliveries;
     }
 
     /**
      * Returns the warehouse {@link Node} id of the {@link DeliveryMap}.
+     *
      * @return the warehouse {@link Node} id of the {@link DeliveryMap}.
      */
     public long getWarehouseNodeId() {
@@ -30,114 +41,243 @@ public class Round {
 
     /**
      * Returns the start date of the {@link DeliveryMap}.
+     *
      * @return the start date of the {@link DeliveryMap}.
      */
     public int getStartDate() {
-        return this.deliveryMap.getStartDateInSeconds();
+        return this.deliveryMap.getStartDate();
     }
 
     /**
      * Returns the {@link List} of {@link Step}.
+     *
      * @return the {@link List} of {@link Step}.
      */
     public List<Step> getSteps() {
         return steps;
     }
 
-    /**
-     * Remove the delivery composed by 2 steps from the list of steps.
-     *
-     * @param stepPickup the pickup from the delivery.
-     * @param stepDelivery the dropoff from the delivery.
-     */
-    public void removeDelivery(Step stepPickup, Step stepDelivery) {            // Make callable with Delivery or one step
-        if (!(steps.contains(stepPickup) && steps.contains(stepDelivery))) {    // The steps are in the list steps
-            throw new IllegalArgumentException();
+    private boolean areAssociated(Step step1, Step step2) {
+        return step1 != step2 && step1.getDeliveryID() == step2.getDeliveryID();
+    }
+
+    private int associatedStepIndex(Step step) throws IllegalArgumentException {
+        for (int i = 0; i < steps.size(); ++i) {
+            if (areAssociated(step, steps.get(i))) {
+                return i;
+            }
         }
-        if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {       // The steps correspond to the same delivery
-            throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Associated step not found");
+    }
+
+    private void removeFirstStep(CityMap map) {
+        long node1 = deliveryMap.getWarehouseNodeId();
+        long node2 = steps.get(1).getArrivalNodeId();
+        steps.get(1).setSections(map.getPath(node1, node2));
+
+        double length = map.getLength(node1, node2);
+        int newArrivalDate =
+                deliveryMap.getStartDate()
+                + (int) (length / ModelConstants.CYCLIST_SPEED);
+        int deltaTime = steps.get(1).getArrivalDate() - newArrivalDate;
+        for (int i = 1; i < steps.size(); ++i) {
+            steps.get(i)
+                 .setArrivalDate(steps.get(i).getArrivalDate() - deltaTime);
         }
+        steps.remove(0);
+    }
 
-        // Change the list section of the next step
-        Step stepAfterPickup = steps.get(steps.indexOf(stepPickup) + 1);
-        Step stepAfterDelivery = null;
-
-        if (steps.indexOf(stepDelivery) != steps.size() - 1) {
-            stepAfterDelivery = steps.get(steps.indexOf(stepDelivery) + 1);
+    private void removeIthStep(int i, CityMap map)
+            throws IllegalArgumentException {
+        if (i < 0 || i >= steps.size()) {
+            throw new IllegalArgumentException("Index "
+                    + i + " out of bounds (size : " + steps.size() + ")");
         }
+        if (i == 0) {
+            removeFirstStep(map);
+        } else if (i == steps.size() - 1) {
+            steps.remove(i);
+        } else {
+            long node1 = steps.get(i - 1).getArrivalNodeId();
+            long node2 = steps.get(i + 1).getArrivalNodeId();
+            steps.get(i + 1).setSections(map.getPath(node1, node2));
 
-        // Remove the steps
-        steps.remove(stepPickup);
-        steps.remove(stepDelivery);
-
-        // Change all hours
-        for (int i = steps.indexOf(stepAfterPickup); i < steps.size(); i++) {
-
+            double length = map.getLength(node1, node2);
+            int newArrivalDate = steps.get(i - 1).getArrivalDate()
+                    + (int) (length / ModelConstants.CYCLIST_SPEED);
+            int deltaTime = steps.get(i + 1).getArrivalDate() - newArrivalDate;
+            for (int j = i + 1; j < steps.size(); ++j) {
+                steps.get(j)
+                     .setArrivalDate(steps.get(j).getArrivalDate() - deltaTime);
+            }
+            steps.remove(i);
         }
     }
 
+    private void addStepAtFirst(Step step, CityMap map) {
+        long node1 = deliveryMap.getWarehouseNodeId();
+        long node2 = step.getArrivalNodeId();
+        long node3 = steps.get(0).getArrivalNodeId();
+        step.setSections(map.getPath(node1, node2));
+        steps.get(0).setSections(map.getPath(node2, node3));
+
+        double length = map.getLength(node1, node2);
+        step.setArrivalDate(deliveryMap.getStartDate()
+                + (int) (length / ModelConstants.CYCLIST_SPEED));
+        length = map.getLength(node2, node3);
+        int newArrivalDate =
+                step.getArrivalDate() + step.getDuration()
+                + (int) (length / ModelConstants.CYCLIST_SPEED);
+        int deltaTime = steps.get(0).getArrivalDate() - newArrivalDate;
+        for (Step value : steps) {
+            value.setArrivalDate(value.getArrivalDate() - deltaTime);
+        }
+        steps.add(0, step);
+    }
+
+    private void addStepAtLast(Step step, CityMap map) {
+        Step lastStep = steps.get(steps.size() - 1);
+        long node1 = lastStep.getArrivalNodeId();
+        long node2 = step.getArrivalNodeId();
+        step.setSections(map.getPath(node1, node2));
+        double length = map.getLength(node1, node2);
+        int time = lastStep.getArrivalDate() + lastStep.getDuration();
+        step.setDuration(time + (int) (length / ModelConstants.CYCLIST_SPEED));
+        LOGGER.fatal("In addStepAtLast , duration set is "
+                + step.getDuration());
+        steps.add(step);
+    }
+
+    public void addStepInIthPlace(Step step, int i, CityMap map) {
+        if (i < 0 || i > steps.size()) {
+            throw new IllegalArgumentException("Index " + i
+                    + " out of bounds (size : " + steps.size() + ")");
+        }
+        if (i == 0) {
+            addStepAtFirst(step, map);
+        } else if (i == steps.size()) {
+            addStepAtLast(step, map);
+        } else {
+            long node1 = steps.get(i - 1).getArrivalNodeId();
+            long node2 = step.getArrivalNodeId();
+            long node3 = steps.get(i).getArrivalNodeId();
+            step.setSections(map.getPath(node1, node2));
+            steps.get(i).setSections(map.getPath(node2, node3));
+
+            int time = steps.get(i - 1).getArrivalDate()
+                        + steps.get(i - 1).getDuration();
+            double length = map.getLength(node1, node2);
+            time += (int) (length / ModelConstants.CYCLIST_SPEED);
+            step.setArrivalDate(time);
+            time += step.getDuration();
+            length = map.getLength(node2, node3);
+            time += (int) (length / ModelConstants.CYCLIST_SPEED);
+            int deltaTime = time - steps.get(i).getArrivalDate();
+            for (int j = i; j < steps.size(); ++j) {
+                steps.get(j).setArrivalDate(steps.get(j)
+                                                 .getArrivalDate() + deltaTime);
+            }
+            steps.add(i, step);
+        }
+    }
+
+    public void removeDelivery(Step step, CityMap map) throws Exception {
+        if (!steps.contains(step)) {
+            throw new IllegalArgumentException("The step to remove "
+                    + "does not belong to this round");
+        }
+        removeIthStep(steps.indexOf(step), map);
+        removeIthStep(associatedStepIndex(step), map);
+        deliveryMap.removeDeliveryById(step.getDeliveryID());
+    }
+
     /**
-     * Add a new delivery to the round. Add two steps, one for the pickup and one for the delivery.
+     * Add a new delivery at the end of the round. Add two steps, one for the
+     * pickup and one for the delivery.
      *
-     * @param stepPickup step to go from the previous location to the pickup location.
-     * @param stepDelivery step to go from the previous location to the delivery pickup.
+     * @param pickUpNode  The pick up node
+     * @param dropOffNode The drop off node
      */
-    public void addDelivery(Step stepPickup, Step stepDelivery) {
-        // /!\ calculer le chemin !!!!!!!!!!
-        //
-        if (stepPickup.getDeliveryID() != stepDelivery.getDeliveryID()) {   // The steps are in the list steps
-            throw new IllegalArgumentException();
-        }
+    public Delivery addDelivery(long pickUpNode, long dropOffNode,
+                                int pickUpDuration,
+                                int dropOffDuration, CityMap map) {
+        map.dijkstra(pickUpNode);
+        map.dijkstra(dropOffNode);
+        Delivery delivery = deliveryMap.createDelivery(pickUpNode, dropOffNode,
+                                pickUpDuration, dropOffDuration);
+        int deliveryId = delivery.getId();
+        int time = steps.get(steps.size() - 1).getArrivalDate()
+                + steps.get(steps.size() - 1).getDuration();
 
-        /*
-            MANQUE LE CALCUL DE TEMPS
-            MODIFIER LES LISTES DES SECTIONS EMPRUNTÉES
-         */
-        steps.add(stepPickup);
-        steps.add(stepDelivery);
+        double lengthToPickUp = map.getLength(steps.get(steps.size() - 1)
+                                   .getArrivalNodeId(), pickUpNode);
+        time += (int) (lengthToPickUp / ModelConstants.CYCLIST_SPEED);
+        Vertex pickUpVertex = new Vertex(pickUpNode, Vertex.PICK_UP,
+                                         pickUpDuration);
+        pickUpVertex.setDeliveryId(deliveryId);
+        Step pickUpStep = new Step(pickUpVertex, deliveryId, time);
+        pickUpStep.setSections(map.getPath(
+                steps.get(steps.size() - 1).getArrivalNodeId(), pickUpNode));
+        time += pickUpStep.getDuration();
 
-        // Change all hours
-        for (int i = steps.indexOf(stepPickup); i < steps.size(); i++) {
-
-        }
+        double lengthToDropOff = map.getLength(pickUpNode, dropOffNode);
+        time += (int) (lengthToDropOff / ModelConstants.CYCLIST_SPEED);
+        Vertex dropOffVertex = new Vertex(dropOffNode, Vertex.DROP_OFF,
+                                          dropOffDuration);
+        dropOffVertex.setDeliveryId(deliveryId);
+        Step dropOffStep = new Step(dropOffVertex, deliveryId, time);
+        dropOffStep.setSections(map.getPath(pickUpNode, dropOffNode));
+        addStep(pickUpStep);
+        addStep(dropOffStep);
+        return delivery;
     }
 
     /**
      * Change the order of stepChangeOrder to be just before stepJustAfter.
      *
-     * @param stepChangeOrder the step that the order will be changed.
-     * @param stepJustAfter the step that will follow stepChangeOrder.
+     * @param stepToChange   the step that the order will be changed.
+     * @param stepJustBefore the step that will follow stepChangeOrder,
+     *                       null if we want to place stepChageOrder at
+     *                       the beginning of the round.
      */
-    public void changeOrderStep(Step stepChangeOrder, Step stepJustAfter) {
-        if (!(steps.contains(stepChangeOrder) && steps.contains(stepJustAfter))) { // The steps are in the list steps
-            throw new IllegalArgumentException();
+    public void changeOrderStep(Step stepToChange,
+                                Step stepJustBefore, CityMap map)
+            throws IllegalArgumentException {
+        if (stepJustBefore == null && stepToChange.isDropOff()) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt "
+                    + "avant son enlèvement");
         }
-
-        int start = 0;
-        int end = 0;
-
-        if (stepChangeOrder.isPickUp()) {           // stepChangeOrder is a pickup, check that the delivery is not before
-            end = steps.indexOf(stepJustAfter);
-        } else {                                    // stepChangeOrder is a delivery, check that the pickup is not after
-            start = steps.indexOf(stepJustAfter);
-            end = steps.size();
+        int i = steps.indexOf(stepToChange);
+        int j = associatedStepIndex(stepToChange);
+        if ((stepToChange.isDropOff() && i < j)
+                || (stepToChange.isPickUp() && i > j)) {
+            throw new IllegalArgumentException("Impossible de placer un dépôt"
+                    + " avant son enlèvement");
         }
-
-        for (int i = start; i < end; i++) {
-            if (steps.get(i).getDeliveryID() == stepChangeOrder.getDeliveryID()) {
-                throw new IllegalArgumentException();    // One of the previous assessment is false
-            }
+        removeIthStep(i, map);
+        if (stepJustBefore == null) {
+            addStepAtFirst(stepToChange, map);
+        } else {
+            i = steps.indexOf(stepJustBefore);
+            addStepInIthPlace(stepToChange, i + 1, map);
         }
+    }
 
-        steps.remove(stepChangeOrder);
-        steps.add(steps.indexOf(stepJustAfter), stepChangeOrder);
-
-        // /!\ CHANGE THE LIST OF STEPS FOR stepJustAfter
-
-        // Change all hours
-        for (int i = steps.indexOf(stepChangeOrder); i < steps.size(); i++) {
-
+    public void changeLocationStep(Step stepToChange,
+                                   long nodeId, CityMap map) {
+        if (stepToChange.isPickUp()) {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID())
+                                                     .getPickUp()
+                                                     .setNodeId(nodeId);
+        } else {
+            deliveryMap.getDeliveryPerId(stepToChange.getDeliveryID())
+                                                     .getDropOff()
+                                                     .setNodeId(nodeId);
         }
+        int index = steps.indexOf(stepToChange);
+        removeIthStep(index, map);
+        stepToChange.setArrivalNodeId(nodeId);
+        addStepInIthPlace(stepToChange, index, map);
     }
 
     /**
@@ -148,4 +288,9 @@ public class Round {
     public void addStep(Step step) {
         steps.add(step);
     }
+
+    public DeliveryMap getDeliveryMap() {
+        return deliveryMap;
+    }
+
 }

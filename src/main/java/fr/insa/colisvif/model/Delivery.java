@@ -1,5 +1,7 @@
 package fr.insa.colisvif.model;
 
+import javafx.beans.value.ChangeListener;
+
 /**
  * Represent a Delivery by its pick up and drop off {@link Vertex} and its id.
  */
@@ -19,19 +21,15 @@ public class Delivery {
      * @param dropOffNodeId the drop off {@link Node} id of the delivery.
      * @param pickUpDuration the pick up duration of the delivery.
      * @param dropOffDuration the drop off duration of the delivery
-     * @throws IllegalArgumentException if the pickUpDuration/dropOffDuration is less than 0.
      */
-    public Delivery(int id, long pickUpNodeId, long dropOffNodeId, int pickUpDuration, int dropOffDuration) throws IllegalArgumentException {
-        //TODO @Felix : Est-ce qu'un pickup et dropoff d'un même delivery peuvent être sur un même noeud?
-        if (pickUpNodeId == dropOffNodeId) {
-            throw new IllegalArgumentException("The drop off and the pick up must correspond to two different Nodes, got "
-                    + pickUpNodeId + " (pick up node ID) and "
-                    + dropOffNodeId + " (drop off node ID) and ");
-        }
-
-        pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
-        dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
+    public Delivery(int id, long pickUpNodeId, long dropOffNodeId,
+                    int pickUpDuration, int dropOffDuration)
+            throws IllegalArgumentException {
         this.id = id;
+        pickUp = new Vertex(pickUpNodeId, Vertex.PICK_UP, pickUpDuration);
+        pickUp.setDeliveryId(this.id);
+        dropOff = new Vertex(dropOffNodeId, Vertex.DROP_OFF, dropOffDuration);
+        dropOff.setDeliveryId(this.id);
     }
 
     /**
@@ -92,8 +90,13 @@ public class Delivery {
      * @param pickUpDuration the time in seconds to perform the pick up.
      * @throws IllegalArgumentException if the pickUpDuration is not positive.
      */
-    public void setPickUpDuration(int pickUpDuration) throws IllegalArgumentException {
+    public void setPickUpDuration(int pickUpDuration)
+            throws IllegalArgumentException {
         this.pickUp.setDuration(pickUpDuration);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -111,8 +114,14 @@ public class Delivery {
      * @param dropOffDuration the time in seconds to perform the drop off.
      * @throws IllegalArgumentException if the deliveryDuration is not positive.
      */
-    public void setDropOffDuration(int dropOffDuration) throws IllegalArgumentException {
+    public void setDropOffDuration(int dropOffDuration)
+            throws IllegalArgumentException {
         this.dropOff.setDuration(dropOffDuration);
+    }
+
+    public void addVertexChangeListener(ChangeListener<Number> changeListener) {
+        this.pickUp.nodeIdProperty().addListener(changeListener);
+        this.dropOff.nodeIdProperty().addListener(changeListener);
     }
 
     /**
@@ -121,8 +130,11 @@ public class Delivery {
      */
     @Override
     public String toString() {
-        return "id : " + id + "pickUpNodeId : " + pickUp.getNodeId() + " | deliveryNodeId : " + dropOff.getNodeId() + " | pickUpDuration : "
-                + pickUp.getDuration() + " | deliveryDuration : " + dropOff.getDuration() + "\n";
+        return "id : " + id
+                + " | pickUpNodeId : " + pickUp.getNodeId()
+                + " | deliveryNodeId : " + dropOff.getNodeId()
+                + " | pickUpDuration : " + pickUp.getDuration()
+                + " | deliveryDuration : " + dropOff.getDuration() + "\n";
     }
 
     /**

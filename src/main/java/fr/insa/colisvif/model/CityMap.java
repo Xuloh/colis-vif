@@ -3,7 +3,6 @@ package fr.insa.colisvif.model;
 import fr.insa.colisvif.exception.IdException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.*;
 
 /**
@@ -16,20 +15,6 @@ import java.util.*;
 public class CityMap {
 
     private static final Logger LOGGER = LogManager.getLogger(CityMap.class);
-
-    /*
-    public static void main(String args[]) throws SAXException,
-    IdError, ParserConfigurationException, IOException {
-        File file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
-        fichiersXML2019/grandPlan.xml");
-        CityMap map = new CityMapFactory().createCityMapFromXMLFile(file);
-        file = new File("/C:/Users/F\u00e9lix/Desktop/INSA/4IF/PLD agile/
-        fichiersXML2019/demandeGrand7.xml");
-        DeliveryMap deliveries = new DeliveryMapFactory()
-        .createDeliveryMapFromXML(file, map);
-
-        Round round = map.naiveRound(deliveries);
-    }*/
 
     private static final int LNG_MIN = -180;
 
@@ -53,6 +38,8 @@ public class CityMap {
 
     private HashMap<Long, PathsFromVertex> pathsFromVertices;
 
+    private Round round;
+
     /**
      * Constructor of CityMap. Initialize the min/max latitudes and min/max
      * longitudes.
@@ -73,13 +60,14 @@ public class CityMap {
      * Creates a Node from an id, a latitude and longitude and ads it
      * to the map of {@link Node}.
      *
-     * @param id the id of the Node.
-     * @param latitude the latitude of the Node.
+     * @param id        the id of the Node.
+     * @param latitude  the latitude of the Node.
      * @param longitude the longitude of the Node.
      * @throws IllegalArgumentException when the latitude or longitude
-     * is out of bounds.
+     *                                  is out of bounds.
      */
-    public void createNode(long id, double latitude, double longitude) throws IllegalArgumentException {
+    public void createNode(long id, double latitude, double longitude)
+            throws IllegalArgumentException {
 
         Node newNode = new Node(id, latitude, longitude);
 
@@ -103,17 +91,19 @@ public class CityMap {
     }
 
     /**
-     * Creates a {@link Section} and adds it to the successors of the {@link Node}
-     * that has the same origin.
+     * Creates a {@link Section} and adds it to the successors of the
+     * {@link Node} that has the same origin.
      *
-     * @param length the length of the section.
-     * @param roadName the road name of the section.
+     * @param length      the length of the section.
+     * @param roadName    the road name of the section.
      * @param destination the destination of the section.
-     * @param origin the origin of the section.
+     * @param origin      the origin of the section.
      * @throws IllegalArgumentException if the origin of the new {@link Section}
-     * does not match any {@link Node}
+     *                                  does not match any {@link Node}
      */
-    public void createSection(double length, String roadName, long origin, long destination) throws IllegalArgumentException {
+    public void createSection(double length, String roadName,
+                              long origin, long destination)
+            throws IllegalArgumentException {
         Section newSection = new Section(length, roadName, origin, destination);
 
         if (this.mapSection.get(roadName) == null) {
@@ -127,7 +117,10 @@ public class CityMap {
         try {
             Optional
                 .ofNullable(this.mapNode.get(origin))
-                .orElseThrow(() -> new IllegalArgumentException("The origin of the Section does not match any Nodes in the map of Nodes"))
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "The origin of the Section does not match"
+                        + " any Nodes in the map of Nodes")
+                )
                 .addToSuccessors(newSection);
         } catch (IdException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
@@ -191,24 +184,59 @@ public class CityMap {
     /**
      * Returns the minimum length between two coordinates.
      *
-     * @param start the starting point.
+     * @param start  the starting point.
      * @param finish the ending point.
      * @return the minimum length between two coordinates.
+     * @throws IllegalArgumentException if the parameter start and / or finish
+     * does not exist in the map of {@link Node}, or if the shortestRound has
+     * not been performed yet.
      */
-    public double getLength(long start, long finish) {
+    public double getLength(long start, long finish)
+            throws IllegalArgumentException {
+        if (!mapNode.containsKey(start)) {
+            throw new IllegalArgumentException("The Node " + start
+                    + " does not exist in the map of Nodes"
+            );
+        }
+        if (!mapNode.containsKey(finish)) {
+            throw new IllegalArgumentException("The Node " + finish
+                    + " does not exist in the map of Nodes"
+            );
+        }
+        if (!pathsFromVertices.containsKey(start)) {
+            dijkstra(start);
+        }
+
         return pathsFromVertices.get(start).getLength(finish);
     }
+
+    public LinkedList<Section> getPath(long start, long finish) {
+        if (!pathsFromVertices.containsKey(start)) {
+            dijkstra(start);
+        }
+        LinkedList<Section> path = new LinkedList<>();
+        Section prevSection = pathsFromVertices.get(start)
+                .getPrevSection(finish);
+        while (prevSection != null) {
+            path.addFirst(prevSection);
+            prevSection = pathsFromVertices.get(start)
+                    .getPrevSection(prevSection.getOrigin());
+        }
+        return path;
+    }
+
 
     /**
      * Returns the {@link Section} between start and finish.
      *
-     * @param start the starting point.
+     * @param start  the starting point.
      * @param finish the ending point.
      * @return the {@link Section} between start and finish.
      * @throws IllegalArgumentException when it does not find a {@link Section}
-     * between start and finish.
+     *                                  between start and finish.
      */
-    public Section getSection(long start, long finish) throws IllegalArgumentException {
+    public Section getSection(long start, long finish)
+            throws IllegalArgumentException {
         for (Section section : getMapNode().get(start).getSuccessors()) {
             if (section.getDestination() == finish) {
                 return section;
@@ -219,6 +247,7 @@ public class CityMap {
 
     /**
      * Returns a {@link String} representation of this {@link CityMap}.
+     *
      * @return a {@link String} representation of this {@link CityMap}.
      */
     @Override
@@ -249,26 +278,37 @@ public class CityMap {
      * the {@link Node} stored in the map of {@link Node}.
      *
      * @param start the coordinate of the starting point.
+     * @throws IllegalArgumentException if the paramater start does not exist
+     * in the map of {@link Node}.
      */
-    private void dijkstra(long start) {
-        // TODO @Felix : tester si start est une bonne coordonnée??
+
+    /*package-private*/ void dijkstra(long start)
+            throws IllegalArgumentException {
+        if (!mapNode.containsKey(start)) {
+            throw new IllegalArgumentException(
+                    "The stating node of Dijkstra's "
+                            + "algorithm does not belong to the map");
+        }
 
         PathsFromVertex pathsFromStart = new PathsFromVertex();
         pathsFromStart.setLength(start, 0D);
         pathsFromStart.setPrev(start, null);
 
-        Comparator<Long> cmp = Comparator.comparingDouble(pathsFromStart::getLength);
+        Comparator<Long> cmp = Comparator
+                .comparingDouble(pathsFromStart::getLength);
         PriorityQueue<Long> priorityQueue = new PriorityQueue<>(cmp);
         priorityQueue.add(start);
 
         while (!priorityQueue.isEmpty()) {
             Long node = priorityQueue.poll();
             double length = pathsFromStart.getLength(node);
-            for(Section section : getMapNode().get(node).getSuccessors()){
+            for (Section section : getMapNode().get(node).getSuccessors()) {
                 long next = section.getDestination();
                 double destinationLength = pathsFromStart.getLength(next);
-                if(destinationLength == -1 || length + section.getLength() < destinationLength){
-                    pathsFromStart.setLength(next,length + section.getLength());
+                if (destinationLength == -1
+                        || length + section.getLength() < destinationLength) {
+                    pathsFromStart.setLength(next,
+                            length + section.getLength());
                     pathsFromStart.setPrev(next, section);
                     priorityQueue.remove(next);
                     priorityQueue.add(next);
@@ -280,25 +320,35 @@ public class CityMap {
 
     /**
      * Creates a {@link Round} object from a {@link DeliveryMap} that contains
-     * the best path to take from the warehouse going though all the pickup and dropoff
-     * {@link Node} respecting the order (pick up node x is always before drop off node x).
+     * the best path to take from the warehouse going though all the pickup and
+     * dropoff {@link Node} respecting the order (pick up node x is always
+     * before drop off node x).
      *
-     * @param deliveries a delivery object containing all the pickup and dropoff nodes and their information.
+     * @param deliveries a delivery object containing all the pickup and dropoff
+     * nodes and their information.
      * @return a {@link Round} object from a {@link DeliveryMap} that contains.
      * the best path.
      */
-    public Round shortestRound(DeliveryMap deliveries){
-        var debut = System.nanoTime();
+    public Round shortestRound(DeliveryMap deliveries) {
         dijkstra(deliveries.getWarehouseNodeId());
         for (Delivery delivery : deliveries.getDeliveryList()) {
             dijkstra(delivery.getPickUpNodeId());
             dijkstra(delivery.getDropOffNodeId());
         }
-        var fin = System.nanoTime();
-        System.out.print("Dijkstra time : ");
-        System.out.println((fin - debut)*0.000000001);
-        VerticesGraph verticesGraph = new VerticesGraph(deliveries, pathsFromVertices);
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries,
+                pathsFromVertices);
         return verticesGraph.shortestRound();
+    }
+
+    public Round naiveRound(DeliveryMap deliveries) {
+        dijkstra(deliveries.getWarehouseNodeId());
+        for (Delivery delivery : deliveries.getDeliveryList()) {
+            dijkstra(delivery.getPickUpNodeId());
+            dijkstra(delivery.getDropOffNodeId());
+        }
+        VerticesGraph verticesGraph = new VerticesGraph(deliveries,
+                pathsFromVertices);
+        return verticesGraph.naiveRound();
     }
 
     /**
@@ -309,7 +359,6 @@ public class CityMap {
      * map of {@link Node} and the map of {@link Section}
      *
      * @param o the {@link Object} to compare this {@link CityMap} to
-     *
      * @return <code>true</code> if o is a {@link CityMap} whose values are
      * "equal" to those of this {@link CityMap}
      */

@@ -12,7 +12,7 @@ package fr.insa.colisvif.controller.state;
 public class NonOptimizedItineraryState implements State {
 
     /**
-     * Continue the calculation of the best itinerary.
+     * Continues the calculation of the best itinerary.
      */
     @Override
     public void continueCalculation() {
@@ -20,7 +20,7 @@ public class NonOptimizedItineraryState implements State {
     }
 
     /**
-     * Stop the calculation of the best itinerary.
+     * Stops the calculation of the best itinerary.
      */
     @Override
     public void stopCalculation() {

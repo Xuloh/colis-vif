@@ -1,7 +1,12 @@
 package fr.insa.colisvif.controller.state;
 
 import fr.insa.colisvif.controller.Controller;
+import fr.insa.colisvif.controller.command.Command;
+import fr.insa.colisvif.controller.command.CommandList;
 import fr.insa.colisvif.model.CityMap;
+import fr.insa.colisvif.model.Node;
+import fr.insa.colisvif.model.Step;
+import fr.insa.colisvif.model.Vertex;
 import fr.insa.colisvif.view.UIController;
 
 import java.io.File;
@@ -60,35 +65,39 @@ public interface State {
      * Calculate a {@link fr.insa.colisvif.model.Round}
      * when a {@link CityMap} and a {@link fr.insa.colisvif.model.DeliveryMap} are loaded.
      */
-    default void calculateItinerary() {
+    default void calculateItinerary(Controller controller, UIController uiController) {
 
     }
 
     /**
      * Save the road map associated to a {@link fr.insa.colisvif.model.Round} in a text file.
      */
-    default void saveRoadMap() {
+    default void saveRoadMap(Controller controller, File file) {
 
     }
 
     /**
-     * Enter in suppression mode //todo : Ca fait quoi reellement ?
+     * Enter in suppression mode to allow the user to delete a delivery
+     *
+     * @see SuppressionModeState
      */
-    default void switchToSuppressionMode() {
+    default void switchToSuppressionMode(Controller controller) {
 
     }
 
     /**
-     * Enter in add mode //todo : Ca fait quoi reellement ?
+     * Enter in add mode to allow the user to ad a new delivery to the map
+     *
+     * @see ModeAddState
      */
-    default void switchToAddMode() {
+    default void switchToAddMode(Controller controller, UIController uiController) {
 
     }
 
     /**
      * When in add mode, allow the user to add a pick up node.
      */
-    default void addPickUpNode() {
+    default void addPickUpNode(Controller controller, UIController uiController, Node node) {
 
     }
 
@@ -107,16 +116,16 @@ public interface State {
     }
 
     /**
-     * Enter in order change mode //todo : Ca fait quoi reellement ?
+     * Enter in order change mode to allow the user to changer the delivery order
      */
-    default void switchToOrderChangeMode() {
+    default void switchToOrderChangeMode(Controller controller, UIController uiController, Step step) {
 
     }
 
     /**
-     * Enter in location change mode //todo : Ca fait quoi reellement ?
+     * Enter in location change mode to allow the user to change the position of a vertex
      */
-    default void switchToLocationChange() {
+    default void switchToLocationChange(Controller controller, UIController uiController, Step step) {
 
     }
 
@@ -164,11 +173,50 @@ public interface State {
     }
 
     /**
-     * Used when the user want to undo his/her modifications. //todo : pas sûre de moi
+     * Used when the user wants to get back to a stable state where no modifications
+     * are happening.
      * @param controller
      */
     default void getBackToPreviousState(Controller controller) {
+    }
+
+    default void nodeClicked(Controller controller, UIController uiController, CommandList commandList, Long nodeId) {
 
     }
 
+    default void stepClicked(Controller controller, UIController uiController, CommandList commandList, Step step) {
+
+    }
+
+    default void setDuration(Controller controller, UIController uiController) {
+
+    }
+
+    default void addPickUpNode(Controller controller, UIController uiController) {
+
+    }
+
+    default void addDropOffNode(Controller controller, UIController uiController, CommandList commandList) {
+
+    }
+
+    default void deleteDelivery(Controller controller, UIController uiController, CommandList commandList, Step step) {
+
+    }
+
+    default void undo(Controller controller, UIController uiController, CommandList commandList) {
+
+    }
+
+    default void redo(Controller controller, UIController uiController, CommandList commandList) {
+
+    }
+
+    default void leftClick(Controller controller, UIController uiController, CommandList commandList, long nodeId, Vertex vertex) {
+
+    }
+
+    default void selectedStepFromStepView(Controller controller, UIController uiController, CommandList commandList, Vertex vertex) {
+
+    }
 }

@@ -3,7 +3,8 @@ package fr.insa.colisvif.model;
 import java.util.Objects;
 
 /**
- * Represents the {@link Section}, that has a length, a road name, a destination and an origin.
+ * Represents the {@link Section}, that has a length, a road name, a destination
+ * and an origin.
  */
 public class Section {
     private double length;
@@ -21,7 +22,8 @@ public class Section {
      * @param origin the {@link Node} id of the origin.
      * @param destination the {@link Node} id of the destination.
      */
-    public Section(double length, String roadName, long origin, long destination) {
+    public Section(double length, String roadName, long origin,
+                   long destination) {
         // TODO change destination origin to origin destination
         this.length = length;
         this.roadName = roadName;
@@ -72,19 +74,25 @@ public class Section {
 
     /**
      * Returns a {@link String} representation of this {@link Section}.
+     *
      * @return a {@link String} representation of this {@link Section}.
      */
     @Override
     public String toString() {
-        String result = "Length : " + length + " | Road Name : " + roadName + " | Destination : " + destination + " | Origin : " + origin + "\n";
-        return result;
+        return "Section{"
+                + "length=" + length
+                + ", roadName='" + roadName + '\''
+                + ", origin=" + origin
+                + ", destination=" + destination
+                + '}';
     }
 
     /**
      * Determines if the given {@link Object} is "equal"
      * to this {@link Section}.
      * Only other {@link Section} are considered for comparison.
-     * The method compares the lengths, the destination and origin {@link Node} id as well as the road names.
+     * The method compares the lengths, the destination and origin {@link Node}
+     * id as well as the road names.
      *
      * @param o the {@link Object} to compare this {@link Section} to
      *

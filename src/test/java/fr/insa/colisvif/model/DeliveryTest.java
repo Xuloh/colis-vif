@@ -13,11 +13,6 @@ public class DeliveryTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testOriginEqualsDestination() {
-        new Delivery(1, 100, 100, 10, 10);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testNegativeDuration1() {
         new Delivery(1, 100, 100, -10, 10);
     }
@@ -106,17 +101,17 @@ public class DeliveryTest {
     @Test
     public void testToString() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 1 + "pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected = "id : " + 1 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
-        assertEquals(delivery.toString(), exptected);
+        assertEquals(exptected, delivery.toString());
     }
 
     @Test
     public void testToStringWrong() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
-        String exptected = "id : " + 2 + "pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
+        String exptected = "id : " + 2 + " | pickUpNodeId : " + 100 + " | deliveryNodeId : " + 101 + " | pickUpDuration : "
                 + 10 + " | deliveryDuration : " + 20 + "\n";
-        assertNotEquals(delivery.toString(), exptected);
+        assertNotEquals(exptected, delivery.toString());
     }
 
 
@@ -124,34 +119,48 @@ public class DeliveryTest {
     public void testClassEquals() {
         Delivery delivery = new Delivery(1, 100, 101, 10, 20);
 
-        assertNotEquals(delivery, 1);
+        assertNotEquals(1, delivery);
     }
 
     @Test
     public void getId() {
         int expected = 1;
         Delivery delivery = new Delivery(expected, 100, 101, 10, 20);
-        assertEquals(delivery.getId(), expected);
+        assertEquals(expected, delivery.getId());
     }
 
     @Test
     public void getIdWrong() {
         int expected = 1;
         Delivery delivery = new Delivery(expected + 1, 100, 101, 10, 20);
-        assertNotEquals(delivery.getId(), expected);
+        assertNotEquals(expected, delivery.getId());
     }
 
     @Test
     public void getPickUp() {
         Vertex expected = new Vertex(100, Vertex.PICK_UP, 10);
         Delivery delivery = new Delivery(1, expected.getNodeId(), 10, expected.getDuration(), 10);
-        assertEquals(delivery.getPickUp(), expected);
+        assertEquals(expected, delivery.getPickUp());
     }
 
     @Test
     public void getPickUpWrong() {
         Vertex expected = new Vertex(100, Vertex.PICK_UP, 10);
         Delivery delivery = new Delivery(1, expected.getNodeId(), 10, expected.getDuration() + 1, 10);
-        assertNotEquals(delivery.getPickUp(), expected);
+        assertNotEquals(expected, delivery.getPickUp());
+    }
+
+    @Test
+    public void getDropOff1() {
+        Vertex expected = new Vertex(10, Vertex.DROP_OFF, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId(), expected.getDuration() + 1, 10);
+        assertEquals(expected, delivery.getDropOff());
+    }
+
+    @Test
+    public void getDropOff2() {
+        Vertex expected = new Vertex(11, Vertex.DROP_OFF, 10);
+        Delivery delivery = new Delivery(1, 1, expected.getNodeId() - 1, expected.getDuration() + 1, 10);
+        assertNotEquals(expected, delivery.getDropOff());
     }
 }

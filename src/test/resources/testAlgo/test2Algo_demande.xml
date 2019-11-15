@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <demandeDeLivraisons>
     <entrepot adresse="0" heureDepart="8:0:0"/>
-    <livraison adresseEnlevement="1" adresseLivraison="2" dureeEnlevement="1" dureeLivraison="1"/>
+    <livraison adresseEnlevement="1" adresseLivraison="2" dureeEnlevement="1" dureeLivraison="2"/>
 </demandeDeLivraisons>

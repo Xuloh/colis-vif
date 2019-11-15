@@ -34,16 +34,16 @@ public class CityMapLoadedState implements State {
      */
     @Override
     public void loadCityMap(Controller controller, UIController uiController, File file) {
-        uiController.clearCanvas();
         try {
             controller.setCityMap(controller.getCityMapFactory().createCityMapFromXMLFile(file));
-            uiController.getMapCanvas().setCityMap(controller.getCityMap());
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            controller.setCurrentState(CityMapLoadedState.class);
+            uiController.printStatus("La carte a bien été chargée.\nVous pouvez désormais charger un plan de livraison.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
-        uiController.getMapCanvas().setDeliveryMap(null);
-        uiController.drawCanvas();
-        controller.setCurrentState(CityMapLoadedState.class);
     }
 
     /**
@@ -59,13 +59,19 @@ public class CityMapLoadedState implements State {
     public void loadDeliveryMap(Controller controller, UIController uiController, File file, CityMap cityMap) {
         try {
             controller.setDeliveryMap(controller.getDeliveryMapFactory().createDeliveryMapFromXML(file, cityMap));
-            uiController.getMapCanvas().setDeliveryMap(controller.getDeliveryMap());
-        } catch (IOException | SAXException | ParserConfigurationException | XMLException e) {
+            controller.setCurrentState(DeliveryMapLoadedState.class);
+            uiController.printStatus("Le plan de livraison a bien été chargé.\nVous pouvez désormais calculer un itinéraire.");
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             LOGGER.error(e.getMessage(), e);
+        } catch (XMLException e) {
+            LOGGER.error(e.getMessage(), e);
+            uiController.printError("Le fichier chargé n'est pas un fichier correct.");
         }
-        uiController.clearCanvas();
-        uiController.drawCanvas();
-        uiController.printTextualView();
-        controller.setCurrentState(DeliveryMapLoadedState.class);
     }
+
+    @Override
+    public void calculateItinerary(Controller controller, UIController uiController) {
+        uiController.printError("Ouvrez d'abord un plan de livraison !");
+    }
+
 }

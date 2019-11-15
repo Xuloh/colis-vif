@@ -25,7 +25,14 @@ public class SectionTest {
     @Test
     public void testSectionToString() {
         Section section = new Section(20, "Rue de la Paix", 101, 100);
-        assertEquals("Length : 20.0 | Road Name : Rue de la Paix | Destination : 100 | Origin : 101\n", section.toString());
+        String expected = "Section{"
+                + "length=" + 20.0
+                + ", roadName='" + "Rue de la Paix" + '\''
+                + ", origin=" + 101
+                + ", destination=" + 100
+                + '}';
+
+        assertEquals(expected, section.toString());
     }
 
 

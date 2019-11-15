@@ -24,19 +24,47 @@ public final class CanvasConstants {
     public static final double DELTA_ZOOM_SCALE = 0.1d;
 
     /**
-     * Color used to draw the sections of the map
+     * Radius used to render the nodes on the map (in pixels).
      */
-    public static final Color SECTION_COLOR = Color.grayRgb(85);
+    public static final double DELIVERY_NODE_RADIUS = 7d;
+
+    public static final double DELIVERY_NODE_SELECTED_RADIUS_SCALE = 1.5d;
 
     /**
-     * Size at which delivery nodes are drawn on the map (diameter in pixels).
+     * Radius used to render the city map nodes (in pixels)
      */
-    public static final int DELIVERY_NODE_SIZE = 15;
+    public static final double CITY_MAP_NODE_RADIUS = DELIVERY_NODE_RADIUS / 2d;
 
     /**
      * Opacity used for delivery nodes' colors
      */
     public static final double NODE_OPACITY = 0.7d;
+
+    /**
+     * Color used to render the sections of the map
+     */
+    public static final Color SECTION_COLOR = Color.grayRgb(85);
+
+    /**
+     * Color used to render the warehouse
+     */
+    public static final Color WAREHOUSE_COLOR = Color.rgb(
+        255,
+        255,
+        255,
+        CanvasConstants.NODE_OPACITY
+    );
+
+    /**
+     * Color used to render the city map nodes
+     */
+    public static final Color CITY_MAP_NODE_COLOR = Color.DARKORANGE;
+
+    public static final Color ROUND_SECTION_COLOR = Color.LIME;
+
+    public static final double ROUND_SECTION_WIDTH = 2d;
+
+    public static final double ARROW_SIZE = 6d;
 
     private CanvasConstants() {
 

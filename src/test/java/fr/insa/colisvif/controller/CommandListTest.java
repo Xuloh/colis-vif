@@ -83,7 +83,7 @@ public class CommandListTest {
     }
 
     @Test
-    public void redoCommandEmpty() throws NoSuchFieldException, IllegalAccessException {
+    public void redoCommandEmpty() throws Exception {
         CommandList cl = new CommandList();
         cl.redoCommand();
 
@@ -92,7 +92,7 @@ public class CommandListTest {
     }
 
     @Test
-    public void redoCommand() throws NoSuchFieldException, IllegalAccessException {
+    public void redoCommand() throws Exception {
         CommandList cl = new CommandList();
         Command c = new SimplePrintCommand();
 
@@ -106,7 +106,7 @@ public class CommandListTest {
     }
 
     @Test
-    public void resetCommand() throws NoSuchFieldException, IllegalAccessException {
+    public void resetCommand() throws Exception {
         CommandList cl = new CommandList();
         Command c = new SimplePrintCommand();
 
