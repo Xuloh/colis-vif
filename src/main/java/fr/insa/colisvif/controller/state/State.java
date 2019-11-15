@@ -177,8 +177,8 @@ public interface State {
      * @param controller {@link Controller} of the application
      * @param uiController {@link UIController} of the application
      * @param commandList {@link CommandList} of the controller
-     * @param nodeId
-     * @param vertex
+     * @param nodeId the id of the node or vertex clicked
+     * @param vertex the vertex clicked or null
      */
     default void leftClick(Controller controller, UIController uiController,
                            CommandList commandList, long nodeId,
