@@ -110,7 +110,7 @@ public class ModifyOrderState implements State {
         }
         controller.setCurrentState(ItineraryCalculatedState.class);
     }
-    
+
     protected void entryToState(Step step) {
         stepToChange = step;
     }
