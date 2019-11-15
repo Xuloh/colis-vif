@@ -7,7 +7,10 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.TilePane;
 
 /**
- * todo javadoc
+ * A custom {@link TilePane} that wraps and handles a {@link Spinner} and
+ * a {@link Label}.
+ *
+ * @see
  */
 public class TimePicker extends TilePane {
 
@@ -15,6 +18,9 @@ public class TimePicker extends TilePane {
 
     private Label label;
 
+    /**
+     * Creates a new {@link Spinner} and an associated {@link Label}.
+     */
     public TimePicker() {
         super();
 
@@ -30,19 +36,37 @@ public class TimePicker extends TilePane {
         this.setHgap(0);
         this.setVgap(0);
 
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 60, 5);
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                        0,
+                        60,
+                        5);
 
         this.spinner.setValueFactory(valueFactory);
     }
 
+    /**
+     * Reset the initial value of the {@link Spinner}
+     *
+     * @param labelText
+     */
     public void resetTimePicker(String labelText) {
         this.label.setText(labelText);
 
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 60, 5);
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                        0,
+                        60,
+                        5);
 
         spinner.setValueFactory(valueFactory);
     }
 
+    /**
+     * Get the time selected by the user.
+     *
+     * @return the value of the spinner
+     */
     public int getTimeValue() {
         return this.spinner.getValue();
     }
