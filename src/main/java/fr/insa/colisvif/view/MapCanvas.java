@@ -447,13 +447,46 @@ public class MapCanvas extends BorderPane {
         for (Section section : this.roundSections) {
             Node origin = nodes.get(section.getOrigin());
             Node destination = nodes.get(section.getDestination());
-            this.drawLineLatLng(
-                origin.getLatitude(),
-                origin.getLongitude(),
-                destination.getLatitude(),
-                destination.getLongitude(),
+            double originX = this.lngToPx(origin.getLongitude());
+            double originY = this.latToPx(origin.getLatitude());
+            double destinationX = this.lngToPx(destination.getLongitude());
+            double destinationY = this.latToPx(destination.getLatitude());
+
+            this.drawLine(
+                originX,
+                originY,
+                destinationX,
+                destinationY,
                 CanvasConstants.ROUND_SECTION_COLOR,
                 CanvasConstants.ROUND_SECTION_WIDTH
+            );
+
+            double norm = this.norm(
+                originX,
+                originY,
+                destinationX,
+                destinationY
+            );
+
+            double aX = destinationX + CanvasConstants.ARROW_SIZE * (originX - destinationX) / norm;
+            double aY = destinationY + CanvasConstants.ARROW_SIZE * (originY - destinationY) / norm;
+
+            norm = this.norm(
+                aX,
+                aY,
+                destinationX,
+                destinationY
+            );
+
+            double alpha = CanvasConstants.ARROW_SIZE * Math.sqrt(3) / 3d / norm;
+
+            double bX = -1 * alpha * (destinationY - aY);
+            double bY = alpha * (destinationX - aX);
+
+            this.drawTriangle(
+                new double[] {destinationX, aX + bX, aX - bX},
+                new double[] {destinationY, aY + bY, aY - bY},
+                CanvasConstants.ROUND_SECTION_COLOR
             );
         }
     }
@@ -586,6 +619,13 @@ public class MapCanvas extends BorderPane {
         this.context.setStroke(prevStroke);
     }
 
+    private void drawTriangle(double[] x, double[] y, Paint paint) {
+        Paint prevFill = this.context.getFill();
+        this.context.setFill(paint);
+        this.context.fillPolygon(x, y, 3);
+        this.context.setStroke(prevFill);
+    }
+
     private void drawSquareLatLng(double lat, double lng, Paint paint, double radius) {
         this.drawSquare(this.lngToPx(lng), this.latToPx(lat), paint, radius);
     }
@@ -624,6 +664,12 @@ public class MapCanvas extends BorderPane {
     private double lngToPx(double lng) {
         final CityMap CITY_MAP = this.uiController.getCityMap();
         return (lng - CITY_MAP.getLngMin()) * this.scale.get() * this.baseZoom + this.originX;
+    }
+
+    private double norm(double x1, double y1, double x2, double y2) {
+        double deltaX = x1 - x2;
+        double deltaY = y1 - y2;
+        return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
     private class CanvasNode {

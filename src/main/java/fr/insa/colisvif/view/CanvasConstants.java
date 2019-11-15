@@ -62,7 +62,9 @@ public final class CanvasConstants {
 
     public static final Color ROUND_SECTION_COLOR = Color.LIME;
 
-    public static final double ROUND_SECTION_WIDTH = 3d;
+    public static final double ROUND_SECTION_WIDTH = 2d;
+
+    public static final double ARROW_SIZE = 6d;
 
     private CanvasConstants() {
 
