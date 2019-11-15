@@ -1,7 +1,6 @@
 package fr.insa.colisvif.controller.command;
 
 import fr.insa.colisvif.model.CityMap;
-import fr.insa.colisvif.model.Node;
 import fr.insa.colisvif.model.Round;
 import fr.insa.colisvif.model.Step;
 
