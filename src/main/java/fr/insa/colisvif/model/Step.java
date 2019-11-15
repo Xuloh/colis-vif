@@ -39,9 +39,9 @@ public class Step {
     }
 
     /**
-     * Returns the type of the Step.
+     * Returns the type of the {@link Step}.
      *
-     * @return the type of the Step.
+     * @return the type of the {@link Step}.
      */
     public boolean getType() {
         return arrival.getType();
@@ -71,18 +71,37 @@ public class Step {
         this.arrivalDate = arrivalDate;
     }
 
+    /**
+     * Returns the arrival date of the {@link Step}.
+     *
+     * @return the arrival date of the {@link Step}.
+     */
     public int getInitialArrivalDate() {
         return initialArrivalDate;
     }
 
+    /**
+     * Sets the initial arrival date in seconds of the {@link Step}.
+     * according to the arrival date
+     */
     public void setInitialArrivalDate() {
         this.initialArrivalDate = this.arrivalDate;
     }
 
+    /**
+     * Returns the ID of the arrival node of the {@link Step}.
+     *
+     * @return the ID of the arrival node of the {@link Step}.
+     */
     public long getArrivalNodeId() {
         return arrival.getNodeId();
     }
 
+    /**
+     * Sets the arrival node of the {@link Step}.
+     *
+     * @param nodeId the id of the new arrival node of the {@link Step}.
+     */
     public void setArrivalNodeId(long nodeId) {
         arrival.setNodeId(nodeId);
     }
@@ -156,9 +175,9 @@ public class Step {
     }
 
     /**
+     * Returns the arrival vertex of the {@link Step}.
      *
-     *
-     * @return
+     * @return the arrival vertex of the {@link Step}.
      */
     public Vertex getArrival() {
         return arrival;
@@ -197,8 +216,6 @@ public class Step {
      * @return <code>true</code> if o is a {@link Step} whose values are
      * "equal" to those of this {@link Step}
      */
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
